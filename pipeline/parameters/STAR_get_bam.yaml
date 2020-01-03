@@ -1,0 +1,28 @@
+contact: 'user@gmail.com' # can be email address or phone_number@txt.att.net
+RawDataPath: '/data2/isshamie/mito_lineage/data/'
+thread: 12
+QC: True
+# database parameters
+ref_fa: '/data/genome/human_GRCh38/GRCh38.primary_assembly.genome.fa'
+annotation: '/data/genome/human_GRCh38/gencode.v30.annotation.gff3'
+# tool specific parameters
+trim_reads: True
+trimmomatic_path: '/home/shangzhong/Installation/Trimmomatic-0.32/Trimmomatic-0.33/trimmomatic-0.33.jar'
+trim_jobs_per_batch: 6
+adapter: ''
+
+picard: '/home/shangzhong/Installation/picard-tools-1.141/picard.jar'
+
+star_jobs_per_batch: 1  # at most 2
+star_index: '/data/genome/human_GRCh38/human_GRCH38_STAR/'
+star_index_path: '/data/genome/human_GRCh38/human_GRCH38_STAR/'
+star_params: 
+star_pass: 2
+
+
+
+
+
+
+
+
