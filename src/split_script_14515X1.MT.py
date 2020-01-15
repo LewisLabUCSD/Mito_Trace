@@ -9,7 +9,10 @@ import pysam
 import os
 from os.path import join
 from tqdm import tqdm
+import numpy as np
+import glob
 import pickle
+
 # Remove CB
 # cmd = 'samtools view data/aml035_post_transplant_possorted_genome_bam.MT.bam | grep "CB:Z:" >> data/aml035_post_transplant_possorted_genome_bam.MT_CB.bam'
 # os.system(cmd)
