@@ -9,11 +9,11 @@ from collections import defaultdict
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sys
 
 
 def extract_barcode_info(bam_f, out_f,rm_slash=False):
     samfile = pysam.AlignmentFile(bam_f, "rb")
-    bam_dict = dict()
     barcodes = set()
     corrected_barcodes = set()
     barcode_pairs = set()
@@ -42,7 +42,7 @@ def extract_barcode_info(bam_f, out_f,rm_slash=False):
                     CB = d["CB"].split['-'][0]
                 else:
                     CB = d["CB"]
-                pair_barcodes.add((CB, '-'))
+                #pair_barcodes.add((CB, '-'))
                 corrected_barcodes.add(CB)
                 CB_read_number[CB] += 1
         if "BC" in d:
@@ -50,3 +50,14 @@ def extract_barcode_info(bam_f, out_f,rm_slash=False):
     samfile.close()
     pickle.dump([CR_read_number,CB_read_number,BC_read_number, barcodes, corrected_barcodes, barcode_pairs], file=open(out_f, "wb"))
     return CR_read_number,CB_read_number,BC_read_number, barcodes, corrected_barcodes, barcode_pairs
+
+
+def main():
+    bam_f = sys.argv[1]
+    out_f = sys.argv[2]
+    extract_barcode_info(bam_f, out_f, rm_slash=False)
+    return
+
+
+if __name__== '__main__':
+    main()
