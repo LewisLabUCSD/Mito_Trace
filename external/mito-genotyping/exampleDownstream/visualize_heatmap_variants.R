@@ -11,10 +11,10 @@ library(circlize)
 "%ni%" <- Negate("%in%")
 
 # Import data
-raw <- readRDS("tf1_barcode.rds")
-meta <- read.table("full_sumstats_TF1barcode.tsv", header = TRUE)
+raw <- readRDS("external/mito-genotyping/exampleDownstream/tf1_barcode.rds")
+meta <- read.table("external/mito-genotyping/exampleDownstream/full_sumstats_TF1barcode.tsv", header = TRUE)
 meta <- meta[meta$group %ni% c("unassigned") & !is.na(meta$group),]
-variants <- read.table("filtered_variants.tsv", header = TRUE, stringsAsFactors = FALSE)[,1]
+variants <- read.table("external/mito-genotyping/exampleDownstream/filtered_variants.tsv", header = TRUE, stringsAsFactors = FALSE)[,1]
 
 # Unpack MAE and visualize allele frequency
 covSE <- raw[["coverage"]]
