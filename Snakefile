@@ -136,10 +136,9 @@ rule scPileup_concat:
     input:
         scPileup_dir = "data/processed/{sample}/{sample}_scPileup_{num_read}"
     output:
-        all = "data/processed/{sample}/scPileup_concat/{sample}_{num_read}_all.coverage.txt.gz"
+        all = "data/processed/{sample}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
     params:
         samplename = lambda wildcards, output: output.all.split("_all.coverage.txt.gz")[0]
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
     shell:
          "external/mito-genotyping/exampleProcessing/02_merge_pileup_counts.sh {input.scPileup_dir} {params.samplename}"
-
