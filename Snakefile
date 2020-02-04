@@ -155,6 +155,7 @@ rule scPileup_concat:
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
     shell:
          "external/mito-genotyping/exampleProcessing/02_merge_pileup_counts.sh {input.scPileup_dir} {params.samplename}"
+<<<<<<< HEAD
 
 
 rule scPileup_MT_matrix:
@@ -201,3 +202,5 @@ rule plot_scPileup_MT_matrix:
 
 #rule plot_allele_frequencies:
 #"""Plot the AF-by-cell heatmap"""
+=======
+>>>>>>> 87b1a5e6f79d0e820540616e71516fd07c187510

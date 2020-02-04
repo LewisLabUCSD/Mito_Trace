@@ -29,7 +29,6 @@ def create_filtered_variants(coverage_folder, ref_fasta, BQ_file, base_quality_t
     return
 
 
-
 def par_variant_fill(bq_init_val):
     #for f in BQ_init.index.values:
     f = bq_init_val.name
