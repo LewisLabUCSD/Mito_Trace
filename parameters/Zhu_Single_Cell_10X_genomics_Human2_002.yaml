@@ -11,12 +11,14 @@ samples: "parameters/samples.tsv"
 #  Zhu_Single_Cell_10X_genomics_Human2_002: Zhu_Single_Cell_10X_genomics_Human2_002
 raw:
   Zhu_Single_Cell_10X_genomics_Human2_002: data/raw/GSM3271867
+
 bam:
   Zhu_Single_Cell_10X_genomics_Human2_002: data/raw/GSM3271867/Zhu_Single_Cell_10X_genomics_Human2_002_possorted_genome_bam.bam
 
 
-
 num_reads_filter:
-  - 16571
   - 200
+  #- 16571
 mito_character: MT
+maxBP: 16571
+ref_fa : external/mito-genotyping/exampleProcessing/mito_fastas/GRCh38.fasta
