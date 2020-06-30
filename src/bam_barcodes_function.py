@@ -8,6 +8,7 @@ import time
 from collections import defaultdict
 import pickle
 import matplotlib.pyplot as plt
+import click
 import seaborn as sns
 import sys
 
@@ -52,9 +53,13 @@ def extract_barcode_info(bam_f, out_f,rm_slash=False):
     return CR_read_number,CB_read_number,BC_read_number, barcodes, corrected_barcodes, barcode_pairs
 
 
-def main():
-    bam_f = sys.argv[1]
-    out_f = sys.argv[2]
+
+@click.command(help="Extract Cell Barcodes from bam")
+@click.argument('bam_f',  type=click.Path(exists=True))
+@click.argument('out_f',  type=click.Path(exists=False))
+def main(bam_f, out_f):
+    # bam_f = sys.argv[1]
+    # out_f = sys.argv[2]
     extract_barcode_info(bam_f, out_f, rm_slash=False)
     return
 
