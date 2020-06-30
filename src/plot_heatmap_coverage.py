@@ -32,6 +32,14 @@ def fill_df_coverage(df, pileup_dir, is_par=False):
 # @click.argument('pileup_dir',  type=click.Path(exists=True))
 # @click.argument('save_f', type=click.STRING)
 def sc_mt_coverage(barcode_p, pileup_dir, save_f, maxbp):
+    """
+
+    :param barcode_p: The cellbarcode information file. Counts how many reads per barcode
+    :param pileup_dir:
+    :param save_f:
+    :param maxbp: This is the cutoff number of basepairs needed to be covered to be added to the filtered matrix
+    :return:
+    """
     print(barcode_p, pileup_dir, save_f, maxbp)
     [CR_read_number, CB_read_number, BC_read_number, barcodes,
      corrected_barcodes, barcode_pairs] = pickle.load(
@@ -41,7 +49,7 @@ def sc_mt_coverage(barcode_p, pileup_dir, save_f, maxbp):
         if CB_read_number[i] * 100 >= maxbp:
             CB_read_MT[i] = CB_read_number[i] * 100
 
-    print(len(CB_read_MT))
+    print(f"Number of Cells that pass the MT threshold: {len(CB_read_MT)}")
     sc_coverage = pd.DataFrame(index=CB_read_MT.keys(),columns= range(1,maxbp+1),dtype=int)
     sc_coverage.loc[:,:] = 0
     sc_coverage = pardf(sc_coverage, fill_df_coverage,
@@ -106,6 +114,12 @@ def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
     return
 
 
+
+# @click.command(help="Create MT by position")
+# @click.option('--maxbp', default=16571, help='The length of the MT genome')
+# @click.argument('barcode_p',  type=click.Path(exists=True))
+# @click.argument('pileup_dir',  type=click.Path(exists=True))
+# @click.argument('save_f', type=click.STRING)
 def main(func, *args, **kwargs):
     print(args)
     if func == "sc_mt":
