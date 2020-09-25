@@ -1,0 +1,17 @@
+{
+    "fasta_hash": "e475be6ce8fe6aec49130158ece4b226ebeff601", 
+    "genomes": [
+        "GRCh38"
+    ], 
+    "gtf_hash": "1f9e6666c2d7a5e069746ad3ccc645555ffe9b7f", 
+    "input_fasta_files": [
+        "Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+    ], 
+    "input_gtf_files": [
+        "Homo_sapiens.GRCh38.93.filtered.gtf"
+    ], 
+    "mem_gb": 16, 
+    "mkref_version": "", 
+    "threads": 2, 
+    "version": "3.0.0"
+}

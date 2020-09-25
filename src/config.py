@@ -1,5 +1,7 @@
 import pathlib
 import os
+import matplotlib as mpl
+mpl.use('agg')
 
 ## Get the project directory
 path = os.path.abspath(__file__)

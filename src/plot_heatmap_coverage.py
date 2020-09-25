@@ -9,9 +9,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 import click
+import matplotlib as mpl
+mpl.use('agg')
 
 
 def fill_df_coverage(df, pileup_dir, is_par=False):
+    """ Reads each cell file and stores the coverage for each cell"""
     not_done = []
     for ind in tqdm(df.index):
         f = glob.glob(os.path.join(pileup_dir,"CB_" + ind + ".coverage.txt"))
@@ -31,26 +34,28 @@ def fill_df_coverage(df, pileup_dir, is_par=False):
 # @click.argument('barcode_p',  type=click.Path(exists=True))
 # @click.argument('pileup_dir',  type=click.Path(exists=True))
 # @click.argument('save_f', type=click.STRING)
-def sc_mt_coverage(barcode_p, pileup_dir, save_f, maxbp):
+def sc_mt_coverage(barcode_p, pileup_dir, save_f, maxBP, read_l = 100):
     """
 
     :param barcode_p: The cellbarcode information file. Counts how many reads per barcode
     :param pileup_dir:
     :param save_f:
-    :param maxbp: This is the cutoff number of basepairs needed to be covered to be added to the filtered matrix
+    :param maxBP: This is the cutoff number of basepairs needed to be covered to be added to the filtered matrix
     :return:
     """
-    print(barcode_p, pileup_dir, save_f, maxbp)
-    [CR_read_number, CB_read_number, BC_read_number, barcodes,
-     corrected_barcodes, barcode_pairs] = pickle.load(
-        open(barcode_p, "rb"))
-    CB_read_MT = dict()
-    for i in CB_read_number:
-        if CB_read_number[i] * 100 >= maxbp:
-            CB_read_MT[i] = CB_read_number[i] * 100
+    print(barcode_p, pileup_dir, save_f, maxBP)
+    CB_read_number = pickle.load(open(barcode_p, "rb"))
 
-    print(f"Number of Cells that pass the MT threshold: {len(CB_read_MT)}")
-    sc_coverage = pd.DataFrame(index=CB_read_MT.keys(),columns= range(1,maxbp+1),dtype=int)
+    # CB_read_MT = dict()
+    # for i in CB_read_number:
+    #     #if CB_read_number[i] * read_l >= maxBP:
+    #     CB_read_MT[i] = CB_read_number[i]
+
+    #print(f"Number of Cells that pass the MT threshold: {len(CB_read_MT)}")
+
+    #sc_coverage = pd.DataFrame(index=CB_read_MT.keys(), columns= range(1, maxBP + 1), dtype=int)
+
+    sc_coverage = pd.DataFrame(index=CB_read_number.keys(), columns=range(1, maxBP + 1), dtype=int)
     sc_coverage.loc[:,:] = 0
     sc_coverage = pardf(sc_coverage, fill_df_coverage,
                         func_args=(pileup_dir,), num_processes=32)
@@ -63,11 +68,11 @@ def sc_mt_coverage(barcode_p, pileup_dir, save_f, maxbp):
 
 def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
     sc_coverage = pd.read_csv(sc_coverage_f, index_col=0)
-    top500 = sc_coverage.loc[
-        sc_coverage.sum(axis=1).sort_values(ascending=False)[
-        :top_n].index]
-    # sns.clustermap(top500, col_cluster=False)
-    sns.clustermap(top500, col_cluster=False, vmax=500)
+    # top500 = sc_coverage.loc[
+    #     sc_coverage.sum(axis=1).sort_values(ascending=False)[
+    #     :top_n].index]
+    # # sns.clustermap(top500, col_cluster=False)
+    # sns.clustermap(top500, col_cluster=False, vmax=500)
 
     log2_sc_coverage = np.log2(sc_coverage + 1)
     if not top_n == 0:
@@ -75,8 +80,7 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
             log2_sc_coverage.sum(axis=1).sort_values(ascending=False)[
             :top_n].index]
     g = sns.clustermap(log2_sc_coverage, col_cluster=False)
-    g.ax_heatmap.set_title(
-        "Log2 number of reads at each MT position by the top 500 covered cells")
+    g.ax_heatmap.set_title("Log2 number of reads at each MT position by the top 500 covered cells")
     g.ax_heatmap.set_yticks([])
     g.ax_heatmap.set_xlabel("MT position")
     g.ax_heatmap.set_ylabel("Cell")

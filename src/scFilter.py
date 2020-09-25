@@ -16,8 +16,7 @@ def filter_barcodes(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
     print("Running get_coverage")
     if not os.path.exists(pileup_dir):
         os.mkdir(pileup_dir)
-    [CR_read_number, CB_read_number, BC_read_number, barcodes,
-     corrected_barcodes, barcode_pairs] = pickle.load(
+    CB_read_number = pickle.load(
         open(barcode_f, "rb"))
     CB_read_200 = set()
     for i in CB_read_number:

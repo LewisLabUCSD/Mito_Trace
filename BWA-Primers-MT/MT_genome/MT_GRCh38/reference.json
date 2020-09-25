@@ -1,0 +1,17 @@
+{
+    "fasta_hash": "7e80a89fc3c2e85169274e19a373c6e398ccc91f", 
+    "genomes": [
+        "MT_GRCh38"
+    ], 
+    "gtf_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709", 
+    "input_fasta_files": [
+        "MT.fasta"
+    ], 
+    "input_gtf_files": [
+        "MT.gene.gtf"
+    ], 
+    "mem_gb": 16, 
+    "mkref_version": "3.1.0", 
+    "threads": 2, 
+    "version": null
+}
