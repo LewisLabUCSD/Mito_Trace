@@ -50,6 +50,7 @@ def extract_barcode_info(bam_f, out_f,rm_slash=False):
             BC_read_number[d["BC"]] += 1 
     samfile.close()
     pickle.dump([CR_read_number,CB_read_number,BC_read_number, barcodes, corrected_barcodes, barcode_pairs], file=open(out_f, "wb"))
+
     return CR_read_number,CB_read_number,BC_read_number, barcodes, corrected_barcodes, barcode_pairs
 
 
@@ -61,6 +62,7 @@ def main(bam_f, out_f):
     # bam_f = sys.argv[1]
     # out_f = sys.argv[2]
     extract_barcode_info(bam_f, out_f, rm_slash=False)
+
     return
 
 

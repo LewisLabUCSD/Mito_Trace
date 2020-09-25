@@ -1,4 +1,3 @@
-
 wildcard_constraints:
     num_read="\d+"
 
@@ -14,6 +13,7 @@ from snakemake.utils import validate
 num_reads_filter = config["num_reads_filter"]
 maxBP = config["maxBP"]
 ref_fa = config["ref_fa"]
+print(pd.read_table(config["samples"], dtype=str,sep=','))
 samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample"], drop=False)
 #(samples)
 
@@ -22,13 +22,18 @@ samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample
 
 #workdir: config["work_dir"]
 
+
+wildcard_constraints:
+    mapq="\d+",
+    cellr='True|False'
+
 rule all:
     input:
-        expand("figures/mttrace/{sample}/mapq_{mapq}/{sample}_CB_coverage_hist.png",sample=samples["sample"].values, mapq=config["mapq"]),
-        expand("data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"]),
-        expand("data/processed/mttrace/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"]),
-        expand("figures/mttrace/{sample}/mapq_{mapq}/{sample}_{num_read}_MT_position.png", sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"]),
-        expand("figures/mttrace/{sample}/mapq_{mapq}/{sample}_{num_read}_MT_position_coverage.png", sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"])
+        #expand("{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"]),
+        expand("{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"]),
+        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=config['results'],sample=samples["sample"].values, mapq=config["mapq"], cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
+        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=config['results'], sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"], cellr_bc=config["use_cellr_barcode"]),
+        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=config['results'],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=config["mapq"], cellr_bc=config["use_cellr_barcode"])
 
 
 
@@ -42,6 +47,14 @@ def get_sample_bam(wildcards):
     #print(bam)
     return bam # + ".bam"
 
+
+def get_sample_barcodes(wildcards):
+    return os.path.join(os.path.dirname(samples.loc[wildcards.sample,"bam_f"]), "filtered_feature_bc_matrix/barcodes.tsv.gz")
+
+
+def results_dir():
+    return config["results"]
+
 # rule orig_index:
 #     input:  get_raw_bam #"{raw_f}"  #lambda wildcards: f"{config['bam'][wildcards.sample]}"
 #     output: "{bam_f}.bam.bai" #"{raw}/{bam}.bai"
@@ -52,8 +65,8 @@ rule cp_bam:
     """Move bam file to current location"""
     input: get_sample_bam
     output:
-        bam = "data/processed/mttrace/{sample}/00_bam/{sample}.bam",
-        #bai = "data/processed/mttrace/{sample}/00_bam/{sample}.bam.bai"
+        bam = "{results}/{sample}/00_bam/{sample}.bam",
+        #bai = "{results}/{sample}/00_bam/{sample}.bam.bai"
     shell: "cp {input} {output}"
 #    run:
         # shell("ln -s {input} {output.bam}"),
@@ -62,33 +75,32 @@ rule cp_bam:
 
 rule index_bam:
     """Index the bam file"""
-    input: "data/processed/mttrace/{sample}/00_bam/{sample}.bam"
-    output: "data/processed/mttrace/{sample}/00_bam/{sample}.bam.bai"
+    input: "{results}/{sample}/00_bam/{sample}.bam"
+    output: "{results}/{sample}/00_bam/{sample}.bam.bai"
     shell: "samtools index {input}"
 
 
 rule filter_bam:
     """Filter reads with low MAPQ and other potential filters """
     input:
-        in_bam = "data/processed/mttrace/{sample}/00_bam/{sample}.bam",
-        in_bai = "data/processed/mttrace/{sample}/00_bam/{sample}.bam.bai",
+        in_bam = "{results}/{sample}/00_bam/{sample}.bam",
+        in_bai = "{results}/{sample}/00_bam/{sample}.bam.bai",
     output:
-        mq_bam = "data/processed/mttrace/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
-        mq_bai = "data/processed/mttrace/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
+        mq_bam = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
+        mq_bai = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
     run:
             shell("samtools view {input.in_bam} -q {wildcards.mapq} -h -b > {output.mq_bam}")
             shell("samtools index {output.mq_bam}")
 
 
-
 rule MT_map:
     """Extract the MT genome"""
     input:
-        bam = "data/processed/mttrace/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
-        bai = "data/processed/mttrace/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
+        bam = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
+        bai = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
     output:
-        mt_bam="data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
+        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
+        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
     run:
         #shell("samtools {input.bam}")
         shell("samtools view -b {input.bam} MT > {output.mt_bam}")
@@ -98,34 +110,47 @@ rule MT_map:
 rule barcode_data:
     """Loop through the bam file and extract the barcode information."""
     input:
-        mt_bam="data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
-    output: "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_barcode_data.p"
+        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
+        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
+    output: "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
     shell:
          "python src/bam_barcodes_function.py {input.mt_bam} {output}"
 
 
-rule compare_CB_with_cellranger_CB_list:
+rule barcode_filter:
     input:
-        cb_list = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
-        cellranger_list = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.barcodes.txt"
-    output:
-        "data/processed/mttrace/{sample}/mapq_{mapq}/barcodes_compare/barcodes_detected.png"
+        barcode_p = "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
+        cellr_f = get_sample_barcodes
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+    params: cellr_bc = "{cellr_bc}"
+    shell: "python src/filter_barcodes.py {input} {params} {output}"
 
-rule plot_CB_coverage:
-    """Plot the MT coverage of the single cells"""
-    input: "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_barcode_data.p"
-    output: "figures/mttrace/{sample}/mapq_{mapq}/{sample}_CB_coverage_hist.png"
-    shell:
-        "python src/plot_CB_coverage.py {input} {output}"
+
+## TODO
+# rule compare_CB_with_cellranger_CB_list:
+#     input:
+#         cb_list = "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
+#         cellranger_list = "{results}/{sample}/mapq_{mapq}/{sample}.barcodes.txt"
+#     output:
+#         "{results}/{sample}/mapq_{mapq}/barcodes_compare/barcodes_detected.png"
+#     shell:
+#
+
+# rule plot_CB_coverage:
+#     """Plot the MT coverage of the single cells"""
+#     input: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+#     output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist.png"
+#     shell:
+#         "python src/plot_CB_coverage.py {input} {output}"
 
 
 rule scBam:
     """Extract each single-cell and put into respective bam file"""
     input:
-        mt_bam="data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="data/processed/mttrace/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
-    output: directory("data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_scBam")
+        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
+        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
+    output: directory("/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam")
+    #directory("/data/isshamie/miito_lineage/mttrace/{sample}/mapq_{mapq}/{sample}_scBam")
     shell:
         "python src/split_by_CB.py {input.mt_bam} {output}"
 
@@ -133,10 +158,11 @@ rule scBam:
 rule scPileup:
     """Run the first part of the MT-genotype function by getting the read pileups for each bam file for each nucleotide and overall coverage"""
     input:
-        scBam = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_scBam",
-        barcodes = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
+        scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam",
+        #scBam = "{results}/{sample}/mapq_{mapq}/{sample}_scBam",
+        barcodes = "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
     output:
-          directory("data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}")
+          directory("{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}")
     # params:
     #     num_reads_filter = config["num_reads_filter"]
     shell:
@@ -153,9 +179,11 @@ rule scPileup:
 rule scPileup_concat:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
     input:
-        scPileup_dir = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}"
+        scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
+        # Added to save directly to /data/isshamie
+        scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam"
     output:
-        all = "data/processed/mttrace/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
+        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
     params:
         samplename = lambda wildcards, output: output.all.split("_all.coverage.txt.gz")[0]
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
@@ -163,14 +191,25 @@ rule scPileup_concat:
          "software/mito-genotyping/exampleProcessing/02_merge_pileup_counts.sh {input.scPileup_dir} {params.samplename}"
 
 
+
+rule plot_CB_coverage:
+    """Plot the MT coverage of the single cells"""
+    input:
+         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",
+         barcodes = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png"
+    shell:
+        "python src/plot_CB_coverage.py {input} {output}"
+
+
 rule scPileup_MT_matrix:
     """Create the position-by-cell coverage matrix"""
     input:
-        all = "data/processed/mttrace/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",
-        scPileup_dir = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
-        barcode_p = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_barcode_data.p"
+        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",
+        scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
+        barcode_p = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
     output:
-        sc_coverage_f = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_{num_read}/sc_coverage.csv"
+        sc_coverage_f = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
     shell:
         "python src/plot_heatmap_coverage.py sc_mt {input.barcode_p} {input.scPileup_dir} {output.sc_coverage_f} {maxBP}"
 
@@ -178,10 +217,10 @@ rule scPileup_MT_matrix:
 rule plot_scPileup_MT_matrix:
     """Plot the posiitonal coverages."""
     input:
-        sc_coverage_f = "data/processed/mttrace/{sample}/mapq_{mapq}/{sample}_{num_read}/sc_coverage.csv"
+        sc_coverage_f = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
     output:
-        save_f_heat = "figures/mttrace/{sample}/mapq_{mapq}/{sample}_{num_read}_MT_position.png",
-        save_f_coverage = "figures/mttrace/{sample}/mapq_{mapq}/{sample}_{num_read}_MT_position_coverage.png"
+        save_f_heat = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",
+        save_f_coverage = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png"
     shell:
         "python src/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_heat} {output.save_f_coverage}"
 

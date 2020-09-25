@@ -2,7 +2,7 @@
 *.svg
 __pycache__/
 *.py[cod]
-
+.snakemake/
 # C extensions
 *.so
 

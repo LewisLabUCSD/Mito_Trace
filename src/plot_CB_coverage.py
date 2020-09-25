@@ -30,10 +30,7 @@ from os.path import join
 
 ## Load CB's, get ones that have over average read coverage of 1x
 def plot_coverage(barcode_data, f_save, maxBP=16571):
-    [CR_read_number, CB_read_number, BC_read_number, barcodes,
-     corrected_barcodes, barcode_pairs] = pickle.load(
-        open(barcode_data, "rb"))
-
+    CB_read_number = pickle.load(open(barcode_data, "rb"))
 
     CB_read_MT = dict()
     for i in CB_read_number:
@@ -44,8 +41,7 @@ def plot_coverage(barcode_data, f_save, maxBP=16571):
     plt.hist(np.array(list(CB_read_MT.values())) / maxBP, log=True)
     plt.xlabel("X Coverage of Mitochondrion")
     plt.ylabel("Number of cells")
-    plt.title(
-        f"LOG Number of nts per MT length per cell\nN cells with > 1x read coverage ={len(CB_read_MT)}")
+    plt.title(f"LOG Number of nts per MT length per cell\nN cells with > 1x read coverage ={len(CB_read_MT)}")
 
     plt.savefig(f_save) #"../figures/CB_coverage_hist.png")
     return
@@ -67,9 +63,7 @@ def plot_coverage_barcode_file(barcode_data, barcode_fs, f_save, maxBP=16571):
     else:
         barcode_text = pd.read_csv(barcode_fs, sep="\t", index_col=0)
 
-    [CR_read_number, CB_read_number, BC_read_number, barcodes,
-     corrected_barcodes, barcode_pairs] = pickle.load(
-        open(barcode_data, "rb"))
+    CB_read_number = pickle.load(open(barcode_data, "rb"))
 
     CB_read_MT = dict()
     cb = 0
@@ -100,5 +94,27 @@ def plot_coverage_barcode_file(barcode_data, barcode_fs, f_save, maxBP=16571):
     return
 
 
+def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, maxBP=16571):
+    scPileup  = pd.read_csv(scPileup_f, header=None)
+    scPileup.columns = ["Position", "Cell", "Coverage"]
+    cell_coverage = scPileup.groupby("Cells").sum()["Coverage"]
+    cell_coverage_mt = cell_coverage/maxBP
+    cell_coverage_mt = cell_coverage_mt[cell_coverage_mt>cov_thresh]
+
+    CB = list(pickle.load(open(barcodes_f, "rb")).keys())
+    cell_coverage_mt.index.isin(CB)
+
+    plt.figure()
+    plt.hist(cell_coverage_mt, log=True)
+    plt.xlabel("X Coverage of Mitochondrion")
+    plt.ylabel("Number of cells")
+    plt.title(
+        f"Number of nts per MT length per cell\nN cells with > {cov_thresh}x read coverage ={len(cell_coverage_mt)}")
+
+    plt.savefig(f_save)
+    return
+
+
 if __name__ == "__main__":
-    plot_coverage(sys.argv[1], sys.argv[2], maxBP=16571)
+    plot_coverage_from_scPileup(sys.argv[1], sys.argv[2], maxBP=16571)
+    #plot_coverage(sys.argv[1], sys.argv[2], maxBP=16571)

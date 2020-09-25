@@ -29,6 +29,7 @@ def create_filtered_variants(coverage_folder, ref_fasta, BQ_file, base_quality_t
     return
 
 
+
 def par_variant_fill(bq_init_val):
     #for f in BQ_init.index.values:
     f = bq_init_val.name
@@ -75,8 +76,6 @@ def par_plot_variant_quality(coverage_folder, f_save, maxBP = 16571, f_save_fig=
     else:
         plt.savefig(f_save_fig)
     return
-
-
 
 
 def create_fullsum_matrix(allele_folder, f_save,groups=None):

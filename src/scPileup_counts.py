@@ -5,21 +5,24 @@ import glob
 import pickle
 import numpy as np
 import sys
+import pandas as pd
 #import click
 
 
 def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
                  maxBP=16571, base_qual=0, alignment_qual=0,
-                 func_p="/home/isshamie/software/mito-genotyping/exampleProcessing/"):
+                 func_p="/home/isshamie/software/mito-genotyping/exampleProcessing/",
+                 cellr_bc_f=None):
     if reads_filter == -1:
         reads_filter = maxBP
 
     print("Running get_coverage")
     if not os.path.exists(pileup_dir):
         os.mkdir(pileup_dir)
-    [CR_read_number, CB_read_number, BC_read_number, barcodes,
-     corrected_barcodes, barcode_pairs] = pickle.load(
+    CB_read_number = pickle.load(
         open(barcode_f, "rb"))
+
+
     CB_read_200 = set()
     for i in CB_read_number:
         if CB_read_number[i] >= reads_filter:
