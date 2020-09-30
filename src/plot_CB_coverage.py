@@ -97,7 +97,7 @@ def plot_coverage_barcode_file(barcode_data, barcode_fs, f_save, maxBP=16571):
 def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, maxBP=16571):
     scPileup  = pd.read_csv(scPileup_f, header=None)
     scPileup.columns = ["Position", "Cell", "Coverage"]
-    cell_coverage = scPileup.groupby("Cells").sum()["Coverage"]
+    cell_coverage = scPileup.groupby("Cell").sum()["Coverage"]
     cell_coverage_mt = cell_coverage/maxBP
     cell_coverage_mt = cell_coverage_mt[cell_coverage_mt>cov_thresh]
 
@@ -112,9 +112,14 @@ def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, ma
         f"Number of nts per MT length per cell\nN cells with > {cov_thresh}x read coverage ={len(cell_coverage_mt)}")
 
     plt.savefig(f_save)
+
+    f = plt.figure()
+    sns.distplot(cell_coverage_mt)
+    plt.savefig(f_save.replace('.png','.dist.png'))
+
     return
 
 
 if __name__ == "__main__":
-    plot_coverage_from_scPileup(sys.argv[1], sys.argv[2], maxBP=16571)
+    plot_coverage_from_scPileup(sys.argv[1], sys.argv[2], sys.argv[3], maxBP=16571)
     #plot_coverage(sys.argv[1], sys.argv[2], maxBP=16571)

@@ -28,3 +28,31 @@ mapq:
   #- 30
 #ref_fa: "/data2/genome/human_GRCh38/cellranger/refdata-cellranger-GRCh38-3.0.0/fasta/genome.fa"
 ref_fa: "/data2/mito_lineage/BWA-Primers-MT/MT_genome/MT.fasta"
+
+
+# For constructing the af_by_cell filter
+
+#position_filter:
+# At least n cells with greater than n reads
+min_cells:
+  - 100
+  - 500
+  - 10
+min_reads:
+  - 100
+
+top_cells:
+  - 0
+
+top_pos:
+  - 0
+
+cell_mt_coverage:
+  - 1
+  - 10
+  - 100
+
+
+position_bq_thresh:
+  - 0
+  - "Gaussian"
