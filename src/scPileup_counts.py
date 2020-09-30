@@ -19,12 +19,15 @@ def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
     print("Running get_coverage")
     if not os.path.exists(pileup_dir):
         os.mkdir(pileup_dir)
-    CB_read_number = pickle.load(
-        open(barcode_f, "rb"))
+
+    [CR_read_number, CB_read_number, BC_read_number, barcodes,corrected_barcodes, barcode_pairs] = pickle.load(open(barcode_f, "rb"))
 
 
+    #print(CB_read_number)
     CB_read_200 = set()
+
     for i in CB_read_number:
+
         if CB_read_number[i] >= reads_filter:
             CB_read_200.add(i)
     print(f"Number of cells: {len(CB_read_200)}")
