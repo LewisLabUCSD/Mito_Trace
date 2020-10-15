@@ -102,7 +102,7 @@ def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
     return cell_df
 
 
-def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min_cells=100, min_reads=100, coverage_thresh=-1):
+def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min_cells=100, min_reads=100, coverage_thresh=-1, het_thresh=0.05, min_het_cells=10):
     """
 
     :param coverage_dir:
@@ -221,7 +221,7 @@ def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min
     # Only keep filtered positions and cells
     af_by_cell = af_by_cell.loc[:, af_by_cell.columns.isin(cell_filter)]
 
-    # Get the positions of variants that poass the filter
+    # Get the positions of variants that pass the filter
     af_by_cell_mask = af_by_cell.apply(lambda x: int(x.name[:-1]), axis=1)
     af_by_cell = af_by_cell.loc[
         af_by_cell_mask[af_by_cell_mask.isin(pos_counts_filter)].index]
@@ -239,6 +239,11 @@ def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min
                             func_args=(coverage_dir,),
                             num_processes=32)
     bq_by_cell = bq_by_cell.loc[:,(bq_by_cell>0).any(axis=0)]
+
+    het_filt = (af_by_cell > het_thresh).sum(axis=0) > min_het_cells
+    het_filt = het_filt[het_filt].index
+    af_by_cell = af_by_cell[het_filt]
+    bq_by_cell = bq_by_cell[het_filt]
 
     if AF_F is not None:
         af_by_cell.to_csv(AF_F)

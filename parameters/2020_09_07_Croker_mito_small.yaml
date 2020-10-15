@@ -48,12 +48,20 @@ top_cells:
 top_pos:
   - 0
 
-
 cell_mt_coverage:
   - 1
-  - 10
-  - 100
+#  - 10
+#  - 100
 
+
+het_thresh:
+  - 0.01
+  - 0.2
+  - 0.4
+
+min_het_cells:
+  - 1
+  - 10
 
 position_bq_thresh:
   - 0
