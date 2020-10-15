@@ -13,7 +13,7 @@ from snakemake.utils import validate
 num_reads_filter = config["num_reads_filter"]
 maxBP = config["maxBP"]
 ref_fa = config["ref_fa"]
-print(pd.read_table(config["samples"], dtype=str,sep=','))
+#print(pd.read_table(config["samples"], dtype=str,sep=','))
 samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample"], drop=False)
 #(samples)
 

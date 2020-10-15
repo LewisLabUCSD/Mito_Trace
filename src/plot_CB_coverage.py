@@ -99,18 +99,28 @@ def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, ma
     scPileup.columns = ["Position", "Cell", "Coverage"]
     cell_coverage = scPileup.groupby("Cell").sum()["Coverage"]
     cell_coverage_mt = cell_coverage/maxBP
-    cell_coverage_mt = cell_coverage_mt[cell_coverage_mt>cov_thresh]
+    cell_coverage_mt.index = list(map(lambda x: x.replace('.bam',''),cell_coverage_mt.index.values))
+
 
     CB = list(pickle.load(open(barcodes_f, "rb")).keys())
-    cell_coverage_mt.index.isin(CB)
+    print(cell_coverage_mt.index)
+    print('before cb filter', len(cell_coverage_mt.index))
+    cell_coverage_mt = cell_coverage_mt.loc[cell_coverage_mt.index.isin(CB)]
+    print('after cb filter', len(cell_coverage_mt.index))
+
+    print('cov thresh', cov_thresh)
+    cell_coverage_mt = cell_coverage_mt[cell_coverage_mt>cov_thresh]
+    print('after cov filter', len(cell_coverage_mt.index))
+
+
+
 
     plt.figure()
     plt.hist(cell_coverage_mt, log=True)
-    plt.xlabel("X Coverage of Mitochondrion")
+    plt.xlabel("Coverage of Mitochondrion Genome")
     plt.ylabel("Number of cells")
-    plt.title(
-        f"Number of nts per MT length per cell\nN cells with > {cov_thresh}x read coverage ={len(cell_coverage_mt)}")
-
+    #plt.title(f"MT coverage\nN cells with > {cov_thresh}x read coverage ={len(cell_coverage_mt)}")
+    plt.title(f"MT coverage per cell")
     plt.savefig(f_save)
 
     f = plt.figure()

@@ -16,7 +16,8 @@ mpl.use('agg')
 def fill_df_coverage(df, pileup_dir, is_par=False):
     """ Reads each cell file and stores the coverage for each cell"""
     not_done = []
-    for ind in tqdm(df.index):
+    for ind in (df.index):
+        print(ind)
         f = glob.glob(os.path.join(pileup_dir,"CB_" + ind + ".coverage.txt"))
         if len(f) == 0:
             not_done.append(ind)
@@ -24,7 +25,9 @@ def fill_df_coverage(df, pileup_dir, is_par=False):
             curr = pd.read_csv(f[0], header=None)
             for _, val in curr.iterrows():
                 df.loc[ind, val[0]] = val[2]
+    print(f"Total {df.shape[0] - len(not_done)}")
     print(f"Number of missing files: {len(not_done)}")
+
     return df
 
 
@@ -74,6 +77,25 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
     # # sns.clustermap(top500, col_cluster=False)
     # sns.clustermap(top500, col_cluster=False, vmax=500)
 
+    if not ((top_n == 0) or (top_n==-1)):
+        sc_coverage = sc_coverage.loc[
+            sc_coverage.sum(axis=1).sort_values(ascending=False)[
+            :top_n].index]
+    # else:
+    #     sc_coverage = sc_coverage.loc[
+    #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
+
+
+    g = sns.clustermap(sc_coverage, row_cluster=False, col_cluster=False, col_linkage=False)
+    plt.title(f"Number of reads at each MT position by the top {top_n} covered cells")
+    #g.ax_heatmap.set_title(f"Number of reads at each MT position by the top {top_n} covered cells")
+    g.ax_heatmap.set_yticks([])
+    g.ax_heatmap.set_xlabel("MT position")
+    #plt.legend(title="Coverage (Number of reads)")
+    g.ax_heatmap.set_ylabel("Cell")
+    plt.savefig(savefig_f)
+    plt.savefig(savefig_f.replace(".png", ".svg"))
+
     log2_sc_coverage = np.log2(sc_coverage + 1)
     if not top_n == 0:
         log2_sc_coverage = log2_sc_coverage.loc[
@@ -84,14 +106,15 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
     g.ax_heatmap.set_yticks([])
     g.ax_heatmap.set_xlabel("MT position")
     g.ax_heatmap.set_ylabel("Cell")
-
-    plt.savefig(savefig_f)
+    plt.savefig(savefig_f.replace(".png","")+".log2.png")
     plt.savefig(savefig_f.replace(".png", ".svg"))
+
+
     return
 
 
 def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
-                                x_cov=(1, 2, 5, 10, 30, 50, 100, 200, 1000, 2000, 3000),
+                                x_cov=(1, 2, 5, 10, 30, 50, 100, 200, 300),
                                 cells_cov = (1, 10, 100, 500)):
     sc_coverage = pd.read_csv(sc_coverage_f, index_col=0)
     # x_cov = [1, 2, 5, 10, 30, 50, 100, 200, 1000, 2000, 3000]
@@ -125,11 +148,11 @@ def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
 # @click.argument('pileup_dir',  type=click.Path(exists=True))
 # @click.argument('save_f', type=click.STRING)
 def main(func, *args, **kwargs):
-    print(args)
+    print('args', args)
     if func == "sc_mt":
         barcode_p, pileup_dir, save_f, maxBP = args
         maxBP = int(maxBP)
-        print(barcode_p, pileup_dir, save_f, maxBP)
+        #print(barcode_p, pileup_dir, save_f, maxBP)
         sc_mt_coverage(barcode_p, pileup_dir, save_f, maxBP)
 
     elif func == "plot":

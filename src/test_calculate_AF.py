@@ -10,5 +10,3 @@ def test():
                  min_reads=10)
 
     return
-
-test()
