@@ -1,0 +1,33 @@
+
+Heteroplasmy values of dominant clone:
+  - 0.02
+  - 0.05
+  - 0.15
+  - 0.25
+  - 0.45
+
+mt_mutation_rate:
+  ## Need to look up
+  - 10*e-8
+
+num_sequences:
+  - 50000000
+
+
+dist_num_sequences:
+  # Normal distribution mu sigma
+  mu:
+    - 50000000
+
+  sigma:
+    - 1000000
+
+
+num_reads_per_cell:
+  - 10000
+dist_num_reads_per_cell:
+  # Normal distribution based on number of reads, and
+
+
+dist_read_coverage_per_nt:
+  # Based on number of reads.

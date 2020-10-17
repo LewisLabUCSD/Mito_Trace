@@ -35,6 +35,7 @@ def main_commandline(ref_fa, out_f, chromosome="MT", amplicon_length=150, pcr_le
     return
 
 
+
 def main(ref_fa, out_f, chromosome="MT", amplicon_length=150, pcr_length=(18,22)):
     amplicons_over_entire_region(ref_fa, out_f, chromosome, amplicon_length, pcr_length)
     return
