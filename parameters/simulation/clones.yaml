@@ -1,0 +1,75 @@
+
+Heteroplasmy values of dominant clone:
+  - 0.02
+  - 0.05
+  - 0.15
+  - 0.25
+  - 0.45
+
+coverage: # Can also be a distribution
+  - 20
+  - 50
+  - 100
+
+#num_iterations:
+
+num_cells_sample:
+  - 1000
+
+num_clones:
+  - 1
+
+clone_sizes: #distribution
+  - 0.1
+
+dist_num_clones: #poisson
+  lambda:
+    0.5
+
+dist_mult_clone_sizes:
+  # Dirichlet distribution which then leads to binomial. Takes input of num_clones
+  beta:
+    - 1
+    - 0.3
+    - (0.1,0.8) #Unbalanced with one bigger than the other
+
+dist_clone_sizes:
+  mu:
+    - 0.1
+  sigma:
+    - 0.05
+
+
+number_mutants_per_clone:
+  - 1
+
+
+dist_number_mutants_perclone:
+#TODO
+  lambda:
+    1
+
+
+
+non_clone_growth_rate:
+  # Poisson parameter for if cell will divide or not
+  - 1
+
+clone_growth_rate:
+  # Growth rate lambda parameter for how much more than non-clones
+  - 1
+  - 2
+  - 4
+  - 10
+
+
+child_mt_af:
+  # Child's AF based on the parents, which for now is normally distributed
+  # However, set all below 0 to 0.
+  mu: 0
+  sigma: 0.1
+
+
+
+
+
