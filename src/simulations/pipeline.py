@@ -25,12 +25,12 @@ from src.simulations.utils.config import check_required
 # Does this ruin running the MCMC? I don't think so, b/c that format is going to be put in after anyway
 class FullSimulation:
     def __init__(self, params):
+        # TODO parallel_apply over simulations
         self.n_iter = params['num_iterations']
         self.params = params
         # Parallelize df
         df = pd.DataFrame(index=range(self.n_iter))
         df = df.apply(self.run_sim)
-        # TODO: parallel_apply over simulations
         self.sim = df
         return
         #for i in self.n_iter:
