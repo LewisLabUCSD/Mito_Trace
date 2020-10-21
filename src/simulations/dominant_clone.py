@@ -10,8 +10,10 @@ import matplotlib.pyplot as plt
 from mplh.color_utils import get_colors
 from mplh.fig_utils import legend_from_color
 
+
 """ Run the simulation similar to in Extended Data Fig 3 from 
     Massively parallel single-cell mitochondrial DNA genotyping and chromatin profiling"""
+
 
 def simulate(n_sim, n_cells, n_dom_cells, coverage, het, err_het):
     dropout = np.zeros([n_sim, ])
@@ -120,9 +122,21 @@ def simulate_growth(cell_af, clone_meta, clone_growth, non_clone_growth=0.5, num
     return cell_af_growth, cell_af_meta
 
 
-def main():
-    return
+def generate_coverage(num_cells, num_pos=None, cov_constant=None, mu_cov_per_cell=None, mu_dist_reads=None, type='constant'):
+    """
+    There are different modes to the coverage, either a constant or through a distribution.
+    :return:
+    """
+    c = np.zeros([num_cells, num_pos])
+    if type == 'constant':
+        c[:, :] = cov_constant
+        return c
+    elif type=="poisson":
+        # Get the number of coverage per cell based on poisson (should be reads)
+        num_reads_per_cell = random.poisson(lam=mu_cov_per_cell, size=num_cells)
 
+        # Number of reads at each position, based on the average for each cell
+        for i in num_cells:
+            c[i,:] = random.poisson(num_reads_per_cell[i], size=num_pos)
+    return c
 
-if "__name__" == "__main__":
-    main()
