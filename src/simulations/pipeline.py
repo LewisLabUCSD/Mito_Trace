@@ -176,8 +176,8 @@ class Simulation:
             self.clone_mt_dict = dict()
             for i in range(1,num_clones+1):
                 self.clone_mt_dict[i] = i
-        # TODO Add the MT clone map that can contain multiple mutants in lineages
 
+        # TODO Add the MT clone map so it can contain multiple mutants in lineages
 
         # If there is a heteroplasmy table in params, it is list of mutant heteroplasmy AFs.
         # If not, will randomly draw based on number of clones
