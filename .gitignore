@@ -3,6 +3,9 @@
 __pycache__/
 *.py[cod]
 .snakemake/
+_STARtmp/
+
+
 # C extensions
 *.so
 
