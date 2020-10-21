@@ -11,7 +11,7 @@ mt_mutation_rate:
   - 10*e-8
 
 num_sequences:
-  - 50000000
+  - 16571
 
 
 dist_num_sequences:

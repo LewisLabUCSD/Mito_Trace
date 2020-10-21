@@ -31,7 +31,7 @@ dist_mult_clone_sizes:
   beta:
     - 1
     - 0.3
-    - (0.1,0.8) #Unbalanced with one bigger than the other
+    - (0.1,0.8) # Unbalanced with one bigger than the other
 
 dist_clone_sizes:
   mu:
@@ -71,5 +71,22 @@ child_mt_af:
 
 
 
+
+grow:
+  type: binomial
+
+  binomial:
+    rates: [0.1, 0.8, 0.01]
+    time_steps: 10
+
+  #type: poisson
+  poisson:
+    rates: [0.05, 1, 0.9]
+
+  mutant_af_sigma_noise: 0.05
+
+
+  non_mutants:
+    to_mutate: False
 
 
