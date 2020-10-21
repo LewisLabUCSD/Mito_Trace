@@ -176,8 +176,7 @@ class Simulation:
             self.clone_mt_dict = dict()
             for i in range(1,num_clones+1):
                 self.clone_mt_dict[i] = i
-        ##TODO
-        # Add the MT clone map that can contain multiple mutants in lineages
+        # TODO Add the MT clone map that can contain multiple mutants in lineages
 
 
         # If there is a heteroplasmy table in params, it is list of mutant heteroplasmy AFs.
@@ -315,6 +314,12 @@ class Simulation:
         f = open(filename, 'wb')
         pickle.dump(self.__dict__, f, 2)
         f.close()
+
+    def save_to_mgatk_format(self):
+        """
+        Converts into the proper files needed for mgatk. (i.e variant and coverage files)
+        :return:
+        """
 
     def load(self):
         filename = self.params['filename']
