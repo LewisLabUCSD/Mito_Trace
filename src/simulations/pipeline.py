@@ -30,7 +30,7 @@ class FullSimulation:
         # Parallelize df
         df = pd.DataFrame(index=range(self.n_iter))
         df = df.apply(self.run_sim)
-        # TODO: parallel_apply
+        # TODO: parallel_apply over simulations
         self.sim = df
         return
         #for i in self.n_iter:
