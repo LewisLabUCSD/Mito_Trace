@@ -2,7 +2,7 @@
 local_outdir: 'simulation'
 prefix: 'simple'
 num_iterations: 100
-num_cells: 1000
+num_cells: 10000
 num_mt_positions: 10
 
 initialize:
@@ -22,6 +22,8 @@ het: # Heterozygous values
   [0.2, 0.2]
 het_err_rate: 0.05
 
+
+sequence_subsample: #10000
 
 growth:
   type: binomial

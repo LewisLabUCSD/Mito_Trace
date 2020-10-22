@@ -11,6 +11,11 @@ import matplotlib.pyplot as plt
 from mplh.color_utils import get_colors
 from mplh.fig_utils import legend_from_color
 import pickle
+from pandarallel import pandarallel
+pandarallel.initialize(nb_workers=24)
+from src.simulations.utils.config import read_config_file
+import glob
+
 
 from src.simulations.utils.config import check_required
 
@@ -19,26 +24,78 @@ from src.simulations.utils.config import check_required
 
 
 
+class ParameterSweep:
+    # TODO Sweep across het, growth rate, coverage, error, cluster size,
+    def __init__(self, params_dir):
+        self.params_dir = params_dir
+        self.files = glob.glob(params_dir+'/*.yaml')
+        sweep_params = dict()
+        # Create a dictionary for each parameter across files
+        for f in self.files:
+            sweep_params[f] = read_config_file(f)
+        self.sweep_params = sweep_params
+        return
+
+    def run_sweep(self):
+        sweep_results = dict()
+        for f in self.sweep_params:
+            params = self.sweep_params[f]
+            print(f"Running with file: {f}")
+            sim = FullSimulation(params)
+            sim.run()
+            sweep_results[f] = sim
+        return
+
+
+    def plot_sensitivity(self, vars=None):
+        return
+
+    def plot_ppv(self):
+        return
+
+    def cluster_before_after(self):
+        return
+
+    def save(self, f_save=None):
+        if f_save is None:
+            f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
+        f = open(f_save, 'wb')
+        pickle.dump(self.__dict__, f, 2)
+        f.close()
+
+    def load(self, filename):
+        #filename = self.params['filename']
+        f = open(filename, 'rb')
+        tmp_dict = pickle.load(f)
+        f.close()
+        self.__dict__.update(tmp_dict)
+
 
 
 # I can make each variable a class?
 # Does this ruin running the MCMC? I don't think so, b/c that format is going to be put in after anyway
 class FullSimulation:
-    def __init__(self, params):
+    def __init__(self, params_f):
         # TODO parallel_apply over simulations
+        params = read_config_file(params_f)
         self.n_iter = params['num_iterations']
         self.params = params
-        # Parallelize df
-        df = pd.DataFrame(index=range(self.n_iter))
-        df = df.apply(self.run_sim)
-        self.sim = df
         return
         #for i in self.n_iter:
 
-    def run_sim(self):
-        s = Simulation(self.params)
+    def run(self):
+        # Parallelize df
+        df = pd.Series(index=range(self.n_iter))
+        df = df.parallel_apply(self.run_sim, args=(self.params,))
+        self.sim = df
+        return
+
+    @staticmethod
+    def run_sim(x, params):
+        s = Simulation(params)
         s.initialize()
         s.grow()
+        s.subsample_new(to_delete=True)
         return s
 
     def flatten_sim(self):
@@ -46,21 +103,33 @@ class FullSimulation:
         # This will extract out the classes of df
         return
 
+    def save(self, f_save=None):
+        if f_save is None:
+            f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
+        f = open(f_save, 'wb')
+        pickle.dump(self.__dict__, f, 2)
+        f.close()
+
+    def load(self, filename):
+        #filename = self.params['filename']
+        f = open(filename, 'rb')
+        tmp_dict = pickle.load(f)
+        f.close()
+        self.__dict__.update(tmp_dict)
+
+
 class Simulation:
-    def __init__(self, params):
+    def __init__(self, params_f):
+        params = read_config_file(params_f)
         self.params = params
-
         check_required(params, ['initialize', 'num_cells', 'num_mt_positions', 'prefix'])
-
         self.prefix = params['prefix']
         self.num_mt_positions = params['num_mt_positions']
         self.num_cells = params['num_cells']
-
         if not os.path.exists(params['local_outdir']):
             os.mkdir(params['local_outdir'])
     #should be external method
     def initialize(self):
-        p = self.params
         self.init_clone_dict()
         self.init_cell_coverage()
         self.init_cell_af()
@@ -294,8 +363,6 @@ class Simulation:
 
         ####TODO
         ## Add death + stimulation rate as well as growth
-
-
         # Save the new cell clones df and cell af
         clone_counts = [i.shape[0] for i in new_dict.values()]
         self.new_cell_clone = self.clone_counts_to_cell_series(clone_counts)
@@ -305,13 +372,32 @@ class Simulation:
             self.new_cell_af = pd.concat((self.new_cell_af, new_dict[clone]),axis=0).reset_index(drop=True)
         return
 
+
     def grow_poisson(self):
-        ## TODO
+        # TODO growth of poisson refactor
         return
 
-    def save(self):
-        filename = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
-        f = open(filename, 'wb')
+
+    def subsample_new(self, to_delete=False):
+        new_cell_af = self.new_cell_af
+        p = self.params
+        if 'sequence_subsample' in p and p['sequence_subsample'] is not None:
+            self.subsample_new_cell_af = new_cell_af.sample(n=self.params['sequence_subsample'])
+        else:
+            self.subsample_new_cell_af = new_cell_af.sample(n=self.num_cells)
+
+        self.subsample_new_cell_clone = self.new_cell_clone.loc[
+            self.subsample_new_cell_af.index]
+
+        if to_delete:
+            self.new_cell_af = None
+            self.new_cell_clone = None
+
+
+    def save(self, f_save=None):
+        if f_save is None:
+            f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
+        f = open(f_save, 'wb')
         pickle.dump(self.__dict__, f, 2)
         f.close()
 
