@@ -30,12 +30,11 @@ def test_iter():
 
 def test_sweepparams():
     default_params_f = join(ROOT_DIR, 'parameters/simulation/simple.yaml')
-    sweep_params_f = join(ROOT_DIR, 'parameters/simulation/sweep_v01.yaml')
+    sweep_params_f = join(ROOT_DIR, 'parameters/simulation/test_sweep.yaml')
     sweep = ParameterSweep(default_params_f, sweep_params_f)
     sweep.run_sweep() # Runs the simulation
     sweep.save()
     sweep.plot_sensitivity_and_dropout() #plots results
-
 
 
 test_sweepparams()

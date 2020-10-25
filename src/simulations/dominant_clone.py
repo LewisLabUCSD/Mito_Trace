@@ -13,8 +13,6 @@ from mplh.fig_utils import legend_from_color
 
 """ Run the simulation similar to in Extended Data Fig 3 from 
     Massively parallel single-cell mitochondrial DNA genotyping and chromatin profiling"""
-
-
 def simulate(n_sim, n_cells, n_dom_cells, coverage, het, err_het):
     dropout = np.zeros([n_sim, ])
     cell_af = np.zeros([n_sim, n_cells])

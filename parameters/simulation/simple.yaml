@@ -1,7 +1,7 @@
 # One set of parameters for simulating cells and their lineages
 local_outdir: 'simulation'
 prefix: 'simple'
-num_iterations: 100
+num_iterations: 10
 num_cells: 10000
 num_mt_positions: 10
 
