@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 #from src.config import ROOT_DIR
-from sklearn.metrics import roc_curve, average_precision_score
+from sklearn.metrics import roc_curve, average_precision_score, confusion_matrix
 import matplotlib.pyplot as plt
 import pickle
 import seaborn as sns
@@ -14,7 +14,6 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 from scipy.spatial.distance import cdist
 from pandarallel import pandarallel
-pandarallel.initialize(nb_workers=32)
 
 from mplh.color_utils import get_colors
 from mplh.fig_utils import legend_from_color
@@ -29,11 +28,7 @@ from src.simulations.utils.config import check_required
 
 from .simulation import Simulation
 
-""" Run the simulation similar to in Extended Data Fig 3 from 
-    Massively parallel single-cell mitochondrial DNA genotyping and chromatin profiling"""
 
-
-# I can make each variable a class?
 # Does this ruin running the MCMC? I don't think so, b/c that format is going to be put in after anyway
 class FullSimulation:
     """
@@ -55,6 +50,7 @@ class FullSimulation:
         self.n_iter = params['num_iterations']
         self.num_cells = params['num_cells']
         self.params = params
+        self.f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
         return
         #for i in self.n_iter:
 
@@ -67,12 +63,14 @@ class FullSimulation:
         """
         # Parallelize df
         df = pd.Series(index=range(self.n_iter))
-        df = df.apply(self.run_sim, args=(self.params,))
-        #df = df.parallel_apply(self.run_sim, args=(self.params,))
+        #df = df.apply(self.run_sim, args=(self.params,))
+        pandarallel.initialize(nb_workers=self.params['cpus'])
+        df = df.parallel_apply(self.run_sim, args=(self.params,))
 
         self.sim = df
         #self.cluster_before_after()
         self.sim_performance_dominant(group='both')
+        self.stats_before_after()
         return
 
     @staticmethod
@@ -113,11 +111,13 @@ class FullSimulation:
         :type prec_scores: list
         :ivar rocs: ROC curves for each iteration based on allele
         frequencies.
+
         :return:
         """
         dropout = []
         rocs = []
         prec_scores = []
+
 
         for iter, s in enumerate(self.sim.values):
             # First get the dominant clone , which is indexed as 1
@@ -154,6 +154,18 @@ class FullSimulation:
         return
 
 
+    def stats_before_after(self, clone_id=1):
+        b_a_df = pd.DataFrame(index=np.arange(0,len(self.sim)), columns=["Before", "After", "A/B"], dtype=str)
+        for iter, s in enumerate(self.sim.values):
+            b_clones = s.clone_cell
+            a_clones = s.subsample_new_clone_cell
+            b_a_df.at[iter, "Before"] = (b_clones == clone_id).sum()
+            b_a_df.at[iter, "After"] = (a_clones==clone_id).sum()
+            b_a_df.at[iter,"A/B"] = (b_a_df.at[iter, "After"]/b_a_df.at[iter, "Before"])
+        self.b_a_df = b_a_df
+        return
+
+
     def cluster_before_after(self):
         """
         Loops through the simulations and for each,
@@ -172,16 +184,43 @@ class FullSimulation:
             print(len(cluster_results[-1]))
         self.cluster_results = cluster_results
 
+
+    def stats_cluster_before_after(self, clone_id=1):
+        """
+        Confusion matrix for clustering the proper clone cells together.
+        :param clone_id: Which clone to get metrics for
+        :return:
+        """
+
+
+        b_a_df = pd.DataFrame(index=len(self.sim),
+                              columns=["TN", "FP", "FN", "TP"], dtype=int)
+        for ind, s in enumerate(self.sim.values):
+            y_true = s.combined_clones
+            y_true[y_true!=1] = 0
+            y_pred = self.cluster_results[ind]
+
+            # y_true, y_pred
+            tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+            b_a_df.loc[ind] = [tn, fp, fn, tp]
+        self.b_a_df = b_a_df
+        return
+
+
+
     def save(self, f_save=None):
         if f_save is None:
-            f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
+            f_save = self.f_save
         f = open(f_save, 'wb')
         pickle.dump(self.__dict__, f, 2)
         f.close()
 
-    def load(self, filename):
+
+    def load(self, f_save=None):
         #filename = self.params['filename']
-        f = open(filename, 'rb')
+        if f_save is None:
+            f_save = self.f_save
+        f = open(f_save, 'rb')
         tmp_dict = pickle.load(f)
         f.close()
         self.__dict__.update(tmp_dict)
