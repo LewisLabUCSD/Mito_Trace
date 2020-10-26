@@ -330,7 +330,7 @@ class Simulation:
         assert (combined_cell_af.shape[0] == self.cell_af.shape[0] +
                 self.subsample_new_cell_af.shape[0])
         assert(combined_meta.shape[0] == clones.shape[0])
-        assert (combined_cell_af.shape[0] == clones.shape[0])
+        assert(combined_cell_af.shape[0] == clones.shape[0])
         self.combined_meta = combined_meta
         self.combined_clones = clones
         self.combined_cell_af = combined_cell_af
@@ -361,7 +361,11 @@ class Simulation:
         Creates a df that contains information on
         the number of cells from each clone before as well as after.
         :return:
+        df.at[ind, "Dominant Before"] = (full_sim.clone_cell == 1).sum()
+        df.at[ind, "Dominant After"] =  (full_sim.subsample_new_clone_cell == 1).sum()
+
         """
+
         return
 
     def cluster_compare_before_after(self):
@@ -410,6 +414,7 @@ class Simulation:
                 np.min(cdist(cell_af, kmeanModel.cluster_centers_, 'euclidean'),
                        axis=1)) / cell_af.shape[0]
             mapping2[k] = kmeanModel.inertia_
+
 
 
 

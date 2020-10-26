@@ -6,6 +6,7 @@ import pickle
 import seaborn as sns
 from pandarallel import pandarallel
 pandarallel.initialize(nb_workers=32)
+import matplotlib.pyplot as plt
 
 from mplh.color_utils import get_colors
 from mplh.fig_utils import legend_from_color
@@ -67,9 +68,13 @@ class ParameterSweep:
         self.default_params = params
 
         # Create the yaml files in the directory indicated by local_outdir and prefix in sweep_params_f
-        self.outdir = os.path.join(sweep_params["local_outdir"], sweep_params["prefix"])
+        self.outdir = os.path.join(sweep_params["outdir"], sweep_params["prefix"])
         if not os.path.exists(self.outdir):
             os.makedirs(self.outdir)
+
+        self.f_save = \
+            os.path.join(self.outdir,self.sweep_params['prefix'] + '.p')
+        self.tmp_f_save = self.f_save.replace('.p', '') + '_tmp.p'
 
         # Create a grid.
         # Loop through and set each parameter in the the params grid parameter.
@@ -119,7 +124,10 @@ class ParameterSweep:
             sim = FullSimulation(params_f)
             sim.run()
             sweep_results[f] = sim
-        self.sweep_results = sweep_results
+
+            # Save temp file for last track.
+            self.sweep_results = sweep_results
+            self.save(f_save=self.tmp_f_save)
         return
 
 
@@ -162,46 +170,95 @@ class ParameterSweep:
         g.savefig(os.path.join(self.outdir, 'dropout.png'))
         return None
 
-
     def plot_ppv(self):
         return
 
+
     def cluster_before_after(self):
         for f in self.sweep_results:
-            self.sweep_results[f].cluster()
+            self.sweep_results[f].cluster_before_after()
         return
+
 
     def plot_before_after_all_clones(self):
         """
-        Plot the growth of each clone.
+        Plot the growth of each clone. Boxplots with x-axis being
+        the growth rate for the dominant clone, the y-axis the
+        after/before ratio, the color the dominant clone cell size.
+
+        # Expand params_df to include each iteration, which will
+        # allow for violinplots. This will lead to
+        params_df.shape[0]*num_iterations rows.
         :return:
         """
-        return
+        df_full = []
+        for ind, val in self.params_df.iterrows():
+            full_sim = self.sweep_results[ind]
+            b_a_df = full_sim.b_a_df
+            # Each element will be a list of the values.
+            s = self.params_df.loc[ind].copy()
+            curr = pd.DataFrame([s.copy()] * len(b_a_df))
+            curr["A/B"] = b_a_df["A/B"].values
+            df_full.append(curr)
+
+        df_full = pd.concat(df_full)
+        df_full = df_full.astype(
+            {'dominant_growth': str, 'dominant_clone_sizes': str,
+             'A/B': float})
+
+        sns.violinplot(data=df_full, y="A/B", hue="dominant_growth",
+                       x="dominant_clone_sizes")
+        plt.savefig(os.path.join(self.outdir, 'growth_before_after.png'))
+        #g.savefig(os.path.join(self.outdir, 'precision.png'))
+        return None
 
     def plot_before_after_true_growth(self):
         """
-        Plot the growth of cells in each clone before and after
+        Plot the growth of cells in each clone before and after.
+        Dotplot/heatmap, where each row is a het value, each column
+        is growth rate, and the value is dominant clone cells
+        growth (after/before). Can make multiple where each column is
+        coverage, each row is error rate.
+
         :return:
         """
         return
 
     def plot_before_after_cluster_growth(self):
         """
-        Plot the growth of the predicted dominant clone based on clustering
-        results and picking the top clone.
+        Plot the growth of cells in each clone before and after.
+        Dotplot/heatmap, where each row is a het value, each column
+        is growth rate, and the value is dominant clone cell cluster
+        growth (after/before). Can make multiple where each column is
+        coverage, each row is error rate.
         :return:
         """
         return
 
-    def save(self):
-        f_save = os.path.join(self.outdir, self.sweep_params['prefix']+'.p')
+
+    def plot_error_cluster_growth(self):
+        """
+        Plot the deviation of the growth rates for each pipeline run.
+        If A=true growth rate, B=predicted, (C = A-B)
+        :return:
+        """
+
+    def delete_tmp(self):
+        if os.path.exists(self.tmp_f_save):
+            os.remove(self.tmp_f_save)
+
+    def save(self, f_save=None):
+        if f_save is None:
+            f_save = self.f_save
         f = open(f_save, 'wb')
         pickle.dump(self.__dict__, f, 2)
         f.close()
 
-    def load(self, filename):
+    def load(self, f_save=None):
+        if f_save is None:
+            f_save = self.f_save
         #filename = self.params['filename']
-        f = open(filename, 'rb')
+        f = open(f_save, 'rb')
         tmp_dict = pickle.load(f)
         f.close()
         self.__dict__.update(tmp_dict)
