@@ -5,8 +5,6 @@ import os
 import pandas as pd
 from tqdm import tqdm
 #from src.config import ROOT_DIR
-from sklearn.metrics import roc_curve, average_precision_score
-from scipy import interp
 import matplotlib.pyplot as plt
 import pickle
 import seaborn as sns
@@ -28,289 +26,15 @@ from scipy.cluster.hierarchy import linkage
 from sklearn.model_selection import ParameterGrid
 from src.simulations.utils.config import check_required
 
-""" Run the simulation similar to in Extended Data Fig 3 from 
-    Massively parallel single-cell mitochondrial DNA genotyping and chromatin profiling"""
-
-
-def replace_item(obj, key, replace_value):
-    # https: // stackoverflow.com / a / 45335542
-    for k, v in obj.items():
-        if isinstance(v, dict):
-            obj[k] = replace_item(v, key, replace_value)
-    if key in obj:
-        obj[key] = replace_value
-    return obj
-
-
-class ParameterSweep:
-    """
-    A class for running a lineage simulation with varying parameters.
-
-    :ivar outdir: Directory to save all output to
-    :ivar sweep_params: The hyperparameters dictionary used
-    :ivar default_params: The baseline parameters used.
-    :ivar metrics: pd DataFrame that contains output metrics
-    """
-    def __init__(self, default_params_f, sweep_params_f):
-        """
-
-        Initialize ParameterSweep creates the pipeline yaml files to be
-        run with run_sweep.
-        :param default_params_f: File that contains the baseline
-        parameters for the simulation that all runs will use.
-        Grid is the key in the parameter file that contains the
-        hyperparameters.
-        :type default_params_f: str
-        :param sweep_params_f: File that contains the hyperparameters to
-        do a grid of all parameters to run the pipeline on.
-        :type str
-
-        :attributes:
-
-
-        """
-        self.sweep_params_f = sweep_params_f
-        self.default_params_f = default_params_f
-        params = read_config_file(default_params_f)
-        sweep_params = read_config_file(sweep_params_f)
-        self.sweep_params = sweep_params
-        self.default_params = params
-
-        # Create the yaml files in the directory indicated by local_outdir and prefix in sweep_params_f
-        self.outdir = os.path.join(sweep_params["local_outdir"], sweep_params["prefix"])
-        if not os.path.exists(self.outdir):
-            os.makedirs(self.outdir)
-
-        # Create a grid.
-        # Loop through and set each parameter in the the params grid parameter.
-        self.params_df = pd.DataFrame(list(ParameterGrid(sweep_params['grid'])))
-        params_dict = dict()
-
-        for ind, val in self.params_df.iterrows():
-            f_name = os.path.join(self.outdir, str(ind)+'.yaml' )
-            for name, v in val.iteritems():
-                # Set the specific variables that need to be updated
-                if name == 'dominant_clone_sizes':
-                    params["initialize"]["clone_sizes"][1] = v
-                    # Set the non-clone such that all clones sum to 1
-                    params["initialize"]["clone_sizes"][0] = 1-sum(params["initialize"]["clone_sizes"][1:])
-                    assert(np.abs(sum(params["initialize"]["clone_sizes"]) - 1)<0.0001)
-                elif name == 'dominant_het':
-                    params["het"][0] = v
-                elif name == 'dominant_growth':
-                    params["growth"]["binomial"]["rates"][1] = v
-                else: # These parameters assumed to have the same name
-                      # In both files
-                    params = replace_item(params, name, v)
-            write_config_file(f_name, params)
-            params_dict[f_name] = params
-        return
-
-    def run_sweep(self, subset=None):
-        """
-        Loops through self.params_df and runs the simulation on that
-        parameter.
-
-        :param subset:  Which files to run the simulation. If list,
-        list of files to run on, if int, number of files to randomly
-        choose. If None, run on all.
-        :type subset: int or None or list (default=None)
-
-        """
-
-        params_df = self.params_df
-        if isinstance(subset, int):
-            params_df = params_df.sample(n=subset)
-
-        sweep_results = dict()
-        for f, val in params_df.iterrows():
-            params_f = os.path.join(self.outdir, str(f) +'.yaml')
-            print(f"Running with file: {f}")
-            sim = FullSimulation(params_f)
-            sim.run()
-            sweep_results[f] = sim
-        self.sweep_results = sweep_results
-        return
-
-
-    def plot_sensitivity_and_dropout(self):
-        """
-        Scatterplots of the average precision score and dropout
-        against variant heteroplasmy.
-
-
-        Additional simulation parameters used for groupings are
-        coverage (color), and  error rate (column).
-        Uses sklearn's average_precision_score to get precision.
-        For dropout, estimates how many times the counts are 0 in the
-        clone mitochondrial variant.
-        """
-
-        metrics = self.params_df.copy()
-        metrics['Avg. Precision'] = -1
-        metrics['% dropout'] = -1
-
-        # Add these results to self.results, which has the meta information too
-        for ind, val in self.params_df.iterrows():
-            full_sim = self.sweep_results[ind]
-            dropout = full_sim.dropout
-            prec_scores = full_sim.prec_scores
-            rocs = full_sim.rocs
-            metrics.at[ind, 'Avg. Precision'] = np.mean(prec_scores)
-            metrics.at[ind, '% dropout'] = np.mean(dropout)
-
-        self.metrics = metrics
-        # colors, _ = get_colors("categorical", names=coverages,
-        #                        n_colors=len(coverages))
-        # Seaborn Factorplot
-        g = sns.FacetGrid(data=metrics, col="het_err_rate", hue="cov_constant")
-        g.map_dataframe(sns.scatterplot, x="dominant_het", y="Avg. Precision")
-        g.add_legend()
-        g.savefig(os.path.join(self.outdir,'precision.png'))
-
-
-        g = sns.FacetGrid(data=metrics, col="het_err_rate", hue="cov_constant")
-        g.map_dataframe(sns.scatterplot, x="dominant_het", y="% dropout")
-        g.add_legend()
-        g.savefig(os.path.join(self.outdir, 'dropout.png'))
-        return
-
-
-    def plot_ppv(self):
-        return
-
-    def cluster_before_after(self):
-        for f in self.sweep_results:
-            self.sweep_results[f].cluster()
-        return
-
-
-    def save(self):
-        f_save = os.path.join(self.outdir, self.sweep_params['prefix']+'.p')
-        f = open(f_save, 'wb')
-        pickle.dump(self.__dict__, f, 2)
-        f.close()
-
-    def load(self, filename):
-        #filename = self.params['filename']
-        f = open(filename, 'rb')
-        tmp_dict = pickle.load(f)
-        f.close()
-        self.__dict__.update(tmp_dict)
-
-
-
-# I can make each variable a class?
-# Does this ruin running the MCMC? I don't think so, b/c that format is going to be put in after anyway
-class FullSimulation:
-    def __init__(self, params_f):
-        params = read_config_file(params_f)
-        self.n_iter = params['num_iterations']
-        self.num_cells = params['num_cells']
-        self.params = params
-        return
-        #for i in self.n_iter:
-
-    def run(self):
-        # Parallelize df
-        df = pd.Series(index=range(self.n_iter))
-        df = df.apply(self.run_sim, args=(self.params,))
-        #df = df.parallel_apply(self.run_sim, args=(self.params,))
-
-        self.sim = df
-        #self.cluster_before_after()
-        self.sim_performance_dominant(group='both')
-        return
-
-    @staticmethod
-    def run_sim(x, params):
-        s = Simulation(params)
-        s.initialize()
-        s.grow()
-        s.subsample_new(to_delete=True)
-        s.combine_init_growth()
-        return s
-
-    def flatten_sim(self):
-        ## TODO
-        # This will extract out the classes of df
-        return
-
-    def sim_performance_dominant(self, group='both'):
-        """
-        Will average metrics over simulations.
-        :param group: {'init', 'growth', 'both'} This will indicate to group by
-        :return:
-        """
-        dropout = []
-        rocs = []
-        prec_scores = []
-
-        for iter, s in enumerate(self.sim.values):
-            # First get the dominant clone , which is indexed as 1
-            mt_pos = s.clone_mt_dict[1]
-            # TODO account for mt_pos being a list not an int
-            if group == 'init':
-                clones = s.clone_cell
-                cell_af = s.cell_af.loc[:,mt_pos]
-            elif group == 'growth':
-                clones = s.new_clone_cell
-                cell_af = s.new_cell_af.loc[:,mt_pos]
-            elif group == 'both':
-                #clones = pd.concat((s.clone_cell, s.subsample_new_clone_cell)).reset_index(drop=True)
-                #cell_af = pd.concat((s.cell_af.loc[:,mt_pos], s.subsample_new_cell_af.loc[:,mt_pos])).reset_index(drop=True)
-                clones = s.combined_clones
-                cell_af = s.combined_cell_af.loc[:,mt_pos]
-            else:
-                raise ValueError('group variable not properly set.')
-
-            y_true = clones.values.copy()
-            y_true[y_true != 1] = 0  # Set nondominant clones to 0
-            rocs.append(roc_curve(y_true, cell_af))
-            prec_scores.append(average_precision_score(y_true, cell_af))
-            dropout.append((cell_af[clones==1]==0).sum()/cell_af.shape[0])
-
-
-
-        self.dropout = dropout
-        self.prec_scores = prec_scores
-        self.rocs = rocs
-        return
-
-
-    def reduce_cells(self, cell_af):
-        #self.sim
-        return
-
-
-    def cluster_before_after(self):
-        cluster_results = []
-        print('clustering')
-        for s in tqdm(self.sim.values):
-            cluster_results.append(s.cluster(s.combined_cell_af))
-            print(len(cluster_results[-1]))
-        self.cluster_results = cluster_results
-        return
-
-
-
-
-    def save(self, f_save=None):
-        if f_save is None:
-            f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
-        f = open(f_save, 'wb')
-        pickle.dump(self.__dict__, f, 2)
-        f.close()
-
-    def load(self, filename):
-        #filename = self.params['filename']
-        f = open(filename, 'rb')
-        tmp_dict = pickle.load(f)
-        f.close()
-        self.__dict__.update(tmp_dict)
-
 
 class Simulation:
+    """
+    Lineage tracing simulation. Will initialize cells based on
+    their parameters and grow as well. This should be a flexible
+    framework, to add different ways to initialize, grow, and metrics to
+    have. Additionally can cluster these results.
+    """
+
     def __init__(self, params_f):
         if isinstance(params_f, str):
             params = read_config_file(params_f)
@@ -324,7 +48,8 @@ class Simulation:
         self.num_cells = params['num_cells']
         if not os.path.exists(params['local_outdir']):
             os.mkdir(params['local_outdir'])
-    #should be external method
+
+
     def initialize(self):
         self.init_clone_dict()
         self.init_cell_coverage()
@@ -516,10 +241,14 @@ class Simulation:
 
     def simulate_expand_cells_af(self, af, growth_inds, sigma):
         """
-        Given a cell-by-af vector, expand the AF
+        Given a cell-by-af vector, expand the AF.
+
+        Expanded AF occurs by duplicating cells that grew based on
+        the growth_inds vector. It will add standard error to each
+        af based on sigma
         :param af:
-        :param growth:
-        :param sigma:
+        :param growth: Indices of AF to copy
+        :param sigma: Variance to add to AF of child.
         :return:
         """
 
@@ -527,7 +256,6 @@ class Simulation:
         new_af.index = np.arange(af.index[-1]+1, af.index[-1]+1+new_af.shape[0])
         new_af = pd.concat((af,new_af), axis=0)
         #new_af = np.append(af, np.concatenate(new_af))
-
         return new_af
 
     def grow_binomial(self, p):
@@ -629,6 +357,19 @@ class Simulation:
         self.__dict__.update(tmp_dict)
 
     def compare_before_after(self):
+        """
+        Creates a df that contains information on
+        the number of cells from each clone before as well as after.
+        :return:
+        """
+        return
+
+    def cluster_compare_before_after(self):
+        """
+        Compares the performance of clustering on grouping the same
+        clones together.
+        :return:
+        """
         return
 
     @staticmethod
@@ -655,7 +396,6 @@ class Simulation:
         mapping1 = {}
         mapping2 = {}
         K = range(1, 10)
-
         for k in K:
             # Building and fitting the model
             kmeanModel = KMeans(n_clusters=k).fit(cell_af)
@@ -670,6 +410,7 @@ class Simulation:
                 np.min(cdist(cell_af, kmeanModel.cluster_centers_, 'euclidean'),
                        axis=1)) / cell_af.shape[0]
             mapping2[k] = kmeanModel.inertia_
+
 
 
 def main():
