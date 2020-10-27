@@ -8,7 +8,7 @@ import unittest
 
 
 os.chdir(RESULTS)
-params = os.path.join(ROOT_DIR, 'parameters/simulations/simple.yaml')
+params = os.path.join(ROOT_DIR, 'parameters/simulations/test_simple.yaml')
 #params = read_config_file(params)
 
 class TestSum(unittest.TestCase):
