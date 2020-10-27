@@ -60,10 +60,10 @@ class ParameterSweep:
         :type str
 
         """
-        self.sweep_params_f = sweep_params_f
-        self.default_params_f = default_params_f
         params = read_config_file(default_params_f)
         sweep_params = read_config_file(sweep_params_f)
+        self.sweep_params_f = sweep_params_f
+        self.default_params_f = default_params_f
         self.sweep_params = sweep_params
         self.default_params = params
 
@@ -71,10 +71,13 @@ class ParameterSweep:
         self.outdir = os.path.join(sweep_params["outdir"], sweep_params["prefix"])
         if not os.path.exists(self.outdir):
             os.makedirs(self.outdir)
-
         self.f_save = \
             os.path.join(self.outdir,self.sweep_params['prefix'] + '.p')
         self.tmp_f_save = self.f_save.replace('.p', '') + '_tmp.p'
+
+        self.data_outdir = os.path.join(sweep_params['data_outdir'], sweep_params["prefix"])
+        if not os.path.exists(self.data_outdir):
+            os.makedirs(self.data_outdir)
 
         # Create a grid.
         # Loop through and set each parameter in the the params grid parameter.
@@ -83,6 +86,11 @@ class ParameterSweep:
 
         for ind, val in self.params_df.iterrows():
             f_name = os.path.join(self.outdir, str(ind)+'.yaml' )
+            # Create the name
+            params['name'] = str(ind)
+            params['data_outdir'] = self.data_outdir
+            params['local_outdir'] = self.sweep_params["outdir"]
+            params['prefix'] = self.sweep_params["prefix"]
             for name, v in val.iteritems():
                 # Set the specific variables that need to be updated
                 if name == 'dominant_clone_sizes':
@@ -101,33 +109,54 @@ class ParameterSweep:
             params_dict[f_name] = params
         return
 
-    def run_sweep(self, subset=None):
-        """
-        Loops through self.params_df and runs the simulation on that
-        parameter.
 
+    @staticmethod
+    def run_single_sweep(f, outdir):
+        print(f'Running file {f}')
+        params_f = os.path.join(outdir, str(f) + '.yaml')
+        sim = FullSimulation(params_f)
+        sim.run()
+        sim.run_metrics()
+        sim.save()
+        return sim.metrics
+
+    def run_sweep(self, subset=None):
+        """ Loops through params_df and runs the simulation on that parameter.
+
+        Each run will be saved, and not stored. However, the metrics
+        will be stored here.
         :param subset:  Which files to run the simulation. If list,
         list of files to run on, if int, number of files to randomly
         choose. If None, run on all.
         :type subset: int or None or list (default=None)
-
         """
-
         params_df = self.params_df
         if isinstance(subset, int):
             params_df = params_df.sample(n=subset)
 
-        sweep_results = dict()
-        for f, val in params_df.iterrows():
-            params_f = os.path.join(self.outdir, str(f) +'.yaml')
-            print(f"Running with file: {f}")
-            sim = FullSimulation(params_f)
-            sim.run()
-            sweep_results[f] = sim
+        sweep_results_df = pd.Series(index=params_df.index, data=params_df.index)
+        ###
+        #sweep_results_df = sweep_results_df.apply(self.run_single_sweep, args=(self.outdir,))
+        pandarallel.initialize(nb_workers=self.sweep_params['cpus'])
+        sweep_results_df = sweep_results_df.parallel_apply(self.run_single_sweep, args=(self.outdir,))
+        ###
 
-            # Save temp file for last track.
-            self.sweep_results = sweep_results
-            self.save(f_save=self.tmp_f_save)
+        self.sweep_results = sweep_results_df
+
+        # sweep_results = dict()
+        #
+        # for f, val in params_df.iterrows():
+        #     params_f = os.path.join(self.outdir, str(f) +'.yaml')
+        #     print(f"Running with file: {f}")
+        #     sim = FullSimulation(params_f)
+        #     sim.run()
+        #     sim.run_metrics()
+        #     sim.save()
+        #
+        #     # Only store the current metrics, not the entire simulation.
+        #     sweep_results[f] = sim.metrics
+        #     #self.save(f_save=self.tmp_f_save)
+        # self.sweep_results = sweep_results
         return
 
 
@@ -149,15 +178,17 @@ class ParameterSweep:
 
         # Add these results to self.results, which has the meta information too
         for ind, val in self.params_df.iterrows():
-            full_sim = self.sweep_results[ind]
-            dropout = full_sim.dropout
-            prec_scores = full_sim.prec_scores
-            rocs = full_sim.rocs
+            curr_results = self.sweep_results[ind]
+            dropout = curr_results['dropout']
+            prec_scores = curr_results['prec_scores']
+            rocs = curr_results['rocs']
 
             metrics.at[ind, 'Avg. Precision'] = np.mean(prec_scores)
             metrics.at[ind, '% dropout'] = np.mean(dropout)
 
         self.metrics = metrics
+        """df that contains simulation performance metric.
+        """
         # Seaborn Factorplot
         g = sns.FacetGrid(data=metrics, col="het_err_rate", hue="cov_constant")
         g.map(sns.scatterplot, "dominant_het", "Avg. Precision")
@@ -193,8 +224,8 @@ class ParameterSweep:
         """
         df_full = []
         for ind, val in self.params_df.iterrows():
-            full_sim = self.sweep_results[ind]
-            b_a_df = full_sim.b_a_df
+            curr_results = self.sweep_results[ind]
+            b_a_df = curr_results['b_a_df']
             # Each element will be a list of the values.
             s = self.params_df.loc[ind].copy()
             curr = pd.DataFrame([s.copy()] * len(b_a_df))

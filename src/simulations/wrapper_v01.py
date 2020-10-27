@@ -11,20 +11,14 @@ import time
 from os.path import join
 import os
 
-os.chdir(RESULTS)
+
+#os.chdir(RESULTS)
 
 default_params_f = join(ROOT_DIR, 'parameters/simulations/simple_v01.yaml')
 sweep_params_f = join(ROOT_DIR, 'parameters/simulations/sweep_v01.yaml')
 sweep = ParameterSweep(default_params_f, sweep_params_f)
 
-if hasattr(sweep, 'f_save'):
-    if os.path.exists(sweep.f_save):
-        print('Already ran. Loading')
-        sweep.load()
-    else:
-        sweep.run_sweep()  # Runs the simulation
-        sweep.save()
-else:
-    print('no attr')
-    sweep.run_sweep()  # Runs the simulation
-    sweep.save()
+sweep.run_sweep()  # Runs the simulation
+sweep.save()
+sweep.plot_before_after_all_clones()
+sweep.plot_sensitivity_and_dropout()  # plots results

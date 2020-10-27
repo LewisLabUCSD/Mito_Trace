@@ -50,36 +50,53 @@ class FullSimulation:
         self.n_iter = params['num_iterations']
         self.num_cells = params['num_cells']
         self.params = params
-        self.f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
+
+        # Store the metrics with this
+        self.metrics = dict()
+
+        # Files to save
+        self.outdir = os.path.join(self.params['local_outdir'])
+        self.data_outdir = os.path.join(self.params['data_outdir'])
+        self.f_save_data = os.path.join(self.data_outdir,
+                                   self.params['name'] + '.p')
+        self.f_save = os.path.join(self.outdir, self.params['name'] + '.p')
+        self.f_save_metrics = self.f_save.replace('.p', '.metrics.tsv')
+        self.f_save_cluster = self.f_save.replace('.p', '.cluster.tsv')
+        self.f_save_befaft = self.f_save.replace('.p', '.before_after.tsv')
+        self.f_save_rocs = self.f_save.replace('.p', '.rocs.p')
+
+
         return
         #for i in self.n_iter:
 
     def run(self):
         """
-        Runs the simulation and stores it in sim attr.
+        Runs the simulation and stores it in sim attr. Will also pickle
+        the objects and save.
 
         This uses Pandaralel to parallelize the runs.
         :return:
         """
         # Parallelize df
         df = pd.Series(index=range(self.n_iter))
-        #df = df.apply(self.run_sim, args=(self.params,))
-        pandarallel.initialize(nb_workers=self.params['cpus'])
-        df = df.parallel_apply(self.run_sim, args=(self.params,))
+        df = df.apply(self.run_sim, args=(self.params,))
+
+        #pandarallel.initialize(nb_workers=self.params['cpus'])
+        #df = df.parallel_apply(self.run_sim, args=(self.params,))
 
         self.sim = df
-        #self.cluster_before_after()
-        self.sim_performance_dominant(group='both')
-        self.stats_before_after()
         return
 
     @staticmethod
     def run_sim(x, params):
-        """
-        For a simulation, it will initialize, grow, subsample,
+        """Run iteration of simulation.
+
+        For a single iteration, it will initialize, grow, subsample,
         and merge the before stimulus and after stimulus variables.
+        It willl also run
         :param x: Placeholder variable
         :param params: The parameter dictionary to use
+        :type params: dict
         :return:
         """
         s = Simulation(params)
@@ -88,6 +105,16 @@ class FullSimulation:
         s.subsample_new(to_delete=True)
         s.combine_init_growth()
         return s
+
+    def run_metrics(self):
+        """
+        Get metrics performances and save.
+        :return:
+        """
+        self.sim_performance_dominant(group='both')
+        self.stats_before_after()
+        # self.cluster_before_after()
+
 
     def flatten_sim(self):
         ## TODO
@@ -146,6 +173,12 @@ class FullSimulation:
         self.dropout = dropout
         self.prec_scores = prec_scores
         self.rocs = rocs
+        pd.DataFrame([prec_scores, dropout], index=['Precision', 'Dropout']).to_csv(self.f_save_metrics, sep='\t')
+        self.metrics['prec_scores'] = prec_scores
+        self.metrics['dropout'] = dropout
+        self.metrics['rocs'] = rocs
+        pickle.dump(rocs, open(self.f_save_rocs, 'wb'))
+
         return
 
 
@@ -163,6 +196,8 @@ class FullSimulation:
             b_a_df.at[iter, "After"] = (a_clones==clone_id).sum()
             b_a_df.at[iter,"A/B"] = (b_a_df.at[iter, "After"]/b_a_df.at[iter, "Before"])
         self.b_a_df = b_a_df
+        b_a_df.to_csv(self.f_save_befaft, sep='\t')
+        self.metrics['b_a_df'] = b_a_df
         return
 
 
@@ -207,10 +242,9 @@ class FullSimulation:
         return
 
 
-
     def save(self, f_save=None):
         if f_save is None:
-            f_save = self.f_save
+            f_save = self.f_save_data
         f = open(f_save, 'wb')
         pickle.dump(self.__dict__, f, 2)
         f.close()

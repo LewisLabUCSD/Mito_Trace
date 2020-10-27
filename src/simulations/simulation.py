@@ -28,14 +28,21 @@ from src.simulations.utils.config import check_required
 
 
 class Simulation:
-    """
-    Lineage tracing simulation. Will initialize cells based on
-    their parameters and grow as well. This should be a flexible
-    framework, to add different ways to initialize, grow, and metrics to
-    have. Additionally can cluster these results.
+    """Lineage tracing simulation of one sample
+
+    Will initialize cells based on their parameters and grow as well. This
+    should be a flexible framework, to add different ways to initialize, grow,
+    and metrics to have. Additionally can cluster these results.
+
+    :ivar params
+    :type params: dict
     """
 
     def __init__(self, params_f):
+        """
+        :param params_f: Parameter yaml file for the specifications
+        :type params_f: yaml file or dict
+        """
         if isinstance(params_f, str):
             params = read_config_file(params_f)
         else:
@@ -69,6 +76,10 @@ class Simulation:
     # Static Method
     @staticmethod
     def clone_counts_to_cell_series(clone_counts):
+        """
+        Args:
+            clone_counts:
+        """
         clone_counts = np.array(clone_counts)
         num_cells = clone_counts.sum()
         clone_cell = -1 * np.ones(shape=[num_cells, ])
@@ -112,9 +123,8 @@ class Simulation:
 
 
     def init_cell_coverage(self):
-        """
-        There are different modes to the coverage, either a constant or through a distribution.
-        :return:
+        """There are different modes to the coverage, either a constant or
+        through a distribution. :return:
         """
         p = self.params['initialize']['coverage']
         type = p['type']
@@ -140,10 +150,10 @@ class Simulation:
 
 
     def init_cell_af(self):
+        """Initialize the cell-by-mtPos af dataframe. Unless a clone:mt dict was
+        provided, the first N MT positions will be the clone AFs. Creates
+        self.clone_mt_dict and self.cell_af
         """
-        Initialize the cell-by-mtPos af dataframe. Unless a clone:mt dict was provided,
-        the first N MT positions will be the clone AFs.
-        Creates self.clone_mt_dict and self.cell_af"""
 
         p = self.params['initialize']
 
@@ -236,20 +246,25 @@ class Simulation:
         return
 
     def extract_clone_cells(self, clone_id):
+        """
+        Args:
+            clone_id:
+        """
         ids = np.flatnonzero(self.clone_cell == clone_id)
         return ids
 
     def simulate_expand_cells_af(self, af, growth_inds, sigma):
-        """
-        Given a cell-by-af vector, expand the AF.
+        """Given a cell-by-af vector, expand the AF.
 
-        Expanded AF occurs by duplicating cells that grew based on
-        the growth_inds vector. It will add standard error to each
-        af based on sigma
-        :param af:
-        :param growth: Indices of AF to copy
-        :param sigma: Variance to add to AF of child.
-        :return:
+        Expanded AF occurs by duplicating cells that grew based on the
+        growth_inds vector. It will add standard error to each af based on sigma
+        :param af: :param growth: Indices of AF to copy :param sigma: Variance
+        to add to AF of child. :return:
+
+        Args:
+            af:
+            growth_inds:
+            sigma:
         """
 
         new_af = af.iloc[growth_inds].copy() + random.normal(0, sigma, size=af.iloc[growth_inds].shape)
@@ -259,6 +274,10 @@ class Simulation:
         return new_af
 
     def grow_binomial(self, p):
+        """
+        Args:
+            p:
+        """
         timesteps = p["time_steps"]
         rates = p["rates"]
 
@@ -303,6 +322,10 @@ class Simulation:
 
 
     def subsample_new(self, to_delete=False):
+        """
+        Args:
+            to_delete:
+        """
         new_cell_af = self.new_cell_af
         p = self.params
         if 'sequence_subsample' in p and p['sequence_subsample'] is not None:
@@ -337,6 +360,10 @@ class Simulation:
         return
 
     def save(self, f_save=None):
+        """
+        Args:
+            f_save:
+        """
         if f_save is None:
             f_save = os.path.join(self.params['local_outdir'], self.params['prefix']+'.p')
         f = open(f_save, 'wb')
@@ -344,9 +371,8 @@ class Simulation:
         f.close()
 
     def save_to_mgatk_format(self):
-        """
-        Converts into the proper files needed for mgatk. (i.e variant and coverage files)
-        :return:
+        """Converts into the proper files needed for mgatk. (i.e variant and
+        coverage files) :return:
         """
 
     def load(self):
@@ -357,36 +383,39 @@ class Simulation:
         self.__dict__.update(tmp_dict)
 
     def compare_before_after(self):
-        """
-        Creates a df that contains information on
-        the number of cells from each clone before as well as after.
-        :return:
-        df.at[ind, "Dominant Before"] = (full_sim.clone_cell == 1).sum()
-        df.at[ind, "Dominant After"] =  (full_sim.subsample_new_clone_cell == 1).sum()
-
+        """Creates a df that contains information on the number of cells from
+        each clone before as well as after. :return: df.at[ind, "Dominant
+        Before"] = (full_sim.clone_cell == 1).sum() df.at[ind, "Dominant After"]
+        = (full_sim.subsample_new_clone_cell == 1).sum()
         """
 
         return
 
     def cluster_compare_before_after(self):
-        """
-        Compares the performance of clustering on grouping the same
-        clones together.
-        :return:
+        """Compares the performance of clustering on grouping the same clones
+        together. :return:
         """
         return
 
     @staticmethod
     def plot_cluster(cell_af, cell_meta=None, mt_meta=None, f_save=None):
+        """
+        Args:
+            cell_af:
+            cell_meta:
+            mt_meta:
+            f_save:
+        """
         ch.plot_cluster(cell_af, row_meta=cell_meta, col_meta=mt_meta,
                         fsave=f_save, to_col_clust=False, to_z=True)
 
     @staticmethod
     def cluster(cell_af):
-        """
-        Dynamic tree clustering of the rows of cell_af
-        :param cell_af:
+        """Dynamic tree clustering of the rows of cell_af :param cell_af:
         :return:
+
+        Args:
+            cell_af:
         """
         distances = pdist(cell_af, "euclidean")
         link = linkage(distances, "average")
@@ -395,6 +424,10 @@ class Simulation:
 
     @staticmethod
     def cluster_kmeans(cell_af):
+        """
+        Args:
+            cell_af:
+        """
         distortions = []
         inertias = []
         mapping1 = {}
@@ -414,7 +447,6 @@ class Simulation:
                 np.min(cdist(cell_af, kmeanModel.cluster_centers_, 'euclidean'),
                        axis=1)) / cell_af.shape[0]
             mapping2[k] = kmeanModel.inertia_
-
 
 
 
