@@ -4,6 +4,8 @@ prefix: 'test_sweep'
 #num_iterations: 100
 #num_cells: 10000
 #num_mt_positions: 10
+cpus: 24
+
 
 grid:
   cov_constant: [5, 100]
