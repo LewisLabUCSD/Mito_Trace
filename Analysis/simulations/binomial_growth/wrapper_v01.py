@@ -1,7 +1,7 @@
 """
 Running the first version of the lineage tracing simulation.
 Files are simple_v01.yaml and wrapper_v01.yaml.
-1000 iterations, 10000 num_cells
+100 iterations, 10000 num_cells
 """
 
 from src.simulations import Simulation, ParameterSweep, FullSimulation
