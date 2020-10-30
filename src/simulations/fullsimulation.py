@@ -60,11 +60,11 @@ class FullSimulation:
         self.f_save_data = os.path.join(self.data_outdir,
                                    self.params['name'] + '.p')
         self.f_save = os.path.join(self.outdir, self.params['name'] + '.p')
-        self.f_save_metrics = self.f_save.replace('.p', '.metrics.tsv')
-        self.f_save_cluster = self.f_save.replace('.p', '.cluster.tsv')
-        self.f_save_befaft = self.f_save.replace('.p', '.before_after.tsv')
-        self.f_save_rocs = self.f_save.replace('.p', '.rocs.p')
 
+        self.f_save_metrics = self.f_save_data.replace('.p', '.metrics.tsv')
+        self.f_save_cluster = self.f_save_data.replace('.p', '.cluster.tsv')
+        self.f_save_befaft = self.f_save_data.replace('.p', '.before_after.tsv')
+        self.f_save_rocs = self.f_save_data.replace('.p', '.rocs.p')
 
         return
         #for i in self.n_iter:

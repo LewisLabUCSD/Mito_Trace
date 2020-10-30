@@ -3,27 +3,8 @@ import numpy as np
 from numpy import random
 import os
 import pandas as pd
-from tqdm import tqdm
-#from src.config import ROOT_DIR
-import matplotlib.pyplot as plt
 import pickle
-import seaborn as sns
-import glob
-from sklearn.cluster import KMeans
-from sklearn import metrics
-from scipy.spatial.distance import cdist
-from pandarallel import pandarallel
-pandarallel.initialize(nb_workers=32)
-
-from mplh.color_utils import get_colors
-from mplh.fig_utils import legend_from_color
-from mplh import cluster_help as ch
 from src.simulations.utils.config import read_config_file, write_config_file
-
-from dynamicTreeCut import cutreeHybrid
-from scipy.spatial.distance import pdist
-from scipy.cluster.hierarchy import linkage
-from sklearn.model_selection import ParameterGrid
 from src.simulations.utils.config import check_required
 
 
@@ -396,58 +377,6 @@ class Simulation:
         together. :return:
         """
         return
-
-    @staticmethod
-    def plot_cluster(cell_af, cell_meta=None, mt_meta=None, f_save=None):
-        """
-        Args:
-            cell_af:
-            cell_meta:
-            mt_meta:
-            f_save:
-        """
-        ch.plot_cluster(cell_af, row_meta=cell_meta, col_meta=mt_meta,
-                        fsave=f_save, to_col_clust=False, to_z=True)
-
-    @staticmethod
-    def cluster(cell_af):
-        """Dynamic tree clustering of the rows of cell_af :param cell_af:
-        :return:
-
-        Args:
-            cell_af:
-        """
-        distances = pdist(cell_af, "euclidean")
-        link = linkage(distances, "average")
-        clusters = cutreeHybrid(link, distances)['labels']
-        return clusters
-
-    @staticmethod
-    def cluster_kmeans(cell_af):
-        """
-        Args:
-            cell_af:
-        """
-        distortions = []
-        inertias = []
-        mapping1 = {}
-        mapping2 = {}
-        K = range(1, 10)
-        for k in K:
-            # Building and fitting the model
-            kmeanModel = KMeans(n_clusters=k).fit(cell_af)
-            kmeanModel.fit(cell_af)
-
-            distortions.append(sum(
-                np.min(cdist(cell_af, kmeanModel.cluster_centers_, 'euclidean'),
-                       axis=1)) / cell_af.shape[0])
-            inertias.append(kmeanModel.inertia_)
-
-            mapping1[k] = sum(
-                np.min(cdist(cell_af, kmeanModel.cluster_centers_, 'euclidean'),
-                       axis=1)) / cell_af.shape[0]
-            mapping2[k] = kmeanModel.inertia_
-
 
 
 def main():

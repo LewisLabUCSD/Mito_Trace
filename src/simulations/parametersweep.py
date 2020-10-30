@@ -5,7 +5,6 @@ import pandas as pd
 import pickle
 import seaborn as sns
 from pandarallel import pandarallel
-pandarallel.initialize(nb_workers=32)
 import matplotlib.pyplot as plt
 
 from mplh.color_utils import get_colors
@@ -19,12 +18,7 @@ from scipy.cluster.hierarchy import linkage
 from sklearn.model_selection import ParameterGrid
 from src.simulations.utils.config import check_required
 
-
 from .fullsimulation import FullSimulation
-
-""" Run the simulation similar to in Extended Data Fig 3 from 
-    Massively parallel single-cell mitochondrial DNA genotyping and chromatin profiling"""
-
 
 def replace_item(obj, key, replace_value):
     # https: // stackoverflow.com / a / 45335542
@@ -66,14 +60,16 @@ class ParameterSweep:
         self.default_params_f = default_params_f
         self.sweep_params = sweep_params
         self.default_params = params
-
+        self.save_sim = sweep_params['save_sim']
+        print(self.save_sim)
         # Create the yaml files in the directory indicated by local_outdir and prefix in sweep_params_f
         self.outdir = os.path.join(sweep_params["outdir"], sweep_params["prefix"])
         if not os.path.exists(self.outdir):
             os.makedirs(self.outdir)
         self.f_save = \
             os.path.join(self.outdir,self.sweep_params['prefix'] + '.p')
-        self.tmp_f_save = self.f_save.replace('.p', '') + '_tmp.p'
+
+        #self.tmp_f_save = self.f_save.replace('.p', '') + '_tmp.p'
 
         self.data_outdir = os.path.join(sweep_params['data_outdir'], sweep_params["prefix"])
         if not os.path.exists(self.data_outdir):
@@ -89,7 +85,7 @@ class ParameterSweep:
             # Create the name
             params['name'] = str(ind)
             params['data_outdir'] = self.data_outdir
-            params['local_outdir'] = self.sweep_params["outdir"]
+            params['local_outdir'] = self.outdir
             params['prefix'] = self.sweep_params["prefix"]
             for name, v in val.iteritems():
                 # Set the specific variables that need to be updated
@@ -111,13 +107,15 @@ class ParameterSweep:
 
 
     @staticmethod
-    def run_single_sweep(f, outdir):
+    def run_single_sweep(f, outdir, save=True):
         print(f'Running file {f}')
         params_f = os.path.join(outdir, str(f) + '.yaml')
         sim = FullSimulation(params_f)
         sim.run()
         sim.run_metrics()
-        sim.save()
+
+        if save:
+            sim.save()
         return sim.metrics
 
     def run_sweep(self, subset=None):
@@ -138,25 +136,10 @@ class ParameterSweep:
         ###
         #sweep_results_df = sweep_results_df.apply(self.run_single_sweep, args=(self.outdir,))
         pandarallel.initialize(nb_workers=self.sweep_params['cpus'])
-        sweep_results_df = sweep_results_df.parallel_apply(self.run_single_sweep, args=(self.outdir,))
+        sweep_results_df = sweep_results_df.parallel_apply(self.run_single_sweep, args=(self.outdir, self.save_sim))
         ###
 
         self.sweep_results = sweep_results_df
-
-        # sweep_results = dict()
-        #
-        # for f, val in params_df.iterrows():
-        #     params_f = os.path.join(self.outdir, str(f) +'.yaml')
-        #     print(f"Running with file: {f}")
-        #     sim = FullSimulation(params_f)
-        #     sim.run()
-        #     sim.run_metrics()
-        #     sim.save()
-        #
-        #     # Only store the current metrics, not the entire simulation.
-        #     sweep_results[f] = sim.metrics
-        #     #self.save(f_save=self.tmp_f_save)
-        # self.sweep_results = sweep_results
         return
 
 
