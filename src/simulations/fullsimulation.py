@@ -168,7 +168,7 @@ class FullSimulation:
             y_true[y_true != 1] = 0  # Set nondominant clones to 0
             rocs.append(roc_curve(y_true, cell_af))
             prec_scores.append(average_precision_score(y_true, cell_af))
-            dropout.append((cell_af[clones==1]==0).sum()/cell_af.shape[0])
+            dropout.append((cell_af[clones==1]==0).sum()/cell_af[clones==1].shape[0])
 
         self.dropout = dropout
         self.prec_scores = prec_scores
