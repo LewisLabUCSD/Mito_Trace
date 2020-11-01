@@ -25,7 +25,7 @@ from scipy.spatial.distance import pdist
 from scipy.cluster.hierarchy import linkage
 from sklearn.model_selection import ParameterGrid
 from src.simulations.utils.config import check_required
-
+from src.simulations.analysis import Analysis as an
 from .simulation import Simulation
 
 
@@ -50,7 +50,8 @@ class FullSimulation:
         self.n_iter = params['num_iterations']
         self.num_cells = params['num_cells']
         self.params = params
-
+        if 'n_clust' not in params:
+            self.params = None
         # Store the metrics with this
         self.metrics = dict()
 
@@ -113,8 +114,9 @@ class FullSimulation:
         """
         self.sim_performance_dominant(group='both')
         self.stats_before_after()
-        # self.cluster_before_after()
-
+        self.cluster_before_after()
+        self.stats_cluster_before_after()
+        self.estimate_growth_rates_from_cluster()
 
     def flatten_sim(self):
         ## TODO
@@ -215,7 +217,8 @@ class FullSimulation:
         cluster_results = []
         print('clustering')
         for s in tqdm(self.sim.values):
-            cluster_results.append(s.cluster(s.combined_cell_af))
+            cluster_results.append(an.cluster_kmeans(s.combined_cell_af,
+                                                     n_clust=self.params['n_clust']))
             print(len(cluster_results[-1]))
         self.cluster_results = cluster_results
 
@@ -227,18 +230,30 @@ class FullSimulation:
         :return:
         """
 
-
-        b_a_df = pd.DataFrame(index=len(self.sim),
+        b_a_df = pd.DataFrame(index=np.arange(len(self.sim)),
                               columns=["TN", "FP", "FN", "TP"], dtype=int)
         for ind, s in enumerate(self.sim.values):
             y_true = s.combined_clones
-            y_true[y_true!=1] = 0
+            y_true[y_true!=clone_id] = 0
             y_pred = self.cluster_results[ind]
 
             # y_true, y_pred
             tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
             b_a_df.loc[ind] = [tn, fp, fn, tp]
-        self.b_a_df = b_a_df
+        self.b_a_df_clust = b_a_df
+        return
+
+
+    def estimate_growth_rates_from_cluster(self):
+        all_growth_estimate = []
+        all_clone_sizes = []
+        for iter, s in enumerate(self.sim.values):
+            growth_estimate, clone_sizes = an.estimate_growth_rate(s.combined_meta)
+            all_growth_estimate.append(growth_estimate)
+            all_clone_sizes.append(clone_sizes)
+
+        self.metrics['pred_growth_rates'] = all_growth_estimate
+        self.metrics['pred_clone_sizes'] = all_clone_sizes
         return
 
 

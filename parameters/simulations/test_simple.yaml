@@ -28,6 +28,7 @@ het: # Heterozygous values
   [0.2, 0.2]
 het_err_rate: 0.05
 
+n_clust: 3
 
 sequence_subsample: #10000
 

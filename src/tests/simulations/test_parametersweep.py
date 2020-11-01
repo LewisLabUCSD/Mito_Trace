@@ -27,6 +27,10 @@ class TestSum(unittest.TestCase):
 
         x = sweep.plot_sensitivity_and_dropout()  # plots results
         self.assertTrue(x is None)
+
+        x = sweep.plot_before_after_true_growth()
+        self.assertTrue(x is None)
+
     # def test_plotsweepparams(self):
     #     default_params_f = join(ROOT_DIR,
     #                             'parameters/simulations/test_simple.yaml')
@@ -39,6 +43,8 @@ class TestSum(unittest.TestCase):
     #
     #     x = sweep.plot_sensitivity_and_dropout()  # plots results
     #     self.assertTrue(x is None)
+
+
 
 if __name__ == '__main__':
     unittest.main()
