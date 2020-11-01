@@ -323,20 +323,22 @@ class Simulation:
 
 
     def combine_init_growth(self):
-        clones = pd.concat(
+        combined_cell_af = self.cell_af.append(self.subsample_new_cell_af).reset_index(drop=True)
+        combined_clones = pd.concat(
             (self.clone_cell, self.subsample_new_clone_cell)).reset_index(
             drop=True)
-        combined_cell_af = self.cell_af.append(self.subsample_new_cell_af).reset_index(drop=True)
 
-        combined_meta = np.concatenate((np.ones(shape=[self.cell_af.shape[0],]), np.zeros(shape=[self.subsample_new_cell_af.shape[0]])))
-        combined_meta = pd.Series(combined_meta, name='After Growth', dtype=int)
+
+        combined_befaft = np.concatenate((np.zeros(shape=[self.cell_af.shape[0],]), np.ones(shape=[self.subsample_new_cell_af.shape[0]])))
+        combined_meta = pd.DataFrame({"pre_post": combined_befaft, "clone": combined_clones})
+        #combined_meta = pd.Series(combined_meta, name='After Growth', dtype=int)
         assert(combined_meta.shape[0] == self.cell_af.shape[0]+self.subsample_new_cell_af.shape[0])
         assert (combined_cell_af.shape[0] == self.cell_af.shape[0] +
                 self.subsample_new_cell_af.shape[0])
-        assert(combined_meta.shape[0] == clones.shape[0])
-        assert(combined_cell_af.shape[0] == clones.shape[0])
+        assert(combined_meta.shape[0] == combined_clones.shape[0])
+        assert(combined_cell_af.shape[0] == combined_clones.shape[0])
         self.combined_meta = combined_meta
-        self.combined_clones = clones
+        self.combined_clones = combined_clones
         self.combined_cell_af = combined_cell_af
         return
 

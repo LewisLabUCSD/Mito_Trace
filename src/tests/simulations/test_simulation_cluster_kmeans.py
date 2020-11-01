@@ -19,8 +19,13 @@ class TestSum(unittest.TestCase):
         s.grow()
         s.subsample_new(to_delete=False)
 
+        # Cluster Metrics
         an = Analysis()
         an.cluster_kmeans(s.subsample_new_cell_af)
+        # an.cluster_performance()
+        # an.estimate_growth_rate()
+        # an.compare_befaft_kl()
+        # an.compare_kl_across_samples()
 
 
         return

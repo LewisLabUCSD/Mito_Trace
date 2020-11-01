@@ -52,15 +52,18 @@ class ParameterSweep:
         :param sweep_params_f: File that contains the hyperparameters to
         do a grid of all parameters to run the pipeline on.
         :type str
-
         """
         params = read_config_file(default_params_f)
+        if 'n_clust' not in params:
+            self.params = None
         sweep_params = read_config_file(sweep_params_f)
         self.sweep_params_f = sweep_params_f
         self.default_params_f = default_params_f
         self.sweep_params = sweep_params
         self.default_params = params
         self.save_sim = sweep_params['save_sim']
+
+
         print(self.save_sim)
         # Create the yaml files in the directory indicated by local_outdir and prefix in sweep_params_f
         self.outdir = os.path.join(sweep_params["outdir"], sweep_params["prefix"])
@@ -105,6 +108,13 @@ class ParameterSweep:
             params_dict[f_name] = params
         return
 
+    def patient_samples_simulate(self):
+        return
+
+    #dominant_clone_sizes
+
+    def patient_samples_compare(self):
+        return
 
     @staticmethod
     def run_single_sweep(f, outdir, save=True):
@@ -113,7 +123,6 @@ class ParameterSweep:
         sim = FullSimulation(params_f)
         sim.run()
         sim.run_metrics()
-
         if save:
             sim.save()
         return sim.metrics
@@ -169,17 +178,27 @@ class ParameterSweep:
             metrics.at[ind, 'Avg. Precision'] = np.mean(prec_scores)
             metrics.at[ind, '% dropout'] = np.mean(dropout)
 
+        metrics = metrics.rename({'cov_constant': 'coverage',
+                        'dominant_clone_sizes': 'CHIP proportion',
+                        'het_err_rate': 'Error rate',
+                        'dominant_het': 'Heteroplasmy'},
+                       axis=1)
         self.metrics = metrics
+
         """df that contains simulation performance metric.
         """
         # Seaborn Factorplot
-        g = sns.FacetGrid(data=metrics, col="het_err_rate", hue="cov_constant")
-        g.map(sns.scatterplot, "dominant_het", "Avg. Precision")
+        g = sns.FacetGrid(data=metrics, col='Error rate',
+                          row='CHIP proportion',
+                          hue="coverage")
+        g.map(sns.stripplot, "Heteroplasmy", "Avg. Precision")
         g.add_legend()
         g.savefig(os.path.join(self.outdir,'precision.png'))
 
-        g = sns.FacetGrid(data=metrics, col="het_err_rate", hue="cov_constant")
-        g.map(sns.scatterplot, "dominant_het", "% dropout")
+        g = sns.FacetGrid(data=metrics, col='Error rate',
+                          row='CHIP proportion',
+                          hue="coverage")
+        g.map(sns.stripplot, "Heteroplasmy", "% dropout")
         g.add_legend()
         g.savefig(os.path.join(self.outdir, 'dropout.png'))
         return None
@@ -187,12 +206,10 @@ class ParameterSweep:
     def plot_ppv(self):
         return
 
-
     def cluster_before_after(self):
         for f in self.sweep_results:
             self.sweep_results[f].cluster_before_after()
         return
-
 
     def plot_before_after_all_clones(self):
         """
@@ -236,6 +253,33 @@ class ParameterSweep:
 
         :return:
         """
+
+        df_full = []
+        for ind, val in self.params_df.iterrows():
+            curr_results = self.sweep_results[ind]
+            b_a_df = curr_results['b_a_df']
+
+            # Each element will be a list of the values.
+            s = self.params_df.loc[ind].copy()
+            curr = pd.DataFrame([s.copy()] * len(b_a_df))
+            curr["A/B"] = b_a_df["A/B"].values
+            curr["True clones"] = 1
+
+            curr_pred = curr.copy()
+            curr_pred["A/B"] = curr_results['pred_growth_rates']
+            curr_pred["True clones"] = 0
+            #curr['Predicted A/B'] = curr_results['pred_growth_rates']
+            df_full.append(curr.append(curr_pred))
+
+        df_full = pd.concat(df_full)
+        df_full = df_full.astype(
+            {'dominant_growth': str, 'dominant_clone_sizes': str,
+             'A/B': float})
+
+        sns.violinplot(data=df_full, y="A/B", hue="True clones",
+                       x="dominant_clone_sizes", row='dominant_growth')
+        plt.savefig(os.path.join(self.outdir, 'growth_before_after_pred.png'))
+        #g.savefig(os.path.join(self.outdir, 'precision.png'))
         return
 
     def plot_before_after_cluster_growth(self):

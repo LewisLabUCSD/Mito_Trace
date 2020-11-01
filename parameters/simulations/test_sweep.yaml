@@ -1,6 +1,8 @@
 # One set of parameters for simulating cells and their lineages
 outdir: 'simulation'
+data_outdir: 'simulation'
 prefix: 'test_sweep'
+save_sim: false
 #num_iterations: 100
 #num_cells: 10000
 #num_mt_positions: 10
