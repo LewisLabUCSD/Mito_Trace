@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 #from src.config import ROOT_DIR
-from sklearn.metrics import roc_curve, average_precision_score, confusion_matrix
+from sklearn.metrics import roc_curve, average_precision_score, confusion_matrix, f1_score
 import matplotlib.pyplot as plt
 import pickle
 import seaborn as sns
@@ -27,7 +27,7 @@ from sklearn.model_selection import ParameterGrid
 from src.simulations.utils.config import check_required
 from src.simulations.analysis import Analysis as an
 from .simulation import Simulation
-
+from src.utils.utils import compare_arbitrary_labels
 
 # Does this ruin running the MCMC? I don't think so, b/c that format is going to be put in after anyway
 class FullSimulation:
@@ -51,12 +51,13 @@ class FullSimulation:
         self.num_cells = params['num_cells']
         self.params = params
         if 'n_clust' not in params:
-            self.params = None
+            self.params['n_clust'] = None
         # Store the metrics with this
         self.metrics = dict()
 
         # Files to save
-        self.outdir = os.path.join(self.params['local_outdir'])
+        #self.outdir = os.path.join(self.params['local_outdir'])
+        self.outdir = self.params['local_outdir' ]
         self.data_outdir = os.path.join(self.params['data_outdir'])
         self.f_save_data = os.path.join(self.data_outdir,
                                    self.params['name'] + '.p')
@@ -65,8 +66,9 @@ class FullSimulation:
         self.f_save_metrics = self.f_save_data.replace('.p', '.metrics.tsv')
         self.f_save_cluster = self.f_save_data.replace('.p', '.cluster.tsv')
         self.f_save_befaft = self.f_save_data.replace('.p', '.before_after.tsv')
+        self.f_save_befaft_cl = self.f_save_data.replace('.p',
+                                                      '.before_after_cl.tsv')
         self.f_save_rocs = self.f_save_data.replace('.p', '.rocs.p')
-
         return
         #for i in self.n_iter:
 
@@ -86,6 +88,13 @@ class FullSimulation:
         #df = df.parallel_apply(self.run_sim, args=(self.params,))
 
         self.sim = df
+
+        if "save_small" in self.params and self.params["save_small"] > 0:
+            curr = self.sim[:self.params["save_small"]]
+            for ind, val in curr.items():
+                curr_f = self.f_save.replace(".p","") + "_sim" + str(ind)
+                val.to_csv(curr_f+".csv")
+
         return
 
     @staticmethod
@@ -114,9 +123,11 @@ class FullSimulation:
         """
         self.sim_performance_dominant(group='both')
         self.stats_before_after()
-        self.cluster_before_after()
-        self.stats_cluster_before_after()
+        self.cluster_befaft()
+        self.stats_cluster_befaft_dom()
         self.estimate_growth_rates_from_cluster()
+        self.stats_before_after_clust()
+        self.kl_divergence()
 
     def flatten_sim(self):
         ## TODO
@@ -146,7 +157,6 @@ class FullSimulation:
         dropout = []
         rocs = []
         prec_scores = []
-
 
         for iter, s in enumerate(self.sim.values):
             # First get the dominant clone , which is indexed as 1
@@ -196,14 +206,15 @@ class FullSimulation:
             a_clones = s.subsample_new_clone_cell
             b_a_df.at[iter, "Before"] = (b_clones == clone_id).sum()
             b_a_df.at[iter, "After"] = (a_clones==clone_id).sum()
-            b_a_df.at[iter,"A/B"] = (b_a_df.at[iter, "After"]/b_a_df.at[iter, "Before"])
+            b_a_df.at[iter,"A/B"] = (b_a_df.at[iter, "After"]+1)/(b_a_df.at[iter, "Before"]+1)
         self.b_a_df = b_a_df
         b_a_df.to_csv(self.f_save_befaft, sep='\t')
         self.metrics['b_a_df'] = b_a_df
         return
 
 
-    def cluster_before_after(self):
+
+    def cluster_befaft(self):
         """
         Loops through the simulations and for each,
         it clusters the cells.
@@ -215,15 +226,23 @@ class FullSimulation:
         is the cell's cluster label
         """
         cluster_results = []
-        print('clustering')
+
+
         for s in tqdm(self.sim.values):
             cluster_results.append(an.cluster_kmeans(s.combined_cell_af,
                                                      n_clust=self.params['n_clust']))
-            print(len(cluster_results[-1]))
+            # Add the cluster results to combined meta
+            s.combined_meta["cluster"] = cluster_results[-1]
+
+            # Bring the cluster labels and the clone labels into same
+            # name space
+            s.combined_meta['cluster_clone'] = compare_arbitrary_labels(s.combined_meta['clone'],
+                                                                        s.combined_meta['cluster'])
+
         self.cluster_results = cluster_results
 
 
-    def stats_cluster_before_after(self, clone_id=1):
+    def stats_cluster_befaft_dom(self, clone_id=1):
         """
         Confusion matrix for clustering the proper clone cells together.
         :param clone_id: Which clone to get metrics for
@@ -232,19 +251,59 @@ class FullSimulation:
 
         b_a_df = pd.DataFrame(index=np.arange(len(self.sim)),
                               columns=["TN", "FP", "FN", "TP"], dtype=int)
+        f1_vals = []
         for ind, s in enumerate(self.sim.values):
             y_true = s.combined_clones
             y_true[y_true!=clone_id] = 0
-            y_pred = self.cluster_results[ind]
+            y_pred = s.combined_meta['cluster_clone'].copy()
+            y_pred[y_pred!=clone_id] = 0
 
+            f1_vals.append(f1_score(y_true, y_pred))
             # y_true, y_pred
             tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
             b_a_df.loc[ind] = [tn, fp, fn, tp]
         self.b_a_df_clust = b_a_df
+
+        self.metrics['Dominant Cluster Confusion'] = b_a_df
+        self.metrics['Cluster F1 scores'] = f1_vals
         return
 
 
+
+    def estimate_growth_rates_from_known(self):
+        all_growth_estimate = []
+        all_clone_sizes = []
+        for iter, s in enumerate(self.sim.values):
+            growth_estimate, clone_sizes = an.estimate_growth_rate(s.combined_meta)
+            all_growth_estimate.append(growth_estimate)
+            all_clone_sizes.append(clone_sizes)
+
+        self.metrics['obs_growth_rates'] = all_growth_estimate
+        self.metrics['obs_clone_sizes'] = all_clone_sizes
+        return
+
     def estimate_growth_rates_from_cluster(self):
+        all_growth_estimate = []
+        all_clone_sizes = []
+        for iter, s in enumerate(self.sim.values):
+            growth_estimate, clone_sizes = an.estimate_growth_rate(s.combined_meta, clone_col="cluster_clone")
+            all_growth_estimate.append(growth_estimate)
+            all_clone_sizes.append(clone_sizes)
+        self.metrics['pred_growth_rates'] = all_growth_estimate
+        self.metrics['pred_clone_sizes'] = all_clone_sizes
+        return
+
+
+    def stats_before_after_clust(self, clone_id=1):
+        b_a_df = pd.DataFrame(index=np.arange(0,len(self.sim)), columns=["A/B"], dtype=str)
+        for iter, s in enumerate(self.sim.values):
+            curr_pred_growth = self.metrics['pred_growth_rates'][iter]
+            b_a_df.at[iter, "A/B"] = curr_pred_growth.loc[clone_id]
+        b_a_df.to_csv(self.f_save_befaft_cl, sep='\t')
+        self.metrics['b_a_clust_df'] = b_a_df
+        return
+
+    def kl_divergence(self):
         all_growth_estimate = []
         all_clone_sizes = []
         for iter, s in enumerate(self.sim.values):
@@ -254,7 +313,6 @@ class FullSimulation:
 
         self.metrics['pred_growth_rates'] = all_growth_estimate
         self.metrics['pred_clone_sizes'] = all_clone_sizes
-        return
 
 
     def save(self, f_save=None):

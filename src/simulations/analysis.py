@@ -110,7 +110,8 @@ class Analysis:
 
 
     @staticmethod
-    def estimate_growth_rate(cells_meta):
+    def estimate_growth_rate(cells_meta, clone_col='clone',
+                             pseudo_count=1):
         """ Estimates the growth rate for each clone, which in this case
         is based on the prediction
 
@@ -126,10 +127,12 @@ class Analysis:
             Name: RangeIndex, dtype: float
         """
 
-        clone_sizes = cells_meta.groupby(['clone', 'pre_post']).size().rename('Count').reset_index()
-        growth_estimate = clone_sizes.groupby('clone').apply(
-                        lambda x: x[x['pre_post'] == 1]['Count'].sum() /
-                                  x[x['pre_post'] == 0]['Count'].sum())
+        clone_sizes = cells_meta.groupby([clone_col, 'pre_post']).size().rename('Count').reset_index()
+        #clone_sizes["Count"] += pseudo_count
+        growth_estimate = clone_sizes.groupby(clone_col).apply(
+                        lambda x: (x[x['pre_post'] == 1]['Count'].sum() + pseudo_count) /
+                                  (x[x['pre_post'] == 0]['Count'].sum() + pseudo_count))
+
         return growth_estimate, clone_sizes
 
 

@@ -39,6 +39,12 @@ class Simulation:
 
 
     def initialize(self):
+        """ (1) Pre-growth cell population is instantiated.
+
+        Creates a clone-MT dictionary, cell coverage matrix
+        (or an int, depending on parameters), and cell-AF matrix.
+        :return:
+        """
         self.init_clone_dict()
         self.init_cell_coverage()
         self.init_cell_af()
@@ -46,6 +52,7 @@ class Simulation:
 
     #should be external method
     def grow(self):
+        """ (2) Growth of cells is run."""
         p = self.params
         type = p["growth"]["type"]
         if  type == "poisson":
@@ -57,14 +64,17 @@ class Simulation:
     # Static Method
     @staticmethod
     def clone_counts_to_cell_series(clone_counts):
-        """
-        Args:
-            clone_counts:
+        """ Generates new cell IDs based on cluster count iterable
+        :param clone_counts: Each i'th element is the number of cells in
+        cluster i.
+        :type clone_counts: iterable
+        :return each index name is a cell ID and each value is which cluster
+        the cell belongs too.
+        :rtype pd.Series
         """
         clone_counts = np.array(clone_counts)
         num_cells = clone_counts.sum()
         clone_cell = -1 * np.ones(shape=[num_cells, ])
-
 
         clone_cell[:clone_counts[0]] = 0
         for ind, val in enumerate(clone_counts[1:]):
@@ -77,11 +87,20 @@ class Simulation:
         return clone_cell
 
     def init_clone_dict(self):
-        ### Add in potential to overwrite the values
+        """1A
+        """
 
+        ### Add in potential to overwrite the values
         # Gets the clone dictionary. Should also have clone to mt dict.
         clones = self.params['initialize']['clone_sizes']
         num_cells = self.num_cells
+
+        if 'num_cells_population' not in self.params:
+            self.num_cells_pop = self.num_cells
+        else:
+            print('num cells pop')
+            self.num_cells_pop = self.params['num_cells_population']
+
 
         # Option 1: List of fraction of size of each clone. 0s are nonclone size, listed first
         if type(clones) == list:
@@ -104,8 +123,10 @@ class Simulation:
 
 
     def init_cell_coverage(self):
-        """There are different modes to the coverage, either a constant or
-        through a distribution. :return:
+        """1B
+
+        There are different modes to the coverage, either a constant or
+        through a distribution.
         """
         p = self.params['initialize']['coverage']
         type = p['type']
@@ -131,7 +152,7 @@ class Simulation:
 
 
     def init_cell_af(self):
-        """Initialize the cell-by-mtPos af dataframe. Unless a clone:mt dict was
+        """1C. Initialize the cell-by-mtPos af dataframe. Unless a clone:mt dict was
         provided, the first N MT positions will be the clone AFs. Creates
         self.clone_mt_dict and self.cell_af
         """
@@ -162,8 +183,6 @@ class Simulation:
         # If there is a heteroplasmy table in params, it is list of mutant heteroplasmy AFs.
         # If not, will randomly draw based on number of clones
         if type(hets) == list:
-            if (len(hets) != num_clones):
-                print('here')
             assert(len(hets) == num_clones)
 
             ## Loop through each clone,
@@ -255,7 +274,7 @@ class Simulation:
         return new_af
 
     def grow_binomial(self, p):
-        """
+        """ (2.1)
         Args:
             p:
         """
@@ -303,9 +322,11 @@ class Simulation:
 
 
     def subsample_new(self, to_delete=False):
-        """
-        Args:
-            to_delete:
+        """(3) Subsample from new cell population
+
+        :param to_delete: To remove the cells that grew (which takes up
+        a lot of RAM).
+        :type to_delete: bool
         """
         new_cell_af = self.new_cell_af
         p = self.params
@@ -323,6 +344,10 @@ class Simulation:
 
 
     def combine_init_growth(self):
+        """(4) Add the pre- and post- population of cells into a group.
+
+        :return:
+        """
         combined_cell_af = self.cell_af.append(self.subsample_new_cell_af).reset_index(drop=True)
         combined_clones = pd.concat(
             (self.clone_cell, self.subsample_new_clone_cell)).reset_index(
@@ -353,10 +378,68 @@ class Simulation:
         pickle.dump(self.__dict__, f, 2)
         f.close()
 
-    def save_to_mgatk_format(self):
+    @staticmethod
+    def expand_to_mgatk(curr_mt_af,mt_ref):
+        ref = mt_ref[curr_mt_af.name]
+        pos = curr_mt_af.name
+        return pd.DataFrame({"Ref":ref, "Pos":pos, "Val":curr_mt_af})
+
+    def test_save_to_mgatk_format(self):
+        df = pd.DataFrame( [[10,0,1,3,5], [3,0,5,5,0], [6,2,1,1,0]] , columns=np.arange(0,5))
+        mt_ref_dict = {0: "A", 1: "G", 2: "C", 3: "C", 4: "T"}
+        mt_ref = pd.DataFrame({"Pos": mt_ref_dict.keys(), "Ref": mt_ref_dict})
+        return
+
+    def save_to_mgatk_format(self, mt_ref, out_f):
         """Converts into the proper files needed for mgatk. (i.e variant and
-        coverage files) :return:
+        coverage files)
+
+        :return:
         """
+        cell_af = self.subsample_new_cell_af
+        chars = ["A", "G", "C", "T"]
+        def alt_generate(x):
+            curr = chars.copy()
+            curr.remove(x["Ref"])
+            return np.random.choice(curr)
+        alt_ref = mt_ref.apply(alt_generate, axis=1)
+
+        # First use the AF and choose an alternative allele
+        df_stack = cell_af.stack().reset_index().rename(
+            {"level_0": "Cell", "level_1": "MT_pos", 0: "Coverage"},
+            axis=1)
+        df_stack["Nucleotide"] = df_stack["MT_pos"].apply(
+            lambda x: alt_ref[x])
+
+        # Add on the reference allele
+        df_stack_ref = cell_af.stack().reset_index().rename(
+            {"level_0": "Cell", "level_1": "MT_pos", 0: "Coverage"},
+            axis=1)
+        df_stack_ref["Coverage"] = 1-df_stack_ref["Coverage"]
+        df_stack["Nucleotide"] = df_stack["MT_pos"].apply(
+            lambda x: mt_ref[x])
+
+        df_stack = pd.concat(df_stack, df_stack_ref)
+        for ind, val in df_stack.groupby("Nucleotide"):
+            # Drop the 0s
+            curr = val[val["Coverage"]>0]
+            # Save file
+            curr_out_f = out_f + "_" + ind + ".txt"
+            curr.to_csv(curr_out_f)
+
+        # Save the coverage.
+        coverage = self.cells_mt_coverage
+        if type(coverage) != int:
+            coverage_stack = pd.DataFrame(coverage).stack().reset_index().rename(
+                {"level_0": "Cell", "level_1": "MT Position", 0: "Coverage"},
+                axis=1)
+        else:
+            coverage_stack = pd.DataFrame(self.cells_mt_coverage)*np.ones(shape=cell_af.shape).stack().reset_index().rename(
+                {"level_0": "Cell", "level_1": "MT Position",  0: "Coverage"},
+                axis=1)
+        curr_out_f = out_f + "_" + "coverage.txt"
+        coverage_stack.to_csv(curr_out_f)
+        return
 
     def load(self):
         filename = self.params['filename']

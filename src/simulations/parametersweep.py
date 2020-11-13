@@ -8,15 +8,17 @@ from pandarallel import pandarallel
 import matplotlib.pyplot as plt
 
 from mplh.color_utils import get_colors
-from mplh.fig_utils import legend_from_color
+from mplh.fig_utils import legend_from_color, helper_save
 from mplh import cluster_help as ch
 from src.simulations.utils.config import read_config_file, write_config_file
+
 
 from dynamicTreeCut import cutreeHybrid
 from scipy.spatial.distance import pdist
 from scipy.cluster.hierarchy import linkage
 from sklearn.model_selection import ParameterGrid
 from src.simulations.utils.config import check_required
+from src.utils.utils import expand_df
 
 from .fullsimulation import FullSimulation
 
@@ -69,8 +71,9 @@ class ParameterSweep:
         self.outdir = os.path.join(sweep_params["outdir"], sweep_params["prefix"])
         if not os.path.exists(self.outdir):
             os.makedirs(self.outdir)
-        self.f_save = \
-            os.path.join(self.outdir,self.sweep_params['prefix'] + '.p')
+        self.f_save = os.path.join(self.outdir,self.sweep_params['prefix'] + '.p')
+
+        self.f_save_metrics = os.path.join(self.outdir,self.sweep_params['prefix'] + '.metrics.p')
 
         #self.tmp_f_save = self.f_save.replace('.p', '') + '_tmp.p'
 
@@ -125,7 +128,9 @@ class ParameterSweep:
         sim.run_metrics()
         if save:
             sim.save()
+        #print(type(sim.metrics))
         return sim.metrics
+
 
     def run_sweep(self, subset=None):
         """ Loops through params_df and runs the simulation on that parameter.
@@ -146,14 +151,31 @@ class ParameterSweep:
         #sweep_results_df = sweep_results_df.apply(self.run_single_sweep, args=(self.outdir,))
         pandarallel.initialize(nb_workers=self.sweep_params['cpus'])
         sweep_results_df = sweep_results_df.parallel_apply(self.run_single_sweep, args=(self.outdir, self.save_sim))
+        #sweep_results_df = sweep_results_df.apply(self.run_single_sweep, args=(self.outdir, self.save_sim))
         ###
 
         self.sweep_results = sweep_results_df
+        print('saving dict sweep_results')
+        pickle.dump(sweep_results_df.to_dict(), open(self.f_save_metrics, 'wb'), pickle.HIGHEST_PROTOCOL)
+        #sweep_results_df.to_pickle(self.f_save_metrics)
         return
 
 
+    def load_results(self):
+        self.sweep_results = pickle.load(open(self.f_save_metrics,'rb'))
+
+    # def cluster_before_after(self):
+    #     for f in self.sweep_results:
+    #         self.sweep_results[f].cluster_befaft()
+    #     return
+
+
+    # ------------------------------
+    # ------------------------------
+    # Fig1A
     def plot_sensitivity_and_dropout(self):
-        """
+        """ Fig1A
+
         Scatterplots of the average precision score and dropout
         against variant heteroplasmy.
 
@@ -187,32 +209,40 @@ class ParameterSweep:
 
         """df that contains simulation performance metric.
         """
-        # Seaborn Factorplot
+        # Seaborn stripplot
         g = sns.FacetGrid(data=metrics, col='Error rate',
                           row='CHIP proportion',
-                          hue="coverage")
+                          hue="coverage", legend_out=True, margin_titles=True)
         g.map(sns.stripplot, "Heteroplasmy", "Avg. Precision")
+        #plt.legend(bbox_to_anchor=(1.15, 1))
         g.add_legend()
-        g.savefig(os.path.join(self.outdir,'precision.png'))
+        #plt.subplots_adjust(wspace=2)
+
+        #g.savefig(os.path.join(self.outdir,'precision.png'))
+        helper_save(os.path.join(self.outdir,'precision'),remove_bg=False)
 
         g = sns.FacetGrid(data=metrics, col='Error rate',
                           row='CHIP proportion',
-                          hue="coverage")
+                          hue="coverage", legend_out=True, margin_titles=True)
         g.map(sns.stripplot, "Heteroplasmy", "% dropout")
-        g.add_legend()
-        g.savefig(os.path.join(self.outdir, 'dropout.png'))
+        g.add_legend()#bbox_to_anchor=(1.15, 1))
+        #plt.legend(bbox_to_anchor=(1.15, 1))
+
+        #g.savefig(os.path.join(self.outdir, 'dropout.png'))
+        helper_save(os.path.join(self.outdir, 'dropout.png'), remove_bg=False)
+
         return None
+
+    # Fig1B
+    def plot_sensitivity_and_dropout_cluster(self):
+        return
 
     def plot_ppv(self):
         return
 
-    def cluster_before_after(self):
-        for f in self.sweep_results:
-            self.sweep_results[f].cluster_before_after()
-        return
-
     def plot_before_after_all_clones(self):
-        """
+        """ Fig2A: Violin plot of the growth rates of the dominant clone
+
         Plot the growth of each clone. Boxplots with x-axis being
         the growth rate for the dominant clone, the y-axis the
         after/before ratio, the color the dominant clone cell size.
@@ -222,29 +252,26 @@ class ParameterSweep:
         params_df.shape[0]*num_iterations rows.
         :return:
         """
-        df_full = []
-        for ind, val in self.params_df.iterrows():
-            curr_results = self.sweep_results[ind]
-            b_a_df = curr_results['b_a_df']
-            # Each element will be a list of the values.
-            s = self.params_df.loc[ind].copy()
-            curr = pd.DataFrame([s.copy()] * len(b_a_df))
-            curr["A/B"] = b_a_df["A/B"].values
-            df_full.append(curr)
 
-        df_full = pd.concat(df_full)
+        df_full = expand_df(self.params_df, self.sweep_results, 'b_a_df', 'A/B')
         df_full = df_full.astype(
             {'dominant_growth': str, 'dominant_clone_sizes': str,
              'A/B': float})
-
-        sns.violinplot(data=df_full, y="A/B", hue="dominant_growth",
+        sns.boxplot(data=df_full, y="A/B", hue="dominant_growth",
                        x="dominant_clone_sizes")
-        plt.savefig(os.path.join(self.outdir, 'growth_before_after.png'))
+        plt.legend(bbox_to_anchor = (1.15, 1))
+        # sns.violinplot(data=df_full, y="A/B", hue="dominant_growth",
+        #                x="dominant_clone_sizes")
+        #plt.savefig(os.path.join(self.outdir, 'growth_before_after.png'))
+
+        helper_save(os.path.join(self.outdir, 'growth_before_after.png'))
         #g.savefig(os.path.join(self.outdir, 'precision.png'))
         return None
 
-    def plot_before_after_true_growth(self):
-        """
+
+    def plot_before_after_true_growth(self, to_log=False):
+        """ Fig2B: Violin plot of the growth rates of the dominant clone
+
         Plot the growth of cells in each clone before and after.
         Dotplot/heatmap, where each row is a het value, each column
         is growth rate, and the value is dominant clone cells
@@ -253,7 +280,6 @@ class ParameterSweep:
 
         :return:
         """
-
         df_full = []
         for ind, val in self.params_df.iterrows():
             curr_results = self.sweep_results[ind]
@@ -263,12 +289,14 @@ class ParameterSweep:
             s = self.params_df.loc[ind].copy()
             curr = pd.DataFrame([s.copy()] * len(b_a_df))
             curr["A/B"] = b_a_df["A/B"].values
-            curr["True clones"] = 1
+            curr["Source"] = "True"
 
             curr_pred = curr.copy()
-            curr_pred["A/B"] = curr_results['pred_growth_rates']
-            curr_pred["True clones"] = 0
+            curr_pred["A/B"] = curr_results['b_a_clust_df']["A/B"].values
+            curr_pred["Source"] = "Cluster predicted"
             #curr['Predicted A/B'] = curr_results['pred_growth_rates']
+            if to_log:
+                curr_pred["A/B"] = (curr_pred["A/B"]+0.001).apply(lambda x: np.log10(x))
             df_full.append(curr.append(curr_pred))
 
         df_full = pd.concat(df_full)
@@ -276,14 +304,50 @@ class ParameterSweep:
             {'dominant_growth': str, 'dominant_clone_sizes': str,
              'A/B': float})
 
-        sns.violinplot(data=df_full, y="A/B", hue="True clones",
-                       x="dominant_clone_sizes", row='dominant_growth')
-        plt.savefig(os.path.join(self.outdir, 'growth_before_after_pred.png'))
+        print('df_full',df_full)
+        print('df_full', df_full.isnull().sum())
+        print('df_full', (df_full==np.inf).sum())
+
+        # Seaborn Factorplot
+        # g = sns.FacetGrid(data=df_full, col='dominant_het',
+        #                   row='dominant_growth')
+
+        # g.map(sns.violinplot, kwargs={'x':"dominant_clone_sizes", 'y':"A/B",
+        #                               "hue":"True clones", "order": ['0','1']})
+        #
+        # g.add_legend()
+        # g.savefig(os.path.join(self.outdir, 'growth_before_after_pred.png'))
+        g = sns.catplot(data=df_full, y="A/B", hue="Source",
+                    x="dominant_clone_sizes", row='dominant_growth',
+                    col="dominant_het", kind="box", margin_titles=True,
+                    legend_out=True)
+        #g.add_legend()
+        #plt.legend(bbox_to_anchor=(1.15, 1))
+
+        # sns.violinplot(data=df_full, y="A/B", hue="True clones",
+        #                x="dominant_clone_sizes", row='dominant_growth')
+        #
+
+        #plt.savefig(os.path.join(self.outdir, 'growth_before_after_pred.png'))
+
+        helper_save(os.path.join(self.outdir, 'growth_before_after_pred.png'), remove_bg=False)
+
+        g = sns.catplot(data=df_full, y="A/B", hue="Source",
+                    x="dominant_clone_sizes", row='dominant_growth',
+                    col="dominant_het", kind="strip", margin_titles=True,
+                    legend_out=True)
+       # g.add_legend()
         #g.savefig(os.path.join(self.outdir, 'precision.png'))
         return
 
+
+    def plot_befaft_kl_cluster(self):
+        return
+
+
     def plot_before_after_cluster_growth(self):
         """
+
         Plot the growth of cells in each clone before and after.
         Dotplot/heatmap, where each row is a het value, each column
         is growth rate, and the value is dominant clone cell cluster
@@ -320,3 +384,4 @@ class ParameterSweep:
         tmp_dict = pickle.load(f)
         f.close()
         self.__dict__.update(tmp_dict)
+
