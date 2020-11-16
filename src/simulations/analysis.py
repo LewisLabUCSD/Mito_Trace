@@ -13,7 +13,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, roc_curve, average_precision_score, confusion_matrix
 from scipy.spatial.distance import cdist
 from pandarallel import pandarallel
-pandarallel.initialize(nb_workers=32)
+
 
 from mplh.color_utils import get_colors
 from mplh.fig_utils import legend_from_color
@@ -133,7 +133,12 @@ class Analysis:
                         lambda x: (x[x['pre_post'] == 1]['Count'].sum() + pseudo_count) /
                                   (x[x['pre_post'] == 0]['Count'].sum() + pseudo_count))
 
-        return growth_estimate, clone_sizes
+        after_estimate = clone_sizes.groupby(clone_col).apply(
+                        lambda x: (x[x['pre_post'] == 1]['Count'].sum() + pseudo_count))
+        before_estimate = clone_sizes.groupby(clone_col).apply(
+                        lambda x: (x[x['pre_post'] == 0]['Count'].sum() + pseudo_count))
+
+        return growth_estimate, clone_sizes, after_estimate, before_estimate
 
 
     @staticmethod

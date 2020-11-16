@@ -86,6 +86,7 @@ class Simulation:
         clone_cell = pd.Series(clone_cell, dtype=int)
         return clone_cell
 
+
     def init_clone_dict(self):
         """1A
         """
@@ -93,21 +94,23 @@ class Simulation:
         ### Add in potential to overwrite the values
         # Gets the clone dictionary. Should also have clone to mt dict.
         clones = self.params['initialize']['clone_sizes']
-        num_cells = self.num_cells
 
         if 'num_cells_population' not in self.params:
             self.num_cells_pop = self.num_cells
         else:
-            print('num cells pop')
             self.num_cells_pop = self.params['num_cells_population']
 
+        num_cells = self.num_cells_pop
 
         # Option 1: List of fraction of size of each clone. 0s are nonclone size, listed first
         if type(clones) == list:
             #clone_cell = pd.Series(index=range(num_cells))
             clone_counts = np.random.multinomial(num_cells, clones)
             clone_cell  = self.clone_counts_to_cell_series(clone_counts)
-            self.clone_cell = clone_cell
+            self.clone_cell_pop = clone_cell
+
+            # Choose subset to be sampled
+            self.clone_cell = clone_cell.sample(n=self.num_cells).sort_values()
         # Option 2: 1 clone. ID'd as 1
         elif type(clones) == int: #One number for dominant clone. the others are not.
             clone_cell = np.zeros(shape=[num_cells,])
@@ -151,25 +154,71 @@ class Simulation:
         return c
 
 
+    @staticmethod
+    def create_cell_af(clone_df, mt_dict, n_cells, n_mt, num_clones,
+                       cov_params, hets, het_err, coverage=None):
+        cell_af = pd.DataFrame(np.zeros(shape=[n_cells, n_mt]))
+
+        #p = self.params['initialize']
+
+        ## Loop through each clone,
+        ## Generate the AF for the clone and non-clones using coverage for each cell
+        ## Fill in cell_by_af for that position.
+        for ind in range(1, num_clones + 1):
+            # Generate AF: (clone_df ==  ind).sum()
+            n_dom_cells = (clone_df == ind).sum()
+            het = hets[ind - 1]
+
+            curr_mt = mt_dict[ind]
+
+            if cov_params['coverage']['type'] == 'constant':
+                c = cov_params['coverage']['cov_constant']
+
+                af_i = random.binomial(c, het, n_dom_cells) / c
+                af_j = random.binomial(c, het_err, n_cells - n_dom_cells) / c
+
+                # Update the dom_cells and non_dom for the current MT
+                cell_af.loc[
+                    np.flatnonzero(clone_df == ind), curr_mt] = af_i
+                cell_af.loc[
+                    np.flatnonzero(clone_df != ind), curr_mt] = af_j
+
+            # Each cell and position has it's own coverage value, so need to update each
+            else:
+                if coverage is None:
+                    raise("coverage needs to be assigned")
+                c = coverage
+
+                # Get the cells coverage for the mt position
+                curr_mt_cov = c[:, curr_mt]
+
+                # Get cell indicies for the clones and nonclones
+                curr_clone_inds = np.flatnonzero(clone_df == ind)
+                curr_nonclone_inds = np.flatnonzero(clone_df != ind)
+                for cell in curr_clone_inds:
+                    # Get one value for curr_mt and cell based on coverage
+                    cell_af.loc[cell, curr_mt] = random.binomial(
+                        curr_mt_cov[cell], het)
+                for cell in curr_nonclone_inds:
+                    cell_af.loc[cell, curr_mt] = random.binomial(
+                        curr_mt_cov[cell], het_err)
+        return cell_af
+
+
+    ##########
     def init_cell_af(self):
         """1C. Initialize the cell-by-mtPos af dataframe. Unless a clone:mt dict was
         provided, the first N MT positions will be the clone AFs. Creates
         self.clone_mt_dict and self.cell_af
         """
-
         p = self.params['initialize']
-
         hets = self.params['het']
-        q = self.params['het_err_rate']
         clone_df = self.clone_cell
         num_clones = self.num_clones
         n_cells = self.num_cells
         n_mt = self.num_mt_positions
 
-        # Output
-        cell_af = pd.DataFrame(np.zeros(shape=[n_cells, n_mt]))
-
-
+        # Get the MT map
         if 'mt_clone_map' in p and p['mt_clone_map'] is not None:
             self.clone_mt_dict = p['mt_clone_map']
         else:
@@ -179,57 +228,18 @@ class Simulation:
                 self.clone_mt_dict[i] = i
 
         # TODO Add the MT clone map so it can contain multiple mutants in lineages
-
         # If there is a heteroplasmy table in params, it is list of mutant heteroplasmy AFs.
         # If not, will randomly draw based on number of clones
         if type(hets) == list:
             assert(len(hets) == num_clones)
 
-            ## Loop through each clone,
-            ## Generate the AF for the clone and non-clones using coverage for each cell
-            ## Fill in cell_by_af for that position.
-            for ind in range(1, num_clones+1):
-                # Generate AF: (clone_df ==  ind).sum()
-                n_dom_cells = (clone_df==ind).sum()
-                het = hets[ind-1]
-
-                curr_mt = self.clone_mt_dict[ind]
-
-
-                if p['coverage']['type'] == 'constant':
-                    c = p['coverage']['cov_constant']
-
-                    af_i = random.binomial(c, het,
-                                           n_dom_cells) / c
-                    af_j = random.binomial(c, q,
-                                           n_cells - n_dom_cells) / c
-
-                    # Update the dom_cells and non_dom for the current MT
-                    cell_af.loc[np.flatnonzero(clone_df == ind), curr_mt] = af_i
-                    cell_af.loc[np.flatnonzero(clone_df != ind), curr_mt] = af_j
-
-                # Each cell and position has it's own coverage value, so need to update each
-                else:
-                    c = self.cells_mt_coverage
-                    #Get the cells coverage for the mt position
-                    curr_mt_cov= c[:, curr_mt]
-
-                    # Get cell indicies for the clones and nonclones
-                    curr_clone_inds = np.flatnonzero(clone_df==ind)
-                    curr_nonclone_inds = np.flatnonzero(clone_df!=ind)
-                    for cell in curr_clone_inds:
-                        # Get one value for curr_mt and cell based on coverage
-                        cell_af.loc[cell, curr_mt] = random.binomial(curr_mt_cov[cell], het)
-                    for cell in curr_nonclone_inds:
-                        cell_af.loc[cell, curr_mt] = random.binomial(curr_mt_cov[cell], q)
-                # Loop through each coverage
-                #for c in n_dom_cells:
-
-        #####
-        # TODO
-        # Add noise to the other non-lineage positions
-        #####
-        self.cell_af = cell_af
+        # Get the cell_af based on MT dictionary and cell coverage
+        self.cell_af = self.create_cell_af(clone_df, self.clone_mt_dict,
+                                           n_cells, n_mt, num_clones,
+                                           self.params['initialize'],
+                                           hets,
+                                           self.params['het_err_rate'],
+                                           coverage=None)
         return
 
 
@@ -245,15 +255,21 @@ class Simulation:
     def average_clone_mt(self):
         return
 
-    def extract_clone_cells(self, clone_id):
+    @staticmethod
+    def extract_clone_cells(clone_cell, clone_id):
+        """ Returns the numbered indices of the specific clones
+
+        :param clone_cell: Each element is the indexed cell's clone label.
+        :type clone_cell: np array or pd.Series
+
+        :param clone_id:
+        :type clone_id: int or string
         """
-        Args:
-            clone_id:
-        """
-        ids = np.flatnonzero(self.clone_cell == clone_id)
+        ids = np.flatnonzero(clone_cell == clone_id)
         return ids
 
-    def simulate_expand_cells_af(self, af, growth_inds, sigma):
+    @staticmethod
+    def simulate_expand_cells_af(af, growth_inds, sigma):
         """Given a cell-by-af vector, expand the AF.
 
         Expanded AF occurs by duplicating cells that grew based on the
@@ -274,23 +290,62 @@ class Simulation:
         return new_af
 
     def grow_binomial(self, p):
-        """ (2.1)
-        Args:
-            p:
+        """ (2.1.2)
+        :param p: contains time_steps, rates,
+        :type dict
+        """
+        timesteps = p["time_steps"]
+        rates = p["rates"]
+
+        num_clones = self.num_clones+1
+        new_dict = {}
+        for curr_clone in range(num_clones):
+            curr_rate = rates[curr_clone]
+            ids = self.extract_clone_cells(self.clone_cell_pop, curr_clone)
+            num_curr_cells = len(ids)
+
+            for i in range(timesteps):
+                # Simulate growth for each clone separately.
+                growth_inds = (random.binomial(1, curr_rate, size=num_curr_cells)).sum()
+                num_curr_cells += growth_inds.sum()
+
+            new_dict[curr_clone] = num_curr_cells
+
+
+        ####TODO
+        ## new_lineage_mutants chances. This will see if a mutation will change
+        ####TODO
+        ## Add death + stimulation rate as well as growth
+        # Save the new cell clones df and cell af
+        clone_counts = [i for i in new_dict.values()]
+        self.new_clone_cell = self.clone_counts_to_cell_series(clone_counts)
+        # Do not make cell_af, will make this only when subsampled.
+
+
+        # self.new_cell_af = pd.DataFrame()
+        # for clone in range(1, self.num_clones+1):
+        #     self.new_cell_af = pd.concat((self.new_cell_af, new_dict[clone]),axis=0).reset_index(drop=True)
+        return
+
+
+    def grow_binomial_old(self, p):
+        """ (2.1.1)
+        :param p: contains time_steps, rates,
+                 and [growth][mutant_af_sigma_noise
+        :type dict
         """
         timesteps = p["time_steps"]
         rates = p["rates"]
 
         sigma = self.params['growth']["mutant_af_sigma_noise"]
         cell_af = self.cell_af
-        clone_mt_dict = self.clone_mt_dict
 
         num_clones = self.num_clones+1
         new_dict = {}
         for curr_clone in range(num_clones):
             curr_rate = rates[curr_clone]
-            ids = self.extract_clone_cells(curr_clone)
-            new_cells = cell_af.loc[ids].copy()
+            ids = self.extract_clone_cells(self.clone_cell, curr_clone)
+            new_cells = cell_af.iloc[ids].copy()
             for i in range(timesteps):
                 # Simulate growth for each clone separately.
                 growth_inds = np.flatnonzero(random.binomial(1, curr_rate, size=new_cells.shape[0]))
@@ -299,29 +354,59 @@ class Simulation:
 
             new_dict[curr_clone] = new_cells
             # Create list of cells
-
         ####TODO
         ## new_lineage_mutants chances. This will see if a mutation will change
-
-
         ####TODO
         ## Add death + stimulation rate as well as growth
         # Save the new cell clones df and cell af
         clone_counts = [i.shape[0] for i in new_dict.values()]
         self.new_clone_cell = self.clone_counts_to_cell_series(clone_counts)
-
         self.new_cell_af = pd.DataFrame(new_dict[0])
         for clone in range(1, self.num_clones+1):
             self.new_cell_af = pd.concat((self.new_cell_af, new_dict[clone]),axis=0).reset_index(drop=True)
         return
 
 
-    def grow_poisson(self):
+    def grow_poisson(self, p):
         # TODO growth of poisson refactor
         return
 
 
     def subsample_new(self, to_delete=False):
+        """(3) Subsample from new cell population and generate cell_af
+
+        :param to_delete: To remove the cells that grew (which takes up
+        a lot of RAM).
+        :type to_delete: bool
+        """
+        p = self.params
+        if 'sequence_subsample' in p and p['sequence_subsample'] is not None:
+            self.subsample_new_clone_cell = self.new_clone_cell.sample(n=self.params['sequence_subsample'])
+        else:
+            self.subsample_new_clone_cell = self.new_clone_cell.sample(
+                n=self.num_cells)
+
+        #print(f'New cell af, {len(self.subsample_new_clone_cell)}')
+        # Generate subsample_new_cell_af
+        self.subsample_new_cell_af = self.create_cell_af(clone_df=self.subsample_new_clone_cell,
+                                                         mt_dict = self.clone_mt_dict,
+                                                         n_cells=len(self.subsample_new_clone_cell),
+                                                         n_mt=self.num_mt_positions,
+                                                         num_clones=self.num_clones,
+                                                         cov_params=p['initialize'],
+                                                         hets=
+                                                             self.params[
+                                                                 'het'],
+                                                         het_err=self.params['het_err_rate'],
+                                                         coverage=None
+                                                         )
+
+        if to_delete:
+            self.new_cell_af = None
+            self.new_clone_cell = None
+
+
+    def subsample_new_old(self, to_delete=False):
         """(3) Subsample from new cell population
 
         :param to_delete: To remove the cells that grew (which takes up
@@ -352,7 +437,6 @@ class Simulation:
         combined_clones = pd.concat(
             (self.clone_cell, self.subsample_new_clone_cell)).reset_index(
             drop=True)
-
 
         combined_befaft = np.concatenate((np.zeros(shape=[self.cell_af.shape[0],]), np.ones(shape=[self.subsample_new_cell_af.shape[0]])))
         combined_meta = pd.DataFrame({"pre_post": combined_befaft, "clone": combined_clones})
@@ -419,6 +503,8 @@ class Simulation:
         df_stack["Nucleotide"] = df_stack["MT_pos"].apply(
             lambda x: mt_ref[x])
 
+        # Save the NTs.
+        # For concordance, split the coverage in two
         df_stack = pd.concat(df_stack, df_stack_ref)
         for ind, val in df_stack.groupby("Nucleotide"):
             # Drop the 0s

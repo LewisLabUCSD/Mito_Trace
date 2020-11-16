@@ -200,13 +200,14 @@ class FullSimulation:
 
 
     def stats_before_after(self, clone_id=1):
-        b_a_df = pd.DataFrame(index=np.arange(0,len(self.sim)), columns=["Before", "After", "A/B"], dtype=str)
+        b_a_df = pd.DataFrame(index=np.arange(0,len(self.sim)), columns=["B", "A", "A/B"], dtype=str)
         for iter, s in enumerate(self.sim.values):
             b_clones = s.clone_cell
             a_clones = s.subsample_new_clone_cell
-            b_a_df.at[iter, "Before"] = (b_clones == clone_id).sum()
-            b_a_df.at[iter, "After"] = (a_clones==clone_id).sum()
-            b_a_df.at[iter,"A/B"] = (b_a_df.at[iter, "After"]+1)/(b_a_df.at[iter, "Before"]+1)
+            b_a_df.at[iter, "B"] = (b_clones == clone_id).sum()
+            b_a_df.at[iter, "A"] = (a_clones==clone_id).sum()
+            b_a_df.at[iter,"A/B"] = (b_a_df.at[iter, "A"]+1)/(b_a_df.at[iter, "B"]+1)
+
         self.b_a_df = b_a_df
         b_a_df.to_csv(self.f_save_befaft, sep='\t')
         self.metrics['b_a_df'] = b_a_df
@@ -274,7 +275,7 @@ class FullSimulation:
         all_growth_estimate = []
         all_clone_sizes = []
         for iter, s in enumerate(self.sim.values):
-            growth_estimate, clone_sizes = an.estimate_growth_rate(s.combined_meta)
+            growth_estimate, clone_sizes, _, _ = an.estimate_growth_rate(s.combined_meta)
             all_growth_estimate.append(growth_estimate)
             all_clone_sizes.append(clone_sizes)
 
@@ -285,20 +286,32 @@ class FullSimulation:
     def estimate_growth_rates_from_cluster(self):
         all_growth_estimate = []
         all_clone_sizes = []
+        all_bef_est = []
+        all_aft_est = []
         for iter, s in enumerate(self.sim.values):
-            growth_estimate, clone_sizes = an.estimate_growth_rate(s.combined_meta, clone_col="cluster_clone")
+            growth_estimate, clone_sizes, aft_est, bef_est = an.estimate_growth_rate(s.combined_meta, clone_col="cluster_clone")
             all_growth_estimate.append(growth_estimate)
+            all_bef_est.append(bef_est)
+            all_aft_est.append(aft_est)
             all_clone_sizes.append(clone_sizes)
         self.metrics['pred_growth_rates'] = all_growth_estimate
+        self.metrics['pred_aft_count'] = all_aft_est
+        self.metrics['pred_bef_count'] = all_bef_est
         self.metrics['pred_clone_sizes'] = all_clone_sizes
         return
 
 
     def stats_before_after_clust(self, clone_id=1):
-        b_a_df = pd.DataFrame(index=np.arange(0,len(self.sim)), columns=["A/B"], dtype=str)
+        b_a_df = pd.DataFrame(index=np.arange(0,len(self.sim)), columns=["A/B", "A", "B"], dtype=str)
         for iter, s in enumerate(self.sim.values):
             curr_pred_growth = self.metrics['pred_growth_rates'][iter]
+            curr_pred_aft = self.metrics['pred_aft_count'][iter]
+            #print('curr_pred_aft', curr_pred_aft)
+            curr_pred_bef = self.metrics['pred_bef_count'][iter]
             b_a_df.at[iter, "A/B"] = curr_pred_growth.loc[clone_id]
+            b_a_df.at[iter, "A"] = curr_pred_aft.loc[clone_id]
+            b_a_df.at[iter, "B"] = curr_pred_bef.loc[clone_id]
+
         b_a_df.to_csv(self.f_save_befaft_cl, sep='\t')
         self.metrics['b_a_clust_df'] = b_a_df
         return
@@ -307,7 +320,7 @@ class FullSimulation:
         all_growth_estimate = []
         all_clone_sizes = []
         for iter, s in enumerate(self.sim.values):
-            growth_estimate, clone_sizes = an.estimate_growth_rate(s.combined_meta)
+            growth_estimate, clone_sizes, _, _ = an.estimate_growth_rate(s.combined_meta)
             all_growth_estimate.append(growth_estimate)
             all_clone_sizes.append(clone_sizes)
 

@@ -22,6 +22,8 @@ from src.utils.utils import expand_df
 
 from .fullsimulation import FullSimulation
 
+pandarallel.initialize(nb_workers=12)
+
 def replace_item(obj, key, replace_value):
     # https: // stackoverflow.com / a / 45335542
     for k, v in obj.items():
@@ -65,14 +67,12 @@ class ParameterSweep:
         self.default_params = params
         self.save_sim = sweep_params['save_sim']
 
-
         print(self.save_sim)
         # Create the yaml files in the directory indicated by local_outdir and prefix in sweep_params_f
         self.outdir = os.path.join(sweep_params["outdir"], sweep_params["prefix"])
         if not os.path.exists(self.outdir):
             os.makedirs(self.outdir)
         self.f_save = os.path.join(self.outdir,self.sweep_params['prefix'] + '.p')
-
         self.f_save_metrics = os.path.join(self.outdir,self.sweep_params['prefix'] + '.metrics.p')
 
         #self.tmp_f_save = self.f_save.replace('.p', '') + '_tmp.p'
@@ -87,7 +87,7 @@ class ParameterSweep:
         params_dict = dict()
 
         for ind, val in self.params_df.iterrows():
-            f_name = os.path.join(self.outdir, str(ind)+'.yaml' )
+            f_name = os.path.join(self.data_outdir, str(ind)+'.yaml' )
             # Create the name
             params['name'] = str(ind)
             params['data_outdir'] = self.data_outdir
@@ -131,7 +131,6 @@ class ParameterSweep:
         #print(type(sim.metrics))
         return sim.metrics
 
-
     def run_sweep(self, subset=None):
         """ Loops through params_df and runs the simulation on that parameter.
 
@@ -149,13 +148,14 @@ class ParameterSweep:
         sweep_results_df = pd.Series(index=params_df.index, data=params_df.index)
         ###
         #sweep_results_df = sweep_results_df.apply(self.run_single_sweep, args=(self.outdir,))
-        pandarallel.initialize(nb_workers=self.sweep_params['cpus'])
-        sweep_results_df = sweep_results_df.parallel_apply(self.run_single_sweep, args=(self.outdir, self.save_sim))
+        print("Number of cpus",self.sweep_params['cpus'])
+
+        sweep_results_df = sweep_results_df.parallel_apply(self.run_single_sweep, args=(self.data_outdir, self.save_sim))
         #sweep_results_df = sweep_results_df.apply(self.run_single_sweep, args=(self.outdir, self.save_sim))
         ###
 
         self.sweep_results = sweep_results_df
-        print('saving dict sweep_results')
+        print('saving dict sweep_results', self.f_save_metrics)
         pickle.dump(sweep_results_df.to_dict(), open(self.f_save_metrics, 'wb'), pickle.HIGHEST_PROTOCOL)
         #sweep_results_df.to_pickle(self.f_save_metrics)
         return
@@ -257,9 +257,11 @@ class ParameterSweep:
         df_full = df_full.astype(
             {'dominant_growth': str, 'dominant_clone_sizes': str,
              'A/B': float})
-        sns.boxplot(data=df_full, y="A/B", hue="dominant_growth",
+        df_full["log2 A/B"] = np.log2(df_full["A/B"])
+
+        ax = sns.boxplot(data=df_full, y="log2 A/B", hue="dominant_growth",
                        x="dominant_clone_sizes")
-        plt.legend(bbox_to_anchor = (1.15, 1))
+        ax.legend(bbox_to_anchor = (1.15, 1), title="dominant_growth")
         # sns.violinplot(data=df_full, y="A/B", hue="dominant_growth",
         #                x="dominant_clone_sizes")
         #plt.savefig(os.path.join(self.outdir, 'growth_before_after.png'))
@@ -269,7 +271,7 @@ class ParameterSweep:
         return None
 
 
-    def plot_before_after_true_growth(self, to_log=False):
+    def plot_before_after_true_growth(self, to_log=True, clust_thresh=5):
         """ Fig2B: Violin plot of the growth rates of the dominant clone
 
         Plot the growth of cells in each clone before and after.
@@ -286,41 +288,50 @@ class ParameterSweep:
             b_a_df = curr_results['b_a_df']
 
             # Each element will be a list of the values.
+
+            # A. Get the actual A and B
             s = self.params_df.loc[ind].copy()
             curr = pd.DataFrame([s.copy()] * len(b_a_df))
             curr["A/B"] = b_a_df["A/B"].values
             curr["Source"] = "True"
-
+            curr["A"] = b_a_df["A"].values
+            curr["B"] = b_a_df["B"].values
+            # B. Get the predicted labels
             curr_pred = curr.copy()
             curr_pred["A/B"] = curr_results['b_a_clust_df']["A/B"].values
             curr_pred["Source"] = "Cluster predicted"
+            curr_pred["A"] = curr_results['b_a_clust_df']["A"].values
+            curr_pred["B"] = curr_results['b_a_clust_df']["B"].values
+
             #curr['Predicted A/B'] = curr_results['pred_growth_rates']
-            if to_log:
-                curr_pred["A/B"] = (curr_pred["A/B"]+0.001).apply(lambda x: np.log10(x))
-            df_full.append(curr.append(curr_pred))
+            new = curr.append(curr_pred)
+
+            df_full.append(new)
 
         df_full = pd.concat(df_full)
+        print(f'number with small clust numbers: ', ((df_full["A"] + df_full["B"])<clust_thresh).sum())
+
+        if to_log:
+            df_full["log2 A/B"] = (df_full["A/B"]).apply(lambda x: np.log2(x))
+            df_full["log2 A/B"] = df_full.apply(lambda x: x["log2 A/B"] if (x["A"] + x["B"]) > clust_thresh else 0, axis=1)
+        else:
+            df_full["A/B"] = df_full.apply(lambda x: x["A/B"] if (x["A"] + x[
+                "B"]) > clust_thresh else 0, axis=1)
+
+
         df_full = df_full.astype(
             {'dominant_growth': str, 'dominant_clone_sizes': str,
              'A/B': float})
 
-        print('df_full',df_full)
-        print('df_full', df_full.isnull().sum())
-        print('df_full', (df_full==np.inf).sum())
-
-        # Seaborn Factorplot
-        # g = sns.FacetGrid(data=df_full, col='dominant_het',
-        #                   row='dominant_growth')
-
-        # g.map(sns.violinplot, kwargs={'x':"dominant_clone_sizes", 'y':"A/B",
-        #                               "hue":"True clones", "order": ['0','1']})
-        #
-        # g.add_legend()
-        # g.savefig(os.path.join(self.outdir, 'growth_before_after_pred.png'))
-        g = sns.catplot(data=df_full, y="A/B", hue="Source",
+        if to_log:
+            y="log2 A/B"
+        else:
+            y="A/B"
+        g = sns.catplot(data=df_full, y=y, hue="Source",
                     x="dominant_clone_sizes", row='dominant_growth',
                     col="dominant_het", kind="box", margin_titles=True,
                     legend_out=True)
+        #plt.suptitle(f'Number of cells in cluster needed to be counted: {clust_thresh}')
         #g.add_legend()
         #plt.legend(bbox_to_anchor=(1.15, 1))
 
