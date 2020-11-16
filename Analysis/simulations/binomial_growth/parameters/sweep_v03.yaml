@@ -1,12 +1,12 @@
 # One set of parameters for simulating cells and their lineages
 outdir: 'results'
-prefix: 'sweep_v02'
+prefix: 'sweep_v03'
 data_outdir: 'data/out'
 
 #num_iterations: 100
 #num_cells: 10000
 #num_mt_positions: 10
-cpus: 36
+cpus: 24
 
 save_sim: false
 
