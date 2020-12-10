@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/isshamie/software/cellranger-atac-1.2.0/martian-cs/v3.2.4/adapters/python/martian_shell.py", line 589, in _main
+    stage.main()
+  File "/home/isshamie/software/cellranger-atac-1.2.0/martian-cs/v3.2.4/adapters/python/martian_shell.py", line 566, in main
+    self.metadata.write('outs', outs.items())
+  File "/home/isshamie/software/cellranger-atac-1.2.0/martian-cs/v3.2.4/adapters/python/martian_shell.py", line 238, in write
+    force)
+  File "/home/isshamie/software/cellranger-atac-1.2.0/martian-cs/v3.2.4/adapters/python/martian_shell.py", line 230, in write_raw
+    with open(self.make_path(name), 'wb') as dest:
+IOError: [Errno 13] Permission denied: '/data2/mito_lineage/Analysis/mtscATAC/2020_11_18_Croker/PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT_LOCAL/fork0/join-ubd4cb4e886/_outs'

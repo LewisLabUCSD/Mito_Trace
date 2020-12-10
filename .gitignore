@@ -1,10 +1,11 @@
 # Byte-compiled / optimized / DLL files
+software/
 *.svg
 __pycache__/
 *.py[cod]
 .snakemake/
 _STARtmp/
-
+old/
 
 # C extensions
 *.so

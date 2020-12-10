@@ -1,0 +1,1 @@
+The mgatk pipeline was unable to run properly on unix. It could not even run for the test data they had. It might be due to Python version but that also did not work. In any case, the sample data was able to run on the a MacOS Mojave. This data is in data/sample_data/out/ and is used to attempt to call variants in 02_mgatk_variants.ipynb.

@@ -1,0 +1,22 @@
+@include "sc_atac_counter_cs.mro"
+call SC_ATAC_COUNTER_CS(
+    fastq_mode = "ILMN_BCL2FASTQ",
+    sample_id = "PBMC_J",
+    sample_def = [ 
+        {
+            "gem_group": null,
+            "lanes": null,
+            "read_path": "/data/isshamie/dropbox/ATACseq/2020_11_18_Croker/igm-storage2.ucsd.edu/201113_A00953_0185_AHN7TMDSXY",
+            "sample_indices": [ "any" ],
+            "sample_names": [ "BC_10xATAC_PMBC_J" ],
+            "library": "LibraryNotSpecified",
+            "bc_in_read": 1,
+            "bc_length": 16
+        }
+    ],
+    reference_path = "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist",
+    downsample = null,
+    sample_desc = "",
+    factorization = [ "lsa" ],
+    force_cells = null,
+)

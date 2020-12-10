@@ -1,0 +1,1 @@
+/home/isshamie/software/cellranger-atac-1.2.0/cellranger-atac-cs/1.2.0/bin/count --id=PBMC_J --reference=/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist --fastqs=/data/isshamie/dropbox/ATACseq/2020_11_18_Croker/igm-storage2.ucsd.edu/201113_A00953_0185_AHN7TMDSXY --sample=BC_10xATAC_PMBC_J --localcores=24

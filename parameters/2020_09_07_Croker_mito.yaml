@@ -5,7 +5,7 @@
 #mito_character: MT
 #num_reads_filter: 16571 #MT genome in humans
 
-samples: "parameters/2020_09_07_Croker_mito.csv"
+samples: "parameters/Lareau_2020.csv"
 results: "data/processed/mttrace/2020_09_07"
 figures: "figures/mttrace/2020_09_07"
 

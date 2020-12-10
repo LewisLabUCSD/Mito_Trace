@@ -13,7 +13,14 @@ import seaborn as sns
 import sys
 
 
-def extract_barcode_info(bam_f, out_f,rm_slash=False):
+def extract_barcode_info(bam_f, out_f,rm_slash=False, mt_chr="MT"):
+    """
+    Args:
+        bam_f:
+        out_f:
+        rm_slash:
+    """
+    print('mt_chr', mt_chr)
     samfile = pysam.AlignmentFile(bam_f, "rb")
     barcodes = set()
     corrected_barcodes = set()
@@ -22,7 +29,7 @@ def extract_barcode_info(bam_f, out_f,rm_slash=False):
     CB_read_number = defaultdict(int)
     BC_read_number = defaultdict(int)
 
-    for read in tqdm(samfile.fetch('MT')):
+    for read in tqdm(samfile.fetch(mt_chr)):
         d = dict(read.tags)
         if "CR" in d:
             barcodes.add(d["CR"])
@@ -58,10 +65,16 @@ def extract_barcode_info(bam_f, out_f,rm_slash=False):
 @click.command(help="Extract Cell Barcodes from bam")
 @click.argument('bam_f',  type=click.Path(exists=True))
 @click.argument('out_f',  type=click.Path(exists=False))
-def main(bam_f, out_f):
+@click.argument('mtchr',  type=click.STRING)
+def main(bam_f, out_f, mtchr):
     # bam_f = sys.argv[1]
     # out_f = sys.argv[2]
-    extract_barcode_info(bam_f, out_f, rm_slash=False)
+    """
+    Args:
+        bam_f:
+        out_f:
+    """
+    extract_barcode_info(bam_f, out_f, rm_slash=False, mt_chr=mtchr)
 
     return
 

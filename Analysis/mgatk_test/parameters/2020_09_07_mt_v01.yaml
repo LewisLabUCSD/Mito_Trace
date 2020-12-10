@@ -1,0 +1,5 @@
+bam_f: /data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_mt_fiveprime/outs/possorted_genome_bam.bam
+bam_dir: /data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_mt_fiveprime/outs/
+outdir: /data2/isshamie/mito_lineage/data/processed/mgatk_test_out/ # results/
+feature_barcodes: /data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_mt_fiveprime/outs/filtered_feature_bc_matrix/barcodes.tsv 
+genome: /data2/mito_lineage/data/external/refdata-cellranger-GRCh38-3.0.0/chrM.fasta

@@ -15,8 +15,8 @@ from mplh.fig_utils import helper_save
 def filter_barcodes_from_CB(CB_read_number, cellr_bc_f):
     """
     Function that filters a dictionary where the keys are cells from a text file of cell barcodes, outputted from cellranger
-    :param CB_read_number:
-    :param cellr_bc_f:
+    :param CB_read_number: dictionary where the keys are the cell IDs
+    :param cellr_bc_f: Each line is a cell ID
     :return:
     """
     if cellr_bc_f is None:
