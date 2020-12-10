@@ -1,0 +1,15 @@
+digraph {
+	subgraph cluster2 {
+		beta [label="beta
+~
+Beta"]
+		label=2 labeljust=r labelloc=b style=rounded
+	}
+	subgraph cluster190 {
+		s [label="s
+~
+Binomial" style=filled]
+		label=190 labeljust=r labelloc=b style=rounded
+	}
+	beta -> s
+}

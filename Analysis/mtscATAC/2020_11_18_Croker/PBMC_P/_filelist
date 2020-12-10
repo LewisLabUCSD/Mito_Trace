@@ -1,0 +1,9 @@
+  5510563      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/fork0/join/files
+  5510555      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/fork0/files
+  5510559      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/fork0/split/files
+  5510619      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT_LOCAL/fork0/split-ubd4cb4e886/files
+  5510628      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT_LOCAL/fork0/join-ubd4cb4e886/files
+  5510632      4 lrwxrwxrwx   1 support  mito_trace       22 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT_LOCAL/fork0/files -> join-ubd4cb4e886/files
+  5510595      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT/fork0/split-ubd4cb4e886/files
+  5510603      4 drwxrwsr-x   1 support  mito_trace     4096 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT/fork0/join-ubd4cb4e886/files
+  5510609      4 lrwxrwxrwx   1 support  mito_trace       22 Nov 18 09:25 PBMC_P/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT/fork0/files -> join-ubd4cb4e886/files

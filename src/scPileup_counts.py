@@ -7,6 +7,7 @@ import numpy as np
 import sys
 import pandas as pd
 #import click
+from src.external.pileup_counts import run_pileup
 
 
 def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
@@ -42,9 +43,11 @@ def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
         outpre = join(pileup_dir,
                       os.path.basename(bamfile.replace(".bam", "")))
         sample = os.path.basename(bamfile).split("_")[-1]
-        cmd = f"python {func_p}/01_pileup_counts.py {bamfile} {outpre} {maxBP} {base_qual} {sample} {alignment_qual}"
+        run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_qual, use_strands=True)
+
+        #cmd = f"python {func_p}/01_pileup_counts.py {bamfile} {outpre} {maxBP} {base_qual} {sample} {alignment_qual}"
         #print(cmd)
-        os.system(cmd)
+        #os.system(cmd)
     return
 
 

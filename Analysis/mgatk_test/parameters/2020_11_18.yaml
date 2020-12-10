@@ -1,0 +1,3 @@
+bam_f: /data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/PBMC_J/outs/possorted_bam.bam
+outdir: results/
+feature_barcodes: /data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/PBMC_J/outs/filtered_peak_bc_matrix/barcodes.tsv.gz
