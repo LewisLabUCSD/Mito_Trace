@@ -21,6 +21,9 @@ def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
     for cell, cell_series in cell_df.iterrows():
         cell_nucs = dict()
         for n in ["A", "C", "G", "T", "coverage"]:
+            if not os.path.exists(join(coverage_dir, "CB_" + cell + "." + n + ".txt")): #it only has the rev strand
+                print(f"{n} not found for {cell}")
+                continue
             cell_nucs[n] = pd.read_csv(
                 join(coverage_dir, "CB_" + cell + "." + n + ".txt"),
                 header=None)
@@ -41,6 +44,8 @@ def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
             pos = int(ind[:-1])
             n = ind[-1]
             # curr_nuc_df = nt_cov_dict[n]
+            if n not in cell_nucs or "coverage" not in cell_nucs:
+                continue
             if pos in cell_nucs[n].index.values:
                 if type == 'coverage':
                     cell_df.loc[cell, ind] = cell_nucs[n].loc[pos][
@@ -80,7 +85,7 @@ def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min
 
     # Create a numpy tensor, of |cell|-|pos|-|nucs| shape, for both coverage along with average base quality
     # Cells are found in the concat file
-    coverage_df = pd.read_csv(glob.glob(os.path.join(concat_dir, f"*.coverage.txt.gz"))[0])
+    coverage_df = pd.read_csv(glob.glob(os.path.join(concat_dir, f"*.coverage.strands.txt.gz"))[0])
     #cells = coverage_df[1].values
 
 
@@ -96,8 +101,12 @@ def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min
 
     cells = dict()
     for n in ["A", "C", "G", "T"]:
-        curr_f = glob.glob(os.path.join(concat_dir, f"*.{n}.txt.gz"))[0]
-        df = pd.read_csv(curr_f, header=None)
+        curr_f = glob.glob(os.path.join(concat_dir, f"*.{n}.strands.txt.gz"))[0]
+        df = pd.read_csv(curr_f)
+
+        # Only take the Forward reads since it is the one to compare against the reference
+        if len(df.columns)>4:
+            df = df.iloc[:, :4]
         df.columns = ["Position", "Cell", "Coverage", "BQ"]
         df["Cell"] = df["Cell"].apply(lambda x: x.replace(".bam", ""))
         cells[n] = set(df["Cell"].values)
@@ -139,8 +148,10 @@ def calculate_af(coverage_dir, concat_dir, AF_F, ref_fasta, maxBP, topN=500, min
     print('no alt count', no_alt_count)
     af = af.dropna()
 
-    sc_coverage = pd.read_csv(glob.glob(join(concat_dir, "*.coverage.txt.gz"))[0],
-                              header=None)
+    sc_coverage = pd.read_csv(glob.glob(join(concat_dir, "*.coverage.strands.txt.gz"))[0])
+
+    if len(sc_coverage)>3:
+        sc_coverage = sc_coverage.iloc[:, :3]
     sc_coverage.columns = ["Position", "Cell", "Coverage"]
     sc_coverage["Cell"] = sc_coverage["Cell"].apply(lambda x: x.replace(".bam",""))
 
