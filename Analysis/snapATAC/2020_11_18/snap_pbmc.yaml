@@ -1,0 +1,12 @@
+#OUTDIR: "/data2/mito_trace/Analysis/"
+genome: "hg38"
+genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+
+#/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklistfasta
+
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/MTblacklist"
+
+
+samples:
+  - "PBMC_J"
+  - "PBMC_P"

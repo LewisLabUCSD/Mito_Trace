@@ -188,5 +188,6 @@ def main():
 	run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality)
 	return
 
+
 if __name__ == "__main__":
 	main()

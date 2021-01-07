@@ -26,7 +26,7 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   # Set up downstream processing including robust ordering
   # The coverage file could have slightly more variants /
   # individual samples depending on the calls, so base it
-  # of of them
+  # off of them
   importDT <- function(file){
     if(tools::file_ext(file) == "gz"){
       cov <- suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE))

@@ -26,7 +26,8 @@ rule all:
         expand("{sample}/outs/possorted_bam.bam", sample=samples_df.index),
         expand("{sample}/outs/web_summary.html", sample=samples_df.index),
         expand("coverage/{sample}_coverage.tsv", sample=samples_df.index),
-        expand("plots/{sample}_coverage_chr.png", sample=samples_df.index)
+        expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
+        expand("coverage/{sample}_coverage.bw", sample=samples_df.index)
 
 def results_dir():
     return config["results"]
@@ -56,8 +57,14 @@ rule generate_coverage:
     input: "{out_name}/outs/possorted_bam.bam"
     output:
         coverage="coverage/{out_name}_coverage.tsv",
-    shell: "samtools depth {input} > {output} "
+    shell: "samtools index {input};samtools depth {input} > {output} "
 
+
+rule generate_bigwig_coverage:
+    input: "{sample}/outs/possorted_bam.bam"
+    output:
+        coverage="coverage/{sample}_coverage.bw"
+    shell: "samtools index {input};bamCoverage -b {input} -o {output}"
 
 rule chrom_coverage:
     input:
@@ -82,6 +89,10 @@ rule chrom_coverage:
 
 
 rule cellranger_qc:
+    """TODO
+    """
     input: expand("{sample}/outs/web_summary.html", sample=samples_df.index)
     output: "plots/cellr_qc.png"
     shell: "python qc_cellr.py {input}"
+
+

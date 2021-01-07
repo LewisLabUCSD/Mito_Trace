@@ -5,6 +5,8 @@ wildcard_constraints:
 import os
 import pandas as pd
 from snakemake.utils import validate
+from Bio import SeqIO
+import pickle
 
 #configfile: "parameters/Zhu_Single_Cell_10X_genomics_Human2_002.yaml"
 
@@ -31,19 +33,22 @@ mq = config["mapq"]
 rule all:
     input:
         #expand("{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
-        expand("{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p", results=res, sample=samples["sample"].values, mapq = mq, num_read=config["num_reads_filter"]),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
-               mapq = mq, cellr_bc=config["use_cellr_barcode"],
-               num_read=config["num_reads_filter"],
-               min_cells=config["min_cells"],
-               min_reads=config["min_reads"],
-               top_pos = config["top_pos"],
-               top_cells = config["top_cells"],
-               cell_mt_coverage=config["cell_mt_coverage"]),
-        expand("{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
+        #expand("{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p", results=res, sample=samples["sample"].values, mapq = mq, num_read=config["num_reads_filter"]),
+        # expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
+        #        mapq = mq, cellr_bc=config["use_cellr_barcode"],
+        #        num_read=config["num_reads_filter"],
+        #        min_cells=config["min_cells"],
+        #        min_reads=config["min_reads"],
+        #        top_pos = config["top_pos"],
+        #        top_cells = config["top_cells"],
+        #        cell_mt_coverage=config["cell_mt_coverage"]),
+        expand("{results}/{sample}/mapq_{mapq}/{sample}.MT.bw",results=res,sample=samples["sample"].values, mapq=mq),
+        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
+        expand("{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
         expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
         expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"])
+        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
+        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.variant.rds", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"])
 
 
 
@@ -83,7 +88,6 @@ rule cp_bam:
         # shell("ln -s {input} {output.bam}"),
         # shell("ln -s {input}.bai {output.bai}")
 
-
 rule index_bam:
     """Index the bam file"""
     input: "{results}/{sample}/00_bam/{sample}.bam"
@@ -99,8 +103,12 @@ rule filter_bam:
     output:
         mq_bam = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
         mq_bai = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
+
     run:
-            shell("samtools view {input.in_bam} -q {wildcards.mapq} -h -b > {output.mq_bam}")
+            if "rm_duplicates" in config and config["rm_duplicates"]:
+                shell("samtools view {input.in_bam} -F 1284 -q {wildcards.mapq} -h -b > {output.mq_bam}")
+            else:
+                shell("samtools view {input.in_bam} -q {wildcards.mapq} -h -b > {output.mq_bam}")
             shell("samtools index {output.mq_bam}")
 
 
@@ -117,6 +125,15 @@ rule MT_map:
         #shell("samtools {input.bam}")
         shell("samtools view -b {input.bam} {params.mt_chr} > {output.mt_bam}")
         shell("samtools index {output.mt_bam}")
+
+
+rule get_bigwig:
+    """Extract the MT genome"""
+    input: "{results}/{sample}/mapq_{mapq}/{sample}.MT.bam"
+    output:
+        coverage="{results}/{sample}/mapq_{mapq}/{sample}.MT.bw"
+    shell: "bamCoverage -b {input} -o {output}"
+
 
 
 rule barcode_data:
@@ -182,25 +199,6 @@ rule scPileup:
     shell:
          "python src/scPileup_counts.py {input.scBam} {output} {input.barcodes} {wildcards.num_read}"
 
-
-rule splitByStrand:
-    """Separate the bam files based on +/- strand"""
-    input:
-        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
-    output:
-        pos_mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.pos.bam",
-        pos_mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.pos.bam.bai",
-        neg_mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.neg.bam",
-        neg_mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.neg.bam.bai"
-    threads: 18
-    params: mt_chr = config["mito_character"]
-    #directory("/data/isshamie/miito_lineage/mttrace/{sample}/mapq_{mapq}/{sample}_scBam")
-    run:
-        shell("samtools view -b {input.bam} {params.mt_chr} > {output.mt_bam}")
-        shell("samtools index {output.mt_bam}")
-
-
 # rule scFilter:
 #     input: "data/processed/{sample}/{sample}_scPileup_{num_read}"
 #     output:
@@ -208,26 +206,42 @@ rule splitByStrand:
 #     shell: "python src/scFilter.py {input} {wildcards.num_read} {output}"
 #
 
-rule scPileup_concat:
+# rule scPileup_concat:
+#     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
+#     input:
+#         scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
+#         # Added to save directly to /data/isshamie
+#         scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam"
+#     output:
+#         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
+#     params:
+#         samplename = lambda wildcards, output: output.all.split("_all.coverage.txt.gz")[0]
+#           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
+#     shell:
+#          "software/mito-genotyping/exampleProcessing/02_merge_pileup_counts.sh {input.scPileup_dir} {params.samplename}"
+
+
+# scPileup_concat with different strands
+rule scPileup_concat_strands:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
     input:
         scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
         # Added to save directly to /data/isshamie
         scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam"
     output:
-        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
+        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
     params:
-        samplename = lambda wildcards, output: output.all.split("_all.coverage.txt.gz")[0]
+        samplename = lambda wildcards, output: output.all.split("_all.coverage.strands.txt.gz")[0]
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
     shell:
-         "software/mito-genotyping/exampleProcessing/02_merge_pileup_counts.sh {input.scPileup_dir} {params.samplename}"
+         "python src/scPileup_concat.py {input.scPileup_dir} {params.samplename}"
 
 
 
 rule plot_CB_coverage:
     """Plot the MT coverage of the single cells"""
     input:
-         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",
+         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
          barcodes = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
     output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png"
     shell:
@@ -237,13 +251,64 @@ rule plot_CB_coverage:
 rule scPileup_MT_matrix:
     """Create the position-by-cell coverage matrix"""
     input:
-        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz",
-        scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
+        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
         barcode_p = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
     output:
         sc_coverage_f = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+    threads: 16
     shell:
-        "python src/plot_heatmap_coverage.py sc_mt {input.barcode_p} {input.scPileup_dir} {output.sc_coverage_f} {maxBP}"
+        "python src/plot_heatmap_coverage.py sc_mt {input.barcode_p} {input.all} {output.sc_coverage_f} {maxBP}"
+
+
+rule filter_cell_bc:
+    input:
+        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
+        barcode_p = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+    output:
+        "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz"
+    run:
+        for n in ["A", "C", "G", "T", "coverage"]:
+            curr_f = input.all
+            curr_f = curr_f.replace(".coverage.", "." + n + ".")
+            df = pd.read_csv(curr_f, header=None)
+            df[1] = df[1].str.replace(".bam","")
+            barcodes = pickle.load(open(input.barcode_p, "rb"))
+            df = df[df[1].isin(barcodes)]
+            curr_out_f = output[0]
+            curr_out_f = curr_out_f.replace(".coverage.", "." + n + ".")
+            if n == "coverage":
+                df = df.iloc[:,:3]
+            df.to_csv(curr_out_f, header=None, index=None, compression='gzip')
+
+
+rule get_depth:
+    input:  "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt"
+    run:
+        df = pd.read_csv(input[0], index_col=0)
+        depth = df.sum(axis=1)/df.shape[1]
+        depth.to_csv(output[0], sep='\t', header=False)
+        #df.groupby()
+
+
+def get_ref(wildcards):
+    w = wildcards
+    return f"{w.results}/{w.sample}/mapq_{w.mapq}/cellr_{w.cellr_bc}/{w.sample}_{w.num_read}/{config['mito_character']}_refAllele.txt"
+
+
+rule get_refAllele:
+    input: config["mt_ref_fa"],
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    run:
+        records = list(SeqIO.parse(input[0], "fasta"))
+        mt_seq = records[0].seq
+        for ind, val in enumerate(mt_seq):
+            if ind == 0:
+                ref_str = f"{ind+1}\t{val}"
+            else:
+                ref_str = f"{ref_str}\n{ind+1}\t{val}"
+        with open(output[0], "w") as f:
+            f.write(ref_str)
 
 
 rule plot_scPileup_MT_matrix:
@@ -257,9 +322,35 @@ rule plot_scPileup_MT_matrix:
         "python src/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_heat} {output.save_f_coverage}"
 
 
-"""Create the AF-by-cell pickle file"""
+#rule filter_sc_barcodes:
+
+rule to_seurat:
+    """ Extract the variants based on the specified parameters"""
+    input:
+        all = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
+        depth = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
+        refAllele = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.rds"
+    params:
+        data_dir=lambda wildcards, input: os.path.dirname(input.all),
+        sample = lambda wildcards: wildcards.sample
+    shell:
+        "Rscript software/toRDS.R {params.data_dir} {params.sample}"
+
+
+rule callVariants_mgatk:
+    input: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.rds"
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.variant.rds"
+    params:
+        sample=lambda wildcards: wildcards.sample,
+        num_read=lambda wildcards: wildcards.num_read
+    shell: "Rscript software/variant_calling.R {input}"
+
+
+
 rule generate_allele_frequencies:
-    input:  "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
+    """Create the AF-by-cell pickle file"""
+    input:  "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
     output:  "{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p"
     params: maxBP = config['maxBP']
     shell:
@@ -267,8 +358,8 @@ rule generate_allele_frequencies:
 
 
 #position_bq_thresh:
-"""Create a text file of cell barcodes to keep"""
 rule filter_af:
+    """Create a text file of cell barcodes to keep"""
     input:
          af_f = "{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p",
          barcode_data = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"

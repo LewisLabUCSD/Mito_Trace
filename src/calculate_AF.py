@@ -4,7 +4,6 @@ import pandas as pd
 from tqdm import tqdm
 import seaborn as sns
 import matplotlib.pyplot as plt
-import click
 import os
 import pickle
 from pandarallel import pandarallel

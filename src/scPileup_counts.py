@@ -14,14 +14,14 @@ def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
                  maxBP=16571, base_qual=0, alignment_qual=0,
                  func_p="/home/isshamie/software/mito-genotyping/exampleProcessing/",
                  cellr_bc_f=None):
-    if reads_filter == -1:
-        reads_filter = maxBP
+    if reads_filter < 0:
+        reads_filter = 0
 
     print("Running get_coverage")
     if not os.path.exists(pileup_dir):
         os.mkdir(pileup_dir)
 
-    [CR_read_number, CB_read_number, BC_read_number, barcodes,corrected_barcodes, barcode_pairs] = pickle.load(open(barcode_f, "rb"))
+    [_, CB_read_number, _, _,_, _] = pickle.load(open(barcode_f, "rb"))
 
 
     #print(CB_read_number)
