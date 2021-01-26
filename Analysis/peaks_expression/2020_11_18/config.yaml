@@ -1,0 +1,10 @@
+global: "PROJECT"
+
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/MTblacklist"
+experiment: "2020_11_18"
+genome: "MTblacklist"
+
+
+samples:
+  - "PBMC_J"
+  - "PBMC_P"

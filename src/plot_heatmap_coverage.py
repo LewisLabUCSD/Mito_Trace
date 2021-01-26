@@ -16,18 +16,24 @@ mpl.use('agg')
 def fill_df_coverage(df, pileup_dir, is_par=False):
     """ Reads each cell file and stores the coverage for each cell"""
     not_done = []
+    df = df.astype(int)
     for ind in (df.index):
-        print(ind)
         f = glob.glob(os.path.join(pileup_dir,"CB_" + ind + ".coverage.txt"))
-        if len(f) == 0:
+        f_rev = glob.glob(os.path.join(pileup_dir,"CB_" + ind + ".coverage.minus.txt"))
+
+        if len(f) == 0 and len(f_rev) == 0:
             not_done.append(ind)
         else:
             curr = pd.read_csv(f[0], header=None)
             for _, val in curr.iterrows():
                 df.loc[ind, val[0]] = val[2]
+            if len(f_rev) > 0:  # Reverse strand
+                curr_rev = pd.read_csv(f_rev[0], header=None)
+                for _, val in curr_rev.iterrows():
+                    df.loc[ind, val[0]] += val[2]
+
     print(f"Total {df.shape[0] - len(not_done)}")
     print(f"Number of missing files: {len(not_done)}")
-
     return df
 
 
@@ -37,39 +43,36 @@ def fill_df_coverage(df, pileup_dir, is_par=False):
 # @click.argument('barcode_p',  type=click.Path(exists=True))
 # @click.argument('pileup_dir',  type=click.Path(exists=True))
 # @click.argument('save_f', type=click.STRING)
-def sc_mt_coverage(barcode_p, pileup_dir, save_f, maxBP, read_l = 100):
+def sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP, read_l = 100, n_cpu=32):
     """
 
     :param barcode_p: The cellbarcode information file. Counts how many reads per barcode
-    :param pileup_dir:
+    :param concat_coverage_f: The concatenated, long, format of all cells
     :param save_f:
     :param maxBP: This is the cutoff number of basepairs needed to be covered to be added to the filtered matrix
     :return:
     """
-    print(barcode_p, pileup_dir, save_f, maxBP)
+    print(barcode_p, concat_coverage_f, save_f, maxBP)
     CB_read_number = pickle.load(open(barcode_p, "rb"))
 
-    # CB_read_MT = dict()
-    # for i in CB_read_number:
-    #     #if CB_read_number[i] * read_l >= maxBP:
-    #     CB_read_MT[i] = CB_read_number[i]
-
-    #print(f"Number of Cells that pass the MT threshold: {len(CB_read_MT)}")
-
-    #sc_coverage = pd.DataFrame(index=CB_read_MT.keys(), columns= range(1, maxBP + 1), dtype=int)
-
-    sc_coverage = pd.DataFrame(index=CB_read_number.keys(), columns=range(1, maxBP + 1), dtype=int)
-    sc_coverage.loc[:,:] = 0
-    sc_coverage = pardf(sc_coverage, fill_df_coverage,
-                        func_args=(pileup_dir,), num_processes=32)
-    not_done = sc_coverage[((sc_coverage == 0).all(axis=1))].index
-
-    sc_coverage = sc_coverage[~(sc_coverage.index.isin(not_done))]
+    df = pd.read_csv(concat_coverage_f, header=None)
+    sc_coverage = (df.pivot(index=1, columns=0, values=2)).fillna(0)
+    sc_coverage.index = sc_coverage.index.str.replace(".bam", "")
+    sc_coverage = sc_coverage.loc[sc_coverage.index.isin(CB_read_number.keys())]
     sc_coverage.to_csv(save_f)
+
+    # sc_coverage = pd.DataFrame(index=CB_read_number.keys(), columns=range(1, maxBP + 1), dtype=int)
+    # sc_coverage.loc[:,:] = 0
+    # sc_coverage = pardf(sc_coverage, fill_df_coverage,
+    #                     func_args=(pileup_dir,), num_processes=n_cpu)
+    # not_done = sc_coverage[((sc_coverage == 0).all(axis=1))].index
+    #
+    # sc_coverage = sc_coverage[~(sc_coverage.index.isin(not_done))]
+    # sc_coverage.to_csv(save_f)
     return
 
 
-def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
+def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     sc_coverage = pd.read_csv(sc_coverage_f, index_col=0)
     # top500 = sc_coverage.loc[
     #     sc_coverage.sum(axis=1).sort_values(ascending=False)[
@@ -81,13 +84,15 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
         sc_coverage = sc_coverage.loc[
             sc_coverage.sum(axis=1).sort_values(ascending=False)[
             :top_n].index]
+    else:
+        top_n = sc_coverage.shape[0]
     # else:
     #     sc_coverage = sc_coverage.loc[
     #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
 
 
     g = sns.clustermap(sc_coverage, row_cluster=False, col_cluster=False, col_linkage=False)
-    plt.title(f"Number of reads at each MT position by the top {top_n} covered cells")
+    plt.title(f"Number of reads at each MT position in {top_n} cells")
     #g.ax_heatmap.set_title(f"Number of reads at each MT position by the top {top_n} covered cells")
     g.ax_heatmap.set_yticks([])
     g.ax_heatmap.set_xlabel("MT position")
@@ -102,13 +107,12 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=500):
             log2_sc_coverage.sum(axis=1).sort_values(ascending=False)[
             :top_n].index]
     g = sns.clustermap(log2_sc_coverage, col_cluster=False)
-    g.ax_heatmap.set_title("Log2 number of reads at each MT position by the top 500 covered cells")
+    g.ax_heatmap.set_title(f"Log2 number of reads at each MT position in {top_n} cells")
     g.ax_heatmap.set_yticks([])
     g.ax_heatmap.set_xlabel("MT position")
     g.ax_heatmap.set_ylabel("Cell")
     plt.savefig(savefig_f.replace(".png","")+".log2.png")
     plt.savefig(savefig_f.replace(".png", ".svg"))
-
 
     return
 
@@ -150,10 +154,10 @@ def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
 def main(func, *args, **kwargs):
     print('args', args)
     if func == "sc_mt":
-        barcode_p, pileup_dir, save_f, maxBP = args
+        barcode_p, concat_coverage_f, save_f, maxBP = args
         maxBP = int(maxBP)
         #print(barcode_p, pileup_dir, save_f, maxBP)
-        sc_mt_coverage(barcode_p, pileup_dir, save_f, maxBP)
+        sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP)#, n_cpu=)
 
     elif func == "plot":
         sc_coverage_f, save_f_pos_heat, save_f_pos_cov = args
@@ -166,7 +170,7 @@ def main(func, *args, **kwargs):
         else:
             cells_cov = [1, 10, 100, 500]
 
-        plot_sc_mt(sc_coverage_f, save_f_pos_cov, top_n=500)
+        plot_sc_mt(sc_coverage_f, save_f_pos_cov, top_n=0)
         plot_percent_coverage_cells(sc_coverage_f, save_f_pos_heat, x_cov, cells_cov)
     return
 

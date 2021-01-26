@@ -2,7 +2,9 @@ import os
 os.chdir(config["OUTDIR"])
 
 rule all:
-    input: ".snake_completed"
+    input:
+        config["name"],
+        ".snake_completed",
 
 
 rule mask_mt:
@@ -18,7 +20,9 @@ rule cellranger_mkref:
     params:
         name = config["name"],
         config = config["config_file"]
-    output: ".snake_completed"
+    output:
+        directory(config["name"]),
+        ".snake_completed"
     run:
          shell("cellranger-atac mkref {params.name} --config {params.config}"),
          shell("touch {output}")

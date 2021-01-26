@@ -1,0 +1,45 @@
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/MTblacklist"
+#variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
+#variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/genome1K.phase3.SNP_AF5e2.chr1toX_chr_full.hg38.vcf"
+variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/liftOver_chr_full_genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
+#genome: "hg38"
+genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+
+#/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklistfasta
+
+use_mt_bam: True
+mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/2020_11_18/" #PBMC_J/mapq_0/PBMC_J.MT.bam"
+
+samples:
+  - "PBMC_J"
+  - "PBMC_P"
+
+
+pseudo_multiplex:
+  #Number Reads Total: 10000000
+  num_cells: 2000
+  is_proportional: False
+
+mt:
+  minMAF:
+    - 0.001
+#    - 0.01
+#    - 0.1
+  minCOUNT:
+    - 1
+#    - 10
+#    - 20
+#    - 200
+    #- 1000
+
+pre_variant:
+  minMAF:
+    # - 0
+    - 0.1
+#    - 0.2
+#    - 0.4
+  minCOUNT:
+    # - 0
+    - 20
+#    - 200
+    #- 1000

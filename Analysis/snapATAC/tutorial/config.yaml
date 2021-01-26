@@ -1,0 +1,12 @@
+OUTDIR: "data/out"
+homer_outdir: "data/out/homer/"
+snap_f: "data/in/atac_v1_adult_brain_fresh_5k.snap"
+sample: "atac_v1_adult_brain_fresh_5k"
+barcodes_f: "data/in/atac_v1_adult_brain_fresh_5k_singlecell.csv"
+snaprds_out_f: "data/out/atac_v1_adult_brain_fresh_5k.snap.rds"
+
+## Genome information
+genome: "mm10"
+genes_f: "data/in/gencode.vM16.gene.bed"
+blacklist_f: "data/in/mm10.blacklist.bed.gz"
+

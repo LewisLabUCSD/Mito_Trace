@@ -12,7 +12,8 @@ import seaborn as sns
 import sys
 import subprocess
 from os.path import join
-
+import matplotlib as mpl
+mpl.use('Agg')
 # FUNC_PATH = "/home/isshamie/software/mito-genotyping/exampleProcessing/"
 # BAM = "../data/raw/14515X1.MT.bam"
 # BARCODES = "../data/raw/Human2_002_Barcodes.txt"
@@ -95,8 +96,14 @@ def plot_coverage_barcode_file(barcode_data, barcode_fs, f_save, maxBP=16571):
 
 
 def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, maxBP=16571):
-    scPileup  = pd.read_csv(scPileup_f, header=None)
-    scPileup.columns = ["Position", "Cell", "Coverage"]
+    scPileup  = pd.read_csv(scPileup_f)
+    print('scPileup')
+    print(scPileup.head())
+    if scPileup.shape[1] == 5:
+        scPileup.columns = ["Position", "Cell", "Coverage", "Fw Coverage", "Rev Coverage"]
+    else:
+        scPileup = scPileup.iloc[:, :3]
+        scPileup.columns = ["Position", "Cell", "Coverage"]
     cell_coverage = scPileup.groupby("Cell").sum()["Coverage"]
     cell_coverage_mt = cell_coverage/maxBP
     cell_coverage_mt.index = list(map(lambda x: x.replace('.bam',''),cell_coverage_mt.index.values))
@@ -111,7 +118,6 @@ def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, ma
     print('cov thresh', cov_thresh)
     cell_coverage_mt = cell_coverage_mt[cell_coverage_mt>cov_thresh]
     print('after cov filter', len(cell_coverage_mt.index))
-
 
 
 

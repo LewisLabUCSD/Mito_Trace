@@ -20,13 +20,16 @@ def create_cell_coverage():
 
 
 def create_barcode_filter(coverage_tensor, cells_d,bq_tensor,barcode_f):
-    """
-    Use the cells dictionary and the barcode names in barcodes_f to filter for the indicies of the tensors
-    :param coverage_tensor:
-    :param cells_d: {cell:index} dictionary for the tensors
-    :param bq_tensor:
-    :param barcode_f:
+    """Use the cells dictionary and the barcode names in barcodes_f to filter
+    for the indicies of the tensors :param coverage_tensor: :param cells_d:
+    {cell:index} dictionary for the tensors :param bq_tensor: :param barcode_f:
     :return:
+
+    Args:
+        coverage_tensor:
+        cells_d:
+        bq_tensor:
+        barcode_f:
     """
     CB_read_number = pickle.load(open(barcode_f, "rb"))
     cb_keys = list(CB_read_number.keys())
@@ -50,6 +53,14 @@ def create_barcode_filter(coverage_tensor, cells_d,bq_tensor,barcode_f):
 
 def create_position_counts_filter(coverage_tensor, bq_tensor, pos_d, min_cells=100, min_reads=100):
     #pos_filter = (coverage_tensor.sum(axis=2) >= min_reads).sum(axis=0) >= min_cells
+    """
+    Args:
+        coverage_tensor:
+        bq_tensor:
+        pos_d:
+        min_cells:
+        min_reads:
+    """
     pos_filter = np.where((coverage_tensor.sum(axis=2) >= min_reads).sum(
         axis=0) >= min_cells)[0]
     coverage_tensor = coverage_tensor[:, pos_filter,:]
@@ -64,6 +75,13 @@ def create_position_counts_filter(coverage_tensor, bq_tensor, pos_d, min_cells=1
 
 
 def create_top_positions_filter(coverage_tensor,bq_tensor, pos_dict, topPositions=-1):
+    """
+    Args:
+        coverage_tensor:
+        bq_tensor:
+        pos_dict:
+        topPositions:
+    """
     coverage_pos = coverage_tensor.sum(axis=2).sum(axis=0)
     pos_inds = coverage_pos.argsort()[::-1]
     if topPositions  > 0:
@@ -83,6 +101,14 @@ def create_top_positions_filter(coverage_tensor,bq_tensor, pos_dict, topPosition
 
 def create_top_cells_filter(coverage_tensor, bq_tensor, cell_dict, topCells=-1, by='coverage'):
     #| cell | - | pos | - | nucs |
+    """
+    Args:
+        coverage_tensor:
+        bq_tensor:
+        cell_dict:
+        topCells:
+        by:
+    """
     coverage_cells = coverage_tensor.sum(axis=1).sum(axis=1)
     cell_inds = coverage_cells.argsort()[::-1]
     if topCells  > 0:
@@ -101,10 +127,18 @@ def create_top_cells_filter(coverage_tensor, bq_tensor, cell_dict, topCells=-1, 
 
 
 def bq_filter(coverage_tensor, bq_tensor, pos_d, type='Gaussian'):
+    """
+    Args:
+        coverage_tensor:
+        bq_tensor:
+        pos_d:
+        type:
+    """
     bq_vals = bq_tensor.flatten()
     gm = GaussianMixture(n_components=3)
     gm.fit(bq_vals)
     vals=gm.get_params()
+
 
 def af_distance():
     return
@@ -122,6 +156,17 @@ def af_distance():
 @click.argument('cell_mt_coverage', type=click.INT, default=-1)
 def create_af_cell(af_tensor_f, barcode_f, out_af_filter_f, mincells, minpos, topcells, toppos, cell_mt_coverage):
     # Load the AF data
+    """
+    Args:
+        af_tensor_f:
+        barcode_f:
+        out_af_filter_f:
+        mincells:
+        minpos:
+        topcells:
+        toppos:
+        cell_mt_coverage:
+    """
     [coverage_tensor, bq_tensor, cells_d, nucs_d, position_d] = pickle.load(open(af_tensor_f,"rb"))
 
     # Create the filters step by step
