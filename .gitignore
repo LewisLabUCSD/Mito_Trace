@@ -1,9 +1,10 @@
 # Byte-compiled / optimized / DLL files
-*.p # pickl files
+*.p 
 software/
 *.bam
 *.bai
 *.svg
+
 __pycache__/
 *.py[cod]
 .snakemake/
