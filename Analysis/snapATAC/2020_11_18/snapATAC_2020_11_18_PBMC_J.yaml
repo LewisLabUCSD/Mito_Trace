@@ -1,0 +1,14 @@
+OUTDIR: "data/out"
+homer_outdir: "data/out/homer/"
+snap_f: "data/in/snap/PBMC_J.snap" #"data/in/atac_v1_adult_brain_fresh_5k.snap"
+
+sample: "PBMC_J"
+barcodes_f: "data/in/barcodes.tsv" #"/data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/MTblacklist/PBMC_J/outs/filtered_peak_bc_matrix/barcodes.tsv"
+snaprds_out_f: "data/out/PBMC_J.snap.rds"
+
+## Genome information
+genome: "hg38"
+#blacklist_f: "data/in/mm10.blacklist.bed.gz"
+blacklist_f: "data/in/hg38.full.blacklist.bed" #"/data2/mito_lineage/data/external/Lareau_blacklist/hg38.full.blacklist.bed"
+#genes_f: "data/in/gencode.vM16.gene.bed"
+genes_f: "data/in/transcripts.bed" #/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/regions/transcripts.bed"

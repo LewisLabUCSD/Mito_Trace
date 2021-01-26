@@ -1,0 +1,131 @@
+{
+    "name": "ID.PBMC_J.SC_ATAC_COUNTER_CS.SC_ATAC_COUNTER.ATAC_COUNTER_PREFLIGHT.fork0",
+    "pid": 48790,
+    "host": "jabba",
+    "type": "local",
+    "cwd": "/data2/mito_lineage/Analysis/mtscATAC/2020_11_18_Croker/PBMC_J/SC_ATAC_COUNTER_CS/SC_ATAC_COUNTER/ATAC_COUNTER_PREFLIGHT/fork0/join-ubd4db4e886/files",
+    "python": {
+        "binpath": "/home/isshamie/software/cellranger-atac-1.2.0/miniconda-atac-cs/4.3.21-miniconda-atac-cs-c10/bin/python",
+        "version": "2.7.14 |Anaconda, Inc.| (default, Mar 27 2018, 17:29:31) \n[GCC 7.2.0]"
+    },
+    "rusage": {
+        "self": {
+            "ru_maxrss": 14620,
+            "ru_ixrss": 0,
+            "ru_idrss": 0,
+            "ru_minflt": 436,
+            "ru_majflt": 0,
+            "ru_nswap": 0,
+            "ru_utime": 0.010787,
+            "ru_stime": 0,
+            "ru_inblock": 16,
+            "ru_oublock": 0,
+            "ru_msgsnd": 0,
+            "ru_msgrcv": 0,
+            "ru_nsignals": 0,
+            "ru_nivcsw": 0
+        },
+        "children": {
+            "ru_maxrss": 92992,
+            "ru_ixrss": 0,
+            "ru_idrss": 0,
+            "ru_minflt": 108433,
+            "ru_majflt": 20,
+            "ru_nswap": 0,
+            "ru_utime": 3.157128,
+            "ru_stime": 0.701537,
+            "ru_inblock": 2928,
+            "ru_oublock": 0,
+            "ru_msgsnd": 0,
+            "ru_msgrcv": 0,
+            "ru_nsignals": 0,
+            "ru_nivcsw": 65
+        }
+    },
+    "used_bytes": {
+        "rss": 143200256,
+        "shared": 56569856,
+        "vmem": 1131413504,
+        "text": 1880064,
+        "stack": 233562112,
+        "proc_count": 3
+    },
+    "io": {
+        "total": {
+            "read": {
+                "sysc": 9792,
+                "bytes": 0
+            },
+            "write": {
+                "sysc": 4322,
+                "bytes": 0
+            }
+        },
+        "max": {
+            "read": {
+                "sysc": 1957.041829530887,
+                "bytes": 0
+            },
+            "write": {
+                "sysc": 864.3301438005818,
+                "bytes": 0
+            }
+        },
+        "dev": {
+            "read": {
+                "sysc": 136.09301216245433,
+                "bytes": 0
+            },
+            "write": {
+                "sysc": 66.87285685510507,
+                "bytes": 0
+            }
+        }
+    },
+    "wallclock": {
+        "start": "2020-11-18 09:25:29",
+        "end": "2020-11-18 09:25:34",
+        "duration_seconds": 5.24967682
+    },
+    "threads": 1,
+    "memGB": 1,
+    "vmemGB": 8,
+    "profile_mode": "disable",
+    "stackvars_flag": "disable",
+    "monitor_flag": "disable",
+    "invocation": {
+        "call": "SC_ATAC_COUNTER_CS",
+        "args": {
+            "downsample": null,
+            "factorization": [
+                "lsa"
+            ],
+            "fastq_mode": "ILMN_BCL2FASTQ",
+            "force_cells": null,
+            "reference_path": "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist",
+            "sample_def": [
+                {
+                    "gem_group": null,
+                    "lanes": null,
+                    "sample_names": [
+                        "BC_10xATAC_PMBC_J"
+                    ],
+                    "bc_length": 16,
+                    "library": "LibraryNotSpecified",
+                    "sample_indices": [
+                        "any"
+                    ],
+                    "bc_in_read": 1,
+                    "read_path": "/data/isshamie/dropbox/ATACseq/2020_11_18_Croker/igm-storage2.ucsd.edu/201113_A00953_0185_AHN7TMDSXY"
+                }
+            ],
+            "sample_desc": "",
+            "sample_id": "PBMC_J"
+        },
+        "sweepargs": []
+    },
+    "version": {
+        "martian": "'1.2.0-v3.2.4'",
+        "pipelines": "1.2.0"
+    }
+}

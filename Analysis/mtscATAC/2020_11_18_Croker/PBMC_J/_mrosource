@@ -1,0 +1,1822 @@
+#
+# @include "_aligner_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+
+filetype json;
+filetype bam;
+#
+# @include "_sort_and_mark_dups_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype bam;
+filetype bam.bai;
+filetype tsv.gz;
+filetype tsv.gz.tbi;
+filetype json;
+filetype csv;
+#
+# @include "_peak_caller_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+
+filetype bedgraph;
+filetype pickle;
+filetype tsv.gz;
+filetype tsv.gz.tbi;
+filetype bed;
+filetype json;
+#
+# @include "_basic_sc_atac_counter_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype tsv.gz;
+filetype tsv.gz.tbi;
+filetype csv;
+filetype json;
+filetype bed;
+filetype pickle;
+filetype h5;
+#
+# @include "_produce_cell_barcodes_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype tsv.gz;
+filetype tsv.gz.tbi;
+filetype csv;
+filetype json;
+filetype bed;
+filetype pickle;
+filetype h5;
+filetype npy.gz;
+#
+# @include "_sc_atac_metric_collector_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype tsv.gz;
+filetype tsv.gz.tbi;
+filetype bed;
+filetype bam;
+filetype csv;
+filetype json;
+filetype h5;
+filetype txt;
+filetype pickle;
+#
+# @include "_peak_annotator_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+
+filetype bed;
+filetype tsv;
+filetype h5;
+filetype gz;
+filetype pickle;
+#
+# @include "_sc_atac_analyzer_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype tsv;
+filetype h5;
+filetype pickle;
+filetype gz;
+filetype bed;
+filetype csv;
+#
+# @include "_sc_atac_reporter_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype json;
+filetype html;
+filetype csv;
+filetype h5;
+filetype bam;
+#
+# @include "_atac_cloupe_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+filetype cloupe;
+filetype csv;
+filetype json;
+filetype h5;
+filetype bed;
+filetype tsv.gz.tbi;
+#
+# @include "_preflight_stages.mro"
+#
+
+#
+# Copyright (c) 2019 10x Genomics, Inc. All rights reserved.
+#
+
+filetype csv;
+filetype bed;
+filetype tsv.gz;
+filetype tsv.gz.tbi;
+
+#
+# @include "_aligner_stages.mro"
+#
+
+# SETUP_CHUNKS chunks up the input fastq data into sets of matched R1, R2, SI, and BC fastq files.
+# input_mode specifies how FASTQs were generated. There are two modes:
+#
+# 1. "BCL_PROCESSOR"
+#
+# FASTQs produced by the 10X BCL_PROCESSOR pipeline. This mode assumes the FASTQ files obey the internal
+# naming conventions and the reads have been interleaved into RA FASTQ files.
+#
+# 2. "ILMN_BCL2FASTQ"
+#
+# FASTQs produced directly by Illumina BCL2FASTQ v1.8.4. For this mode, BCL2FASTQ must be configured to emit the
+# index2 read, rather than using it for dual-index demultiplexing:
+#
+# configureBclToFastq.pl --no-eamss --use-bases-mask=Y100,I8,Y14,Y100 --input-dir=<basecalls_dir> \
+#     --output-dir=<output_dir> --sample-sheet=<sample_sheet.csv>
+#
+# The sample sheet must be formatted as per the BCL2FASTQ documentation (10 column csv), and must contain a row for
+# each sample index used. The sequencer must have been run in dual index mode, with the second index read (used to
+# read the 10X barcode) emitted as the R2 output file. The --use-bases-mask argument should be set to the read
+# length used.
+stage SETUP_CHUNKS(
+    in  string   sample_id        "id of the sample",
+    in  map[]    sample_def       "list of dictionary specifying input data",
+    in  string   input_mode       "configuration of the input fastqs",
+    in  map      downsample       "map specifies either subsample_rate (float) or gigabases (int)",
+    out map[]    chunks           "map has barcode, barcode_reverse_complement, sample_index, read1, read2, gem_group, and read_group fields",
+    out string[] read_groups      "list of strings representing read groups",
+    out json     downsample_info  "info about downsampling result",
+    src py       "stages/processing/setup_chunks",
+)
+
+# Trims adapter sequences from reads and massages fastq output into a fixed format (interleaved R1 file, etc.)
+stage TRIM_READS(
+    in  map[]  chunks,
+    in  string barcode_whitelist,
+    in  int    max_read_num,
+    in  map    trim_def,
+    in  map    adapters,
+    out map[]  chunks,
+    out json   bc_counts,
+    out json   lot_info,
+    out json   read_counts,
+    src py     "stages/processing/trim_reads",
+) split (
+    in  map    chunk,
+) using (
+    volatile = strict,
+)
+
+# Aligns the reads to the input reference, producing chunked bam files
+stage ALIGN_READS(
+    in  map[]  chunks,
+    in  string aligner,
+    in  string aligner_method,
+    in  string reference_path,
+    in  string read_group_sample,
+    in  int    num_threads,
+    out bam[],
+    src py     "stages/processing/align_reads",
+) split (
+    in  map    chunk,
+) using (
+    # N.B. No index files are generated for the bam
+    volatile = strict,
+)
+
+#
+# @include "_aligner.mro"
+#
+
+# Takes input fastqs and chunks them, trims them, and aligns the trimmed reads to a reference
+pipeline _ALIGNER(
+    in  string sample_id,
+    in  string fastq_mode         "configuration of the input fastqs",
+    in  map[]  sample_def,
+    in  string reference_path     "this is the reference_path",
+    in  string barcode_whitelist  "name of barcode whitelist file",
+    in  map    trim_def,
+    in  map    adapters,
+    in  string read_group_sample  "sample header for BAM file",
+    in  map    downsample,
+    out bam[]  align,
+    out map[]  chunks,
+    out json   bc_counts,
+    out json   lot_info           "gelbead lot detected",
+    out json   read_counts        "total # of read pairs before and after adapter trimming",
+    out json   downsample_info    "info on downsampling",
+)
+{
+    call SETUP_CHUNKS(
+        sample_id  = self.sample_id,
+        input_mode = self.fastq_mode,
+        sample_def = self.sample_def,
+        downsample = self.downsample,
+    ) using (
+        volatile = true,
+    )
+
+    call TRIM_READS(
+        chunks            = SETUP_CHUNKS.chunks,
+        max_read_num      = 5000000,
+        trim_def          = self.trim_def,
+        adapters          = self.adapters,
+        barcode_whitelist = self.barcode_whitelist,
+    ) using (
+        volatile = true,
+    )
+
+    call ALIGN_READS(
+        chunks            = TRIM_READS.chunks,
+        aligner           = "bwa",
+        aligner_method    = "MEM",
+        reference_path    = self.reference_path,
+        read_group_sample = self.read_group_sample,
+        num_threads       = 4,
+    ) using (
+        volatile = true,
+    )
+
+    return (
+        align           = ALIGN_READS,
+        chunks          = TRIM_READS.chunks,
+        bc_counts       = TRIM_READS.bc_counts,
+        lot_info        = TRIM_READS.lot_info,
+        read_counts     = TRIM_READS.read_counts,
+        downsample_info = SETUP_CHUNKS.downsample_info,
+    )
+}
+
+#
+# @include "_sort_and_mark_dups_stages.mro"
+#
+
+# Attaches raw and corrected barcode sequences to the aligned reads
+stage ATTACH_BCS(
+    in  string barcode_whitelist,
+    in  bam[]  align,
+    in  map[]  chunks,
+    in  bool   paired_end,
+    in  bool   exclude_non_bc_reads,
+    in  float  bc_confidence_threshold,
+    in  json   bc_counts,
+    out bam[]  output,
+    out int    perfect_read_count,
+    src py     "stages/processing/attach_bcs",
+) split (
+    in  bam    align_chunk,
+    in  map    chunk,
+) using (
+    # N.B. No index files are generated for the bam
+    volatile = strict,
+)
+
+stage SORT_READS_BY_POS(
+    in  bam[] input,
+    out bam   tagsorted_bam,
+    src py    "stages/processing/sort_reads_by_pos",
+) split (
+    in  bam   chunk_input,
+) using (
+    # N.B. No index files are generated for the bam
+    volatile = strict,
+)
+
+# Marks duplicates in the reads using barcodes and fragment alignments to detect PCR and optical/diffusion duplicates
+stage MARK_DUPLICATES(
+    in  bam        input,
+    in  string     reference_path,
+    in  json       raw_barcode_counts,
+    in  string     barcode_whitelist,
+    out bam        output,
+    out bam.bai    index,
+    out csv        singlecell_mapping,
+    out tsv.gz     fragments,
+    out tsv.gz.tbi fragments_index,
+    src py         "stages/processing/mark_duplicates",
+) split (
+    in  map        lane_map,
+    in  string     chunk_start,
+    in  string     chunk_end,
+    in  int        chunk_num,
+) using (
+    # N.B. BAM/BED index files are explicitly bound where used
+    volatile = strict,
+)
+
+#
+# @include "_sort_and_mark_dups.mro"
+#
+
+# Attaches barcodes to the aligned reads, marks duplicate reads, and produces a barcode-sorted and position-sorted
+# output BAM
+pipeline _SORT_AND_MARK_DUPS(
+    in  bam[]      align,
+    in  map[]      chunks,
+    in  string     barcode_whitelist,
+    in  json       bc_counts,
+    in  string     reference_path,
+    out bam        possorted_bam        "bam file sorted by position",
+    out bam.bai    possorted_bam_index  "position-sorted bam index",
+    out tsv.gz     fragments,
+    out tsv.gz.tbi fragments_index,
+    out csv        singlecell_mapping,
+    out bam[]      read_paired_bam,
+)
+{
+    call ATTACH_BCS(
+        align                   = self.align,
+        chunks                  = self.chunks,
+        paired_end              = true,
+        barcode_whitelist       = self.barcode_whitelist,
+        exclude_non_bc_reads    = false,
+        bc_confidence_threshold = 0.975,
+        bc_counts               = self.bc_counts,
+    ) using (
+        volatile = true,
+    )
+
+    call SORT_READS_BY_POS(
+        input = ATTACH_BCS.output,
+    ) using (
+        volatile = true,
+    )
+
+    call MARK_DUPLICATES(
+        input              = SORT_READS_BY_POS.tagsorted_bam,
+        reference_path     = self.reference_path,
+        barcode_whitelist  = self.barcode_whitelist,
+        raw_barcode_counts = self.bc_counts,
+    ) using (
+        volatile = true,
+    )
+
+    return (
+        possorted_bam       = MARK_DUPLICATES.output,
+        possorted_bam_index = MARK_DUPLICATES.index,
+        singlecell_mapping  = MARK_DUPLICATES.singlecell_mapping,
+        fragments           = MARK_DUPLICATES.fragments,
+        fragments_index     = MARK_DUPLICATES.fragments_index,
+        read_paired_bam     = ATTACH_BCS.output,
+    )
+}
+
+#
+# @include "_peak_caller_stages.mro"
+#
+
+stage COUNT_CUT_SITES(
+    in  path       reference_path,
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    out bedgraph   cut_sites,
+    out pickle     count_dict,
+    src py         "stages/processing/count_cut_sites",
+) split (
+    in  string     contig,
+) using (
+    # N.B. We explicitly bind the index file
+    volatile = strict,
+)
+
+stage DETECT_PEAKS(
+    in  bedgraph cut_sites,
+    in  path     reference_path,
+    in  pickle   count_dict,
+    out bed      peaks,
+    out json     peak_metrics,
+    src py       "stages/processing/detect_peaks",
+) split (
+    in  string   contig,
+    in  float[]  params,
+    in  float    threshold,
+) using (
+    mem_gb   = 6,
+    # N.B. We explicitly bind the index file
+    volatile = strict,
+)
+
+#
+# @include "_peak_caller.mro"
+#
+
+pipeline _PEAK_CALLER(
+    in  path       reference_path,
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    out bedgraph   cut_sites,
+    out bed        peaks,
+    out json       peak_metrics,
+)
+{
+    call COUNT_CUT_SITES(
+        reference_path  = self.reference_path,
+        fragments       = self.fragments,
+        fragments_index = self.fragments_index,
+    )
+
+    call DETECT_PEAKS(
+        reference_path = self.reference_path,
+        cut_sites      = COUNT_CUT_SITES.cut_sites,
+        count_dict     = COUNT_CUT_SITES.count_dict,
+    )
+
+    return (
+        cut_sites    = COUNT_CUT_SITES.cut_sites,
+        peaks        = DETECT_PEAKS.peaks,
+        peak_metrics = DETECT_PEAKS.peak_metrics,
+    )
+}
+
+#
+# @include "_basic_sc_atac_counter_stages.mro"
+#
+
+stage GENERATE_PEAK_MATRIX(
+    in  string reference_path,
+    in  tsv.gz fragments,
+    in  bed    peaks,
+    out h5     raw_matrix,
+    out path   raw_matrix_mex,
+    src py     "stages/processing/generate_peak_matrix",
+) split (
+    in  file   barcodes,
+) using (
+    mem_gb   = 4,
+    # N.B. we don't explicitly need the fragment index
+    volatile = strict,
+)
+
+stage FILTER_PEAK_MATRIX(
+    in  h5   raw_matrix,
+    in  int  num_analysis_bcs,
+    in  int  random_seed,
+    in  csv  cell_barcodes,
+    out h5   filtered_matrix,
+    out path filtered_matrix_mex,
+    src py   "stages/processing/filter_peak_matrix",
+) split (
+) using (
+    volatile = strict,
+)
+
+#
+# @include "_produce_cell_barcodes_stages.mro"
+#
+
+stage REMOVE_LOW_TARGETING_BARCODES(
+    in  bed        peaks,
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  string     reference_path,
+    out json       barcode_counts,
+    out json       low_targeting_barcodes,
+    out json       low_targeting_summary,
+    out json       fragment_lengths,
+    out json       covered_bases,
+    src py         "stages/processing/cell_calling/remove_low_targeting_barcodes",
+) split (
+    in  string     contig,
+    out pickle     fragment_counts,
+    out pickle     targeted_counts,
+    out int        peak_coverage,
+) using (
+    mem_gb   = 4,
+    volatile = strict,
+)
+
+stage REMOVE_GEL_BEAD_DOUBLET_BARCODES(
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  string     reference_path,
+    in  json       barcode_counts,
+    out json       gel_bead_doublet_barcodes,
+    out json       gel_bead_doublet_summary,
+    out csv        connect_matrix,
+    src py         "stages/processing/cell_calling/remove_gel_bead_doublet_barcodes",
+) split (
+    in  string     contig,
+    in  file       valid_barcodes,
+) using (
+    mem_gb   = 4,
+    volatile = strict,
+)
+
+stage REMOVE_BARCODE_MULTIPLETS(
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  string     reference_path,
+    in  string     barcode_whitelist,
+    in  json       barcode_counts,
+    out json       barcode_multiplets,
+    out json       barcode_multiplets_summary,
+    src py         "stages/processing/cell_calling/remove_barcode_multiplets",
+) split (
+    in  string     contig,
+    in  string     gem_group,
+    out npy.gz     part_a_linkage_matrix,
+    out npy.gz     part_b_linkage_matrix,
+) using (
+    mem_gb   = 4,
+    volatile = strict,
+)
+
+stage MERGE_EXCLUDED_BARCODES(
+    in  json[] barcode_exclusions,
+    out json   excluded_barcodes,
+    src py     "stages/processing/cell_calling/merge_excluded_barcodes",
+)
+
+stage DETECT_CELL_BARCODES(
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  string     barcode_whitelist,
+    in  json       excluded_barcodes,
+    in  map        force_cells,
+    in  string     reference_path,
+    in  bed        peaks,
+    out csv        cell_barcodes,
+    out csv        singlecell,
+    out json       cell_calling_summary,
+    src py         "stages/processing/cell_calling/detect_cell_barcodes",
+) split (
+    in  string     contig,
+    out pickle     barcode_counts,
+    out pickle     targeted_counts,
+    out int        fragment_depth,
+) using (
+    mem_gb   = 4,
+    volatile = strict,
+)
+
+# TODO: This should be in mro/common for general use
+stage MERGE_SUMMARY_METRICS(
+    in  json[] summary_jsons,
+    out json   merged_summary,
+    src py     "stages/processing/cell_calling/merge_summary_metrics",
+)
+
+#
+# @include "_produce_cell_barcodes.mro"
+#
+
+pipeline _PRODUCE_CELL_BARCODES(
+    in  bed        peaks,
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  string     reference_path,
+    in  string     barcode_whitelist,
+    in  map        force_cells,
+    out csv        cell_barcodes,
+    out csv        singlecell,
+    out json       cell_calling_summary,
+    out json       excluded_barcodes,
+    out json       fragment_lengths,
+    out json       covered_bases,
+)
+{
+    call REMOVE_LOW_TARGETING_BARCODES(
+        fragments       = self.fragments,
+        fragments_index = self.fragments_index,
+        peaks           = self.peaks,
+        reference_path  = self.reference_path,
+    )
+
+    call REMOVE_GEL_BEAD_DOUBLET_BARCODES(
+        fragments       = self.fragments,
+        fragments_index = self.fragments_index,
+        reference_path  = self.reference_path,
+        barcode_counts  = REMOVE_LOW_TARGETING_BARCODES.barcode_counts,
+    )
+
+    call REMOVE_BARCODE_MULTIPLETS(
+        fragments         = self.fragments,
+        fragments_index   = self.fragments_index,
+        reference_path    = self.reference_path,
+        barcode_whitelist = self.barcode_whitelist,
+        barcode_counts    = REMOVE_LOW_TARGETING_BARCODES.barcode_counts,
+    )
+
+    call MERGE_EXCLUDED_BARCODES(
+        barcode_exclusions = [
+            REMOVE_BARCODE_MULTIPLETS.barcode_multiplets,
+            REMOVE_GEL_BEAD_DOUBLET_BARCODES.gel_bead_doublet_barcodes,
+            REMOVE_LOW_TARGETING_BARCODES.low_targeting_barcodes,
+        ],
+    )
+
+    call DETECT_CELL_BARCODES(
+        fragments         = self.fragments,
+        fragments_index   = self.fragments_index,
+        barcode_whitelist = self.barcode_whitelist,
+        force_cells       = self.force_cells,
+        excluded_barcodes = MERGE_EXCLUDED_BARCODES.excluded_barcodes,
+        reference_path    = self.reference_path,
+        peaks             = self.peaks,
+    )
+
+    call MERGE_SUMMARY_METRICS as MERGE_CELL_METRICS(
+        summary_jsons = [
+            REMOVE_LOW_TARGETING_BARCODES.low_targeting_summary,
+            REMOVE_GEL_BEAD_DOUBLET_BARCODES.gel_bead_doublet_summary,
+            REMOVE_BARCODE_MULTIPLETS.barcode_multiplets_summary,
+            DETECT_CELL_BARCODES.cell_calling_summary,
+        ],
+    )
+
+    return (
+        cell_barcodes        = DETECT_CELL_BARCODES.cell_barcodes,
+        excluded_barcodes    = MERGE_EXCLUDED_BARCODES.excluded_barcodes,
+        singlecell           = DETECT_CELL_BARCODES.singlecell,
+        cell_calling_summary = MERGE_CELL_METRICS.merged_summary,
+        fragment_lengths     = REMOVE_LOW_TARGETING_BARCODES.fragment_lengths,
+        covered_bases        = REMOVE_LOW_TARGETING_BARCODES.covered_bases,
+    )
+}
+
+#
+# @include "_basic_sc_atac_counter.mro"
+#
+
+pipeline _BASIC_SC_ATAC_COUNTER(
+    in  string     sample_id,
+    in  string     fastq_mode                   "configuration of the input fastqs",
+    in  map[]      sample_def,
+    in  string     reference_path               "this is the reference_path",
+    in  string     barcode_whitelist            "name of barcode whitelist file",
+    in  map        trim_def,
+    in  map        adapters,
+    in  map        downsample,
+    in  map        force_cells,
+    out bam        possorted_bam                "bam file sorted by position",
+    out bam.bai    possorted_bam_index          "position-sorted bam index",
+    out tsv.gz     fragments,
+    out tsv.gz.tbi fragments_index,
+    out json       lot_info                     "gelbead lot detected",
+    out json       read_counts                  "total # of read pairs before and after adapter trimming",
+    out json       downsample_info              "info on downsampling",
+    out csv        cell_barcodes,
+    out json       excluded_barcodes,
+    out json       cell_calling_summary,
+    out bed        peaks,
+    out bedgraph   cut_sites,
+    out csv        singlecell_mapping,
+    out csv        singlecell_cells,
+    out json       peak_metrics,
+    out bam[]      read_paired_bam,
+    out h5         raw_peak_bc_matrix,
+    out path       raw_peak_bc_matrix_mex,
+    out h5         filtered_peak_bc_matrix,
+    out path       filtered_peak_bc_matrix_mex,
+)
+{
+    call _ALIGNER(
+        sample_id         = self.sample_id,
+        fastq_mode        = self.fastq_mode,
+        sample_def        = self.sample_def,
+        read_group_sample = self.sample_id,
+        trim_def          = self.trim_def,
+        adapters          = self.adapters,
+        reference_path    = self.reference_path,
+        barcode_whitelist = self.barcode_whitelist,
+        downsample        = self.downsample,
+    )
+
+    call _SORT_AND_MARK_DUPS(
+        align             = _ALIGNER.align,
+        chunks            = _ALIGNER.chunks,
+        reference_path    = self.reference_path,
+        barcode_whitelist = self.barcode_whitelist,
+        bc_counts         = _ALIGNER.bc_counts,
+    )
+
+    call _PEAK_CALLER(
+        fragments       = _SORT_AND_MARK_DUPS.fragments,
+        fragments_index = _SORT_AND_MARK_DUPS.fragments_index,
+        reference_path  = self.reference_path,
+    )
+
+    call _PRODUCE_CELL_BARCODES(
+        fragments         = _SORT_AND_MARK_DUPS.fragments,
+        fragments_index   = _SORT_AND_MARK_DUPS.fragments_index,
+        peaks             = _PEAK_CALLER.peaks,
+        force_cells       = self.force_cells,
+        reference_path    = self.reference_path,
+        barcode_whitelist = self.barcode_whitelist,
+    )
+
+    call GENERATE_PEAK_MATRIX(
+        reference_path = self.reference_path,
+        fragments      = _SORT_AND_MARK_DUPS.fragments,
+        peaks          = _PEAK_CALLER.peaks,
+    )
+
+    call FILTER_PEAK_MATRIX(
+        num_analysis_bcs = null,
+        cell_barcodes    = _PRODUCE_CELL_BARCODES.cell_barcodes,
+        raw_matrix       = GENERATE_PEAK_MATRIX.raw_matrix,
+        random_seed      = null,
+    )
+
+    return (
+        possorted_bam               = _SORT_AND_MARK_DUPS.possorted_bam,
+        possorted_bam_index         = _SORT_AND_MARK_DUPS.possorted_bam_index,
+        singlecell_mapping          = _SORT_AND_MARK_DUPS.singlecell_mapping,
+        singlecell_cells            = _PRODUCE_CELL_BARCODES.singlecell,
+        lot_info                    = _ALIGNER.lot_info,
+        read_counts                 = _ALIGNER.read_counts,
+        downsample_info             = _ALIGNER.downsample_info,
+        cell_barcodes               = _PRODUCE_CELL_BARCODES.cell_barcodes,
+        excluded_barcodes           = _PRODUCE_CELL_BARCODES.excluded_barcodes,
+        cell_calling_summary        = _PRODUCE_CELL_BARCODES.cell_calling_summary,
+        peak_metrics                = _PEAK_CALLER.peak_metrics,
+        cut_sites                   = _PEAK_CALLER.cut_sites,
+        peaks                       = _PEAK_CALLER.peaks,
+        fragments                   = _SORT_AND_MARK_DUPS.fragments,
+        fragments_index             = _SORT_AND_MARK_DUPS.fragments_index,
+        read_paired_bam             = _SORT_AND_MARK_DUPS.read_paired_bam,
+        raw_peak_bc_matrix          = GENERATE_PEAK_MATRIX.raw_matrix,
+        raw_peak_bc_matrix_mex      = GENERATE_PEAK_MATRIX.raw_matrix_mex,
+        filtered_peak_bc_matrix     = FILTER_PEAK_MATRIX.filtered_matrix,
+        filtered_peak_bc_matrix_mex = FILTER_PEAK_MATRIX.filtered_matrix_mex,
+    )
+}
+
+#
+# @include "_sc_atac_metric_collector_stages.mro"
+#
+
+stage ESTIMATE_LIBRARY_COMPLEXITY(
+    in  json   sequencing_summary,
+    in  tsv.gz fragments,
+    in  csv    cell_barcodes,
+    out json   bulk_complexity,
+    out json   complexity_summary,
+    out json   singlecell_complexity,
+    src py     "stages/metrics/estimate_library_complexity",
+) split (
+    in  file   barcodes,
+) using (
+    mem_gb   = 6,
+    volatile = strict,
+)
+
+stage GENERATE_SEQUENCING_METRICS(
+    in  bam[] input,
+    out txt   misc_sm,
+    out json  summary,
+    src py    "stages/metrics/generate_sequencing_metrics",
+) split (
+    in  bam   chunk_bam,
+) using (
+    volatile = strict,
+)
+
+stage GENERATE_SINGLECELL_TARGETING(
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  bed        peaks,
+    in  string     reference_path,
+    out csv        singlecell,
+    out json       summary,
+    out csv        tss_relpos,
+    out csv        ctcf_relpos,
+    src py         "stages/metrics/generate_singlecell_targeting",
+) split (
+    in  string     contig,
+    out int        read_count,
+    out pickle     target_counts_by_barcode,
+    out pickle     chunk_tss,
+    out pickle     chunk_ctcf,
+) using (
+    mem_gb   = 6,
+    volatile = strict,
+)
+
+stage MERGE_SINGLECELL_METRICS(
+    in  string reference_path,
+    in  csv    singlecell_mapping,
+    in  csv    singlecell_targets,
+    in  csv    singlecell_cells,
+    out csv    singlecell,
+    out json   summary,
+    src py     "stages/metrics/merge_singlecell_metrics",
+) using (
+    mem_gb   = 8,
+    volatile = strict,
+)
+
+stage REPORT_INSERT_SIZES(
+    in  tsv.gz fragments,
+    in  bool   exclude_non_nuclear,
+    in  string reference_path,
+    out csv    insert_sizes,
+    out json   insert_summary,
+    src py     "stages/metrics/report_insert_sizes",
+) split (
+    in  file   barcode,
+    out file   total,
+) using (
+    volatile = strict,
+)
+
+stage REPORT_TSS_CTCF(
+    in  csv  tss_relpos,
+    in  csv  ctcf_relpos,
+    out json summary_metrics,
+    src py   "stages/metrics/report_tss_ctcf",
+) using (
+    volatile = strict,
+)
+
+#
+# @include "_sc_atac_metric_collector.mro"
+#
+
+pipeline _SC_ATAC_METRIC_COLLECTOR(
+    in  bam[]      read_paired_bam,
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  bed        peaks,
+    in  string     reference_path         "this is the reference_path",
+    in  csv        cell_barcodes,
+    in  csv        singlecell_mapping,
+    in  csv        singlecell_cells,
+    out json       singlecell_results,
+    out csv        singlecell,
+    out json       enrichment_results,
+    out json       basic_summary,
+    out json       insert_summary,
+    out csv        insert_sizes,
+    out json       bulk_complexity,
+    out json       singlecell_complexity,
+    out json       complexity_summary,
+    out csv        tss_relpos,
+    out csv        ctcf_relpos,
+)
+{
+    call GENERATE_SINGLECELL_TARGETING(
+        fragments       = self.fragments,
+        fragments_index = self.fragments_index,
+        peaks           = self.peaks,
+        reference_path  = self.reference_path,
+    )
+
+    call MERGE_SINGLECELL_METRICS(
+        reference_path     = self.reference_path,
+        singlecell_mapping = self.singlecell_mapping,
+        singlecell_cells   = self.singlecell_cells,
+        singlecell_targets = GENERATE_SINGLECELL_TARGETING.singlecell,
+    )
+
+    call GENERATE_SEQUENCING_METRICS(
+        input = self.read_paired_bam,
+    )
+
+    call ESTIMATE_LIBRARY_COMPLEXITY(
+        sequencing_summary = GENERATE_SEQUENCING_METRICS.summary,
+        fragments          = self.fragments,
+        cell_barcodes      = self.cell_barcodes,
+    )
+
+    call REPORT_INSERT_SIZES(
+        fragments           = self.fragments,
+        reference_path      = self.reference_path,
+        exclude_non_nuclear = true,
+    )
+
+    call REPORT_TSS_CTCF(
+        tss_relpos  = GENERATE_SINGLECELL_TARGETING.tss_relpos,
+        ctcf_relpos = GENERATE_SINGLECELL_TARGETING.ctcf_relpos,
+    )
+
+    return (
+        ###
+        singlecell            = MERGE_SINGLECELL_METRICS.singlecell,
+        singlecell_results    = MERGE_SINGLECELL_METRICS.summary,
+        ###
+        enrichment_results    = REPORT_TSS_CTCF.summary_metrics,
+        basic_summary         = GENERATE_SEQUENCING_METRICS.summary,
+        insert_summary        = REPORT_INSERT_SIZES.insert_summary,
+        insert_sizes          = REPORT_INSERT_SIZES.insert_sizes,
+        bulk_complexity       = ESTIMATE_LIBRARY_COMPLEXITY.bulk_complexity,
+        singlecell_complexity = ESTIMATE_LIBRARY_COMPLEXITY.singlecell_complexity,
+        complexity_summary    = ESTIMATE_LIBRARY_COMPLEXITY.complexity_summary,
+        tss_relpos            = GENERATE_SINGLECELL_TARGETING.tss_relpos,
+        ctcf_relpos           = GENERATE_SINGLECELL_TARGETING.ctcf_relpos,
+    )
+}
+
+#
+# @include "_peak_annotator_stages.mro"
+#
+
+stage ANNOTATE_PEAKS(
+    in  bed    peaks,
+    in  string reference_path,
+    out tsv    peak_annotation,
+    src py     "stages/analysis/annotate_peaks",
+) split (
+    in  int    chunk_start,
+    in  int    chunk_end,
+) using (
+    mem_gb   = 5,
+    volatile = strict,
+)
+
+stage COMPUTE_GC_DISTRIBUTION(
+    in  bed    peaks,
+    in  string reference_path,
+    out pickle GCdict,
+    src py     "stages/analysis/compute_gc_dist",
+) split (
+) using (
+    volatile = strict,
+)
+
+stage SCAN_MOTIFS(
+    in  pickle globalGCdict,
+    in  bed    peaks,
+    in  string reference_path,
+    in  float  pwm_threshold,
+    out bed    peak_motif_hits,
+    src py     "stages/analysis/scan_motifs",
+) split (
+    in  file   GCdict,
+) using (
+    volatile = strict,
+)
+
+stage GENERATE_TF_MATRIX(
+    in  path reference_path,
+    in  bed  peaks,
+    in  bed  peak_motif_hits,
+    in  h5   filtered_matrix,
+    out h5   filtered_tf_bc_matrix,
+    out path filtered_tf_bc_matrix_mex,
+    out gz   tf_propZ_matrix,
+    src py   "stages/analysis/generate_tf_matrix",
+) split (
+) using (
+    volatile = strict,
+)
+
+#
+# @include "_peak_annotator.mro"
+#
+
+pipeline _PEAK_ANNOTATOR(
+    in  string reference_path,
+    in  bed    peaks,
+    in  h5     filtered_peak_bc_matrix,
+    in  float  pwm_threshold,
+    out h5     filtered_tf_bc_matrix,
+    out path   filtered_tf_bc_matrix_mex,
+    out gz     tf_propZ_matrix,
+    out tsv    peak_annotation,
+)
+{
+    call ANNOTATE_PEAKS(
+        peaks          = self.peaks,
+        reference_path = self.reference_path,
+    )
+
+    call COMPUTE_GC_DISTRIBUTION(
+        peaks          = self.peaks,
+        reference_path = self.reference_path,
+    )
+
+    call SCAN_MOTIFS(
+        globalGCdict   = COMPUTE_GC_DISTRIBUTION.GCdict,
+        peaks          = self.peaks,
+        reference_path = self.reference_path,
+        pwm_threshold  = self.pwm_threshold,
+    )
+
+    call GENERATE_TF_MATRIX(
+        reference_path  = self.reference_path,
+        peaks           = self.peaks,
+        filtered_matrix = self.filtered_peak_bc_matrix,
+        peak_motif_hits = SCAN_MOTIFS.peak_motif_hits,
+    )
+
+    return (
+        filtered_tf_bc_matrix     = GENERATE_TF_MATRIX.filtered_tf_bc_matrix,
+        filtered_tf_bc_matrix_mex = GENERATE_TF_MATRIX.filtered_tf_bc_matrix_mex,
+        tf_propZ_matrix           = GENERATE_TF_MATRIX.tf_propZ_matrix,
+        peak_annotation           = ANNOTATE_PEAKS.peak_annotation,
+    )
+}
+
+#
+# @include "_sc_atac_analyzer_stages.mro"
+#
+
+stage ANALYZER_PREFLIGHT(
+    in  bed      peaks,
+    in  h5       filtered_peak_bc_matrix,
+    in  string[] factorization,
+    in  int      tsne_perplexity,
+    in  int      random_seed,
+    in  float    tsne_theta,
+    in  int      tsne_mom_switch_iter,
+    in  int      tsne_stop_lying_iter,
+    in  int      tsne_max_dims,
+    in  int      tsne_input_pcs,
+    in  int      tsne_max_iter,
+    in  int      max_clusters,
+    in  int      num_components,
+    in  int      num_dr_bcs,
+    in  int      num_dr_features,
+    in  float    neighbor_a,
+    in  float    neighbor_b,
+    in  int      graphclust_neighbors,
+    src py       "stages/preflight/atac_analyzer",
+)
+
+stage REDUCE_DIMENSIONS(
+    in  h5       filtered_matrix,
+    in  string[] factorization,
+    in  int      num_dims,
+    in  int      num_bcs,
+    in  int      num_features,
+    in  int      random_seed,
+    out path     reduced_data,
+    out map      reduction_summary,
+    src py       "stages/analysis/reduce_dimensions",
+) split (
+    in  string   method,
+) using (
+    volatile = strict,
+)
+
+stage CLUSTER_CELLS(
+    in  h5       filtered_matrix,
+    in  path     reduced_data,
+    in  map      reduction_summary,
+    in  string[] factorization,
+    in  int      minclusters,
+    in  int      maxclusters,
+    in  int      num_dims,
+    in  int      random_seed,
+    out path     clustered_data,
+    out map      clustering_summary,
+    src py       "stages/analysis/cluster_cells",
+) split (
+    in  int      n_clusters,
+) using (
+    volatile = strict,
+)
+
+stage PROJECT_TSNE(
+    in  h5       filtered_matrix,
+    in  path     reduced_data,
+    in  map      reduction_summary,
+    in  int      tsne_perplexity,
+    in  int      tsne_max_dims,
+    in  int      tsne_input_pcs,
+    in  float    tsne_theta,
+    in  int      tsne_max_iter,
+    in  int      tsne_stop_lying_iter,
+    in  int      tsne_mom_switch_iter,
+    in  int      random_seed,
+    in  string[] factorization,
+    out path     tsne,
+    out map      tsne_summary,
+    src py       "stages/analysis/project_tsne",
+) split (
+    in  string   method,
+    in  int      tsne_dims,
+) using (
+    volatile = strict,
+)
+
+stage RUN_GRAPH_CLUSTERING(
+    in  h5       matrix_h5                 "Processed matrix",
+    in  string[] factorization,
+    in  path     reduced_data,
+    in  map      reduction_summary,
+    in  int      num_neighbors             "Use this many neighbors",
+    in  float    neighbor_a                "Use larger of (a+b*log10(n_cells) neighbors or num_neighbors",
+    in  float    neighbor_b                "Use larger of (a+b*log10(n_cells) neighbors or num_neighbors",
+    in  int      balltree_leaf_size,
+    in  string   similarity_type           "Type of similarity to use (nn or snn)",
+    out h5       chunked_neighbors,
+    out path     knn_clusters,
+    out map      graph_clustering_summary,
+    src py       "stages/analysis/run_graph_clustering",
+) split (
+    in  string   method,
+    in  pickle   neighbor_index,
+    in  h5       submatrix,
+    in  int      row_start,
+    in  int      total_rows,
+    in  int      k_nearest,
+    in  h5       use_bcs,
+) using (
+    volatile = strict,
+)
+
+stage COMBINE_CLUSTERING(
+    in  h5   filtered_matrix,
+    in  map  clustering_summary,
+    in  path clustered_data,
+    in  map  graph_clustering_summary,
+    in  path knn_clusters,
+    out path clustering,
+    out map  clustering_summary,
+    src py   "stages/analysis/combine_clustering",
+) using (
+    volatile = strict,
+)
+
+stage SUMMARIZE_ANALYSIS(
+    in  tsv  peak_annotation,
+    in  h5   filtered_peak_bc_matrix,
+    in  h5   filtered_tf_bc_matrix,
+    in  gz   tf_propZ_matrix,
+    in  path reduced_data,
+    in  map  reduction_summary,
+    in  path clustering,
+    in  map  clustering_summary,
+    in  path tsne,
+    in  map  tsne_summary,
+    in  path enrichment_analysis,
+    in  map  enrichment_analysis_summary,
+    out h5   analysis,
+    out path analysis_csv,
+    out h5   feature_bc_matrix,
+    src py   "stages/analysis/summarize_analysis",
+) split (
+) using (
+    volatile = strict,
+)
+
+stage PERFORM_DIFFERENTIAL_ANALYSIS(
+    in  bed      peaks,
+    in  string   reference_path,
+    in  h5       filtered_peak_bc_matrix,
+    in  h5       filtered_tf_bc_matrix,
+    in  string[] factorization,
+    in  path     clustering,
+    in  map      clustering_summary,
+    out path     enrichment_analysis,
+    out map      enrichment_analysis_summary,
+    src py       "stages/analysis/perform_differential_analysis",
+) split (
+    in  string   method,
+    in  string   clustering_key,
+    in  int      cluster,
+    out csv      tmp_diffexp,
+) using (
+    volatile = strict,
+)
+
+#
+# @include "_sc_atac_analyzer.mro"
+#
+
+pipeline _SC_ATAC_ANALYZER(
+    in  string   reference_path,
+    in  bed      peaks,
+    in  h5       filtered_peak_bc_matrix,
+    in  string[] factorization,
+    in  int      tsne_perplexity,
+    in  int      random_seed,
+    in  float    tsne_theta,
+    in  int      tsne_mom_switch_iter,
+    in  int      tsne_stop_lying_iter,
+    in  int      tsne_max_dims,
+    in  int      tsne_input_pcs,
+    in  int      tsne_max_iter,
+    in  int      max_clusters,
+    in  int      num_components,
+    in  int      num_dr_bcs,
+    in  int      num_dr_features,
+    in  float    neighbor_a,
+    in  float    neighbor_b,
+    in  int      graphclust_neighbors,
+    out h5       analysis,
+    out path     analysis_csv,
+    out h5       filtered_tf_bc_matrix,
+    out path     filtered_tf_bc_matrix_mex,
+    out h5       feature_bc_matrix,
+    out tsv      peak_annotation,
+)
+{
+    call ANALYZER_PREFLIGHT(
+        peaks                   = self.peaks,
+        filtered_peak_bc_matrix = self.filtered_peak_bc_matrix,
+        factorization           = self.factorization,
+        tsne_perplexity         = self.tsne_perplexity,
+        random_seed             = self.random_seed,
+        tsne_theta              = self.tsne_theta,
+        tsne_mom_switch_iter    = self.tsne_mom_switch_iter,
+        tsne_stop_lying_iter    = self.tsne_stop_lying_iter,
+        tsne_max_dims           = self.tsne_max_dims,
+        tsne_input_pcs          = self.tsne_input_pcs,
+        tsne_max_iter           = self.tsne_max_iter,
+        max_clusters            = self.max_clusters,
+        num_components          = self.num_components,
+        num_dr_bcs              = self.num_dr_bcs,
+        num_dr_features         = self.num_dr_features,
+        neighbor_a              = self.neighbor_a,
+        neighbor_b              = self.neighbor_b,
+        graphclust_neighbors    = self.graphclust_neighbors,
+    ) using (
+        volatile = true,
+    )
+
+    call _PEAK_ANNOTATOR(
+        reference_path          = self.reference_path,
+        peaks                   = self.peaks,
+        filtered_peak_bc_matrix = self.filtered_peak_bc_matrix,
+        pwm_threshold           = null,
+    )
+
+    call REDUCE_DIMENSIONS(
+        filtered_matrix = self.filtered_peak_bc_matrix,
+        factorization   = self.factorization,
+        num_dims        = self.num_components,
+        num_bcs         = self.num_dr_bcs,
+        num_features    = self.num_dr_features,
+        random_seed     = self.random_seed,
+    )
+
+    call CLUSTER_CELLS(
+        filtered_matrix   = self.filtered_peak_bc_matrix,
+        reduced_data      = REDUCE_DIMENSIONS.reduced_data,
+        reduction_summary = REDUCE_DIMENSIONS.reduction_summary,
+        factorization     = self.factorization,
+        minclusters       = 2,
+        maxclusters       = self.max_clusters,
+        num_dims          = null,
+        random_seed       = self.random_seed,
+    )
+
+    call PROJECT_TSNE(
+        filtered_matrix      = self.filtered_peak_bc_matrix,
+        reduced_data         = REDUCE_DIMENSIONS.reduced_data,
+        reduction_summary    = REDUCE_DIMENSIONS.reduction_summary,
+        tsne_perplexity      = self.tsne_perplexity,
+        tsne_max_dims        = self.tsne_max_dims,
+        tsne_input_pcs       = self.tsne_input_pcs,
+        tsne_theta           = self.tsne_theta,
+        tsne_max_iter        = self.tsne_max_iter,
+        tsne_stop_lying_iter = self.tsne_stop_lying_iter,
+        tsne_mom_switch_iter = self.tsne_mom_switch_iter,
+        random_seed          = self.random_seed,
+        factorization        = self.factorization,
+    )
+
+    call RUN_GRAPH_CLUSTERING(
+        matrix_h5          = self.filtered_peak_bc_matrix,
+        factorization      = self.factorization,
+        reduced_data       = REDUCE_DIMENSIONS.reduced_data,
+        reduction_summary  = REDUCE_DIMENSIONS.reduction_summary,
+        num_neighbors      = self.graphclust_neighbors,
+        neighbor_a         = self.neighbor_a,
+        neighbor_b         = self.neighbor_b,
+        balltree_leaf_size = null,
+        similarity_type    = "nn",
+    )
+
+    call COMBINE_CLUSTERING(
+        filtered_matrix          = self.filtered_peak_bc_matrix,
+        clustering_summary       = CLUSTER_CELLS.clustering_summary,
+        clustered_data           = CLUSTER_CELLS.clustered_data,
+        graph_clustering_summary = RUN_GRAPH_CLUSTERING.graph_clustering_summary,
+        knn_clusters             = RUN_GRAPH_CLUSTERING.knn_clusters,
+    )
+
+    call PERFORM_DIFFERENTIAL_ANALYSIS(
+        reference_path          = self.reference_path,
+        peaks                   = self.peaks,
+        filtered_peak_bc_matrix = self.filtered_peak_bc_matrix,
+        filtered_tf_bc_matrix   = _PEAK_ANNOTATOR.filtered_tf_bc_matrix,
+        factorization           = self.factorization,
+        clustering              = COMBINE_CLUSTERING.clustering,
+        clustering_summary      = COMBINE_CLUSTERING.clustering_summary,
+    )
+
+    call SUMMARIZE_ANALYSIS(
+        peak_annotation             = _PEAK_ANNOTATOR.peak_annotation,
+        filtered_peak_bc_matrix     = self.filtered_peak_bc_matrix,
+        filtered_tf_bc_matrix       = _PEAK_ANNOTATOR.filtered_tf_bc_matrix,
+        tf_propZ_matrix             = _PEAK_ANNOTATOR.tf_propZ_matrix,
+        reduced_data                = REDUCE_DIMENSIONS.reduced_data,
+        reduction_summary           = REDUCE_DIMENSIONS.reduction_summary,
+        clustering                  = COMBINE_CLUSTERING.clustering,
+        clustering_summary          = COMBINE_CLUSTERING.clustering_summary,
+        tsne                        = PROJECT_TSNE.tsne,
+        tsne_summary                = PROJECT_TSNE.tsne_summary,
+        enrichment_analysis         = PERFORM_DIFFERENTIAL_ANALYSIS.enrichment_analysis,
+        enrichment_analysis_summary = PERFORM_DIFFERENTIAL_ANALYSIS.enrichment_analysis_summary,
+    )
+
+    return (
+        analysis                  = SUMMARIZE_ANALYSIS.analysis,
+        analysis_csv              = SUMMARIZE_ANALYSIS.analysis_csv,
+        filtered_tf_bc_matrix     = _PEAK_ANNOTATOR.filtered_tf_bc_matrix,
+        filtered_tf_bc_matrix_mex = _PEAK_ANNOTATOR.filtered_tf_bc_matrix_mex,
+        feature_bc_matrix         = SUMMARIZE_ANALYSIS.feature_bc_matrix,
+        peak_annotation           = _PEAK_ANNOTATOR.peak_annotation,
+    )
+}
+
+#
+# @include "_sc_atac_reporter_stages.mro"
+#
+
+stage SUMMARIZE_REPORTS_SINGLECELL(
+    in  string reference_path,
+    in  json   complexity_summary,
+    in  json   cell_calling_summary,
+    in  json   peak_results,
+    in  json   basic_results,
+    in  json   error_results_summary,
+    in  json   insert_summary,
+    in  json   singlecell_results,
+    in  json   contam_results,
+    in  json   downsample_info,
+    in  json   enrichment_results,
+    out json   analysis_params,
+    out json   summary,
+    out csv    summary_csv,
+    src py     "stages/reporter/summarize_reports_singlecell",
+) using (
+    mem_gb = 4,
+)
+
+stage CREATE_WEBSUMMARY(
+    in  string reference_path,
+    in  string barcode_whitelist,
+    in  json   summary_results,
+    in  json   bulk_complexity,
+    in  json   singlecell_complexity,
+    in  string sample_id,
+    in  string sample_desc,
+    in  map[]  sample_def,
+    in  bool   debug,
+    in  csv    singlecell,
+    in  csv    insert_sizes,
+    in  csv    tss_relpos,
+    in  csv    ctcf_relpos,
+    in  h5     filtered_peak_bc_matrix,
+    in  h5     analysis,
+    in  json   excluded_barcodes,
+    out html   web_summary,
+    src py     "stages/reporter/create_websummary",
+) using (
+    mem_gb = 16,
+)
+
+#
+# @include "_sc_atac_reporter.mro"
+#
+
+pipeline _SC_ATAC_REPORTER(
+    in  string reference_path,
+    in  string barcode_whitelist,
+    in  json   bulk_complexity,
+    in  json   cell_calling_summary,
+    in  json   complexity_summary,
+    in  json   basic_summary,
+    in  json   peak_summary,
+    in  json   singlecell_results,
+    in  json   insert_summary,
+    in  json   downsample_info,
+    in  json   singlecell_complexity,
+    in  csv    singlecell,
+    in  csv    tss_relpos,
+    in  csv    ctcf_relpos,
+    in  string sample_id,
+    in  string sample_desc,
+    in  map[]  sample_def,
+    in  csv    sc_insert_sizes,
+    in  json   enrichment_results,
+    in  h5     filtered_peak_bc_matrix,
+    in  h5     analysis,
+    in  json   excluded_barcodes,
+    #
+    out json   summary,
+    out html   web_summary,
+    out csv    summary_csv,
+)
+{
+    call SUMMARIZE_REPORTS_SINGLECELL(
+        reference_path        = self.reference_path,
+        complexity_summary    = self.complexity_summary,
+        cell_calling_summary  = self.cell_calling_summary,
+        peak_results          = self.peak_summary,
+        basic_results         = self.basic_summary,
+        error_results_summary = null,
+        insert_summary        = self.insert_summary,
+        singlecell_results    = self.singlecell_results,
+        contam_results        = null,
+        downsample_info       = self.downsample_info,
+        enrichment_results    = self.enrichment_results,
+    )
+
+    call CREATE_WEBSUMMARY(
+        reference_path          = self.reference_path,
+        barcode_whitelist       = self.barcode_whitelist,
+        singlecell              = self.singlecell,
+        tss_relpos              = self.tss_relpos,
+        ctcf_relpos             = self.ctcf_relpos,
+        sample_id               = self.sample_id,
+        sample_desc             = self.sample_desc,
+        sample_def              = self.sample_def,
+        insert_sizes            = self.sc_insert_sizes,
+        summary_results         = SUMMARIZE_REPORTS_SINGLECELL.summary,
+        bulk_complexity         = self.bulk_complexity,
+        singlecell_complexity   = self.singlecell_complexity,
+        analysis                = self.analysis,
+        filtered_peak_bc_matrix = self.filtered_peak_bc_matrix,
+        excluded_barcodes       = self.excluded_barcodes,
+        debug                   = false,
+    )
+
+    return (
+        summary     = SUMMARIZE_REPORTS_SINGLECELL.summary,
+        web_summary = CREATE_WEBSUMMARY.web_summary,
+        summary_csv = SUMMARIZE_REPORTS_SINGLECELL.summary_csv,
+    )
+}
+
+#
+# @include "_atac_cloupe_stages.mro"
+#
+
+stage CLOUPE_PREPROCESS(
+    in  string     pipestance_type,
+    in  string     sample_id,
+    in  string     sample_desc,
+    in  string     reference_path,
+    in  h5         analysis,
+    in  h5         feature_barcode_matrix,
+    in  bed        peaks,
+    in  tsv.gz.tbi fragments_index,
+    in  json       metrics_json,
+    in  csv        aggregation_csv,
+    in  json       gem_group_index_json,
+    in  bool       no_secondary_analysis,
+    out cloupe     output_for_cloupe,
+    out json       gem_group_index_json,
+    src py         "stages/cloupe/atac_cloupe_preprocess",
+) split (
+)
+
+#
+# @include "_preflight_stages.mro"
+#
+
+stage ATAC_COUNTER_PREFLIGHT(
+    in  string   sample_id,
+    in  string   fastq_mode,
+    in  map[]    sample_def,
+    in  string   reference_path,
+    in  map      force_cells,
+    in  string[] factorization,
+    in  map      downsample,
+    in  bool     check_executables,
+    in  map      trim_def,
+    src py       "stages/preflight/atac_counter",
+) split (
+)
+
+stage ATAC_AGGR_PREFLIGHT(
+    in  string   sample_id,
+    in  string   reference_path,
+    in  csv      aggr_csv,
+    in  string   normalization,
+    in  string[] factorization,
+    in  bool     check_executables,
+    src py       "stages/preflight/atac_aggr",
+) split (
+)
+
+stage ATAC_REANALYZER_PREFLIGHT(
+    in  string     sample_id,
+    in  string     reference_path,
+    in  string     barcode_whitelist,
+    in  bed        peaks,
+    in  csv        parameters,
+    in  map        force_cells,
+    in  csv        cell_barcodes,
+    in  tsv.gz     fragments,
+    in  tsv.gz.tbi fragments_index,
+    in  csv        aggregation_csv,
+    in  bool       check_executables,
+    src py         "stages/preflight/atac_reanalyzer",
+) split (
+)
+
+#
+# @include "sc_atac_counter.mro"
+#
+
+pipeline SC_ATAC_COUNTER(
+    in  string     fastq_mode,
+    in  string     sample_id,
+    in  map[]      sample_def,
+    in  map        downsample,
+    in  string     sample_desc,
+    in  string     reference_path,
+    in  map        trim_def,
+    in  string     barcode_whitelist,
+    in  map        adapters,
+    in  string[]   factorization,
+    in  map        force_cells,
+    #
+    out csv        singlecell,
+    out bam        possorted_bam,
+    out bam.bai    possorted_bam_index,
+    out json       summary,
+    out html       web_summary,
+    out bed        peaks,
+    out h5         raw_peak_bc_matrix,
+    out path       raw_peak_bc_matrix_mex,
+    out path       analysis_csv,
+    out h5         filtered_peak_bc_matrix,
+    out path       filtered_peak_bc_matrix_mex,
+    out tsv.gz     fragments,
+    out tsv.gz.tbi fragments_index,
+    out h5         filtered_tf_bc_matrix,
+    out path       filtered_tf_bc_matrix_mex,
+    out cloupe     cloupe,
+    out csv        summary_csv,
+    out tsv        peak_annotation,
+)
+{
+    call ATAC_COUNTER_PREFLIGHT as ATAC_COUNTER_PREFLIGHT_LOCAL(
+        sample_id         = self.sample_id,
+        fastq_mode        = self.fastq_mode,
+        sample_def        = self.sample_def,
+        reference_path    = self.reference_path,
+        force_cells       = self.force_cells,
+        factorization     = self.factorization,
+        downsample        = self.downsample,
+        trim_def          = self.trim_def,
+        check_executables = false,
+    ) using (
+        local     = true,
+        preflight = true,
+    )
+
+    call ATAC_COUNTER_PREFLIGHT(
+        sample_id         = self.sample_id,
+        fastq_mode        = self.fastq_mode,
+        sample_def        = self.sample_def,
+        reference_path    = self.reference_path,
+        force_cells       = self.force_cells,
+        factorization     = self.factorization,
+        downsample        = self.downsample,
+        trim_def          = self.trim_def,
+        check_executables = true,
+    ) using (
+        preflight = true,
+    )
+
+    call _BASIC_SC_ATAC_COUNTER(
+        sample_id         = self.sample_id,
+        fastq_mode        = self.fastq_mode,
+        sample_def        = self.sample_def,
+        trim_def          = self.trim_def,
+        adapters          = self.adapters,
+        reference_path    = self.reference_path,
+        barcode_whitelist = self.barcode_whitelist,
+        downsample        = self.downsample,
+        force_cells       = self.force_cells,
+    )
+
+    call _SC_ATAC_METRIC_COLLECTOR(
+        read_paired_bam    = _BASIC_SC_ATAC_COUNTER.read_paired_bam,
+        fragments          = _BASIC_SC_ATAC_COUNTER.fragments,
+        fragments_index    = _BASIC_SC_ATAC_COUNTER.fragments_index,
+        peaks              = _BASIC_SC_ATAC_COUNTER.peaks,
+        reference_path     = self.reference_path,
+        cell_barcodes      = _BASIC_SC_ATAC_COUNTER.cell_barcodes,
+        singlecell_cells   = _BASIC_SC_ATAC_COUNTER.singlecell_cells,
+        singlecell_mapping = _BASIC_SC_ATAC_COUNTER.singlecell_mapping,
+    )
+
+    call _SC_ATAC_ANALYZER(
+        peaks                   = _BASIC_SC_ATAC_COUNTER.peaks,
+        filtered_peak_bc_matrix = _BASIC_SC_ATAC_COUNTER.filtered_peak_bc_matrix,
+        reference_path          = self.reference_path,
+        factorization           = self.factorization,
+        tsne_perplexity         = 30,
+        tsne_max_dims           = null,
+        tsne_input_pcs          = null,
+        tsne_max_iter           = null,
+        tsne_stop_lying_iter    = null,
+        tsne_mom_switch_iter    = null,
+        tsne_theta              = null,
+        random_seed             = null,
+        max_clusters            = 10,
+        neighbor_a              = null,
+        neighbor_b              = null,
+        graphclust_neighbors    = null,
+        num_components          = 15,
+        num_dr_bcs              = null,
+        num_dr_features         = null,
+    )
+
+    call CLOUPE_PREPROCESS(
+        pipestance_type        = "SC_ATAC_COUNTER_CS",
+        reference_path         = self.reference_path,
+        sample_id              = self.sample_id,
+        sample_desc            = self.sample_desc,
+        analysis               = _SC_ATAC_ANALYZER.analysis,
+        feature_barcode_matrix = _SC_ATAC_ANALYZER.feature_bc_matrix,
+        metrics_json           = _SC_ATAC_METRIC_COLLECTOR.basic_summary,
+        peaks                  = _BASIC_SC_ATAC_COUNTER.peaks,
+        fragments_index        = _BASIC_SC_ATAC_COUNTER.fragments_index,
+        aggregation_csv        = null,
+        gem_group_index_json   = null,
+        no_secondary_analysis  = false,
+    )
+
+    call _SC_ATAC_REPORTER(
+        reference_path          = self.reference_path,
+        barcode_whitelist       = self.barcode_whitelist,
+        bulk_complexity         = _SC_ATAC_METRIC_COLLECTOR.bulk_complexity,
+        singlecell_complexity   = _SC_ATAC_METRIC_COLLECTOR.singlecell_complexity,
+        cell_calling_summary    = _BASIC_SC_ATAC_COUNTER.cell_calling_summary,
+        complexity_summary      = _SC_ATAC_METRIC_COLLECTOR.complexity_summary,
+        basic_summary           = _SC_ATAC_METRIC_COLLECTOR.basic_summary,
+        peak_summary            = _BASIC_SC_ATAC_COUNTER.peak_metrics,
+        singlecell_results      = _SC_ATAC_METRIC_COLLECTOR.singlecell_results,
+        insert_summary          = _SC_ATAC_METRIC_COLLECTOR.insert_summary,
+        downsample_info         = _BASIC_SC_ATAC_COUNTER.downsample_info,
+        singlecell              = _SC_ATAC_METRIC_COLLECTOR.singlecell,
+        tss_relpos              = _SC_ATAC_METRIC_COLLECTOR.tss_relpos,
+        ctcf_relpos             = _SC_ATAC_METRIC_COLLECTOR.ctcf_relpos,
+        sample_id               = self.sample_id,
+        sample_desc             = self.sample_desc,
+        sample_def              = self.sample_def,
+        sc_insert_sizes         = _SC_ATAC_METRIC_COLLECTOR.insert_sizes,
+        enrichment_results      = _SC_ATAC_METRIC_COLLECTOR.enrichment_results,
+        filtered_peak_bc_matrix = _BASIC_SC_ATAC_COUNTER.filtered_peak_bc_matrix,
+        analysis                = _SC_ATAC_ANALYZER.analysis,
+        excluded_barcodes       = _BASIC_SC_ATAC_COUNTER.excluded_barcodes,
+    )
+
+    return (
+        singlecell                  = _SC_ATAC_METRIC_COLLECTOR.singlecell,
+        possorted_bam               = _BASIC_SC_ATAC_COUNTER.possorted_bam,
+        possorted_bam_index         = _BASIC_SC_ATAC_COUNTER.possorted_bam_index,
+        summary                     = _SC_ATAC_REPORTER.summary,
+        web_summary                 = _SC_ATAC_REPORTER.web_summary,
+        peaks                       = _BASIC_SC_ATAC_COUNTER.peaks,
+        raw_peak_bc_matrix          = _BASIC_SC_ATAC_COUNTER.raw_peak_bc_matrix,
+        raw_peak_bc_matrix_mex      = _BASIC_SC_ATAC_COUNTER.raw_peak_bc_matrix_mex,
+        analysis_csv                = _SC_ATAC_ANALYZER.analysis_csv,
+        filtered_peak_bc_matrix     = _BASIC_SC_ATAC_COUNTER.filtered_peak_bc_matrix,
+        filtered_peak_bc_matrix_mex = _BASIC_SC_ATAC_COUNTER.filtered_peak_bc_matrix_mex,
+        fragments                   = _BASIC_SC_ATAC_COUNTER.fragments,
+        fragments_index             = _BASIC_SC_ATAC_COUNTER.fragments_index,
+        filtered_tf_bc_matrix       = _SC_ATAC_ANALYZER.filtered_tf_bc_matrix,
+        filtered_tf_bc_matrix_mex   = _SC_ATAC_ANALYZER.filtered_tf_bc_matrix_mex,
+        cloupe                      = CLOUPE_PREPROCESS.output_for_cloupe,
+        summary_csv                 = _SC_ATAC_REPORTER.summary_csv,
+        peak_annotation             = _SC_ATAC_ANALYZER.peak_annotation,
+    )
+}
+
+#
+# @include "sc_atac_counter_cs.mro"
+#
+
+# Customer-facing (CS) pipeline
+pipeline SC_ATAC_COUNTER_CS(
+    in  string     fastq_mode                   "Input fastq configuration",
+    in  string     sample_id,
+    in  map[]      sample_def,
+    in  map        downsample,
+    in  string     sample_desc                  "Sample description",
+    in  string     reference_path               "Path to 10X reference package",
+    in  string[]   factorization                "Dimensionality reduction method (lsa, plsa, or pca)",
+    in  map        force_cells                  "Force cell calling to a fixed number",
+    #
+    out csv        singlecell                   "Per-barcode fragment counts & metrics",
+    out bam        possorted_bam                "Position sorted BAM file"  "possorted_bam.bam",
+    out bam.bai    possorted_bam_index          "Position sorted BAM index"  "possorted_bam.bam.bai",
+    out json       summary                      "Summary of all data metrics",
+    out html       web_summary                  "HTML file summarizing data & analysis",
+    out bed        peaks                        "Bed file of all called peak locations",
+    out h5         raw_peak_bc_matrix           "Raw peak barcode matrix in hdf5 format",
+    out path       raw_peak_bc_matrix_mex       "Raw peak barcode matrix in mex format"  "raw_peak_bc_matrix",
+    out path       analysis_csv                 "Directory of analysis files"  "analysis",
+    out h5         filtered_peak_bc_matrix      "Filtered peak barcode matrix in hdf5 format",
+    out path       filtered_peak_bc_matrix_mex  "Filtered peak barcode matrix in mex format"  "filtered_peak_bc_matrix",
+    out tsv.gz     fragments                    "Barcoded and aligned fragment file"  "fragments.tsv.gz",
+    out tsv.gz.tbi fragments_index              "Fragment file index"       "fragments.tsv.gz.tbi",
+    out h5         filtered_tf_bc_matrix        "Filtered tf barcode matrix in hdf5 format",
+    out path       filtered_tf_bc_matrix_mex    "Filtered tf barcode matrix in mex format"  "filtered_tf_bc_matrix",
+    out cloupe     cloupe                       "Loupe Cell Browser input file",
+    out csv        summary_csv                  "csv summarizing important metrics and values"  "summary.csv",
+    out tsv        peak_annotation              "Annotation of peaks with genes",
+)
+{
+    call SC_ATAC_COUNTER(
+        fastq_mode        = self.fastq_mode,
+        sample_id         = self.sample_id,
+        sample_def        = self.sample_def,
+        downsample        = self.downsample,
+        sample_desc       = self.sample_desc,
+        reference_path    = self.reference_path,
+        trim_def          = {
+            "R1": {
+                "3prime": ["MErc"],
+            },
+            "R2": {
+                "3prime": ["MErc"],
+            },
+            "discard_untrimmed": false,
+        },
+        barcode_whitelist = "737K-cratac-v1",
+        adapters          = {
+            "ME": "AGATGTGTATAAGAGACAG",
+            "MErc": "CTGTCTCTTATACACATCT",
+        },
+        factorization     = self.factorization,
+        force_cells       = self.force_cells,
+    )
+
+    return (
+        singlecell                  = SC_ATAC_COUNTER.singlecell,
+        possorted_bam               = SC_ATAC_COUNTER.possorted_bam,
+        possorted_bam_index         = SC_ATAC_COUNTER.possorted_bam_index,
+        summary                     = SC_ATAC_COUNTER.summary,
+        web_summary                 = SC_ATAC_COUNTER.web_summary,
+        peaks                       = SC_ATAC_COUNTER.peaks,
+        raw_peak_bc_matrix          = SC_ATAC_COUNTER.raw_peak_bc_matrix,
+        raw_peak_bc_matrix_mex      = SC_ATAC_COUNTER.raw_peak_bc_matrix_mex,
+        analysis_csv                = SC_ATAC_COUNTER.analysis_csv,
+        filtered_peak_bc_matrix     = SC_ATAC_COUNTER.filtered_peak_bc_matrix,
+        filtered_peak_bc_matrix_mex = SC_ATAC_COUNTER.filtered_peak_bc_matrix_mex,
+        fragments                   = SC_ATAC_COUNTER.fragments,
+        fragments_index             = SC_ATAC_COUNTER.fragments_index,
+        filtered_tf_bc_matrix       = SC_ATAC_COUNTER.filtered_tf_bc_matrix,
+        filtered_tf_bc_matrix_mex   = SC_ATAC_COUNTER.filtered_tf_bc_matrix_mex,
+        cloupe                      = SC_ATAC_COUNTER.cloupe,
+        summary_csv                 = SC_ATAC_COUNTER.summary_csv,
+        peak_annotation             = SC_ATAC_COUNTER.peak_annotation,
+    )
+}
+
+#
+# @include "__PBMC_J.mro"
+#
+
+call SC_ATAC_COUNTER_CS(
+    fastq_mode     = "ILMN_BCL2FASTQ",
+    sample_id      = "PBMC_J",
+    sample_def     = [{
+        "bc_in_read": 1,
+        "bc_length": 16,
+        "gem_group": null,
+        "lanes": null,
+        "library": "LibraryNotSpecified",
+        "read_path": "/data/isshamie/dropbox/ATACseq/2020_11_18_Croker/igm-storage2.ucsd.edu/201113_A00953_0185_AHN7TMDSXY",
+        "sample_indices": ["any"],
+        "sample_names": ["BC_10xATAC_PMBC_J"],
+    }],
+    reference_path = "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist",
+    downsample     = null,
+    sample_desc    = "",
+    factorization  = ["lsa"],
+    force_cells    = null,
+)

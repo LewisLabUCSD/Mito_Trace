@@ -1,11 +1,14 @@
 # Byte-compiled / optimized / DLL files
 *.p # pickl files
+software/
+*.bam
+*.bai
 *.svg
 __pycache__/
 *.py[cod]
 .snakemake/
 _STARtmp/
-
+old/
 
 # C extensions
 *.so
@@ -83,6 +86,7 @@ target/
 # exclude data from source control by default
 /data/
 data
+data/
 # Mac OS-specific storage files
 .DS_Store
 

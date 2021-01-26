@@ -1,0 +1,468 @@
+Wed Nov 18 09:25:41 UTC 2020
+
+=====================================================================
+System Info
+uname -a
+---------------------------------------------------------------------
+Linux jabba 4.15.0-112-generic #113-Ubuntu SMP Thu Jul 9 23:41:39 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+=====================================================================
+
+=====================================================================
+Linux Distro
+cat /etc/lsb-release /etc/os-release | sort -u
+---------------------------------------------------------------------
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+DISTRIB_CODENAME=bionic
+DISTRIB_DESCRIPTION="Ubuntu 18.04.4 LTS"
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=18.04
+HOME_URL="https://www.ubuntu.com/"
+ID=ubuntu
+ID_LIKE=debian
+NAME="Ubuntu"
+PRETTY_NAME="Ubuntu 18.04.4 LTS"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+SUPPORT_URL="https://help.ubuntu.com/"
+UBUNTU_CODENAME=bionic
+VERSION="18.04.4 LTS (Bionic Beaver)"
+VERSION_CODENAME=bionic
+VERSION_ID="18.04"
+=====================================================================
+
+=====================================================================
+Kernel Build
+cat /proc/version
+---------------------------------------------------------------------
+Linux version 4.15.0-112-generic (buildd@lcy01-amd64-027) (gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)) #113-Ubuntu SMP Thu Jul 9 23:41:39 UTC 2020
+=====================================================================
+
+=====================================================================
+glibc version
+ldd --version | head -n 1
+---------------------------------------------------------------------
+ldd (Ubuntu GLIBC 2.27-3ubuntu1.2) 2.27
+=====================================================================
+
+=====================================================================
+CPU Model
+grep -m 1 'model name' /proc/cpuinfo | cut -d ':' -f 2 | sed 's/^[ \t]*//'
+---------------------------------------------------------------------
+Intel(R) Xeon(R) CPU E5-2697 v2 @ 2.70GHz
+=====================================================================
+
+=====================================================================
+CPU Sockets
+grep 'physical id' /proc/cpuinfo | sort -u | wc -l
+---------------------------------------------------------------------
+2
+=====================================================================
+
+=====================================================================
+CPU Cores
+grep -c processor /proc/cpuinfo
+---------------------------------------------------------------------
+48
+=====================================================================
+
+=====================================================================
+CPU Support
+grep -m 1 'flags' /proc/cpuinfo | cut -d ':' -f 2 | sed 's/^\s*//'
+---------------------------------------------------------------------
+fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm cpuid_fault epb pti intel_ppin ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt dtherm ida arat pln pts md_clear flush_l1d
+=====================================================================
+
+=====================================================================
+Memory Total
+grep MemTotal /proc/meminfo | cut -d ':' -f 2 | sed 's/^[ \t]*//'
+---------------------------------------------------------------------
+297135188 kB
+=====================================================================
+
+=====================================================================
+Disk Space
+df -Ph | awk '{print $2, $3, $4}'
+---------------------------------------------------------------------
+Size Used Avail
+142G 0 142G
+29G 3.2M 29G
+1.1T 1.1T 4.3G
+142G 1.5G 141G
+5.0M 0 5.0M
+142G 0 142G
+15M 15M 0
+17M 17M 0
+126M 126M 0
+126M 126M 0
+39M 39M 0
+5.5T 4.8T 378G
+13T 12T 1.3T
+29G 32K 29G
+56M 56M 0
+29G 8.0K 29G
+26T 23T 1.9T
+29G 4.0K 29G
+29G 0 29G
+29G 0 29G
+29G 4.0K 29G
+29G 0 29G
+29G 0 29G
+29G 8.0K 29G
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+98M 98M 0
+29G 4.0K 29G
+29G 0 29G
+98M 98M 0
+56M 56M 0
+29G 0 29G
+29G 0 29G
+29G 0 29G
+129M 129M 0
+26T 23T 1.9T
+26T 23T 1.9T
+26T 23T 1.9T
+29G 0 29G
+129M 129M 0
+=====================================================================
+
+=====================================================================
+Filesystem Options
+mount | cut -d ' ' -f 5,6
+---------------------------------------------------------------------
+sysfs (rw,nosuid,nodev,noexec,relatime)
+proc (rw,nosuid,nodev,noexec,relatime)
+devtmpfs (rw,nosuid,relatime,size=148536168k,nr_inodes=37134042,mode=755)
+devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)
+tmpfs (rw,nosuid,noexec,relatime,size=29713520k,mode=755)
+ext4 (rw,relatime,stripe=64,data=ordered)
+securityfs (rw,nosuid,nodev,noexec,relatime)
+tmpfs (rw,nosuid,nodev)
+tmpfs (rw,nosuid,nodev,noexec,relatime,size=5120k)
+tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup2 (rw,nosuid,nodev,noexec,relatime)
+cgroup (rw,nosuid,nodev,noexec,relatime,xattr,name=systemd)
+pstore (rw,nosuid,nodev,noexec,relatime)
+cgroup (rw,nosuid,nodev,noexec,relatime,cpu,cpuacct)
+cgroup (rw,nosuid,nodev,noexec,relatime,net_cls,net_prio)
+cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
+cgroup (rw,nosuid,nodev,noexec,relatime,devices)
+cgroup (rw,nosuid,nodev,noexec,relatime,pids)
+cgroup (rw,nosuid,nodev,noexec,relatime,rdma)
+cgroup (rw,nosuid,nodev,noexec,relatime,memory)
+cgroup (rw,nosuid,nodev,noexec,relatime,freezer)
+cgroup (rw,nosuid,nodev,noexec,relatime,perf_event)
+cgroup (rw,nosuid,nodev,noexec,relatime,hugetlb)
+cgroup (rw,nosuid,nodev,noexec,relatime,cpuset)
+autofs (rw,relatime,fd=25,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=1054)
+hugetlbfs (rw,relatime,pagesize=2M)
+debugfs (rw,relatime)
+mqueue (rw,relatime)
+rpc_pipefs (rw,relatime)
+nfsd (rw,relatime)
+tracefs (rw,relatime)
+configfs (rw,relatime)
+fusectl (rw,relatime)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+ext4 (rw,relatime,stripe=320,data=ordered)
+binfmt_misc (rw,relatime)
+fuse.lxcfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0,allow_other)
+tmpfs (rw,nosuid,noexec,relatime,size=29713520k,mode=755)
+cifs (rw,relatime,vers=1.0,sec=ntlm,cache=strict,username=CHOData,domain=lewislab.ucsd.edu,uid=0,forceuid,gid=10004,forcegid,addr=137.110.195.20,file_mode=0755,dir_mode=0755,soft,nounix,mapposix,rsize=61440,wsize=65536,echo_interval=60,actimeo=1)
+nsfs (rw)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=119,gid=127)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1007,gid=1007)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1035,gid=1036)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1052,gid=1057)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1016,gid=1016)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1003,gid=1003)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1026,gid=1027)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1015,gid=1015)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1006,gid=1006)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1030,gid=1031)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1042,gid=1045)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1014,gid=1014)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1018,gid=1018)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1039,gid=1039)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+fuse.sshfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+tmpfs (rw,nosuid,nodev,relatime,size=29713516k,mode=700,uid=1060,gid=1066)
+squashfs (ro,nodev,relatime,x-gdu.hide)
+=====================================================================
+
+=====================================================================
+User Limits
+bash -c 'ulimit -a'
+---------------------------------------------------------------------
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 1160438
+max locked memory       (kbytes, -l) 16384
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 2048
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 1160438
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+=====================================================================
+
+=====================================================================
+Global File Limit
+cat /proc/sys/fs/file-{max,nr}
+---------------------------------------------------------------------
+29676758
+24192	0	29676758
+=====================================================================
+
+=====================================================================
+Memory config
+sysctl vm
+---------------------------------------------------------------------
+vm.admin_reserve_kbytes = 8192
+vm.block_dump = 0
+vm.compact_unevictable_allowed = 1
+vm.dirty_background_bytes = 0
+vm.dirty_background_ratio = 10
+vm.dirty_bytes = 0
+vm.dirty_expire_centisecs = 3000
+vm.dirty_ratio = 20
+vm.dirty_writeback_centisecs = 500
+vm.dirtytime_expire_seconds = 43200
+vm.extfrag_threshold = 500
+vm.hugepages_treat_as_movable = 0
+vm.hugetlb_shm_group = 0
+vm.laptop_mode = 0
+vm.legacy_va_layout = 0
+vm.lowmem_reserve_ratio = 256	256	32	1
+vm.max_map_count = 65530
+vm.memory_failure_early_kill = 0
+vm.memory_failure_recovery = 1
+vm.min_free_kbytes = 90112
+vm.min_slab_ratio = 5
+vm.min_unmapped_ratio = 1
+vm.mmap_min_addr = 65536
+vm.nr_hugepages = 0
+vm.nr_hugepages_mempolicy = 0
+vm.nr_overcommit_hugepages = 0
+vm.numa_stat = 1
+vm.numa_zonelist_order = Node
+vm.oom_dump_tasks = 1
+vm.oom_kill_allocating_task = 0
+vm.overcommit_kbytes = 0
+vm.overcommit_memory = 0
+vm.overcommit_ratio = 50
+vm.page-cluster = 3
+vm.panic_on_oom = 0
+vm.percpu_pagelist_fraction = 0
+vm.stat_interval = 1
+vm.swappiness = 60
+vm.user_reserve_kbytes = 131072
+vm.vfs_cache_pressure = 100
+vm.watermark_scale_factor = 10
+vm.zone_reclaim_mode = 0
+=====================================================================
+
+=====================================================================
+THP memory config
+cat /sys/kernel/mm/transparent_hugepage/enabled
+---------------------------------------------------------------------
+always [madvise] never
+=====================================================================
+
+=====================================================================
+cgroups
+cat /proc/self/cgroup
+---------------------------------------------------------------------
+12:cpuset:/
+11:hugetlb:/
+10:perf_event:/
+9:freezer:/
+8:memory:/user.slice
+7:rdma:/
+6:pids:/user.slice/user-1007.slice/session-32227.scope
+5:devices:/user.slice
+4:blkio:/user.slice
+3:net_cls,net_prio:/
+2:cpu,cpuacct:/user.slice
+1:name=systemd:/user.slice/user-1007.slice/session-32227.scope
+0::/user.slice/user-1007.slice/session-32227.scope
+=====================================================================
+
+=====================================================================
+cgroup mem stats
+cat /sys/fs/cgroup/memory/user.slice/memory.stat
+---------------------------------------------------------------------
+cache 231750807552
+rss 50475778048
+rss_huge 0
+shmem 37064704
+mapped_file 355192832
+dirty 155648
+writeback 0
+pgpgin 186065133280
+pgpgout 186040980618
+pgfault 273521268967
+pgmajfault 10183414
+inactive_anon 2733604864
+active_anon 47774871552
+inactive_file 183519182848
+active_file 48198127616
+unevictable 16384
+hierarchical_memory_limit 9223372036854771712
+total_cache 231750807552
+total_rss 50475786240
+total_rss_huge 0
+total_shmem 37064704
+total_mapped_file 355192832
+total_dirty 155648
+total_writeback 0
+total_pgpgin 186065133281
+total_pgpgout 186040980618
+total_pgfault 273521268968
+total_pgmajfault 10183414
+total_inactive_anon 2733604864
+total_active_anon 47774871552
+total_inactive_file 183519182848
+total_active_file 48198127616
+total_unevictable 16384
+=====================================================================
+
+=====================================================================
+memory soft limit
+cat /sys/fs/cgroup/memory/user.slice/memory.soft_limit_in_bytes
+---------------------------------------------------------------------
+9223372036854771712
+=====================================================================
+
+=====================================================================
+memory hard limit
+cat /sys/fs/cgroup/memory/user.slice/memory.limit_in_bytes
+---------------------------------------------------------------------
+9223372036854771712
+=====================================================================
+
+=====================================================================
+memory swap limit
+cat /sys/fs/cgroup/memory/user.slice/memory.memsw.limit_in_bytes
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+Container
+[ -e /.dockerenv ] || [ -e /.dockerinit ] || [ ! -z "$container" ] || grep -m 1 -E 'docker|lxc' /proc/1/cgroup > /dev/null && echo 'Detected'
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+init process
+head -n 1 /proc/1/sched | cut -d ' ' -f 1
+---------------------------------------------------------------------
+systemd
+=====================================================================
+
+=====================================================================
+SGE Submit
+which qsub
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+LSF Submit
+which bsub
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+BCL2FASTQ 1
+which configureBclToFastq.pl
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+BCL2FASTQ 2
+which bcl2fastq
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+Java
+which java
+---------------------------------------------------------------------
+/home/isshamie/software/anaconda2/envs/mito_trace/bin/java
+=====================================================================
+
+=====================================================================
+Java Version
+java -version 2>&1 | cat
+---------------------------------------------------------------------
+openjdk version "11.0.1-internal" 2018-10-16
+OpenJDK Runtime Environment (build 11.0.1-internal+0-adhoc..src)
+OpenJDK 64-Bit Server VM (build 11.0.1-internal+0-adhoc..src, mixed mode)
+=====================================================================
+
+=====================================================================
+10X Refdata
+echo $TENX_REFDATA
+---------------------------------------------------------------------
+
+=====================================================================
+
+=====================================================================
+10X Refdata Version
+cat $TENX_REFDATA/version
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+qconf
+which qconf
+---------------------------------------------------------------------
+=====================================================================
+
+=====================================================================
+MRP
+mrp --version
+---------------------------------------------------------------------
+'1.2.0-v3.2.4'
+=====================================================================
+
+=====================================================================
+mrp templates
+ls $(dirname $(dirname $(which mrp)))/jobmanagers/*.template
+---------------------------------------------------------------------
+=====================================================================
+

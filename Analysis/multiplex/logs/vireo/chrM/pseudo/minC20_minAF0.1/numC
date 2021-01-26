@@ -1,0 +1,3 @@
+data/chrM/pseudo/minC20_minAF0.1/numC2000_ispropFalse ('data/chrM/PBMC_J_cellSNP_minC20_minAF0.1', 'data/chrM/PBMC_P_cellSNP_minC20_minAF0.1') 0.1 2000 False
+<class 'bool'>
+cell proportion [0.53019608 0.46980392]
