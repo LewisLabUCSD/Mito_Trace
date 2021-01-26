@@ -261,6 +261,7 @@ rule scPileup_MT_matrix:
 
 
 rule filter_cell_bc:
+    """Extracts only the relevant cell barcodes and removes the .bam from the barcode names."""
     input:
         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
         barcode_p = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
@@ -340,17 +341,16 @@ rule to_seurat:
 
 rule callVariants_mgatk:
     input: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.rds"
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.variant.rds"
+    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.{low_cov_thresh}.variant.rds"
     params:
-        sample=lambda wildcards: wildcards.sample,
-        num_read=lambda wildcards: wildcards.num_read
-    shell: "Rscript software/variant_calling.R {input}"
+        low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
+    shell: "Rscript software/variant_calling.R {input} {params.low_cov_thresh}"
 
 
 
 rule generate_allele_frequencies:
     """Create the AF-by-cell pickle file"""
-    input:  "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
+    input:  "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
     output:  "{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p"
     params: maxBP = config['maxBP']
     shell:

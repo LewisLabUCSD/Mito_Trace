@@ -15,5 +15,31 @@ samples:
   - "PBMC_P"
 
 
-pseudo-multiplex:
-  Number Reads Total: 10000000
+pseudo_multiplex:
+  #Number Reads Total: 10000000
+  num_cells: 2000
+  is_proportional: False
+
+mt:
+  minMAF:
+    - 0.001
+#    - 0.01
+#    - 0.1
+  minCOUNT:
+    - 1
+#    - 10
+#    - 20
+#    - 200
+    #- 1000
+
+pre_variant:
+  minMAF:
+    # - 0
+    - 0.1
+#    - 0.2
+#    - 0.4
+  minCOUNT:
+    # - 0
+    - 20
+#    - 200
+    #- 1000

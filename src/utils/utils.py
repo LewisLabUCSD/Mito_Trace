@@ -222,6 +222,7 @@ def compare_arbitrary_labels(l1, l2):
     l2_new = list(map(lambda x: l2_to_l1[x], l2))
     return l2_new
 
+
 def test_compare_arbitrary_labels():
     l1 = [0, 1, 2, 2, 2, 2, 1, 0, 0, 3, 0]
     l2 = [2, 0, 1, 2, 8, 8, 0, 7, 2, 7, 2]
@@ -232,6 +233,7 @@ def test_compare_arbitrary_labels():
     l2 = [0, 1, 2, 2, 2, 2, 1, 0, 0, 3, 0]
     l2_new = compare_arbitrary_labels(l1,l2)
     print(l2_new)
+
 
 
 if __name__ == '__main__':
