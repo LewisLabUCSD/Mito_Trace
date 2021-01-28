@@ -1,10 +1,12 @@
 # Byte-compiled / optimized / DLL files
+# Inserted by isshamie
 *.p 
 software/
 *.bam
 *.bai
 *.svg
 
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 .snakemake/

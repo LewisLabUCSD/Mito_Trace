@@ -38,7 +38,8 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   }
   
   cov <- importDT(coverageFile)
-  
+  print('cov')
+  print(cov)
   # Make a long matrix of bq and Counts for non-reference alleles
   ref <- importDT(referenceAlleleFile)
   maxpos <- max(ref[[1]])
@@ -56,6 +57,8 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   
   # Import Counts and qualities
   importSMs <- function(file){
+    print("File")
+    print(file)
     # fread the individual variant calls in
     if(tools::file_ext(file) == "gz"){
       dt <-  suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE))
@@ -67,15 +70,19 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
     
     # Encore same ordering as coverage for the sample factor 
     dt[[2]] <- factor(as.character(dt[[2]]), levels = samplesOrder)
-    
+    print('before creating matrix')
+    print('dim')
+    print(dim(dt))
     if(dim(dt)[2] == 6){
       # including base qualities
-      
+      print('dim 6')
       qual_fw <- Matrix::sparseMatrix(
         i = c(dt[[1]],maxpos),
         j = c(as.numeric(dt[[2]]), maxsamples),
         x = c(dt[[4]],0)
       )
+      print('qual_fw')
+      print(dim(qual_fw))
       
       qual_rev <- Matrix::sparseMatrix(
         i = c(dt[[1]],maxpos),
@@ -109,13 +116,16 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
     remove(dt)
     
     # Return more substantial list only if there are base qualities involved
+
     if(base_quals){
+      print('base_quals')
       return(list("counts_fw" = counts_fw, "qual_fw" = qual_fw,
                   "counts_rev" = counts_rev, "qual_rev" = qual_rev))
     } else {
       return(list("counts_fw" = counts_fw, 
                   "counts_rev" = counts_rev))
     }
+
   }
   
   ACGT <- lapply(variantFiles, importSMs)
@@ -187,7 +197,7 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
 importMito <- function(folder, ...){
   
   files <- list.files(folder, full.names = TRUE)
-  
+  print(files)
   checkGrep <- function(hit){
     if(length(hit) != 1){
       stop("Improper folder specification; file missing / extra file present. See documentation")
@@ -197,18 +207,20 @@ importMito <- function(folder, ...){
   }
   
   # Set up file paths
-  Afile <- files[checkGrep(grep(".A.txt", files))]
-  Cfile <- files[checkGrep(grep(".C.txt", files))]
-  Gfile <- files[checkGrep(grep(".G.txt", files))]
-  Tfile <- files[checkGrep(grep(".T.txt", files))]
-  coverageFile <- files[checkGrep(grep(".coverage.txt", files))]
+  Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
+  Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
+  Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
+  Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
+  coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
   depthFile <- files[checkGrep(grep(".depthTable.txt", files))]
-  referenceAlleleFile <- files[checkGrep(grep("refAllele.txt", files))]
+  referenceAlleleFile <- files[checkGrep(grep("chrM_refAllele.txt", files))]
   
   # Parse out the mitochondrial genome name from the file name
   sv <- strsplit(gsub("_refAllele.txt", "", basename(referenceAlleleFile)), split = "[.]")[[1]]
   mitoChr <- sv[length(sv)]
-  
+  print("mitoChr")
+  print(mitoChr)
+
   SElist <- importMito.explicit(Afile, Cfile, Gfile, Tfile,
                                 coverageFile, depthFile, referenceAlleleFile, mitoChr, ...)
   return(SElist)

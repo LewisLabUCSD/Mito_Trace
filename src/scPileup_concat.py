@@ -65,7 +65,7 @@ def main(directory, samplename):
 
     curr = pd.merge(curr_fw, curr_rev, on=["Position", "CB"], how="outer").fillna(0)
     curr = curr.astype({"Count Fw": int, "Count Rev": int})
-    curr["Coverage"] = curr["Count Fw"] + curr["Count Rev"]
+    curr["Coverage"] = (curr["Count Fw"] + curr["Count Rev"])/2
     curr = curr[["Position", "CB", "Coverage", "Count Fw", "Count Rev"]]
     curr.to_csv(f"{samplename}_all.coverage.strands.txt.gz", compression='gzip', index=None)
     return

@@ -8,33 +8,25 @@ from snakemake.utils import validate
 from Bio import SeqIO
 import pickle
 
-#configfile: "parameters/Zhu_Single_Cell_10X_genomics_Human2_002.yaml"
-
-#raw = config["raw"]
-
-#bam = config["bam"]
+cellr_bc = config["use_cellr_barcode"]
 num_reads_filter = config["num_reads_filter"]
 maxBP = config["maxBP"]
 ref_fa = config["ref_fa"]
 #print(pd.read_table(config["samples"], dtype=str,sep=','))
 samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample"], drop=False)
-#(samples)
+
 
 #print('index',samples.index)
 res = config["results"]
 mq = config["mapq"]
 
-
+ft = config["filters"]
 #workdir: config["work_dir"]
-
-
-
-
 rule all:
     input:
-        #expand("{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
-        #expand("{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p", results=res, sample=samples["sample"].values, mapq = mq, num_read=config["num_reads_filter"]),
-        # expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
+        #expand("{results}/{sample}/MT/{sample}_scPileup_{num_read}",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
+        #expand("{results}/{sample}/MT/AF_min{num_read}.tensor.p", results=res, sample=samples["sample"].values, mapq = mq, num_read=config["num_reads_filter"]),
+        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
         #        mapq = mq, cellr_bc=config["use_cellr_barcode"],
         #        num_read=config["num_reads_filter"],
         #        min_cells=config["min_cells"],
@@ -42,13 +34,20 @@ rule all:
         #        top_pos = config["top_pos"],
         #        top_cells = config["top_cells"],
         #        cell_mt_coverage=config["cell_mt_coverage"]),
-        expand("{results}/{sample}/mapq_{mapq}/{sample}.MT.bw",results=res,sample=samples["sample"].values, mapq=mq),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.variant.rds", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"])
+       # expand("{results}/{sample}/MT/{sample}.MT.bw",results=res,sample=samples["sample"].values, mapq=mq),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
+        expand("{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.{low_cov_thresh}.variant.rds",
+               results=res,sample=samples["sample"].values, cellr_bc=True, num_read=num_reads_filter,
+               min_cells=ft["min_cells"], min_reads=ft["min_reads"],
+               topN=ft["topN"], het_thresh=ft["het_thresh"],
+               min_het_cells=ft["min_het_cells"],
+               het_count_thresh=ft["het_count_thresh"], bq_thresh=ft["bq_thresh"],
+               low_cov_thresh=config["low_cov_thresh"])
+        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.{low_cov_thresh}.variant.rds", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"], low_cov_thresh=config["low_cov_thresh"])
 
 
 
@@ -76,7 +75,6 @@ def results_dir():
 #     output: "{bam_f}.bam.bai" #"{raw}/{bam}.bai"
 #     shell: "samtools index {input}"
 
-
 rule cp_bam:
     """Move bam file to current location"""
     input: get_sample_bam
@@ -101,8 +99,8 @@ rule filter_bam:
         in_bam = "{results}/{sample}/00_bam/{sample}.bam",
         in_bai = "{results}/{sample}/00_bam/{sample}.bam.bai",
     output:
-        mq_bam = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
-        mq_bai = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
+        mq_bam = "{results}/{sample}/01_bam_filter/{sample}.bam",
+        mq_bai = "{results}/{sample}/01_bam_filter/{sample}.bam.bai"
 
     run:
             if "rm_duplicates" in config and config["rm_duplicates"]:
@@ -114,34 +112,35 @@ rule filter_bam:
 
 rule MT_map:
     """Extract the MT genome"""
+    # input:
+    #     bam = "{results}/{sample}/01_bam_filter/{sample}.bam",
+    #     bai = "{results}/{sample}/01_bam_filter/{sample}.bam.bai"
     input:
-        bam = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam",
-        bai = "{results}/{sample}/01_bam_filter/mapq_{mapq}/{sample}.bam.bai"
+        bam = "{results}/{sample}/00_bam/{sample}.bam",
+        bai = "{results}/{sample}/00_bam/{sample}.bam.bai",
     output:
-        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
+        mt_bam="{results}/{sample}/MT/{sample}.MT.bam",
+        mt_bai="{results}/{sample}/MT/{sample}.MT.bam.bai"
     params: mt_chr=config["mito_character"]
     run:
         #shell("samtools {input.bam}")
         shell("samtools view -b {input.bam} {params.mt_chr} > {output.mt_bam}")
         shell("samtools index {output.mt_bam}")
 
-
 rule get_bigwig:
     """Extract the MT genome"""
-    input: "{results}/{sample}/mapq_{mapq}/{sample}.MT.bam"
+    input: "{results}/{sample}/MT/{sample}.MT.bam"
     output:
-        coverage="{results}/{sample}/mapq_{mapq}/{sample}.MT.bw"
+        coverage="{results}/{sample}/MT/{sample}.MT.bw"
     shell: "bamCoverage -b {input} -o {output}"
-
 
 
 rule barcode_data:
     """Loop through the bam file and extract the barcode information."""
     input:
-        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
-    output: "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
+        mt_bam="{results}/{sample}/MT/{sample}.MT.bam",
+        mt_bai="{results}/{sample}/MT/{sample}.MT.bam.bai"
+    output: "{results}/{sample}/MT/{sample}_barcode_data.p",
     params: mt_chr=config["mito_character"]
     shell:
          "python src/bam_barcodes_function.py {input.mt_bam} {output} {params.mt_chr}"
@@ -149,9 +148,9 @@ rule barcode_data:
 
 rule barcode_filter:
     input:
-        barcode_p = "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
+        barcode_p = "{results}/{sample}/MT/{sample}_barcode_data.p",
         cellr_f = get_sample_barcodes
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
     params: cellr_bc = "{cellr_bc}"
     shell: "python src/filter_barcodes.py {input} {params} {output}"
 
@@ -159,17 +158,17 @@ rule barcode_filter:
 ## TODO
 # rule compare_CB_with_cellranger_CB_list:
 #     input:
-#         cb_list = "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
-#         cellranger_list = "{results}/{sample}/mapq_{mapq}/{sample}.barcodes.txt"
+#         cb_list = "{results}/{sample}/MT/{sample}_barcode_data.p",
+#         cellranger_list = "{results}/{sample}/MT/{sample}.barcodes.txt"
 #     output:
-#         "{results}/{sample}/mapq_{mapq}/barcodes_compare/barcodes_detected.png"
+#         "{results}/{sample}/MT/barcodes_compare/barcodes_detected.png"
 #     shell:
 #
 
 # rule plot_CB_coverage:
 #     """Plot the MT coverage of the single cells"""
-#     input: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
-#     output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist.png"
+#     input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
+#     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist.png"
 #     shell:
 #         "python src/plot_CB_coverage.py {input} {output}"
 
@@ -177,11 +176,11 @@ rule barcode_filter:
 rule scBam:
     """Extract each single-cell and put into respective bam file"""
     input:
-        mt_bam="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam",
-        mt_bai="{results}/{sample}/mapq_{mapq}/{sample}.MT.bam.bai"
-    output: directory("/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam")
+        mt_bam="{results}/{sample}/MT/{sample}.MT.bam",
+        mt_bai="{results}/{sample}/MT/{sample}.MT.bam.bai"
+    output: directory("/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam")
     threads: 18
-    #directory("/data/isshamie/miito_lineage/mttrace/{sample}/mapq_{mapq}/{sample}_scBam")
+    #directory("/data/isshamie/miito_lineage/mttrace/{sample}/MT/{sample}_scBam")
     shell:
         "python src/split_by_CB.py {input.mt_bam} {output}"
 
@@ -189,61 +188,38 @@ rule scBam:
 rule scPileup:
     """Run the first part of the MT-genotype function by getting the read pileups for each bam file for each nucleotide and overall coverage"""
     input:
-        scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam",
-        #scBam = "{results}/{sample}/mapq_{mapq}/{sample}_scBam",
-        barcodes = "{results}/{sample}/mapq_{mapq}/{sample}_barcode_data.p",
+        scBam = "/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam",
+        #scBam = "{results}/{sample}/MT/{sample}_scBam",
+        barcodes = "{results}/{sample}/MT/{sample}_barcode_data.p",
     output:
-          directory("{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}")
-    # params:
-    #     num_reads_filter = config["num_reads_filter"]
+          directory("{results}/{sample}/MT/{sample}_scPileup_{num_read}")
+    params:
+        base_quality = config['base_quality']
     shell:
-         "python src/scPileup_counts.py {input.scBam} {output} {input.barcodes} {wildcards.num_read}"
-
-# rule scFilter:
-#     input: "data/processed/{sample}/{sample}_scPileup_{num_read}"
-#     output:
-#         directory("data/processed/{sample}/{sample}_scPileup_Filter_{num_read}")
-#     shell: "python src/scFilter.py {input} {wildcards.num_read} {output}"
-#
-
-# rule scPileup_concat:
-#     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
-#     input:
-#         scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
-#         # Added to save directly to /data/isshamie
-#         scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam"
-#     output:
-#         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.txt.gz"
-#     params:
-#         samplename = lambda wildcards, output: output.all.split("_all.coverage.txt.gz")[0]
-#           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
-#     shell:
-#          "software/mito-genotyping/exampleProcessing/02_merge_pileup_counts.sh {input.scPileup_dir} {params.samplename}"
+         "python src/scPileup_counts.py {input.scBam} {output} {input.barcodes} {wildcards.num_read} {params.base_quality}"
 
 
 # scPileup_concat with different strands
 rule scPileup_concat_strands:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
     input:
-        scPileup_dir = "{results}/{sample}/mapq_{mapq}/{sample}_scPileup_{num_read}",
+        scPileup_dir = "{results}/{sample}/MT/{sample}_scPileup_{num_read}",
         # Added to save directly to /data/isshamie
-        scBam = "/data/isshamie/mito_lineage/{results}/{sample}/mapq_{mapq}/{sample}_scBam"
+        scBam = "/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam"
     output:
-        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
+        all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
     params:
         samplename = lambda wildcards, output: output.all.split("_all.coverage.strands.txt.gz")[0]
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
     shell:
          "python src/scPileup_concat.py {input.scPileup_dir} {params.samplename}"
 
-
-
 rule plot_CB_coverage:
     """Plot the MT coverage of the single cells"""
     input:
-         all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
-         barcodes = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png"
+         all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
+         barcodes = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png"
     shell:
         "python src/plot_CB_coverage.py {input} {output}"
 
@@ -251,10 +227,10 @@ rule plot_CB_coverage:
 rule scPileup_MT_matrix:
     """Create the position-by-cell coverage matrix"""
     input:
-        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
-        barcode_p = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+        all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
+        barcode_p = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
     output:
-        sc_coverage_f = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+        sc_coverage_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
     threads: 16
     shell:
         "python src/plot_heatmap_coverage.py sc_mt {input.barcode_p} {input.all} {output.sc_coverage_f} {maxBP}"
@@ -263,10 +239,10 @@ rule scPileup_MT_matrix:
 rule filter_cell_bc:
     """Extracts only the relevant cell barcodes and removes the .bam from the barcode names."""
     input:
-        all = "{results}/{sample}/mapq_{mapq}/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
-        barcode_p = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
+        all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
+        barcode_p = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
     output:
-        "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz"
+        "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz"
     run:
         for n in ["A", "C", "G", "T", "coverage"]:
             curr_f = input.all
@@ -274,7 +250,10 @@ rule filter_cell_bc:
             df = pd.read_csv(curr_f, header=None)
             df[1] = df[1].str.replace(".bam","")
             barcodes = pickle.load(open(input.barcode_p, "rb"))
-            df = df[df[1].isin(barcodes)]
+            if isinstance(barcodes, dict):
+                df = df[df[1].isin(list(barcodes.keys()))]
+            else:
+                df = df[df[1].isin(barcodes)]
             curr_out_f = output[0]
             curr_out_f = curr_out_f.replace(".coverage.", "." + n + ".")
             if n == "coverage":
@@ -283,8 +262,8 @@ rule filter_cell_bc:
 
 
 rule get_depth:
-    input:  "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt"
+    input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt"
     run:
         df = pd.read_csv(input[0], index_col=0)
         depth = df.sum(axis=1)/df.shape[1]
@@ -299,7 +278,7 @@ def get_ref(wildcards):
 
 rule get_refAllele:
     input: config["mt_ref_fa"],
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
     run:
         records = list(SeqIO.parse(input[0], "fasta"))
         mt_seq = records[0].seq
@@ -315,83 +294,100 @@ rule get_refAllele:
 rule plot_scPileup_MT_matrix:
     """Plot the posiitonal coverages."""
     input:
-        sc_coverage_f = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+        sc_coverage_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
     output:
-        save_f_heat = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",
-        save_f_coverage = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png"
+        save_f_heat = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",
+        save_f_coverage = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png"
     shell:
         "python src/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_heat} {output.save_f_coverage}"
 
 
-#rule filter_sc_barcodes:
+def get_filt(w):
+    return w.min_cells, w.min_reads, w.topN, w.het_thresh, w.min_het_cells, w.het_count_thresh, w.bq_thresh
+
+rule create_filters:
+    input:
+        concat_dir = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz"
+    #output:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/af_by_cell.tsv"
+    output:
+        af_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/af_by_cell.tsv",
+        cov = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.strands.txt"
+    params:
+        concat_d = lambda wildcards, input: os.path.dirname(input.concat_dir),
+        ref_fa = config['mt_ref_fa'],
+        name = lambda wildcards: wildcards.sample,
+        filt_params = get_filt
+    shell: "python src/calculate_AF_by_cell.py {params.concat_d} {output.af_f} {params.ref_fa} {params.name} {params.filt_params}"
+
 
 rule to_seurat:
     """ Extract the variants based on the specified parameters"""
     input:
-        all = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-        depth = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-        refAllele = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.rds"
+        all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.strands.txt",
+        #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
+        depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.rds"
     params:
         data_dir=lambda wildcards, input: os.path.dirname(input.all),
         sample = lambda wildcards: wildcards.sample
     shell:
-        "Rscript software/toRDS.R {params.data_dir} {params.sample}"
+        "Rscript R_scripts/toRDS.R {params.data_dir} {params.sample}"
 
 
 rule callVariants_mgatk:
-    input: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.rds"
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.{low_cov_thresh}.variant.rds"
+    input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.rds"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.{low_cov_thresh}.variant.rds"
     params:
         low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
-    shell: "Rscript software/variant_calling.R {input} {params.low_cov_thresh}"
+    shell: "Rscript R_scripts/variant_calling.R {input} {params.low_cov_thresh}"
 
 
 
-rule generate_allele_frequencies:
-    """Create the AF-by-cell pickle file"""
-    input:  "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-    output:  "{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p"
-    params: maxBP = config['maxBP']
-    shell:
-      "python src/calculate_AF.py {input} {output} -maxBP {params}"
-
-
-#position_bq_thresh:
-rule filter_af:
-    """Create a text file of cell barcodes to keep"""
-    input:
-         af_f = "{results}/{sample}/mapq_{mapq}/AF_min{num_read}.tensor.p",
-         barcode_data = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_barcode_data.p"
-        #"{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
-    output:
-        af_filt_f = "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p"
-    params:
-        min_cells = "{min_cells}",
-        min_reads = "{min_reads}",
-        top_cells = "{top_cells}",
-        top_pos = "{top_pos}",
-        cell_mt_coverage = "{cell_mt_coverage}",
-    shell: "python src/af_filters.py {input} {output} {params}"
-
-
-rule aggregate_samples:
-    input:
-        expand("{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
-               mapq = mq, cellr_bc=config["use_cellr_barcode"],
-               num_read=config["num_reads_filter"],
-               min_cells=config["min_cells"],
-               min_reads=config["min_reads"],
-               top_pos = config["top_pos"],
-               top_cells = config["top_cells"],
-               cell_mt_coverage=config["cell_mt_coverage"])
-    output: "{results}/mq_{mapq}_cellr_{cellr_bc}_nr_{num_reads}_mc_{min_cells}_mr_{min_reads}/aggregate_af.csv"
-    shell: "python aggregate.py {input} {output}"
+# rule generate_allele_frequencies:
+#     """Create the AF-by-cell pickle file"""
+#     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
+#     output:  "{results}/{sample}/MT/AF_min{num_read}.tensor.p"
+#     params: maxBP = config['maxBP']
+#     shell:
+#       "python src/calculate_AF.py {input} {output} -maxBP {params}"
+#
+#
+# #position_bq_thresh:
+# rule filter_af:
+#     """Create a text file of cell barcodes to keep"""
+#     input:
+#          af_f = "{results}/{sample}/MT/AF_min{num_read}.tensor.p",
+#          barcode_data = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
+#         #"{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+#     output:
+#         af_filt_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p"
+#     params:
+#         min_cells = "{min_cells}",
+#         min_reads = "{min_reads}",
+#         top_cells = "{top_cells}",
+#         top_pos = "{top_pos}",
+#         cell_mt_coverage = "{cell_mt_coverage}",
+#     shell: "python src/af_filters.py {input} {output} {params}"
+#
+#
+# rule aggregate_samples:
+#     input:
+#         expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
+#                mapq = mq, cellr_bc=config["use_cellr_barcode"],
+#                num_read=config["num_reads_filter"],
+#                min_cells=config["min_cells"],
+#                min_reads=config["min_reads"],
+#                top_pos = config["top_pos"],
+#                top_cells = config["top_cells"],
+#                cell_mt_coverage=config["cell_mt_coverage"])
+#     output: "{results}/mq_{mapq}_cellr_{cellr_bc}_nr_{num_reads}_mc_{min_cells}_mr_{min_reads}/aggregate_af.csv"
+#     shell: "python aggregate.py {input} {output}"
 
 
 rule plot_cells:
     input: "{results}/mq_{mapq}_cellr_{cellr_bc}_nr_{num_reads}_mc_{min_cells}_mr_{min_reads}/aggregate_af.csv"
-    output: "{results}/{sample}/mapq_{mapq}/cellr_{cellr_bc}/{sample}_{num_read}/cluster_{min_cells}_{min_reads}_{cell_mt_coverage}.png"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/cluster_{min_cells}_{min_reads}_{cell_mt_coverage}.png"
     shell: "python plot_lineage.py {input} {output}"
 
 #

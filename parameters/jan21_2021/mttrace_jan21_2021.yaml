@@ -1,0 +1,61 @@
+#raw_folder: data/raw/GSM3271867/
+#bam_f:
+#  Zhu_Single_Cell_10X_genomics_Human2_002_possorted_genome_bam.bam
+#name: Zhu_Single_Cell_10X_genomics_Human2_002
+#mito_character: MT
+#num_reads_filter: 16571 #MT genome in humans
+ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa"
+mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
+
+samples: "parameters/jan21_2021/jan21_2021.csv"
+results: "data/processed/mttrace/jan21_2021"
+figures: "figures/mttrace/jan21_2021"
+
+main:
+  - "mtscATAC"
+#workdir: "/data2/mito_lineage/data/processed/200403_A00953_0090_BHC23FDSXY/"
+
+use_cellr_barcode:
+  #- False
+  - True
+
+num_reads_filter:
+  - 200
+
+mito_character: "chrM"
+maxBP: 16571
+
+mapq:
+  - 0
+base_quality: 20
+
+# Variants:
+low_cov_thresh:
+  - 10
+
+# For constructing the af_by_cell filter position_filter:
+filters:
+  cell_depth: "Gaussian"
+
+  min_cells:
+    - 100
+    - 500
+    - 10
+
+  min_reads:
+    - 50
+    - 100
+
+  top_cells:
+    - 0
+
+  top_pos:
+    - 0
+
+  cell_mt_coverage:
+    - 10
+    - 100
+
+  position_bq_thresh:
+    - 30
+    #- "Gaussian"

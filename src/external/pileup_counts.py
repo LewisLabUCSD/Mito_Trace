@@ -61,8 +61,6 @@ def run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality, use
 		quality = read.query_qualities
 		align_qual_read = read.mapping_quality
 		reverse = read.is_reverse
-		print('seq len', len(seq))
-		print("reverse", reverse)
 		if use_strands:
 			if reverse:
 				for qpos, refpos in read.get_aligned_pairs(True):

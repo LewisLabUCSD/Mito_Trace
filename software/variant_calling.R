@@ -151,14 +151,14 @@ call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_thr
 
 
 
-plot_mutations_qc <- function(mut_se, f_save, strand_correlation_thresh = 0.65, n_cells_thresh = 5, log_vmr_thresh=-2) {
+plot_mutations_qc <- function(mut_se, f_save) {
   misc_df <- data.frame(rowData(mut_se))
-  filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation >strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
-  dim(filter_df)
-  filter_df # Verify that 8202 and 8344 are there
-  
+  # filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation >strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
+  # dim(filter_df)
+  # filter_df # Verify that 8202 and 8344 are there
+  #
   # Make the standard variant calling plot
-  p1 <- ggplot(filter_df, aes(x = strand_correlation, y = log10(vmr), color = log10(vmr) > -2 & strand_correlation > 0.65)) +
+  p1 <- ggplot(misc_df, aes(x = strand_correlation, y = log10(vmr), color = log10(vmr) > -2 & strand_correlation > 0.65)) +
     geom_point(size = 0.4) + scale_color_manual(values = c("black", "firebrick")) +
     labs(color = "HQ", x = "Strand concordance", y = "log VMR") +
     #L_border() + pretty_plot(fontsize = 8) + ## Not in R 3.5
@@ -175,6 +175,9 @@ args <- commandArgs(trailingOnly = TRUE)
 SE_f <- args[1]
 SE <- readRDS(SE_f)
 low_coverage_threshold <- args[2]
+strand_correlation_thresh <- 0.65
+n_cells_thresh <- 5
+log_vmr_thresh <- -2
 
 if (!(grepl('.rds', SE_f))) {
   print('Not an .rds file! Not running')
@@ -188,11 +191,12 @@ if (!(grepl('.rds', SE_f))) {
   saveRDS(mut_se, file = gsub('.rds', '.variant.rds', SE_f))
 
   misc_df <- data.frame(rowData(mut_se))
-  #filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation >strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
+  filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
 
 
   write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = gsub('.rds', ".coverage.tsv", SE_f), sep='\t')
   write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', "af.tsv", SE_f), sep='\t')
+  write.table(filter_df, file = gsub('.rds', "af.mgatk.tsv", SE_f), sep='\t')
   plot_mutations_qc(mut_se , f_save = gsub('.rds', 'variantQC.png', SE_f))
 }
 

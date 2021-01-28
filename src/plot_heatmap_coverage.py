@@ -43,8 +43,8 @@ def fill_df_coverage(df, pileup_dir, is_par=False):
 # @click.argument('barcode_p',  type=click.Path(exists=True))
 # @click.argument('pileup_dir',  type=click.Path(exists=True))
 # @click.argument('save_f', type=click.STRING)
-def sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP, read_l = 100, n_cpu=32):
-    """
+def sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP):
+    """ Converts from sparse to wide, and uses the Cell Barcodes
 
     :param barcode_p: The cellbarcode information file. Counts how many reads per barcode
     :param concat_coverage_f: The concatenated, long, format of all cells
@@ -56,19 +56,11 @@ def sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP, read_l = 100, n_
     CB_read_number = pickle.load(open(barcode_p, "rb"))
 
     df = pd.read_csv(concat_coverage_f, header=None)
+    # Only use the + strand here
     sc_coverage = (df.pivot(index=1, columns=0, values=2)).fillna(0)
     sc_coverage.index = sc_coverage.index.str.replace(".bam", "")
-    sc_coverage = sc_coverage.loc[sc_coverage.index.isin(CB_read_number.keys())]
+    sc_coverage = sc_coverage.loc[sc_coverage.index.isin(list(CB_read_number.keys()))]
     sc_coverage.to_csv(save_f)
-
-    # sc_coverage = pd.DataFrame(index=CB_read_number.keys(), columns=range(1, maxBP + 1), dtype=int)
-    # sc_coverage.loc[:,:] = 0
-    # sc_coverage = pardf(sc_coverage, fill_df_coverage,
-    #                     func_args=(pileup_dir,), num_processes=n_cpu)
-    # not_done = sc_coverage[((sc_coverage == 0).all(axis=1))].index
-    #
-    # sc_coverage = sc_coverage[~(sc_coverage.index.isin(not_done))]
-    # sc_coverage.to_csv(save_f)
     return
 
 
@@ -89,7 +81,6 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     # else:
     #     sc_coverage = sc_coverage.loc[
     #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
-
 
     g = sns.clustermap(sc_coverage, row_cluster=False, col_cluster=False, col_linkage=False)
     plt.title(f"Number of reads at each MT position in {top_n} cells")

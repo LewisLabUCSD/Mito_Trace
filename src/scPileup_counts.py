@@ -10,8 +10,8 @@ import pandas as pd
 from src.external.pileup_counts import run_pileup
 
 
-def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
-                 maxBP=16571, base_qual=0, alignment_qual=0,
+def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1, base_qual=0,
+                 maxBP=16571, alignment_qual=0,
                  func_p="/home/isshamie/software/mito-genotyping/exampleProcessing/",
                  cellr_bc_f=None):
     if reads_filter < 0:
@@ -52,6 +52,6 @@ def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1,
 
 
 if __name__=="__main__":
-    get_coverage(sys.argv[1], sys.argv[2], sys.argv[3], int(sys.argv[4]))
+    get_coverage(sys.argv[1], sys.argv[2], sys.argv[3], int(sys.argv[4]), int(sys.argv[5]))
 
 #get_coverage(bam_dir="../data/raw/scBam",pileup_dir="../data/raw/scPileup", barcode_f="../data/scBam/barcode_data.p")
