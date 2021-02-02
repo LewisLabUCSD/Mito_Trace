@@ -13,13 +13,13 @@ prefix: "jan21_2021"
 
 samples:
   - "P2"
-  #- "J2"
+  - "J2"
 
-
+N_DONORS: 4
 
 pseudo_multiplex:
   #Number Reads Total: 10000000
-  num_cells: 2000
+  num_cells: 25000 # high enough to choose all
   is_proportional: False
 
 mt:
