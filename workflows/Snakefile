@@ -7,6 +7,8 @@ import pandas as pd
 from snakemake.utils import validate
 from Bio import SeqIO
 import pickle
+import subprocess as subp
+from datetime import datetime
 
 cellr_bc = config["use_cellr_barcode"]
 num_reads_filter = config["num_reads_filter"]
@@ -35,18 +37,24 @@ rule all:
         #        top_cells = config["top_cells"],
         #        cell_mt_coverage=config["cell_mt_coverage"]),
        # expand("{results}/{sample}/MT/{sample}.MT.bw",results=res,sample=samples["sample"].values, mapq=mq),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
+        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
         expand("{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.{low_cov_thresh}.variant.rds",
-               results=res,sample=samples["sample"].values, cellr_bc=True, num_read=num_reads_filter,
-               min_cells=ft["min_cells"], min_reads=ft["min_reads"],
-               topN=ft["topN"], het_thresh=ft["het_thresh"],
-               min_het_cells=ft["min_het_cells"],
-               het_count_thresh=ft["het_count_thresh"], bq_thresh=ft["bq_thresh"],
+        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
+        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
+        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
+
+        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
+        #        results=res,sample=samples["sample"].values, cellr_bc=True, num_read=num_reads_filter,
+        #        min_cells=ft["min_cells"], min_reads=ft["min_reads"],
+        #        topN=ft["topN"], het_thresh=ft["het_thresh"],
+        #        min_het_cells=ft["min_het_cells"],
+        #        het_count_thresh=ft["het_count_thresh"], bq_thresh=ft["bq_thresh"],
+        #        low_cov_thresh=config["low_cov_thresh"])
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
+               results=res,sample=samples["sample"].values,
+               cellr_bc=True, num_read=num_reads_filter,
                low_cov_thresh=config["low_cov_thresh"])
+
         #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.{low_cov_thresh}.variant.rds", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"], low_cov_thresh=config["low_cov_thresh"])
 
 
@@ -198,21 +206,56 @@ rule scPileup:
     shell:
          "python src/scPileup_counts.py {input.scBam} {output} {input.barcodes} {wildcards.num_read} {params.base_quality}"
 
+def concat_files(directory, samplename, nt):
+    cmd = f"find {directory} -type f -name *.{nt}.txt -exec cat {{}} \; > {samplename}_all.{nt}.txt"
+    print(cmd)
+    subp.check_call(str(cmd), shell=True)
+    cmd = f"find {directory} -type f -name *.{nt}.minus.txt -exec cat {{}} \; > {samplename}_all.{nt}.minus.txt"
+    print(cmd)
+    subp.check_call(str(cmd), shell=True)
+    return
 
-# scPileup_concat with different strands
-rule scPileup_concat_strands:
-    """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
+rule scConcat:
     input:
         scPileup_dir = "{results}/{sample}/MT/{sample}_scPileup_{num_read}",
-        # Added to save directly to /data/isshamie
         scBam = "/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam"
+    output:
+        "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.minus.txt"
+    threads: 28
+    params:
+        samplename = lambda wildcards, output: output[0].split("_all.coverage.minus.txt")[0]
+          #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
+    run:
+        for n in ["A", "C", "G", "T", "coverage"]:
+            concat_files(input.scPileup_dir, params.samplename, n)
+
+rule scPileup_concat_strands:
+    """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
+    input:  "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.minus.txt"
     output:
         all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
     params:
+        concat_dir = lambda wildcards, input: os.path.dirname(input[0]),
         samplename = lambda wildcards, output: output.all.split("_all.coverage.strands.txt.gz")[0]
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
     shell:
-         "python src/scPileup_concat.py {input.scPileup_dir} {params.samplename}"
+         "python src/scPileup_concat.py {params.concat_dir} {params.samplename}"
+
+# scPileup_concat with different strands
+# rule scPileup_concat_strands:
+#     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
+#     input:
+#         scPileup_dir = "{results}/{sample}/MT/{sample}_scPileup_{num_read}",
+#         # Added to save directly to /data/isshamie
+#         scBam = "/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam"
+#     output:
+#         all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
+#     threads: 34
+#     params:
+#         samplename = lambda wildcards, output: output.all.split("_all.coverage.strands.txt.gz")[0]
+#           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
+#     shell:
+#          "python src/scPileup_concat.py {input.scPileup_dir} {params.samplename}"
 
 rule plot_CB_coverage:
     """Plot the MT coverage of the single cells"""
@@ -236,6 +279,20 @@ rule scPileup_MT_matrix:
         "python src/plot_heatmap_coverage.py sc_mt {input.barcode_p} {input.all} {output.sc_coverage_f} {maxBP}"
 
 
+def run_filter_cell(in_f, prefix, barcode_p, n=""):
+    df = pd.read_csv(in_f)
+    df["CB"] = df["CB"].str.replace(".bam","")
+    barcodes = pickle.load(open(barcode_p, "rb"))
+    if isinstance(barcodes, dict):
+        df = df[df["CB"].isin(list(barcodes.keys()))]
+    else:
+        df = df[df["CB"].isin(barcodes)]
+    if n == "coverage":
+        df = df.iloc[:,:3]
+    df.to_csv(prefix+f".{n}.strands.txt.gz", header=None, index=None, compression='gzip')
+    return
+
+
 rule filter_cell_bc:
     """Extracts only the relevant cell barcodes and removes the .bam from the barcode names."""
     input:
@@ -247,48 +304,28 @@ rule filter_cell_bc:
         for n in ["A", "C", "G", "T", "coverage"]:
             curr_f = input.all
             curr_f = curr_f.replace(".coverage.", "." + n + ".")
-            df = pd.read_csv(curr_f, header=None)
-            df[1] = df[1].str.replace(".bam","")
+            df = pd.read_csv(curr_f)
+            df["CB"] = df["CB"].str.replace(".bam","")
             barcodes = pickle.load(open(input.barcode_p, "rb"))
             if isinstance(barcodes, dict):
-                df = df[df[1].isin(list(barcodes.keys()))]
+                df = df[df["CB"].isin(list(barcodes.keys()))]
             else:
-                df = df[df[1].isin(barcodes)]
+                df = df[df["CB"].isin(barcodes)]
             curr_out_f = output[0]
             curr_out_f = curr_out_f.replace(".coverage.", "." + n + ".")
             if n == "coverage":
                 df = df.iloc[:,:3]
             df.to_csv(curr_out_f, header=None, index=None, compression='gzip')
-
-
-rule get_depth:
-    input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt"
-    run:
-        df = pd.read_csv(input[0], index_col=0)
-        depth = df.sum(axis=1)/df.shape[1]
-        depth.to_csv(output[0], sep='\t', header=False)
-        #df.groupby()
-
+# for n in ["A", "C", "G", "T", "coverage"]:
+    #curr_f = input.all
+    #curr_f = curr_f.replace(".coverage.", "." + n + ".")
+    #out_f = output[0].replace(".coverage.", "." + n + ".")
+    #run_filter_cell(args=(output[0].replace(".coverage.strands.txt.gz", "", input.barcode_p, n)
 
 def get_ref(wildcards):
     w = wildcards
-    return f"{w.results}/{w.sample}/mapq_{w.mapq}/cellr_{w.cellr_bc}/{w.sample}_{w.num_read}/{config['mito_character']}_refAllele.txt"
-
-
-rule get_refAllele:
-    input: config["mt_ref_fa"],
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
-    run:
-        records = list(SeqIO.parse(input[0], "fasta"))
-        mt_seq = records[0].seq
-        for ind, val in enumerate(mt_seq):
-            if ind == 0:
-                ref_str = f"{ind+1}\t{val}"
-            else:
-                ref_str = f"{ref_str}\n{ind+1}\t{val}"
-        with open(output[0], "w") as f:
-            f.write(ref_str)
+    mito = config['mito_character']
+    return f"{w.results}/{w.sample}/mapq_{w.mapq}/cellr_{w.cellr_bc}/{w.sample}_{w.num_read}/{mito}_refAllele.txt"
 
 
 rule plot_scPileup_MT_matrix:
@@ -311,39 +348,112 @@ rule create_filters:
     #output:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/af_by_cell.tsv"
     output:
         af_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/af_by_cell.tsv",
-        cov = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.strands.txt"
+        cov = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.txt"
     params:
         concat_d = lambda wildcards, input: os.path.dirname(input.concat_dir),
         ref_fa = config['mt_ref_fa'],
         name = lambda wildcards: wildcards.sample,
         filt_params = get_filt
-    shell: "python src/calculate_AF_by_cell.py {params.concat_d} {output.af_f} {params.ref_fa} {params.name} {params.filt_params}"
+    resources:
+        mem_mb=90000
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/.outcfg"
+    shell: "python src/calculate_AF_by_cell.py {params.concat_d} {output.af_f} {params.ref_fa} {params.name} {params.filt_params} --log {log}"
+
+
+rule get_refAllele:
+    input: config["mt_ref_fa"],
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
+    run:
+        records = list(SeqIO.parse(input[0], "fasta"))
+        mt_seq = records[0].seq
+        for ind, val in enumerate(mt_seq):
+            if ind == 0:
+                ref_str = f"{ind+1}\t{val}"
+            else:
+                ref_str = f"{ref_str}\n{ind+1}\t{val}"
+        with open(output[0], "w") as f:
+            f.write(ref_str)
+
 
 
 rule to_seurat:
     """ Extract the variants based on the specified parameters"""
     input:
-        all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.strands.txt",
+        all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.txt",
         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-        depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+        #depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.rds"
     params:
         data_dir=lambda wildcards, input: os.path.dirname(input.all),
         sample = lambda wildcards: wildcards.sample
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.to_seurat.log"
     shell:
-        "Rscript R_scripts/toRDS.R {params.data_dir} {params.sample}"
+        "Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}"
 
 
 rule callVariants_mgatk:
     input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.rds"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.{low_cov_thresh}.variant.rds"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
     params:
         low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
-    shell: "Rscript R_scripts/variant_calling.R {input} {params.low_cov_thresh}"
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
+    shell: "Rscript R_scripts/variant_calling.R {input} {params.low_cov_thresh} &> {log}"
 
 
 
+# B. Run mgatk before the filters
+rule raw_get_depth:
+    input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz" #"{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt"
+    run:
+        df = pd.read_csv(input[0], header=None)
+        depth = df.groupby(1).sum()[2]/16569
+        depth.sort_index().to_csv(output[0], sep='\t', header=False)
+
+
+rule raw_get_refAllele:
+    input: config["mt_ref_fa"],
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    run:
+        records = list(SeqIO.parse(input[0], "fasta"))
+        mt_seq = records[0].seq
+        for ind, val in enumerate(mt_seq):
+            if ind == 0:
+                ref_str = f"{ind+1}\t{val}"
+            else:
+                ref_str = f"{ref_str}\n{ind+1}\t{val}"
+        with open(output[0], "w") as f:
+            f.write(ref_str)
+
+rule raw_to_seurat:
+    """ Extract the variants based on the specified parameters"""
+    input:
+        #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.txt",
+        all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
+        depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
+    params:
+        data_dir=lambda wildcards, input: os.path.dirname(input.all),
+        sample = lambda wildcards: wildcards.sample
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.to_seurat.log"
+    shell:
+        "Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} TRUE &> {log}"
+
+
+rule raw_callVariants_mgatk:
+    input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
+    params:
+        low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
+    shell: "Rscript R_scripts/variant_calling.R {input} {params.low_cov_thresh} &> {log}"
+
+
+
+
+# C. Not finished. Generating the AF tensor
 # rule generate_allele_frequencies:
 #     """Create the AF-by-cell pickle file"""
 #     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",

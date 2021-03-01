@@ -15,6 +15,10 @@ samples:
   - "P2"
   - "J2"
 
+sample_dict:
+  P2: "Control"
+  J2: "Flt3"
+
 N_DONORS: 4
 
 pseudo_multiplex:

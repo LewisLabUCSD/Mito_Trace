@@ -104,7 +104,7 @@ rule pseudo_bulk_create:
 rule vireo_psuedo:
     input:
         AD_F="data/{prefix}/vcf/pseudo/minC{minC}_minAF{minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx", #"data/{prefix}/vireo/pseudo/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx",
-        notebook=join(ROOT_DIR, "src", "vireo", "vireoSNP_donors.ipynb" )
+        notebook=join(ROOT_DIR, "src", "vireo", "vireoSNP_donors.ipynb")
     output: "data/{prefix}/vcf/pseudo/minC{minC}_minAF{minAF}/numC{num_cells}_isprop{is_prop}/pseudo.ipynb"
     params:
         INDIR = lambda wildcards, input: dirname(input.AD_F),
@@ -157,10 +157,11 @@ rule pseudo_bulk_create_chrM:
     params:
         num_cells=num_cells,
         is_prop = is_prop,
-        outdir = lambda wildcards, output: dirname(output[0])
+        outdir = lambda wildcards, output: dirname(output[0]),
+        prefix=config["samples"]
     output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx"
     log: "logs/{prefix}/vireo/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}.log"
-    shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} > {log} 2>&1"
+    shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix} > {log} 2>&1"
 
 
 rule pseudo_vireo_chrM:

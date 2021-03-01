@@ -18,7 +18,7 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   
   variantFiles <- list(Afile, Cfile, Gfile, Tfile)
   metaFiles <- list(coverageFile, depthFile, referenceAlleleFile)
-  
+  print(variantFiles)
   nullout <- lapply(c(variantFiles, metaFiles), function(file){
     stopifnot(length(file) == 1)
   })
@@ -43,7 +43,8 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   # Make a long matrix of bq and Counts for non-reference alleles
   ref <- importDT(referenceAlleleFile)
   maxpos <- max(ref[[1]])
-  
+  print('maxpos')
+  print(head(maxpos))
   samplesOrder <- levels(cov[[2]])
   maxsamples <- length(samplesOrder)
   
@@ -106,12 +107,14 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
       j = c(as.numeric(dt[[2]]), maxsamples),
       x = c(dt[[count_fw_idx]],0)
     )
+    print('counts_fw')
     
     counts_rev <- Matrix::sparseMatrix(
       i = c(dt[[1]],maxpos),
       j = c(as.numeric(dt[[2]]), maxsamples),
       x = c(dt[[count_rev_idx]],0)
     )
+    
     
     remove(dt)
     
@@ -133,6 +136,9 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   
   # Create colData
   depth <- data.frame(importDT(depthFile))
+  print('depth')
+  print(head(depth))
+  
   sdf <- merge(data.frame(sample = samplesOrder), depth, by.x = "sample", by.y = "V1")
   rownames(sdf) <- samplesOrder
   colnames(sdf) <- c("sample", "depth")
@@ -194,7 +200,7 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
 # Function to parse the folder hierarchy
 #---------------------------------------
 
-importMito <- function(folder, ...){
+importMito <- function(folder, is_strand, ...){
   
   files <- list.files(folder, full.names = TRUE)
   print(files)
@@ -205,13 +211,22 @@ importMito <- function(folder, ...){
       return(hit)
     }
   }
-  
+
+  if (is_strand) {
+    Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
+    Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
+    Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
+    Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
+    coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
+  } else {
   # Set up file paths
-  Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
-  Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
-  Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
-  Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
-  coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
+  Afile <- files[checkGrep(grep(".A.txt", files))]
+  Cfile <- files[checkGrep(grep(".C.txt", files))]
+  Gfile <- files[checkGrep(grep(".G.txt", files))]
+  Tfile <- files[checkGrep(grep(".T.txt", files))]
+  coverageFile <- files[checkGrep(grep(".coverage.txt", files))]
+  
+  }
   depthFile <- files[checkGrep(grep(".depthTable.txt", files))]
   referenceAlleleFile <- files[checkGrep(grep("chrM_refAllele.txt", files))]
   
@@ -230,10 +245,26 @@ importMito <- function(folder, ...){
 #-----------------
 # Command line i/o
 #-----------------
+# folder <- "data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30"
+# name <- "mgatk/P2"
+#Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}
+
 args <- commandArgs(trailingOnly = TRUE)
+print(args)
 folder <- args[1]
 name <- args[2]
+print(length(args))
+is_strand <- args[3]
+if (is_strand == "TRUE"){
+  is_strand <- TRUE
+} else{
+  is_strand<-FALSE
+  }
 
-SElist <- importMito(folder)
+
+print('is_strand')
+print(is_strand)
+
+SElist <- importMito(folder, is_strand)
 saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
 saveRDS(SElist[[2]], file = paste0(folder, "/", name, ".signac.rds"))

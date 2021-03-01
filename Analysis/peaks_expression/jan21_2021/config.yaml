@@ -1,0 +1,10 @@
+global: "PROJECT"
+
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist"
+experiment: "jan21_2021"
+genome: "MTblacklist"
+
+
+samples:
+  - "J2"
+  - "P2"

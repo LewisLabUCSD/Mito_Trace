@@ -100,10 +100,33 @@ def merge_vcf_ids(indirs, outdir=None):
     return vars_coords, variants
 
 
+def add_suffix_to_labels(in_files, cells_kept=None, out_file=None, sample_names=None):
+    """
+    :param in_files: list of labels files
+    :param out_file: output label file
+    :return:
+    """
+    all = []
+    for f in in_files:
+        curr = pd.read_csv(f, header=None)
+        if (sample_names is None) or (sample_names==()):
+            curr[0] = curr[0] + "_" + os.path.basename(f)
+        else:
+            curr[0] = curr[0] + sample_names[f]
+
+        if cells_kept is not None: # Indices to keep
+            curr = curr.iloc[cells_kept[f].keys()]
+            curr['new index'] = cells_kept[f].values()
+        all.append(curr)
+    df = pd.concat(all, ignore_index=True)
+    if out_file is not None:
+        df.to_csv(out_file, header=None, index=False)
+    return df
+
 
 def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
                               num_cells_total=1000,
-                              is_proportional=False):
+                              is_proportional=False, sample_names=None):
     """ Subsamples the cellSNP output matrices and combines into a new folder, with metadata saying which cell comes from which sample.
 
     :param indirs:
@@ -278,7 +301,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
             {"Variant": ad_full["Variant"].max(),
              "Cell": ad_full["Cell"].max(),
              "integer": ad_full.shape[0]}, index=["Meta"]),
-                             ad_full.sort_values(["Variant", "Cell"])))
+                             ad_full.sort_values(["Variant", "Cell"])), sort=False)
         ad_full.to_csv(file, sep="\t", header=False, index=False)
 
     with open(join(outdir, "cellSNP.tag.DP.mtx"), 'a') as file:
@@ -287,7 +310,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
             {"Variant": dp_full["Variant"].max(),
              "Cell": dp_full["Cell"].max(),
              "integer": dp_full.shape[0]}, index=["Meta"]),
-                             dp_full.sort_values(["Variant", "Cell"])))
+                             dp_full.sort_values(["Variant", "Cell"])), sort=False)
         dp_full.to_csv(file, sep="\t", header=False, index=False)
     with open(join(outdir, "cellSNP.tag.OTH.mtx"), 'a') as file:
         file.write(header)
@@ -296,7 +319,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
              "Cell": oth_full["Cell"].max(),
              "integer": oth_full.shape[0]}, index=["Meta"]),
                               oth_full.sort_values(
-                                  ["Variant", "Cell"])))
+                                  ["Variant", "Cell"])), sort=False)
         oth_full.to_csv(file, sep="\t", header=False, index=False)
 
     # Save cell indices
@@ -306,6 +329,19 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
             for k in cells_kept[val]:
                 curr = f"{curr}\n{k},{cells_kept[val][k]}"
             f.write(curr)
+
+    # Recopy the cell labels
+    for ind, val in enumerate(indirs):
+        cells = os.path.join(os.path.dirname(val), "cellSNP.samples.tsv")
+        out_f = join(outdir, f"cell_labels_{ind}.txt")
+        cmd = f"cp {cells} {out_f}"
+        os.system(cmd)
+
+    in_files = [os.path.join(os.path.dirname(val), "cellSNP.samples.tsv") for val in indirs]
+    add_suffix_to_labels(in_files, cells_kept,
+                         join(outdir, "cell_labels.txt"),
+                         sample_names=sample_names)
+
     return
 
 
@@ -314,6 +350,9 @@ def merge_vcf(vcf_files, out_vcf):
     print(cmd)
     os.system(cmd)
     return
+
+
+
 
 # Subsampling on bam files:
 # Pros: More raw
@@ -327,11 +366,12 @@ def merge_vcf(vcf_files, out_vcf):
 @click.argument("indirs", type=click.Path(exists=True), nargs=-1)
 @click.option("--is_prop", default=False, type=click.BOOL)
 @click.option("--num_cells", default=1000)
-def main(outdir, indirs, is_prop, num_cells):
+@click.option("--samples", default=())
+def main(outdir, indirs, is_prop, num_cells, samples):
     subsample_sparse_matrices(outdir, indirs,
                               num_cells_total=num_cells,
                               is_proportional=is_prop,
-                              cell_subsample=0.1)
+                              cell_subsample=0.1, sample_names=samples)
     return
 
 

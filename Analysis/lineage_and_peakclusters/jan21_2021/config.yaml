@@ -1,0 +1,19 @@
+aggregate_out: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist/aggregate/outs"
+reanalysis_out: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist/reanalysis/outs"
+
+lineage_config: "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/pseudo/minC200_minAF0.01/numC25000_ispropFalse"
+cell_names:
+  - "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/P2_cellSNP_minC200_minAF0.01/cellSNP.samples.tsv"
+  - "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/J2_cellSNP_minC200_minAF0.01/cellSNP.samples.tsv"
+
+prefix: "jan21_2021"
+genome: "MTblacklist"
+name: "cd34"
+
+samples:
+  - "P2"
+  - "J2"
+
+sample_moniker:
+  - "Control"
+  - "Flt3l"

@@ -4,6 +4,7 @@
 ## changing directory.
 ####
 import os
+from os.path import abspath, dirname
 from shutil import rmtree
 import pandas as pd
 import seaborn as sns
@@ -27,9 +28,11 @@ rule all:
     input:
         expand("{sample}/outs/possorted_bam.bam", sample=samples_df.index),
         expand("{sample}/outs/web_summary.html", sample=samples_df.index),
-        expand("coverage/{sample}_coverage.tsv", sample=samples_df.index),
-        expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
-        expand("coverage/{sample}_coverage.bw", sample=samples_df.index)
+        #expand("coverage/{sample}_coverage.tsv", sample=samples_df.index),
+        "aggregate/outs/web_summary.html",
+         "reanalysis/outs/web_summary.html"
+        #expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
+        #expand("coverage/{sample}_coverage.bw", sample=samples_df.index)
 
 def results_dir():
     return config["results"]
@@ -43,7 +46,9 @@ rule cellranger_count:
         genome_ref = config["genome_dir"]
     output:
         bam_f = "{out_name}/outs/possorted_bam.bam",
-        html_out = "{out_name}/outs/web_summary.html"
+        html_out = "{out_name}/outs/web_summary.html",
+        frag_out = "{out_name}/outs/fragments.tsv.gz",
+        sing_out = "{out_name}/outs/singlecell.csv"
     threads: 24
     #log: "logs/cellratac_{out_name}.log "
     run:
@@ -115,3 +120,56 @@ rule subsample_fastq:
     awk -F"\t" '{print $1"\n"$3"\n"$5"\n"$7 > "forward_sub.fastq";print
     $2"\n"$4"\n"$6"\n"$8 > "reverse_sub.fastq"}'
     """
+
+
+rule create_csv:
+    input:
+        expand("{sample}/outs/fragments.tsv.gz", sample=samples_df.index),
+    output:
+        aggr_csv = "aggr.csv"
+    run:
+        df = pd.DataFrame(columns=["library_id", "fragments", "cells"])
+        print('in',input)
+        for ind, frag in enumerate(input):
+            print('frag', frag)
+            cell = frag.replace("fragments.tsv.gz", "singlecell.csv")
+            samp = os.path.dirname(frag).split('/')[0]
+            print(pd.DataFrame([samp, frag, cell], index=["library_id", "fragments", "cells"]).transpose())
+            df = pd.concat((df,
+                           pd.DataFrame([samp, os.path.abspath(frag), os.path.abspath(cell)], index=["library_id", "fragments", "cells"]).transpose()),
+                           axis=0)
+            print('df', df)
+        df.to_csv(output.aggr_csv, index=False)
+
+#        library_id,fragments,cells
+#LV123,/opt/runs/LV123/outs/fragments.tsv.gz,/opt/runs/LV123/outs/singlecell.csv
+#LB456,/opt/runs/LB456/outs/fragments.tsv.gz,/opt/runs/LB456/outs/singlecell.csv
+    #params: lambda wildcards: wildcards.sa
+
+rule aggr_cellranger:
+    input:
+        aggr_csv = "aggr.csv" #expand("{out_name}/outs/web_summary.html", out_)
+    output: "aggregate/outs/web_summary.html"
+    params:
+        ref = config["genome_dir"],
+    shell: "cellranger-atac aggr --id=aggregate \
+                  --csv={input.aggr_csv}  \
+                  --normalize=depth \
+                  --reference={params.ref}"
+
+rule reanalyze:
+    input: "aggregate/outs/web_summary.html"
+    output: "reanalysis/outs/web_summary.html"
+    params:
+        aggr_outs = "aggregate/outs",
+        ana_outs = "reanalysis/outs",
+        ref = config["genome_dir"],
+        full_in = lambda wildcards, input: dirname(abspath(input[0])),
+        full_out = lambda wildcards, output: dirname(abspath(output[0]))
+    threads: 24
+    shell:
+         "cellranger-atac reanalyze --id=reanalysis \
+                --peaks={params.full_in}/peaks.bed \
+               --reference={params.ref} --localcores={threads} \
+               --fragments={params.full_in}/fragments.tsv.gz"
+          #--params={params.full_out}/aggregation_csv.csv \

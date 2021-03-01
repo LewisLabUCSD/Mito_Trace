@@ -20,6 +20,8 @@ call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_thr
     boo <- ref_allele != letter & ref_allele != "N"
     pos <- start(rowRanges(SE))
     variant_name <- paste0(as.character(pos), ref_allele, ">", letter)[boo]
+    print('variant name')
+    print(head(variant_name))
     nucleotide <- paste0(ref_allele, ">", letter)[boo]
     position_filt <- pos[boo]
     
@@ -27,6 +29,8 @@ call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_thr
     getMutMatrix <- function(letter){
       mat <- ((assays(SE)[[paste0(letter, "_counts_fw")]] + assays(SE)[[paste0(letter, "_counts_rev")]]) / cov)[boo,]
       rownames(mat) <- variant_name
+      print('mat')
+      print(head(mat))
       mat <- as(mat, "dgCMatrix")
       return(mat)
     }
@@ -187,7 +191,9 @@ if (!(grepl('.rds', SE_f))) {
   #misc_df <- data.frame(rowData(mut_se))
   #filter_df <- misc_df %>%  filter(n_cells_conf_detected >= 5 & strand_correlation > 0.65 & log10(vmr) > -2)
   #dim(filter_df)
-  print(mut_se)
+  print('mut_se')
+  print(head(mut_se))
+  
   saveRDS(mut_se, file = gsub('.rds', '.variant.rds', SE_f))
 
   misc_df <- data.frame(rowData(mut_se))
@@ -195,9 +201,9 @@ if (!(grepl('.rds', SE_f))) {
 
 
   write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = gsub('.rds', ".coverage.tsv", SE_f), sep='\t')
-  write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', "af.tsv", SE_f), sep='\t')
-  write.table(filter_df, file = gsub('.rds', "af.mgatk.tsv", SE_f), sep='\t')
-  plot_mutations_qc(mut_se , f_save = gsub('.rds', 'variantQC.png', SE_f))
+  write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', ".af.tsv", SE_f), sep='\t')
+  write.table(filter_df, file = gsub('.rds', ".af.mgatk.tsv", SE_f), sep='\t')
+  plot_mutations_qc(mut_se , f_save = gsub('.rds', '.variantQC.png', SE_f))
 }
 
 

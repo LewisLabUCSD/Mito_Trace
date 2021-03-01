@@ -311,7 +311,6 @@ class Simulation:
 
             new_dict[curr_clone] = num_curr_cells
 
-
         ####TODO
         ## new_lineage_mutants chances. This will see if a mutation will change
         ####TODO
@@ -369,6 +368,12 @@ class Simulation:
 
     def grow_poisson(self, p):
         # TODO growth of poisson refactor
+
+        # Sample from poisson the growth
+        grow_clones = random.poisson(lam=p['clone_growth'],
+                                     size=(p['clone_meta']))
+        grow_nonclones = random.poisson(lam=p['non_clone_growth'],
+                                        size=(p['clone_meta']))
         return
 
 

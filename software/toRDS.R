@@ -207,11 +207,11 @@ importMito <- function(folder, ...){
   }
   
   # Set up file paths
-  Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
-  Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
-  Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
-  Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
-  coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
+  Afile <- files[checkGrep(grep(".A.txt", files))]
+  Cfile <- files[checkGrep(grep(".C.txt", files))]
+  Gfile <- files[checkGrep(grep(".G.txt", files))]
+  Tfile <- files[checkGrep(grep(".T.txt", files))]
+  coverageFile <- files[checkGrep(grep(".coverage.txt", files))]
   depthFile <- files[checkGrep(grep(".depthTable.txt", files))]
   referenceAlleleFile <- files[checkGrep(grep("chrM_refAllele.txt", files))]
   

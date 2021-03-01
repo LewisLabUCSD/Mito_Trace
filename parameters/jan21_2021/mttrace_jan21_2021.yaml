@@ -29,33 +29,37 @@ mapq:
   - 0
 base_quality: 20
 
-# Variants:
-low_cov_thresh:
-  - 10
 
 # For constructing the af_by_cell filter position_filter:
 filters:
-  cell_depth: "Gaussian"
-
+  #cell_depth: "Gaussian"
   min_cells:
     - 100
-    - 500
-    - 10
+#    - 500
+#    - 10
 
   min_reads:
     - 50
-    - 100
+#    - 100
 
-  top_cells:
+  topN:
     - 0
 
-  top_pos:
-    - 0
+  het_thresh:
+    - 0.01
 
-  cell_mt_coverage:
+  min_het_cells:
     - 10
-    - 100
+    #- 50
+    #- 50
 
-  position_bq_thresh:
+  het_count_thresh:
+    - 5
+    - 2
+   # - 50
+
+  bq_thresh:
     - 30
-    #- "Gaussian"
+
+# For mgatk to fill in low coverage cell positions
+low_cov_thresh: 10
