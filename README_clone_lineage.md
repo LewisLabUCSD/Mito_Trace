@@ -1,21 +1,8 @@
 # Clone-Cell type relationship Writeup
-
-Created: Mar 22, 2021 5:45 PM
-Status 1: No
-
-# Introduction
-
-Brief description of the task needed to get done.
-
----
-
 - Once we get the clones, and we correlate them with cell types, we want to see if there's any relationship between the clones and the cell types
 - This will be similar to Lareau et al 2021, and Dawn et al 2021.
 
 # Current Report:
-
-This can be links to the subtask pages , or can include more detail
-
 ---
 
 ## A. Flt3l + Control cytokines
