@@ -147,12 +147,12 @@ call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_thr
   }
   
   se <- SummarizedExperiment::rbind(process_letter("A"), process_letter("C"), process_letter("G"), process_letter("T"))
+  print('se')
+  print(se)
   se <- se[rowData(se)[,"n_cells_conf_detected"]> n_cells_conf_detected_threshold, drop=FALSE]
   return(se)
   
 }
-
-
 
 
 plot_mutations_qc <- function(mut_se, f_save) {
@@ -177,9 +177,15 @@ plot_mutations_qc <- function(mut_se, f_save) {
 #-----------------
 args <- commandArgs(trailingOnly = TRUE)
 
-SE_f <- "/data2/mito_lineage/data/processed/mttrace/2020_11_18/PBMC_J/mapq_0/cellr_True/PBMC_J_200/PBMC_J.rds"
+
+#SE_f <- "/data2/mito_lineage/data/processed/mttrace/2020_11_18/PBMC_J/mapq_0/cellr_True/PBMC_J_200/PBMC_J.rds"
+#out_f <- "tmp_variant_old.rds"
+
+SE_f <- "P2.rds" #"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/mgatk/P2.rds"
+out_f <- "P2.variant"#"tmp_variant_p2.rds"
 #SE_f <- args[1]
 SE <- readRDS(SE_f)
+
 low_coverage_threshold <- 10 #args[2]
 strand_correlation_thresh <- 0.65
 n_cells_thresh <- 5
@@ -196,18 +202,27 @@ if (!(grepl('.rds', SE_f))) {
   print('mut_se')
   print(head(mut_se))
   
-  saveRDS(mut_se, file = gsub('.rds', '.variant.rds', SE_f))
+  saveRDS(mut_se, file = gsub('.rds', '.variant.rds', out_f))
 
   misc_df <- data.frame(rowData(mut_se))
-  filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
+  #filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
+  filter_df <- misc_df %>%  filter(strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
 
-
-  write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = gsub('.rds', ".coverage.tsv", SE_f), sep='\t')
-  write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', ".af.tsv", SE_f), sep='\t')
-  write.table(filter_df, file = gsub('.rds', ".af.mgatk.tsv", SE_f), sep='\t')
-  plot_mutations_qc(mut_se , f_save = gsub('.rds', '.variantQC.png', SE_f))
+  
+  write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = gsub('.rds', ".coverage.tsv", out_f), sep='\t')
+  write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', ".af.tsv", out_f), sep='\t')
+  write.table(filter_df, file = gsub('.rds', ".af.mgatk.tsv", out_f), sep='\t')
+  plot_mutations_qc(mut_se , f_save = gsub('.rds', '.variantQC.png', out_f))
+  
+  plot_mutations_qc(filter_df , f_save = gsub('.rds', '.filter.variantQC.png', out_f))
 }
 
+# 
+# mut_se <- call_mutations_mgatk(SE)
+# misc_df <- data.frame(rowData(mut_se))
+# filter_df <- misc_df %>%  filter(n_cells_conf_detected >= 5 & strand_correlation > 0.65 & log10(vmr) > -2)
+# dim(filter_df)
+# filter_df # Verify that 8202 and 8344 are there
 
 # # Find TF1 cells
 # rbind(read.table("../output/data1_meta.tsv", header = TRUE), 

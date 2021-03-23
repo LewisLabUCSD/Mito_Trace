@@ -214,18 +214,18 @@ importMito <- function(folder, ...){
   
   # Set up file paths
   
-  # Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
-  # Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
-  # Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
-  # Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
-  #coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
-  
-  Afile <- files[checkGrep(grep(".A.txt", files))]
-  Cfile <- files[checkGrep(grep(".C.txt", files))]
-  Gfile <- files[checkGrep(grep(".G.txt", files))]
-  Tfile <- files[checkGrep(grep(".T.txt", files))]
-  coverageFile <- files[checkGrep(grep(".coverage.txt", files))]
-  
+  Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
+  Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
+  Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
+  Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
+  coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
+
+  # Afile <- files[checkGrep(grep(".A.txt", files))]
+  # Cfile <- files[checkGrep(grep(".C.txt", files))]
+  # Gfile <- files[checkGrep(grep(".G.txt", files))]
+  # Tfile <- files[checkGrep(grep(".T.txt", files))]
+  # coverageFile <- files[checkGrep(grep(".coverage.txt", files))]
+  # 
   depthFile <- files[checkGrep(grep(".depthTable.txt", files))]
   referenceAlleleFile <- files[checkGrep(grep("chrM_refAllele.txt", files))]
   
@@ -244,8 +244,10 @@ importMito <- function(folder, ...){
 #-----------------
 # Command line i/o
 #-----------------
-folder <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount2_bq30"
-name <- "mgatk/P2"
+folder <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200" #data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount2_bq30"
+name <- "P2" #"mgatk/P2"
+outdir <- "./"
+
 #Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}
 
 # folder <- "/data2/mito_lineage/data/processed/mttrace/2020_11_18/PBMC_J/mapq_0/cellr_True/PBMC_J_200"
@@ -257,5 +259,7 @@ name <- "mgatk/P2"
 SElist <- importMito(folder)
 
 curr <- SElist[[1]]
+#saveRDS(SElist[[1]], file = paste0(name, ".rds"))
+#saveRDS(SElist[[2]], file = paste0(name, ".signac.rds"))
 #saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
 #saveRDS(SElist[[2]], file = paste0(folder, "/", name, ".signac.rds"))

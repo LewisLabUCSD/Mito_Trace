@@ -1,0 +1,55 @@
+indir: "/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/" #CD34_Flt3L_PolydT_fiveprime"
+#variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
+#variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/genome1K.phase3.SNP_AF5e2.chr1toX_chr_full.hg38.vcf"
+variants_f: "/data2/mito_lineage/data/external/variant_files/gnomad/gnomad.genomes.v3.1.sites.chrM.vcf"
+#genome: "hg38"
+genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+
+#/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklistfasta
+
+use_mt_bam: True
+mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/2020_09_07/CD34_Flt3L_PolydT"
+
+sample_csv: "/data2/mito_lineage/parameters/2020_09_07_Croker_mito.csv"
+
+prefix: "2020_09_07"
+
+
+samples:
+  - "CD34_flt3l_polydT"
+
+sample_dict:
+  CD34_flt3l_polydT: "CD34 Flt3l fiveprime"
+
+N_DONORS: 1
+
+pseudo_multiplex:
+  #Number Reads Total: 10000000
+  num_cells: 25000 # high enough to choose all
+  is_proportional: False
+
+mt:
+  minMAF:
+#    - 0
+    - 0.00001
+#    - 0.01
+#    - 0.1
+  minCOUNT:
+#    - 0
+#    - 200
+    - 10
+#    - 20
+#    - 200
+    #- 1000
+
+pre_variant:
+  minMAF:
+    # - 0
+    - 0.01
+#    - 0.2
+#    - 0.4
+  minCOUNT:
+    # - 0
+    - 3
+#    - 200
+    #- 1000

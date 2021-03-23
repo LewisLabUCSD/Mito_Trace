@@ -2,6 +2,7 @@ wildcard_constraints:
     mapq="\d+",
     cellr='True|False'
 
+from src.config import r_kernel
 import os
 import pandas as pd
 from snakemake.utils import validate
@@ -26,6 +27,11 @@ ft = config["filters"]
 #workdir: config["work_dir"]
 rule all:
     input:
+        expand("{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
+               results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
+               results=res,sample=samples["sample"].values,
+               cellr_bc=True, num_read=num_reads_filter, low_cov_thresh=config["low_cov_thresh"]),
         #expand("{results}/{sample}/MT/{sample}_scPileup_{num_read}",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
         #expand("{results}/{sample}/MT/AF_min{num_read}.tensor.p", results=res, sample=samples["sample"].values, mapq = mq, num_read=config["num_reads_filter"]),
         # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
@@ -38,23 +44,18 @@ rule all:
         #        cell_mt_coverage=config["cell_mt_coverage"]),
        # expand("{results}/{sample}/MT/{sample}.MT.bw",results=res,sample=samples["sample"].values, mapq=mq),
         #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
+
         #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
         #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
         #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-
-        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
+        #
+        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
         #        results=res,sample=samples["sample"].values, cellr_bc=True, num_read=num_reads_filter,
         #        min_cells=ft["min_cells"], min_reads=ft["min_reads"],
         #        topN=ft["topN"], het_thresh=ft["het_thresh"],
         #        min_het_cells=ft["min_het_cells"],
         #        het_count_thresh=ft["het_count_thresh"], bq_thresh=ft["bq_thresh"],
-        #        low_cov_thresh=config["low_cov_thresh"])
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
-               results=res,sample=samples["sample"].values,
-               cellr_bc=True, num_read=num_reads_filter,
-               low_cov_thresh=config["low_cov_thresh"])
-
+        #        low_cov_thresh=config["low_cov_thresh"]),
         #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.{low_cov_thresh}.variant.rds", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"], low_cov_thresh=config["low_cov_thresh"])
 
 
@@ -315,6 +316,7 @@ rule filter_cell_bc:
             curr_out_f = curr_out_f.replace(".coverage.", "." + n + ".")
             if n == "coverage":
                 df = df.iloc[:,:3]
+            df = df.sort_values(["CB", "Position"])
             df.to_csv(curr_out_f, header=None, index=None, compression='gzip')
 # for n in ["A", "C", "G", "T", "coverage"]:
     #curr_f = input.all
@@ -342,6 +344,7 @@ rule plot_scPileup_MT_matrix:
 def get_filt(w):
     return w.min_cells, w.min_reads, w.topN, w.het_thresh, w.min_het_cells, w.het_count_thresh, w.bq_thresh
 
+
 rule create_filters:
     input:
         concat_dir = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz"
@@ -362,7 +365,7 @@ rule create_filters:
 
 rule get_refAllele:
     input: config["mt_ref_fa"],
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/chrM_refAllele.txt"
     run:
         records = list(SeqIO.parse(input[0], "fasta"))
         mt_seq = records[0].seq
@@ -382,23 +385,25 @@ rule to_seurat:
         all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.txt",
         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
         #depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.rds"
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.rds"
     params:
         data_dir=lambda wildcards, input: os.path.dirname(input.all),
-        sample = lambda wildcards: wildcards.sample
-    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.to_seurat.log"
+        sample = lambda wildcards: wildcards.sample,
+        rkernel = r_kernel
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/.to_seurat.log"
     shell:
-        "Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}"
+        "./R_scripts/toRDS {params.data_dir} filter_mgatk/{params.sample} FALSE" # &> {log}"
 
 
 rule callVariants_mgatk:
-    input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.rds"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
+    input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.rds"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
     params:
-        low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
-    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
-    shell: "Rscript R_scripts/variant_calling.R {input} {params.low_cov_thresh} &> {log}"
+        low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh,
+        rkernel = r_kernel
+    #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
+    shell: "./R_scripts/variant_calling {input} {params.low_cov_thresh}"# &> {log}"
 
 
 
@@ -409,12 +414,12 @@ rule raw_get_depth:
     run:
         df = pd.read_csv(input[0], header=None)
         depth = df.groupby(1).sum()[2]/16569
-        depth.sort_index().to_csv(output[0], sep='\t', header=False)
+        depth.to_csv(output[0], sep='\t', header=False)
 
 
 rule raw_get_refAllele:
     input: config["mt_ref_fa"],
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/chrM_refAllele.txt"
     run:
         records = list(SeqIO.parse(input[0], "fasta"))
         mt_seq = records[0].seq
@@ -432,23 +437,25 @@ rule raw_to_seurat:
         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.txt",
         all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
         depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/chrM_refAllele.txt"
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/chrM_refAllele.txt"
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
     params:
         data_dir=lambda wildcards, input: os.path.dirname(input.all),
-        sample = lambda wildcards: wildcards.sample
+        sample = lambda wildcards: wildcards.sample,
+        rkernel = r_kernel
     log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.to_seurat.log"
     shell:
-        "Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} TRUE &> {log}"
+        "./R_scripts/toRDS {params.data_dir} mgatk/{params.sample} TRUE" # &> {log}"
 
 
 rule raw_callVariants_mgatk:
     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
     params:
+        rkernel = r_kernel,
         low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
     log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
-    shell: "Rscript R_scripts/variant_calling.R {input} {params.low_cov_thresh} &> {log}"
+    shell: "./R_scripts/variant_calling {input} {params.low_cov_thresh}" # &> {log}"
 
 
 

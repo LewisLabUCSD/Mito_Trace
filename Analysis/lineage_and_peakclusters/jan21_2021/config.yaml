@@ -1,18 +1,19 @@
-aggregate_out: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist/aggregate/outs"
-reanalysis_out: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist/reanalysis/outs"
-
-lineage_config: "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/pseudo/minC200_minAF0.01/numC25000_ispropFalse"
+outdir : "/data2/mito_lineage/Analysis/lineage_and_peakclusters/results/jan21_2021/"
+lineage_in: "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/pseudo/minC200_minAF0.01/numC25000_ispropFalse/flt3/"
+aggregate_in  : "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist/reanalysis/outs/analysis/"
 cell_names:
   - "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/P2_cellSNP_minC200_minAF0.01/cellSNP.samples.tsv"
   - "/data2/mito_lineage/Analysis/multiplex/data/jan21_2021/chrM/J2_cellSNP_minC200_minAF0.01/cellSNP.samples.tsv"
+
+samples : "J2,P2" #,J2"
+n_donors : 4
+only_donors: False
+nclones_values: "20,100"
 
 prefix: "jan21_2021"
 genome: "MTblacklist"
 name: "cd34"
 
-samples:
-  - "P2"
-  - "J2"
 
 sample_moniker:
   - "Control"

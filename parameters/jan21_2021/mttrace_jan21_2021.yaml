@@ -11,6 +11,7 @@ samples: "parameters/jan21_2021/jan21_2021.csv"
 results: "data/processed/mttrace/jan21_2021"
 figures: "figures/mttrace/jan21_2021"
 
+
 main:
   - "mtscATAC"
 #workdir: "/data2/mito_lineage/data/processed/200403_A00953_0090_BHC23FDSXY/"
@@ -55,7 +56,7 @@ filters:
 
   het_count_thresh:
     - 5
-    - 2
+   # - 2
    # - 50
 
   bq_thresh:

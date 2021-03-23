@@ -9,7 +9,10 @@ genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fast
 
 use_mt_bam: True
 mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/jan21_2021/" #PBMC_J/mapq_0/PBMC_J.MT.bam"
+sample_csv: "/data2/mito_lineage/parameters/mtscATAC/jan21_2021/jan21_2021.csv"
+
 prefix: "jan21_2021"
+
 
 samples:
   - "P2"
@@ -28,11 +31,13 @@ pseudo_multiplex:
 
 mt:
   minMAF:
-    - 0.01
+    - 0
+    - 0.00001
 #    - 0.01
 #    - 0.1
   minCOUNT:
-    - 200
+    - 0
+#    - 200
 #    - 10
 #    - 20
 #    - 200

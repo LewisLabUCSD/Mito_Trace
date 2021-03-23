@@ -3,6 +3,9 @@ import os
 import matplotlib as mpl
 mpl.use('agg')
 
+
+r_kernel = "/usr/bin/Rscript"
+
 ## Get the project directory
 path = os.path.abspath(__file__)
 dir_path = pathlib.Path(os.path.dirname(path))

@@ -31,9 +31,9 @@ rule all:
            #MT
            expand("data/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}", prefix=config["prefix"], name=config["samples"],
                   mt_minC=mt_minC,mt_minAF=mt_minAF),
-           expand("results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb", prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF),
-            expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/flt3/multiplex.ipynb",
-                   prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop)
+           #expand("results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb", prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF),
+            #expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/flt3/multiplex.ipynb",
+            #       prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop)
            #expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/pseudo.ipynb", prefix=config["prefix"], num_cells=num_cells, is_prop=is_prop, mt_minC=mt_minC, mt_minAF=mt_minAF)
 
 
@@ -158,7 +158,7 @@ rule pseudo_bulk_create_chrM:
         num_cells=num_cells,
         is_prop = is_prop,
         outdir = lambda wildcards, output: dirname(output[0]),
-        prefix=config["samples"]
+        prefix= ','.join(config["samples"]) # make it as a list
     output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx"
     log: "logs/{prefix}/vireo/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}.log"
     shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix} > {log} 2>&1"
@@ -185,8 +185,9 @@ rule flt3_vireo_chrM:
         N_DONORS=config["N_DONORS"],
         notebook=join(ROOT_DIR, "src", "vireo", "MT_Donors_flt3.ipynb" ),
         INDIR = lambda wildcards, input: dirname(input.AD_F),
-        OUTDIR = lambda wildcards, output: dirname(output.out_note)
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+        OUTDIR = lambda wildcards, output: dirname(output.out_note),
+        sample_csv = config["sample_csv"]
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_csv {params.sample_csv} {params.notebook} {output}"
 
 # rule deconvolve_individual:
 #     input: "data/{prefix}/{name}_cellSNP_minC{minC}_minAF{minAF}"

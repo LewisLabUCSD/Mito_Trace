@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import click
 import sys
+import logging
 
 
 def run_batch(indirs, outdir, num_reads_total):
@@ -12,15 +13,83 @@ def run_batch(indirs, outdir, num_reads_total):
     return
 
 
+########################################
+# Read/write utils
 def load_mtx_df(in_f, skip_first=True, give_header=False):
     df = pd.read_csv(in_f, comment="%", header=None, sep="\t")
     df.columns = ["Variant", "Cell", "integer"]
     if skip_first:
         head = df.iloc[0]
         df = df.iloc[1:] # Seems to be summary values
-    if give_header:
-        return df,head
+    if give_header and skip_first:
+        return df, head
     return df
+
+
+def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
+                      prefix=None, columns=('Variant', 'Cell', 'integer')):
+    if prefix is None:
+        prefix="cellSNP.tag"
+    print(prefix)
+    write_mtx_df(ad, outdir, f"{prefix}.AD.mtx", to_rm=to_rm,
+                 columns=columns)
+    write_mtx_df(dp, outdir, f"{prefix}.DP.mtx", to_rm=to_rm,
+                 columns=columns)
+    if oth is not None:
+        write_mtx_df(oth, outdir, f"{prefix}.OTH.mtx", to_rm=to_rm,
+                     columns=columns)
+    return
+
+
+def write_mtx_df(in_mtx, outdir, out_f, to_rm=True, columns=('Variant', 'Cell', 'integer')):
+    header = "%%MatrixMarket matrix coordinate integer general\n%\n"
+    if to_rm:
+        if os.path.exists(join(outdir, out_f)):
+            os.remove(join(outdir, out_f)) #"cellSNP.tag.DP.mtx"))
+    elif os.path.exists(join(outdir, out_f)):
+        logging.info("File already exists. To rerun, use to_rm")
+        return
+    with open(join(outdir, out_f), 'a') as file:
+        file.write(header)
+        full = pd.concat((pd.DataFrame(
+            {columns[0]: in_mtx[columns[0]].max(),
+             columns[1]: in_mtx[columns[1]].max(),
+             columns[2]: in_mtx.shape[0]}, index=["Meta"]),
+                             in_mtx.sort_values([columns[0], columns[1]])), sort=False)
+        full.to_csv(file, sep="\t", header=False, index=False)
+    return
+
+
+def add_suffix_to_labels(in_files, cells_kept=None, out_file=None, sample_names=None):
+    """
+    :param in_files: list of labels files
+    :param out_file: output label file
+    :return: df of the filtered cell list.
+
+    columns are 'ID', 'raw ID', and 'new index'. The first contains the
+    suffix with the old id, the new index contains the mapping to the
+    outputted subsampled cells, which is 1-based and the raw ID is the initial cell IDs without the suffix.
+    """
+    print('sample_names', sample_names)
+    all = []
+    for ind, f in enumerate(in_files):
+        curr = pd.read_csv(f, header=None)
+        curr["raw ID"] = curr[0]
+        if (sample_names is None) or (sample_names==[]):
+            curr[0] = curr[0] + "_" + os.path.basename(f)
+        else:
+            curr[0] = curr[0] + "_" + sample_names[ind]
+        if cells_kept is not None: # Indices to keep
+            inds_to_keep = np.array(list(cells_kept[os.path.dirname(f)].keys()))-1
+            curr = curr.iloc[inds_to_keep]
+            curr['new index'] = list(cells_kept[os.path.dirname(f)].values())
+        curr = curr.rename({0: "ID"}, axis=1)
+        all.append(curr)
+    df = pd.concat(all, ignore_index=True)
+    if out_file is not None:
+        df.to_csv(out_file, index=False)
+    return df
+########################################
 
 
 def merge_vcf_ids(indirs, outdir=None):
@@ -99,29 +168,6 @@ def merge_vcf_ids(indirs, outdir=None):
                                     sep="\t")  # Use index + header
     return vars_coords, variants
 
-
-def add_suffix_to_labels(in_files, cells_kept=None, out_file=None, sample_names=None):
-    """
-    :param in_files: list of labels files
-    :param out_file: output label file
-    :return:
-    """
-    all = []
-    for f in in_files:
-        curr = pd.read_csv(f, header=None)
-        if (sample_names is None) or (sample_names==()):
-            curr[0] = curr[0] + "_" + os.path.basename(f)
-        else:
-            curr[0] = curr[0] + sample_names[f]
-
-        if cells_kept is not None: # Indices to keep
-            curr = curr.iloc[cells_kept[f].keys()]
-            curr['new index'] = cells_kept[f].values()
-        all.append(curr)
-    df = pd.concat(all, ignore_index=True)
-    if out_file is not None:
-        df.to_csv(out_file, header=None, index=False)
-    return df
 
 
 def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
@@ -212,7 +258,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
                 cells_per_sample = int(
                     round(num_cells_total / len(indirs)))
             if cells_per_sample > curr_num_cells:
-                print("Number of cells less than the desired number. "
+                logging.warning("Number of cells less than the desired number. "
                       "Please consider changing a parameter. For now, "
                       "using all cells in the sample.")
                 subs = curr_cell_ids
@@ -286,41 +332,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
 
     # Save the pseudo matrices
     # Need to also add in a row tha is max var, max cell, number of entries
-    header = "%%MatrixMarket matrix coordinate integer general\n%\n"
-
-    if os.path.exists(join(outdir, "cellSNP.tag.DP.mtx")):
-        os.remove(join(outdir, "cellSNP.tag.DP.mtx"))
-    if os.path.exists(join(outdir, "cellSNP.tag.AD.mtx")):
-        os.remove(join(outdir, "cellSNP.tag.AD.mtx"))
-    if os.path.exists(join(outdir, "cellSNP.tag.OTH.mtx")):
-        os.remove(join(outdir, "cellSNP.tag.OTH.mtx"))
-
-    with open(join(outdir, "cellSNP.tag.AD.mtx"), 'a') as file:
-        file.write(header)
-        ad_full = pd.concat((pd.DataFrame(
-            {"Variant": ad_full["Variant"].max(),
-             "Cell": ad_full["Cell"].max(),
-             "integer": ad_full.shape[0]}, index=["Meta"]),
-                             ad_full.sort_values(["Variant", "Cell"])), sort=False)
-        ad_full.to_csv(file, sep="\t", header=False, index=False)
-
-    with open(join(outdir, "cellSNP.tag.DP.mtx"), 'a') as file:
-        file.write(header)
-        dp_full = pd.concat((pd.DataFrame(
-            {"Variant": dp_full["Variant"].max(),
-             "Cell": dp_full["Cell"].max(),
-             "integer": dp_full.shape[0]}, index=["Meta"]),
-                             dp_full.sort_values(["Variant", "Cell"])), sort=False)
-        dp_full.to_csv(file, sep="\t", header=False, index=False)
-    with open(join(outdir, "cellSNP.tag.OTH.mtx"), 'a') as file:
-        file.write(header)
-        oth_full = pd.concat((pd.DataFrame(
-            {"Variant": oth_full["Variant"].max(),
-             "Cell": oth_full["Cell"].max(),
-             "integer": oth_full.shape[0]}, index=["Meta"]),
-                              oth_full.sort_values(
-                                  ["Variant", "Cell"])), sort=False)
-        oth_full.to_csv(file, sep="\t", header=False, index=False)
+    wrap_write_mtx_df(outdir, ad_full, dp_full, oth=oth_full, to_rm=True)
 
     # Save cell indices
     for ind, val in enumerate(indirs):
@@ -330,14 +342,16 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
                 curr = f"{curr}\n{k},{cells_kept[val][k]}"
             f.write(curr)
 
-    # Recopy the cell labels
-    for ind, val in enumerate(indirs):
-        cells = os.path.join(os.path.dirname(val), "cellSNP.samples.tsv")
-        out_f = join(outdir, f"cell_labels_{ind}.txt")
-        cmd = f"cp {cells} {out_f}"
-        os.system(cmd)
+    # # Recopy the cell labels
+    # for ind, val in enumerate(indirs):
+    #     cells = os.path.join(val, "cellSNP.samples.tsv")
+    #     out_f = join(outdir, f"cell_labels_{ind}.txt")
+    #     cmd = f"cp {cells} {out_f}"
+    #     os.system(cmd)
 
-    in_files = [os.path.join(os.path.dirname(val), "cellSNP.samples.tsv") for val in indirs]
+    in_files = [os.path.join(val, "cellSNP.samples.tsv") for val in indirs]
+    logging.info('in_files')
+    logging.info(in_files)
     add_suffix_to_labels(in_files, cells_kept,
                          join(outdir, "cell_labels.txt"),
                          sample_names=sample_names)
@@ -366,8 +380,19 @@ def merge_vcf(vcf_files, out_vcf):
 @click.argument("indirs", type=click.Path(exists=True), nargs=-1)
 @click.option("--is_prop", default=False, type=click.BOOL)
 @click.option("--num_cells", default=1000)
-@click.option("--samples", default=())
+@click.option("--samples", default="")
 def main(outdir, indirs, is_prop, num_cells, samples):
+    logging.basicConfig(level=logging.DEBUG)
+    logging.info('samples')
+    logging.info(samples)
+    logging.info(type(samples))
+    if samples != "":
+        #exec(f"samples={samples}")
+        samples = samples.split(',')
+    if samples == []:
+        samples=None
+
+    logging.info(type(samples))
     subsample_sparse_matrices(outdir, indirs,
                               num_cells_total=num_cells,
                               is_proportional=is_prop,

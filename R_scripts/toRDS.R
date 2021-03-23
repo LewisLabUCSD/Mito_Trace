@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+#!/usr/bin/Rscript
 suppressMessages(suppressWarnings(library(tools)))
 suppressMessages(suppressWarnings(library(Matrix)))
 suppressMessages(suppressWarnings(library(SummarizedExperiment)))
@@ -234,7 +234,8 @@ importMito <- function(folder, is_strand, ...){
   sv <- strsplit(gsub("_refAllele.txt", "", basename(referenceAlleleFile)), split = "[.]")[[1]]
   mitoChr <- sv[length(sv)]
   print("mitoChr")
-  print(mitoChr)
+  #print(mitoChr)
+  print(length(mitoChr))
 
   SElist <- importMito.explicit(Afile, Cfile, Gfile, Tfile,
                                 coverageFile, depthFile, referenceAlleleFile, mitoChr, ...)
@@ -242,28 +243,38 @@ importMito <- function(folder, is_strand, ...){
 }
 
 
+
+# i/o
+####################
+#-----------------
+# hard-coded i/o
+#-----------------
+folder <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30/" #"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200"
+name <- "filter_mgatk/P2"
+is_strand <- FALSE
+#Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}
+
+
 #-----------------
 # Command line i/o
 #-----------------
-# folder <- "data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30"
-# name <- "mgatk/P2"
-#Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}
+# args <- commandArgs(trailingOnly = TRUE)
+# print(args)
+# folder <- args[1]
+# name <- args[2]
+# print('length')
+# print(length(args))
+# is_strand <- args[3]
+# print('is_strand')
+# print(is_strand)
+# if (is_strand == "TRUE"){
+#   is_strand <- TRUE
+# } else{
+#   is_strand<-FALSE
+#   }
+####################
 
-args <- commandArgs(trailingOnly = TRUE)
-print(args)
-folder <- args[1]
-name <- args[2]
-print(length(args))
-is_strand <- args[3]
-if (is_strand == "TRUE"){
-  is_strand <- TRUE
-} else{
-  is_strand<-FALSE
-  }
-
-
-print('is_strand')
-print(is_strand)
+print(sessionInfo())
 
 SElist <- importMito(folder, is_strand)
 saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
