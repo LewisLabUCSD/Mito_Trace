@@ -50,7 +50,7 @@ Note that one donor did not have any confident clones called (p>0.9 a cell is as
 - UMAP of Clone-Lineage 20 clones each donor.
     - Each lineage (flt3l and wt are separated) are their own datapoint, with number of cell-type clusters being the number of features. All donors included
 
-['Fate-Clusters' separating out the donors](./notebooks/jan21_2021/clone_fate/clone_fate_scanpy_separateConditions_SplitDonors.html)
+['Fate-Clusters' separating out the donors](./notebooks/jan21_2021/clone_fate/clone_fate_scanpy_separateConditions_SplitDonors.pdf)
 
 ## To Do:
 
