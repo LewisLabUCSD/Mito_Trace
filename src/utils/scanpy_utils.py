@@ -13,7 +13,6 @@ def read_meta(adata, in_f=None, df=None, cols=None, is_header=True,
     elif not (df is None):
             anno = df
     else:
-        print("No meta")
         return adata
     if cols is not None:
         for c in cols:
