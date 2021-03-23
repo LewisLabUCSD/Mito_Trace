@@ -26,15 +26,15 @@ This can be links to the subtask pages , or can include more detail
 
 [Flt3l](./reports/clusters/clusters_J2.png)
 
-[Merged Conditions](./reports/clusters/irf8/reanalysis_aggr_conditions.png)
+![Merged Conditions](./reports/clusters/irf8/reanalysis_aggr_conditions.png)
 
-[Merged](./reports/clusters/irf8/clusters_reanalysis.png)
+![Merged](./reports/clusters/irf8/clusters_reanalysis.png)
 
 ### Marker DC TFs from Dawn
 
-[Id2](./reports/clusters/irf8/id2.png)
+![Id2](./reports/clusters/irf8/id2.png)
 
-[Irf8](./reports/clusters/irf8/reanalysis_irf8.png)
+![Irf8](./reports/clusters/irf8/reanalysis_irf8.png)
 
 ## C. Multiplexing Donors
 
@@ -46,7 +46,7 @@ See Google slides for now.
 
 ## E. Grouping cells by both cell-types and Clones
 
-[Clone Lineage 20 clones each donor](./Analysis/lineage_and_peakclusters/results/jan21_2021/cells_merged_lin_and_peak_nclones20.overlap_percent_normClone.png)
+![Clone Lineage 20 clones each donor](./Analysis/lineage_and_peakclusters/results/jan21_2021/cells_merged_lin_and_peak_nclones20.overlap_percent_normClone.png)
 
 [Clone Lineage 100 clones each donor](./Analysis/lineage_and_peakclusters/results/jan21_2021/cells_merged_lin_and_peak_nclones100.overlap_percent_normClone.png)
 
