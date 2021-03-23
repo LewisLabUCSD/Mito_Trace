@@ -26,9 +26,10 @@ This can be links to the subtask pages , or can include more detail
 
 [Flt3l](./reports/jan21_2021/clusters/clusters_J2.png)
 
+![Merged](./reports/jan21_2021/clusters/clusters_reanalysis.png)
+
 ![Merged Conditions](./reports/jan21_2021/clusters/irf8/reanalysis_aggr_conditions.png)
 
-![Merged](./reports/jan21_2021/clusters/irf8/clusters_reanalysis.png)
 
 ### Marker DC TFs from Dawn
 
