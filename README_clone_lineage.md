@@ -22,19 +22,19 @@ This can be links to the subtask pages , or can include more detail
 
 ## B. Clustering cells on scATAC-seq peaks to enable cell type calling
 
-[Control](./reports/clusters/clusters_P2.png)
+[Control](./reports/jan21_2021/clusters/clusters_P2.png)
 
-[Flt3l](./reports/clusters/clusters_J2.png)
+[Flt3l](./reports/jan21_2021/clusters/clusters_J2.png)
 
-![Merged Conditions](./reports/clusters/irf8/reanalysis_aggr_conditions.png)
+![Merged Conditions](./reports/jan21_2021/clusters/irf8/reanalysis_aggr_conditions.png)
 
-![Merged](./reports/clusters/irf8/clusters_reanalysis.png)
+![Merged](./reports/jan21_2021/clusters/irf8/clusters_reanalysis.png)
 
 ### Marker DC TFs from Dawn
 
-![Id2](./reports/clusters/irf8/id2.png)
+![Id2](./reports/jan21_2021/clusters/irf8/id2.png)
 
-![Irf8](./reports/clusters/irf8/reanalysis_irf8.png)
+![Irf8](./reports/jan21_2021/clusters/irf8/reanalysis_irf8.png)
 
 ## C. Multiplexing Donors
 
