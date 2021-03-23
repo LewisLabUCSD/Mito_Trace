@@ -1,6 +1,6 @@
 # Clone-Cell type relationship Writeup
 - Once we get the clones, and we correlate them with cell types, we want to see if there's any relationship between the clones and the cell types
-- This will be similar to Lareau et al 2021, and Dawn et al 2021.
+- This will be similar to Lareau et al 2020, and Lin et al 2021.
 
 # Current Report:
 ---
@@ -18,7 +18,7 @@
 ![Merged Conditions](./reports/jan21_2021/clusters/irf8/reanalysis_aggr_conditions.png)
 
 
-### Marker DC TFs from Dawn
+### Marker DC TFs from Lin
 
 ![Id2](./reports/jan21_2021/clusters/irf8/id2.png)
 
@@ -40,7 +40,7 @@ See Google slides for now.
 
 Note that one donor did not have any confident clones called (p>0.9 a cell is assigned to a clone) when n-clones is 100.
 
-## F. Inspired by Dawn et al Fig2. , dim-red cell-type:clone cell count matrix highlights lineages that are certain found certain 'fate-cluster', so we can find some lineages
+## F. Inspired by Lin et al Fig2. , dim-red cell-type:clone cell count matrix highlights lineages that are certain found certain 'fate-cluster', so we can find some lineages
 
 - Donors are separated
 - There are still dynamics can be seen between lineages and cell types
