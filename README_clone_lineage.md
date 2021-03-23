@@ -57,12 +57,12 @@ Note that one donor did not have any confident clones called (p>0.9 a cell is as
 - Donors are separated
 - There are still dynamics can be seen between lineages and cell types
 
-['Fate-Clusters'] (./notebooks/notebooks/jan21_2021/clone_fate/clone_fate_scanpy_separateConditions.ipynb)
+['Fate-Clusters'](./notebooks/notebooks/jan21_2021/clone_fate/clone_fate_scanpy_separateConditions.ipynb)
 
 - UMAP of Clone-Lineage 20 clones each donor.
     - Each lineage (flt3l and wt are separated) are their own datapoint, with number of cell-type clusters being the number of features. All donors included
 
-['Fate-Clusters' separating out the donors] (./notebooks/notebooks/jan21_2021/clone_fate/clone_fate_scanpy_separateConditions_SplitDonors.ipynb)
+['Fate-Clusters' separating out the donors](./notebooks/notebooks/jan21_2021/clone_fate/clone_fate_scanpy_separateConditions_SplitDonors.ipynb)
 
 ## To Do:
 
@@ -89,7 +89,7 @@ Filter this To Do to only this task. Use this in conjunction with Daily Log
 
 ---
 
-[To-Do ](https://www.notion.so/0f158156f549475a82c95042b3c8e952)
+[To-Do](https://www.notion.so/0f158156f549475a82c95042b3c8e952)
 
 # Log
 
