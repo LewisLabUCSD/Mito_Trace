@@ -1,0 +1,15 @@
+artifact_uri: file:///data2/mito_lineage/Analysis/clones/mlruns/0/cd47a0764f15451d9b518ccf0838aaa3/artifacts
+end_time: 1617668312385
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: cd47a0764f15451d9b518ccf0838aaa3
+run_uuid: cd47a0764f15451d9b518ccf0838aaa3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1617668310077
+status: 4
+tags: []
+user_id: isshamie

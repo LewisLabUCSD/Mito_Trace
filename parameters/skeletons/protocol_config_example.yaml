@@ -1,0 +1,46 @@
+Project_Directory: "/data2/mito_lineage"
+Protocol_Name: "MTExp"
+Prefix: "jan21_2021"
+workflow_file:
+####################
+input:
+  files:
+    - name: "genome"
+      file: "/data2/isshamie/mito_trace/genome/genome.fa"
+      is_project: False
+      dir:
+
+  protocols:
+    mttrace:
+      files:
+        name:
+          - "P2_depth.csv"
+          - "J2_depth.csv"
+        is_project: True
+        dir: "/data2/mito_lineage/data/processed"
+
+    mgatk:
+      params_f: "parameters/jan21_2021/mttrace_jan21_2021.yaml"
+      is_project: True
+    donors:
+      dir: "Analysis/multiplex/results/jan21_2021/flt3l/"
+      is_project: True
+
+
+
+output:
+  results:
+    -
+  data:
+    -
+  qc:
+    -
+
+parameters:
+  same_memory:
+    bin_het_thresh: [0.001] # AF threshold
+    donor_high_variant:
+      proportion: 0.9
+      thresh: 0.1
+
+  parallel:

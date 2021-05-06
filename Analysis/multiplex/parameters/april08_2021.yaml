@@ -1,0 +1,60 @@
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist"
+#variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
+#variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/genome1K.phase3.SNP_AF5e2.chr1toX_chr_full.hg38.vcf"
+variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/liftOver_chr_full_genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
+#genome: "hg38"
+genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+
+#/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklistfasta
+
+use_mt_bam: True
+mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/CHIP_april08_2021_Croker/" #PBMC_J/mapq_0/PBMC_J.MT.bam"
+sample_csv: "/data2/mito_lineage/parameters/mtscATAC/CHIP_april08_2021/CHIP_april08_2021_Croker.csv"
+
+prefix: "CHIP_april08_2021"
+
+
+samples:
+  - "Control"
+  - "Flt3l"
+  - "Input"
+
+sample_dict:
+  Control: "Control"
+  Flt3l: "Flt3l"
+  Input: "Input"
+
+
+N_DONORS: 5
+
+pseudo_multiplex:
+  #Number Reads Total: 10000000
+  num_cells: 25000 # high enough to choose all
+  is_proportional: False
+
+mt:
+  minMAF:
+    #- 0
+    - 0.01
+    - 0.0001
+#    - 0.01
+#    - 0.1
+  minCOUNT:
+    - 200
+    - 1
+#    - 10
+#    - 20
+#    - 200
+    #- 1000
+
+pre_variant:
+  minMAF:
+    # - 0
+    - 0.1
+#    - 0.2
+#    - 0.4
+  minCOUNT:
+    # - 0
+    - 20
+#    - 200
+    #- 1000

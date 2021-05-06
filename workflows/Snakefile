@@ -10,13 +10,25 @@ from Bio import SeqIO
 import pickle
 import subprocess as subp
 from datetime import datetime
+import copy
 
+# Flatten dictionary parameters
+if "mttrace" in config:
+    for c in config['mttrace']:
+        config[c] = copy.deepcopy(config['mttrace'][c])
+# Flatten dictionary parameters
+if "mgatk" in config:
+    for c in config['mgatk']:
+        config[c] = copy.deepcopy(config['mgatk'][c])
+
+print('config')
+print(config)
 cellr_bc = config["use_cellr_barcode"]
 num_reads_filter = config["num_reads_filter"]
 maxBP = config["maxBP"]
 ref_fa = config["ref_fa"]
 #print(pd.read_table(config["samples"], dtype=str,sep=','))
-samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample"], drop=False)
+samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
 
 #print('index',samples.index)
@@ -28,35 +40,12 @@ ft = config["filters"]
 rule all:
     input:
         expand("{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
-               results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
-               results=res,sample=samples["sample"].values,
-               cellr_bc=True, num_read=num_reads_filter, low_cov_thresh=config["low_cov_thresh"]),
-        #expand("{results}/{sample}/MT/{sample}_scPileup_{num_read}",results=config["results"],sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq),
-        #expand("{results}/{sample}/MT/AF_min{num_read}.tensor.p", results=res, sample=samples["sample"].values, mapq = mq, num_read=config["num_reads_filter"]),
-        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
-        #        mapq = mq, cellr_bc=config["use_cellr_barcode"],
-        #        num_read=config["num_reads_filter"],
-        #        min_cells=config["min_cells"],
-        #        min_reads=config["min_reads"],
-        #        top_pos = config["top_pos"],
-        #        top_cells = config["top_cells"],
-        #        cell_mt_coverage=config["cell_mt_coverage"]),
-       # expand("{results}/{sample}/MT/{sample}.MT.bw",results=res,sample=samples["sample"].values, mapq=mq),
-        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq,cellr_bc=config["use_cellr_barcode"]),
-
-        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist_minReads{num_read}.png",results=res,sample=samples["sample"].values, mapq=mq, cellr_bc=config["use_cellr_barcode"], num_read=config["num_reads_filter"]),
-        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",results=res, sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"]),
-        #
-        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
-        #        results=res,sample=samples["sample"].values, cellr_bc=True, num_read=num_reads_filter,
-        #        min_cells=ft["min_cells"], min_reads=ft["min_reads"],
-        #        topN=ft["topN"], het_thresh=ft["het_thresh"],
-        #        min_het_cells=ft["min_het_cells"],
-        #        het_count_thresh=ft["het_count_thresh"], bq_thresh=ft["bq_thresh"],
-        #        low_cov_thresh=config["low_cov_thresh"]),
-        #expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.{low_cov_thresh}.variant.rds", results=res,sample=samples["sample"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"], low_cov_thresh=config["low_cov_thresh"])
+               results=res,sample=samples["sample_name"].values, num_read=config["num_reads_filter"], mapq=mq),
+        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
+        #        results=res,sample=samples["sample_name"].values,
+        #        cellr_bc=cellr_bc, num_read=num_reads_filter, low_cov_thresh=config["low_cov_thresh"]),
+        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png",
+               results=res,sample=samples["sample_name"].values, num_read=config["num_reads_filter"], mapq=mq, cellr_bc=config["use_cellr_barcode"])
 
 
 
@@ -84,39 +73,51 @@ def results_dir():
 #     output: "{bam_f}.bam.bai" #"{raw}/{bam}.bai"
 #     shell: "samtools index {input}"
 
-rule cp_bam:
-    """Move bam file to current location"""
+# rule cp_bam:
+#     """Move bam file to current location"""
+#     input: get_sample_bam
+#     output:
+#         bam = temp("{results}/{sample}/00_bam/{sample}.bam"),
+#         #bai = "{results}/{sample}/00_bam/{sample}.bam.bai"
+#     shell: "cp {input} {output}"
+# #    run:
+#         # shell("ln -s {input} {output.bam}"),
+#         # shell("ln -s {input}.bai {output.bai}")
+#
+# rule index_bam:
+#     """Index the bam file"""
+#     input: "{results}/{sample}/00_bam/{sample}.bam"
+#     output: temp("{results}/{sample}/00_bam/{sample}.bam.bai")
+#     shell: "samtools index {input}"
+
+rule link_bam:
     input: get_sample_bam
-    output:
-        bam = "{results}/{sample}/00_bam/{sample}.bam",
-        #bai = "{results}/{sample}/00_bam/{sample}.bam.bai"
-    shell: "cp {input} {output}"
-#    run:
-        # shell("ln -s {input} {output.bam}"),
-        # shell("ln -s {input}.bai {output.bai}")
+    output: "{results}/{sample}/00_bam/{sample}.bam"
+    shell: "ln -s {input} {output}"
 
 rule index_bam:
     """Index the bam file"""
-    input: "{results}/{sample}/00_bam/{sample}.bam"
+    input: rules.link_bam.output
     output: "{results}/{sample}/00_bam/{sample}.bam.bai"
     shell: "samtools index {input}"
 
 
-rule filter_bam:
-    """Filter reads with low MAPQ and other potential filters """
-    input:
-        in_bam = "{results}/{sample}/00_bam/{sample}.bam",
-        in_bai = "{results}/{sample}/00_bam/{sample}.bam.bai",
-    output:
-        mq_bam = "{results}/{sample}/01_bam_filter/{sample}.bam",
-        mq_bai = "{results}/{sample}/01_bam_filter/{sample}.bam.bai"
-
-    run:
-            if "rm_duplicates" in config and config["rm_duplicates"]:
-                shell("samtools view {input.in_bam} -F 1284 -q {wildcards.mapq} -h -b > {output.mq_bam}")
-            else:
-                shell("samtools view {input.in_bam} -q {wildcards.mapq} -h -b > {output.mq_bam}")
-            shell("samtools index {output.mq_bam}")
+# rule filter_bam:
+#     """Filter reads with low MAPQ and other potential filters """
+#     input:
+#         get_sample_bam,
+#         #in_bam = "{results}/{sample}/00_bam/{sample}.bam",
+#         #in_bai = "{results}/{sample}/00_bam/{sample}.bam.bai",
+#     output:
+#         mq_bam = "{results}/{sample}/01_bam_filter/{sample}.bam",
+#         mq_bai = "{results}/{sample}/01_bam_filter/{sample}.bam.bai"
+#
+#     run:
+#             if "rm_duplicates" in config and config["rm_duplicates"]:
+#                 shell("samtools view {input.in_bam} -F 1284 -q {wildcards.mapq} -h -b > {output.mq_bam}")
+#             else:
+#                 shell("samtools view {input.in_bam} -q {wildcards.mapq} -h -b > {output.mq_bam}")
+#             shell("samtools index {output.mq_bam}")
 
 
 rule MT_map:
@@ -125,15 +126,18 @@ rule MT_map:
     #     bam = "{results}/{sample}/01_bam_filter/{sample}.bam",
     #     bai = "{results}/{sample}/01_bam_filter/{sample}.bam.bai"
     input:
-        bam = "{results}/{sample}/00_bam/{sample}.bam",
+        #bam = "{results}/{sample}/00_bam/{sample}.bam",
         bai = "{results}/{sample}/00_bam/{sample}.bam.bai",
     output:
         mt_bam="{results}/{sample}/MT/{sample}.MT.bam",
         mt_bai="{results}/{sample}/MT/{sample}.MT.bam.bai"
-    params: mt_chr=config["mito_character"]
+    params:
+        bam = lambda wildcards, input: input.bai.replace('.bai', ''),
+        mt_chr=config["mito_character"],
+
     run:
         #shell("samtools {input.bam}")
-        shell("samtools view -b {input.bam} {params.mt_chr} > {output.mt_bam}")
+        shell("samtools view -b {params.bam} {params.mt_chr} > {output.mt_bam}")
         shell("samtools index {output.mt_bam}")
 
 rule get_bigwig:
@@ -181,17 +185,24 @@ rule barcode_filter:
 #     shell:
 #         "python src/plot_CB_coverage.py {input} {output}"
 
-
-rule scBam:
-    """Extract each single-cell and put into respective bam file"""
+rule sortCB:
     input:
         mt_bam="{results}/{sample}/MT/{sample}.MT.bam",
         mt_bai="{results}/{sample}/MT/{sample}.MT.bam.bai"
+    output: "{results}/{sample}/MT/{sample}.MT.CB.bam"
+    shell: "samtools sort -t CB {input.mt_bam} > {output}"
+
+
+rule scBam:
+    """Extract each single-cell and put into respective bam file"""
+    input: "{results}/{sample}/MT/{sample}.MT.CB.bam"
+        #mt_bam="{results}/{sample}/MT/{sample}.MT.bam",
+        #mt_bai="{results}/{sample}/MT/{sample}.MT.bam.bai"
     output: directory("/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam")
     threads: 18
     #directory("/data/isshamie/miito_lineage/mttrace/{sample}/MT/{sample}_scBam")
     shell:
-        "python src/split_by_CB.py {input.mt_bam} {output}"
+        "python src/split_by_CB.py {input} {output}"
 
 
 rule scPileup:
@@ -229,6 +240,7 @@ rule scConcat:
     run:
         for n in ["A", "C", "G", "T", "coverage"]:
             concat_files(input.scPileup_dir, params.samplename, n)
+
 
 rule scPileup_concat_strands:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
@@ -335,10 +347,11 @@ rule plot_scPileup_MT_matrix:
     input:
         sc_coverage_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
     output:
-        save_f_heat = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",
+        #save_f_heat = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position.png",
         save_f_coverage = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png"
     shell:
-        "python src/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_heat} {output.save_f_coverage}"
+        "python src/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_coverage}"
+        #"python src/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_heat} {output.save_f_coverage}"
 
 
 def get_filt(w):
@@ -364,18 +377,21 @@ rule create_filters:
 
 
 rule get_refAllele:
-    input: config["mt_ref_fa"],
+    #input: config["mt_ref_fa"],
+    params: config["chrM_refAllele"]
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/chrM_refAllele.txt"
-    run:
-        records = list(SeqIO.parse(input[0], "fasta"))
-        mt_seq = records[0].seq
-        for ind, val in enumerate(mt_seq):
-            if ind == 0:
-                ref_str = f"{ind+1}\t{val}"
-            else:
-                ref_str = f"{ref_str}\n{ind+1}\t{val}"
-        with open(output[0], "w") as f:
-            f.write(ref_str)
+    shell: 'cp {input} {output}'
+    # already done so just copied over for all
+    # run:
+    #     records = list(SeqIO.parse(input[0], "fasta"))
+    #     mt_seq = records[0].seq
+    #     for ind, val in enumerate(mt_seq):
+    #         if ind == 0:
+    #             ref_str = f"{ind+1}\t{val}"
+    #         else:
+    #             ref_str = f"{ref_str}\n{ind+1}\t{val}"
+    #     with open(output[0], "w") as f:
+    #         f.write(ref_str)
 
 
 

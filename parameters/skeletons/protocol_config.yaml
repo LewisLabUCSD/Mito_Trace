@@ -1,0 +1,75 @@
+Project_Directory:
+  type: 'string' # Path
+  default: None
+
+Protocol_Name:
+  type: 'string'
+
+Prefix:
+  type: 'string'
+  default: ''
+
+
+Workflow_File:
+  type: "string" #"file"
+  default: ''
+####################
+input:
+  type: "dict"
+  keys: ["files", "protocols"]
+
+  files:
+    type: "dict"
+    name:
+      type: "string"
+    file:
+      type: "string"
+    is_project:
+      type: "bool"
+    dir:
+      type: "string"
+      default: ""
+
+  protocols:
+    type: "dict"
+    key_type: "protocol" # This key is explained below
+
+    protocol:
+      type: "dict"
+
+      files:
+        type: "dict"
+        default: {}
+        names:
+          type: "string"
+        is_project:
+          type: "bool"
+        dir:
+          type: "string" #"directory"
+
+      params_f:
+        type: "string" #"file"
+
+      is_project:
+        type: "bool"
+        default: "True"
+      dir:
+        type: "string" #"directory"
+        default:
+
+output:
+  type: "dict"
+  keys: ["results", "data", "figures"]
+  key_type: "list" # i.e. output['results'] is a list, same w/data and qc
+
+
+## These are the specific parameters to use
+parameters:
+  type: "dict"
+  keys: ["same_memory", "parallel"]
+
+  same_memory:
+    type: "dict"
+
+  parallel:
+    type: "dict"

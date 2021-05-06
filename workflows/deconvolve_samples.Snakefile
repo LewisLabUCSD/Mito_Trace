@@ -4,7 +4,25 @@ import os
 from os.path import join, dirname
 import papermill as pm
 from src.config import ROOT_DIR
+import copy
 #join(ROOT_DIR, src)
+
+
+
+# Flatten dictionary parameters
+# if "mttrace" in config:
+#     for c in config['mttrace']:
+#         config[c] = copy.deepcopy(config['mttrace'][c])
+# # Flatten dictionary parameters
+# if "mgatk" in config:
+#     for c in config['mgatk']:
+#         config[c] = copy.deepcopy(config['mgatk'][c])
+if "multiplex" in config:
+    for c in config['multiplex']:
+        if c in config:
+            print(c, "Duplicate values in config.")
+        config[c] = copy.deepcopy(config['multiplex'][c])
+
 
 num_cells = config["pseudo_multiplex"]["num_cells"]
 is_prop = config["pseudo_multiplex"]["is_proportional"]
@@ -32,8 +50,8 @@ rule all:
            expand("data/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}", prefix=config["prefix"], name=config["samples"],
                   mt_minC=mt_minC,mt_minAF=mt_minAF),
            #expand("results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb", prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF),
-            #expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/flt3/multiplex.ipynb",
-            #       prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop)
+           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/flt3/multiplex.ipynb",
+                  prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop)
            #expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/pseudo.ipynb", prefix=config["prefix"], num_cells=num_cells, is_prop=is_prop, mt_minC=mt_minC, mt_minAF=mt_minAF)
 
 

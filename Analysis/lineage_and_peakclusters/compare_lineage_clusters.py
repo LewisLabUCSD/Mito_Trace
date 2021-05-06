@@ -232,7 +232,6 @@ def nonparametric_enrichment_overlap():
     return
 
 
-
 def run_single_lineage(curr_lineage_files, tsne, clusters,  out_f, lin_col="Lineage",
                        to_plot=True, to_save=True):
     # 1. Get the lineage files and load them

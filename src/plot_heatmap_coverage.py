@@ -75,23 +75,24 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     if not ((top_n == 0) or (top_n==-1)):
         sc_coverage = sc_coverage.loc[
             sc_coverage.sum(axis=1).sort_values(ascending=False)[
-            :top_n].index]
+            :min(top_n, sc_coverage.shape[0])].index]
     else:
         top_n = sc_coverage.shape[0]
     # else:
     #     sc_coverage = sc_coverage.loc[
     #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
 
-    g = sns.clustermap(sc_coverage, row_cluster=False, col_cluster=False, col_linkage=False)
+    sns.heatmap(sc_coverage) #, row_cluster=False, col_cluster=False)
     plt.title(f"Number of reads at each MT position in {top_n} cells")
     #g.ax_heatmap.set_title(f"Number of reads at each MT position by the top {top_n} covered cells")
-    g.ax_heatmap.set_yticks([])
-    g.ax_heatmap.set_xlabel("MT position")
+    #g.ax_heatmap.set_yticks([])
+    #g.ax_heatmap.set_xlabel("MT position")
+    plt.xlabel("MT position")
     #plt.legend(title="Coverage (Number of reads)")
-    g.ax_heatmap.set_ylabel("Cell")
+    plt.ylabel("Cell")
+    #g.ax_heatmap.set_ylabel("Cell")
     plt.savefig(savefig_f)
     plt.savefig(savefig_f.replace(".png", ".svg"))
-
     log2_sc_coverage = np.log2(sc_coverage + 1)
     if not top_n == 0:
         log2_sc_coverage = log2_sc_coverage.loc[
@@ -110,7 +111,7 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
 
 def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
                                 x_cov=(1, 2, 5, 10, 30, 50, 100, 200, 300),
-                                cells_cov = (1, 10, 100, 500)):
+                                cells_cov = (1, 10, 100, 500, 1000,5000,10000)):
     sc_coverage = pd.read_csv(sc_coverage_f, index_col=0)
     # x_cov = [1, 2, 5, 10, 30, 50, 100, 200, 1000, 2000, 3000]
     # cells_cov = [1, 10, 100, 500]
@@ -151,7 +152,8 @@ def main(func, *args, **kwargs):
         sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP)#, n_cpu=)
 
     elif func == "plot":
-        sc_coverage_f, save_f_pos_heat, save_f_pos_cov = args
+        sc_coverage_f, save_f_pos_cov = args
+        #sc_coverage_f, save_f_pos_heat, save_f_pos_cov = args
         if "x_cov" in kwargs:
             x_cov = kwargs["x_cov"]
         else:
@@ -159,10 +161,9 @@ def main(func, *args, **kwargs):
         if "cells_cov" in kwargs:
             cells_cov = kwargs["cells_cov"]
         else:
-            cells_cov = [1, 10, 100, 500]
-
-        plot_sc_mt(sc_coverage_f, save_f_pos_cov, top_n=0)
-        plot_percent_coverage_cells(sc_coverage_f, save_f_pos_heat, x_cov, cells_cov)
+            cells_cov = [1, 10, 100, 500, 1000,5000,10000]
+        plot_percent_coverage_cells(sc_coverage_f, save_f_pos_cov , x_cov, cells_cov)
+        #plot_sc_mt(sc_coverage_f, save_f_pos_heat, top_n=1000)
     return
 
 

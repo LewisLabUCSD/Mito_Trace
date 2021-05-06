@@ -186,7 +186,7 @@ SE_f <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/
 # SE_f <- "/data2/mito_lineage/data/processed/mttrace/2020_11_18/PBMC_J/mapq_0/cellr_True/PBMC_J_200/PBMC_J.rds"
 # SE_f <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/mgatk/P2.rds" #"P2.rds" 
 #out_f <- "tmp_variant_old.rds"
-low_coverage_threshold <- 10
+low_coverage_threshold <- 0
 
 #-----------------
 # Command line i/o

@@ -1,0 +1,10 @@
+Samples_Meta: "/data2/mito_trace/parameters/jan21_2021/jan21_2021.csv" # This is not mt_as_normal
+is_project: True
+Prefix: "jan21_2021"
+Protocol_Name: "scatac_integration"
+samples: "P2,J2"
+####################
+
+external_data:
+####################
+integration_technique: "singleR"

@@ -22,8 +22,21 @@ import sys
 
 
 def split(in_f, out_d, to_overwrite=False):
+    """ Splits bam file into single-cell bam files with CB as barcode.
+
+    Input file is a CB sorted bam file, but if not, then will sort.
+    If already sorted, suffix needs to be .CB.bam.
+    Otherwise, it will add that as a suffix to in_f.
+    :param in_f:
+    :param out_d:
+    :param to_overwrite:
+    :return:
+    """
     # Sort on CB
-    unsplit_file = in_f.replace(".bam","") + ".CB.bam"
+    if ".CB.bam" in in_f:
+        unsplit_file = in_f
+    else:
+        unsplit_file = in_f.replace(".bam","") + ".CB.bam"
     print(in_f, unsplit_file)
 
     if to_overwrite or (not os.path.exists(unsplit_file)):
@@ -48,7 +61,7 @@ def split(in_f, out_d, to_overwrite=False):
     itr = 0
     # read in upsplit file and loop reads by line
     count = 0
-    samfile = pysam.AlignmentFile( unsplit_file, "rb")
+    samfile = pysam.AlignmentFile(unsplit_file, "rb")
     for read in tqdm(samfile.fetch(until_eof=True)):
         # barcode itr for current read
         try:

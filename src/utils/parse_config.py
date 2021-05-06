@@ -137,3 +137,37 @@ def iterate_files(outcfg, subset=None):
         else:
             # skip any other entries
             pass
+
+
+# def validate_schema_files(params_f, schema_f, to_normalize=True):
+#     """ Validates a parameter file and forces proper types.
+#
+#     This will compare params file to a schema in json format.
+#     Raises an exception if the schema is not valid.
+#     See cerberus for additional information on schema structure.
+#     :param params_f: Parameter file in yaml/json format
+#     :param schema_f: Schema file in json formate based on cerberus schema.
+#     :param to_normalize: If True, will coerve to proper types when
+#     applicable.
+#     :raise ValidationError: If documaent is not valid.
+#     :return: params
+#     """
+#
+#     params = read_config_file(params_f)
+#     schema = read_config_file(schema_f)
+#     print(schema["PROJECT"]["rename_handler"])
+#
+#     # Execute the rename_handler, which loads a rename_handler function,
+#     # and sets it.
+#     exec(schema["PROJECT"]["rename_handler"])
+#     exec(f'schema["PROJECT"]["rename_handler"] = {schema["PROJECT"]["rename_handler"]}')
+#
+#     worked, v = validate_schema(params, schema)
+#     print('v',v)
+#     if to_normalize:
+#         params = v.document
+#     if not worked:
+#         print("Errors", v.errors)
+#         raise(ValidationError)
+#     else:
+#         return params

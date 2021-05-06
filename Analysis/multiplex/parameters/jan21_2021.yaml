@@ -31,12 +31,12 @@ pseudo_multiplex:
 
 mt:
   minMAF:
-    - 0
+    #- 0
     - 0.00001
 #    - 0.01
 #    - 0.1
   minCOUNT:
-    - 0
+    - 1
 #    - 200
 #    - 10
 #    - 20

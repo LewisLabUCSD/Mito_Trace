@@ -1,0 +1,11 @@
+Analysis_Name: "MTExp" # Required
+Project_Directory: "/data2/mito_lineage" # If empty, will use ROOT_DIR in config
+Prefix: "jan21_2021"
+Working_Directory: # Optional, will
+workflow_file:
+####################
+
+protocols:
+  mttrace:
+  mgatk:
+
