@@ -1,12 +1,12 @@
 ## Files that require full paths:
-prefix: "CHIP_april08_2021_Croker"
+prefix: "DUPI_april08_2021_Croker"
 fastq_dir: "/data2/isshamie/mito_lineage/data/raw/CHIP_april08_2021_Croker/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
-mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/NoMTblacklist"
+mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/DUPI_april08_2021_Croker/NoMTblacklist"
 
-samples: "parameters/CHIP_april08_2021/CHIP_april08_2021.csv"
+samples: "parameters/DUPI_april08_2021/DUPI_april08_2021.csv"
 
 # mttrace parameters
-results: "data/processed/mttrace/CHIP_april08_2021_Croker"
+results: "data/processed/mttrace/DUPI_april08_2021_Croker"
 #results: "data/processed/mttrace/jan21_2021"
 figures: "figures/mttrace/jan21_2021"
 

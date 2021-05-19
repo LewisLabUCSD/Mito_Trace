@@ -23,6 +23,8 @@ def type_of_variants(variants, style=">"):
     # Get types of mutations
     def var_type(x):
         nts = set(x[["ref", "alt"]])
+        if "N" in nts:
+            return "Undefined"
         if nts == {"A","G"} or nts == {"T", "C"}:
             return "Transition"
         return "Transversion"

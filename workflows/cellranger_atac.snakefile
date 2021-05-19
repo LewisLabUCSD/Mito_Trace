@@ -46,8 +46,8 @@ def results_dir():
 rule cellranger_count:
     params:
         fastq_path = config['fastq_dir'],  #lambda wildcards: samples_df.loc[wildcards.out_name, 'fastq_dir'],
-        sample = lambda wildcards: samples_df.loc[wildcards.out_name, 'sample'],
-        out_name = lambda wildcards: wildcards.out_name,
+        sample = lambda wildcards: samples_df.loc[wildcards.sample, 'sample'],
+        out_name = lambda wildcards: wildcards.sample,
         genome_ref = config["genome_dir"]
     output:
         bam_f = "{sample}/outs/possorted_bam.bam",

@@ -462,14 +462,19 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
     logging.info('sorting depth')
     dp_by_cell = dp_by_cell.loc[dp_by_cell.sum(axis=1).sort_values().index]
     f_init, ax = plt.subplots(nrows=3, ncols=1)
-    sns.heatmap(np.log2(dp_by_cell.iloc[:100] + 1), ax=ax[0])
+
+    sns.heatmap(np.log2(dp_by_cell.iloc[:max(len(dp_by_cell), 500)] + 1), ax=ax[0])
     ax[0].set_title("Lowest 100 depth cells")
     ax[0].set_xticks([])
     ax[0].set_yticks([])
-    sns.heatmap(np.log2(dp_by_cell.iloc[5000:5100] + 1), ax=ax[1])
-    ax[1].set_title("Middle 1000 depth cells")
-    ax[1].set_xticks([])
-    ax[1].set_yticks([])
+
+    if len(dp_by_cell) > 5100:
+
+        sns.heatmap(np.log2(dp_by_cell.iloc[5000:5100] + 1), ax=ax[1])
+        ax[1].set_title("Middle 1000 depth cells")
+        ax[1].set_xticks([])
+        ax[1].set_yticks([])
+
     sns.heatmap(np.log2(dp_by_cell.iloc[-100:] + 1), ax=ax[2])
     ax[2].set_title("Highest 100 depth cells")
     ax[2].set_xticks([])

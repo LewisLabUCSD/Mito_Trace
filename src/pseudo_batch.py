@@ -169,7 +169,6 @@ def merge_vcf_ids(indirs, outdir=None):
     return vars_coords, variants
 
 
-
 def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
                               num_cells_total=1000,
                               is_proportional=False, sample_names=None):

@@ -1,16 +1,19 @@
-#!/usr/bin/Rscript
+#!/usr/bin/Rscript --vanilla
+
 # suppressMessages(suppressWarnings(library(tools)))
 # suppressMessages(suppressWarnings(library(Matrix)))
 # suppressMessages(suppressWarnings(library(SummarizedExperiment)))
 # suppressMessages(suppressWarnings(library(GenomicRanges)))
 # suppressMessages(suppressWarnings(library(data.table)))
 
-library(Matrix)
-library(SummarizedExperiment)
-library(dplyr)
-library(ggplot2)
-library(cowplot)
-library(data.table)
+suppressMessages(suppressWarnings(library(tools)))
+suppressMessages(suppressWarnings(library(Matrix)))
+suppressMessages(suppressWarnings(library(SummarizedExperiment)))
+suppressMessages(suppressWarnings(library(GenomicRanges)))
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(ggplot2)))
+suppressMessages(suppressWarnings(library(cowplot)))
+suppressMessages(suppressWarnings(library(data.table)))
 #library(BuenColors)
 "%ni%" <- Negate("%in%")
 
@@ -182,53 +185,59 @@ plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
 #-----------------
 # hard-coded i/o
 #-----------------
-SE_f <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30/filter_mgatk/P2.rds"#"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filter_mgatk/P2.rds"
+#SE_f <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30/filter_mgatk/P2.rds"#"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filter_mgatk/P2.rds"
 # SE_f <- "/data2/mito_lineage/data/processed/mttrace/2020_11_18/PBMC_J/mapq_0/cellr_True/PBMC_J_200/PBMC_J.rds"
 # SE_f <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/mgatk/P2.rds" #"P2.rds" 
 #out_f <- "tmp_variant_old.rds"
-low_coverage_threshold <- 0
+#low_coverage_threshold <- 0
 
 #-----------------
 # Command line i/o
 #-----------------
-# args <- commandArgs(trailingOnly = TRUE)
-# SE_f <- args[1]
-# low_coverage_threshold <- args[2]
-print(low_coverage_threshold)
-####################
+args <- commandArgs(trailingOnly = TRUE)
+print(sessionInfo())
+if (length(args) == 3) {
+  
+  SE_f <- args[1]
+  low_coverage_threshold <- args[2]
+  n_cells_thresh <- args[3] #2
+  print(low_coverage_threshold)
+  ####################
 
 
-
-SE <- readRDS(SE_f)
-strand_correlation_thresh <- 0.65
-n_cells_thresh <- 5
-log_vmr_thresh <- -2
-
-
-out_SE <- gsub('.rds', paste("_lowC", low_coverage_threshold, sep = ""), SE_f)
-print('out_SE')
-print(out_SE)
-
-if (!(grepl('.rds', SE_f))) {
-  print('Not an .rds file! Not running')
+  
+  SE <- readRDS(SE_f)
+  strand_correlation_thresh <- 0.65
+  log_vmr_thresh <- -2
+  
+  
+  out_SE <- gsub('.rds', paste("_lowC", low_coverage_threshold, "_cellT", n_cells_thresh, sep = ""), SE_f)
+  print('out_SE')
+  print(out_SE)
+  
+  if (!(grepl('.rds', SE_f))) {
+    print('Not an .rds file! Not running')
+  } else {
+    # Call variants
+    
+    mut_se <- call_mutations_mgatk(SE, low_coverage_threshold=low_coverage_threshold)
+    print('mut_se')
+    print(head(mut_se))
+    
+    saveRDS(mut_se, file = gsub('.rds', '.variant.rds', SE_f))
+  
+    
+    misc_df <- data.frame(rowData(mut_se))
+    filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
+    write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = paste(out_SE, ".coverage.tsv", sep = ""), sep='\t')
+    write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = paste(out_SE, ".af.tsv", sep = ""), sep='\t')
+    write.table(filter_df, file = paste(out_SE, ".af.mgatk.tsv", sep = ""), sep='\t')
+    plot_mutations_qc(mut_se , f_save = paste(out_SE,'.variantQC.png', sep = ""))
+  }
 } else {
-  # Call variants
-  print(sessionInfo() )
-  mut_se <- call_mutations_mgatk(SE, low_coverage_threshold=low_coverage_threshold)
-  print('mut_se')
-  print(head(mut_se))
-  
-  saveRDS(mut_se, file = gsub('.rds', '.variant.rds', SE_f))
-
-  
-  misc_df <- data.frame(rowData(mut_se))
-  filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
-  write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = paste(out_SE, ".coverage.tsv", sep = ""), sep='\t')
-  write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = paste(out_SE, ".af.tsv", sep = ""), sep='\t')
-  write.table(filter_df, file = paste(out_SE, ".af.mgatk.tsv", sep = ""), sep='\t')
-  plot_mutations_qc(mut_se , f_save = paste(out_SE,'.variantQC.png', sep = ""))
+  print("Args not correct: SE_f; low_coverage_threshold; n_cells_thresh")
 }
-
+  
 
 # # Find TF1 cells
 # rbind(read.table("../output/data1_meta.tsv", header = TRUE), 

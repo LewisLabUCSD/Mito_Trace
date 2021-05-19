@@ -30,8 +30,6 @@ ref_fa = config["ref_fa"]
 #print(pd.read_table(config["samples"], dtype=str,sep=','))
 samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
-ncells_thresh_mgatk=config['ncells_thresh_mgatk']
-
 
 #print('index',samples.index)
 res = config["results"]
@@ -43,22 +41,12 @@ rule all:
     input:
         expand("{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz",
                results=res,sample=samples["sample_name"].values, num_read=config["num_reads_filter"]),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}_cellT{ncells_thresh_mgatk}.variant.rds",
-               results=res,sample=samples["sample_name"].values,
-               cellr_bc=cellr_bc, num_read=num_reads_filter, low_cov_thresh=config["low_cov_thresh"], ncells_thresh_mgatk=ncells_thresh_mgatk),
+        # expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds",
+        #        results=res,sample=samples["sample_name"].values,
+        #        cellr_bc=cellr_bc, num_read=num_reads_filter, low_cov_thresh=config["low_cov_thresh"]),
         expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}_MT_position_coverage.png",
-               results=res,sample=samples["sample_name"].values, num_read=config["num_reads_filter"], cellr_bc=config["use_cellr_barcode"]),
-        expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}_cellT{ncells_thresh_mgatk}.variant.rds",
-               results=res,sample=samples["sample_name"].values,
-               cellr_bc=cellr_bc, num_read=num_reads_filter, low_cov_thresh=config["low_cov_thresh"], ncells_thresh_mgatk=ncells_thresh_mgatk,
-               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
-               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'])
+               results=res,sample=samples["sample_name"].values, num_read=config["num_reads_filter"], cellr_bc=config["use_cellr_barcode"])
 
-
-
-# def get_sample_bai(wildcards):
-#     bai = os.path.join(samples.loc[wildcards.sample, "raw"],samples.loc[wildcards.sample, "bam"]) + ".bam.bai"
-#     return bai
 
 
 def get_sample_bam(wildcards):
@@ -75,27 +63,6 @@ def get_sample_barcodes(wildcards):
 def results_dir():
     return config["results"]
 
-# rule orig_index:
-#     input:  get_raw_bam #"{raw_f}"  #lambda wildcards: f"{config['bam'][wildcards.sample]}"
-#     output: "{bam_f}.bam.bai" #"{raw}/{bam}.bai"
-#     shell: "samtools index {input}"
-
-# rule cp_bam:
-#     """Move bam file to current location"""
-#     input: get_sample_bam
-#     output:
-#         bam = temp("{results}/{sample}/00_bam/{sample}.bam"),
-#         #bai = "{results}/{sample}/00_bam/{sample}.bam.bai"
-#     shell: "cp {input} {output}"
-# #    run:
-#         # shell("ln -s {input} {output.bam}"),
-#         # shell("ln -s {input}.bai {output.bai}")
-#
-# rule index_bam:
-#     """Index the bam file"""
-#     input: "{results}/{sample}/00_bam/{sample}.bam"
-#     output: temp("{results}/{sample}/00_bam/{sample}.bam.bai")
-#     shell: "samtools index {input}"
 
 rule link_bam:
     input: get_sample_bam
@@ -174,23 +141,6 @@ rule barcode_filter:
     params: cellr_bc = "{cellr_bc}"
     shell: "python src/filter_barcodes.py {input} {params} {output}"
 
-
-## TODO
-# rule compare_CB_with_cellranger_CB_list:
-#     input:
-#         cb_list = "{results}/{sample}/MT/{sample}_barcode_data.p",
-#         cellranger_list = "{results}/{sample}/MT/{sample}.barcodes.txt"
-#     output:
-#         "{results}/{sample}/MT/barcodes_compare/barcodes_detected.png"
-#     shell:
-#
-
-# rule plot_CB_coverage:
-#     """Plot the MT coverage of the single cells"""
-#     input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
-#     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_CB_coverage_hist.png"
-#     shell:
-#         "python src/plot_CB_coverage.py {input} {output}"
 
 rule sortCB:
     input:
@@ -337,11 +287,7 @@ rule filter_cell_bc:
                 df = df.iloc[:,:3]
             df = df.sort_values(["CB", "Position"])
             df.to_csv(curr_out_f, header=None, index=None, compression='gzip')
-# for n in ["A", "C", "G", "T", "coverage"]:
-    #curr_f = input.all
-    #curr_f = curr_f.replace(".coverage.", "." + n + ".")
-    #out_f = output[0].replace(".coverage.", "." + n + ".")
-    #run_filter_cell(args=(output[0].replace(".coverage.strands.txt.gz", "", input.barcode_p, n)
+
 
 def get_ref(wildcards):
     w = wildcards
@@ -386,20 +332,8 @@ rule create_filters:
 rule get_refAllele:
     #input: config["mt_ref_fa"],
     params: config["chrM_refAllele"]
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
-    shell: 'cp {params} {output}'
-    # already done so just copied over for all
-    # run:
-    #     records = list(SeqIO.parse(input[0], "fasta"))
-    #     mt_seq = records[0].seq
-    #     for ind, val in enumerate(mt_seq):
-    #         if ind == 0:
-    #             ref_str = f"{ind+1}\t{val}"
-    #         else:
-    #             ref_str = f"{ref_str}\n{ind+1}\t{val}"
-    #     with open(output[0], "w") as f:
-    #         f.write(ref_str)
-
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/chrM_refAllele.txt"
+    shell: 'cp {input} {output}'
 
 
 rule to_seurat:
@@ -408,7 +342,7 @@ rule to_seurat:
         all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.txt",
         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
         #depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/chrM_refAllele.txt"
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.rds"
     params:
         data_dir=lambda wildcards, input: os.path.dirname(input.all),
@@ -416,18 +350,17 @@ rule to_seurat:
         rkernel = r_kernel
     log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/.to_seurat.log"
     shell:
-        "./R_scripts/toRDS.R {params.data_dir} filter_mgatk/{params.sample} FALSE" # &> {log}"
+        "./R_scripts/toRDS {params.data_dir} filter_mgatk/{params.sample} FALSE" # &> {log}"
 
 
 rule callVariants_mgatk:
     input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.rds"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}_cellT{ncells_thresh_mgatk}.variant.rds"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
     params:
         low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh,
-        rkernel = r_kernel,
-        ncells_thresh=ncells_thresh_mgatk
+        rkernel = r_kernel
     #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
-    shell: "./R_scripts/variant_calling.R {input} {params.low_cov_thresh} {params.ncells_thresh}"# &> {log}"
+    shell: "./R_scripts/variant_calling {input} {params.low_cov_thresh}"# &> {log}"
 
 
 
@@ -443,7 +376,7 @@ rule raw_get_depth:
 
 rule raw_get_refAllele:
     input: config["mt_ref_fa"],
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read,[0-9]+}/chrM_refAllele.txt"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/chrM_refAllele.txt"
     run:
         records = list(SeqIO.parse(input[0], "fasta"))
         mt_seq = records[0].seq
@@ -461,70 +394,26 @@ rule raw_to_seurat:
         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.txt",
         all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
         depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read,[0-9]+}/chrM_refAllele.txt"
+        refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/chrM_refAllele.txt"
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
     params:
         data_dir=lambda wildcards, input: os.path.dirname(input.all),
         sample = lambda wildcards: wildcards.sample,
         rkernel = r_kernel
-    #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.to_seurat.log"
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.to_seurat.log"
     shell:
-        "./R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} TRUE" # &> {log}"
+        "./R_scripts/toRDS {params.data_dir} mgatk/{params.sample} TRUE" # &> {log}"
 
 
 rule raw_callVariants_mgatk:
     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}_cellT{ncells_thresh}.variant.rds"
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}.variant.rds"
     params:
         rkernel = r_kernel,
-        low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh,
-        ncells_thresh=ncells_thresh_mgatk
-    #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}_cellT{ncells_thresh}.log"
-    shell: "./R_scripts/variant_calling.R {input} {params.low_cov_thresh} {params.ncells_thresh}"# &> {log}"
+        low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh
+    log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
+    shell: "./R_scripts/variant_calling {input} {params.low_cov_thresh}" # &> {log}"
 
-
-
-
-# C. Not finished. Generating the AF tensor
-# rule generate_allele_frequencies:
-#     """Create the AF-by-cell pickle file"""
-#     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-#     output:  "{results}/{sample}/MT/AF_min{num_read}.tensor.p"
-#     params: maxBP = config['maxBP']
-#     shell:
-#       "python src/calculate_AF.py {input} {output} -maxBP {params}"
-#
-#
-# #position_bq_thresh:
-# rule filter_af:
-#     """Create a text file of cell barcodes to keep"""
-#     input:
-#          af_f = "{results}/{sample}/MT/AF_min{num_read}.tensor.p",
-#          barcode_data = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
-#         #"{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
-#     output:
-#         af_filt_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p"
-#     params:
-#         min_cells = "{min_cells}",
-#         min_reads = "{min_reads}",
-#         top_cells = "{top_cells}",
-#         top_pos = "{top_pos}",
-#         cell_mt_coverage = "{cell_mt_coverage}",
-#     shell: "python src/af_filters.py {input} {output} {params}"
-#
-#
-# rule aggregate_samples:
-#     input:
-#         expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
-#                mapq = mq, cellr_bc=config["use_cellr_barcode"],
-#                num_read=config["num_reads_filter"],
-#                min_cells=config["min_cells"],
-#                min_reads=config["min_reads"],
-#                top_pos = config["top_pos"],
-#                top_cells = config["top_cells"],
-#                cell_mt_coverage=config["cell_mt_coverage"])
-#     output: "{results}/mq_{mapq}_cellr_{cellr_bc}_nr_{num_reads}_mc_{min_cells}_mr_{min_reads}/aggregate_af.csv"
-#     shell: "python aggregate.py {input} {output}"
 
 
 rule plot_cells:
@@ -532,19 +421,5 @@ rule plot_cells:
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/cluster_{min_cells}_{min_reads}_{cell_mt_coverage}.png"
     shell: "python plot_lineage.py {input} {output}"
 
-#
-# rule filter_positions:
-#""" Create a text file of variants to keep
-#     input:
-#     output:
-#     shell:
-#
-# rule generate_allele_frequencies:
-#"""Create the AF-by-cell csv file"""
-#     input:
-#     output:
-#     shell:
 
 
-#rule plot_allele_frequencies:
-#"""Plot the AF-by-cell heatmap"""

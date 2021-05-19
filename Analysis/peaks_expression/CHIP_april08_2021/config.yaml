@@ -1,0 +1,11 @@
+global: "PROJECT"
+
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist"
+experiment: "CHIP_april08_2021"
+genome: "MTblacklist"
+
+
+samples:
+  - "Control"
+  - "Flt3l"
+  - "Input"

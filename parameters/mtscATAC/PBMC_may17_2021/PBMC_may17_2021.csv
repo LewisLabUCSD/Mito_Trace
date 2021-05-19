@@ -1,0 +1,3 @@
+sample,fastq_dir,out_name,sample_name
+BC_10xATAC_pre,/data2/isshamie/mito_lineage/data/raw/may17_2021,pre,pre
+BC_10xATAC_post,/data2/isshamie/mito_lineage/data/raw/may17_2021,post,post

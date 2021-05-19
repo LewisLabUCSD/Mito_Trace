@@ -1,9 +1,10 @@
-#!/usr/bin/Rscript
-suppressMessages(suppressWarnings(library(tools)))
-suppressMessages(suppressWarnings(library(Matrix)))
-suppressMessages(suppressWarnings(library(SummarizedExperiment)))
-suppressMessages(suppressWarnings(library(GenomicRanges)))
-suppressMessages(suppressWarnings(library(data.table)))
+#!/usr/bin/Rscript --vanilla
+
+library(tools)
+library(Matrix)
+library(SummarizedExperiment)
+library(GenomicRanges)
+library(data.table)
 
 options(warn=-1)
 
@@ -249,33 +250,37 @@ importMito <- function(folder, is_strand, ...){
 #-----------------
 # hard-coded i/o
 #-----------------
-folder <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30/" #"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200"
-name <- "filter_mgatk/P2"
-is_strand <- FALSE
+#folder <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30/" #"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200"
+#name <- "filter_mgatk/P2"
+##is_strand <- FALSE
 #Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}
 
 
 #-----------------
 # Command line i/o
 #-----------------
-# args <- commandArgs(trailingOnly = TRUE)
-# print(args)
-# folder <- args[1]
-# name <- args[2]
-# print('length')
-# print(length(args))
-# is_strand <- args[3]
-# print('is_strand')
-# print(is_strand)
-# if (is_strand == "TRUE"){
-#   is_strand <- TRUE
-# } else{
-#   is_strand<-FALSE
-#   }
-####################
-
+args <- commandArgs(trailingOnly = TRUE)
 print(sessionInfo())
-
-SElist <- importMito(folder, is_strand)
-saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
-saveRDS(SElist[[2]], file = paste0(folder, "/", name, ".signac.rds"))
+if (length(args) == 3) {
+  print(args)
+  folder <- args[1]
+  name <- args[2]
+  print('length')
+  print(length(args))
+  is_strand <- args[3]
+  # print('is_strand')
+  # print(is_strand).
+  if (is_strand == "TRUE"){
+    is_strand <- TRUE
+  } else{
+    is_strand<-FALSE
+  }
+  print(paste0(folder, "/", name, ".rds"))
+  ####################
+  
+  SElist <- importMito(folder, is_strand)
+  saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
+  saveRDS(SElist[[2]], file = paste0(folder, "/", name, ".signac.rds"))
+} else {
+  print("Args not correct: folder; name; is_strand")
+}

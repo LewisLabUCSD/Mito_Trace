@@ -81,7 +81,7 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     # else:
     #     sc_coverage = sc_coverage.loc[
     #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
-
+    f=plt.figure()
     sns.heatmap(sc_coverage) #, row_cluster=False, col_cluster=False)
     plt.title(f"Number of reads at each MT position in {top_n} cells")
     #g.ax_heatmap.set_title(f"Number of reads at each MT position by the top {top_n} covered cells")
@@ -92,19 +92,24 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     plt.ylabel("Cell")
     #g.ax_heatmap.set_ylabel("Cell")
     plt.savefig(savefig_f)
-    plt.savefig(savefig_f.replace(".png", ".svg"))
+
     log2_sc_coverage = np.log2(sc_coverage + 1)
     if not top_n == 0:
         log2_sc_coverage = log2_sc_coverage.loc[
             log2_sc_coverage.sum(axis=1).sort_values(ascending=False)[
             :top_n].index]
-    g = sns.clustermap(log2_sc_coverage, col_cluster=False)
-    g.ax_heatmap.set_title(f"Log2 number of reads at each MT position in {top_n} cells")
-    g.ax_heatmap.set_yticks([])
-    g.ax_heatmap.set_xlabel("MT position")
-    g.ax_heatmap.set_ylabel("Cell")
+
+    sns.heatmap(sc_coverage)
+    plt.title(f"Log2 Number of reads at each MT position in {top_n} cells")
+    #g = sns.clustermap(log2_sc_coverage, col_cluster=False)
+    #g.ax_heatmap.set_title(f"Log2 number of reads at each MT position in {top_n} cells")
+    #g.ax_heatmap.set_yticks([])
+    #g.ax_heatmap.set_xlabel("MT position")
+    #g.ax_heatmap.set_ylabel("Cell")
+    plt.xlabel("MT position")
+    plt.title(os.path.basename(savefig_f))
+    plt.ylabel("Cell")
     plt.savefig(savefig_f.replace(".png","")+".log2.png")
-    plt.savefig(savefig_f.replace(".png", ".svg"))
 
     return
 
@@ -133,7 +138,8 @@ def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
                 y="Number of MT positions",
                 hue="Minimum number of cells")
     plt.savefig(savefig_f)
-    plt.savefig(savefig_f.replace(".png",".svg"))
+
+    plt.close(f)
     return
 
 
@@ -152,8 +158,8 @@ def main(func, *args, **kwargs):
         sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP)#, n_cpu=)
 
     elif func == "plot":
-        sc_coverage_f, save_f_pos_cov = args
-        #sc_coverage_f, save_f_pos_heat, save_f_pos_cov = args
+        #sc_coverage_f, save_f_pos_cov = args
+        sc_coverage_f, save_f_pos_heat, save_f_pos_cov = args
         if "x_cov" in kwargs:
             x_cov = kwargs["x_cov"]
         else:
@@ -163,7 +169,7 @@ def main(func, *args, **kwargs):
         else:
             cells_cov = [1, 10, 100, 500, 1000,5000,10000]
         plot_percent_coverage_cells(sc_coverage_f, save_f_pos_cov , x_cov, cells_cov)
-        #plot_sc_mt(sc_coverage_f, save_f_pos_heat, top_n=1000)
+        plot_sc_mt(sc_coverage_f, save_f_pos_heat, top_n=1000)
     return
 
 

@@ -11,6 +11,17 @@ import pandas as pd
 import logging
 
 
+
+def set_artifact():
+    ###TODO: add this into the class
+    if not os.path.exists("output"):
+        os.mkdir("output")
+    for f in ["images", "plots", "data", "results"]:
+        if not os.path.exists(join("output",f)):
+            os.mkdir(join("output",f))
+
+
+
 def helper_add_prefix_to_recursive_dict(d, in_dir):
     """ Recursive function to add a prefix to every value in the dict
 

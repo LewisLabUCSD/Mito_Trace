@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+#!/usr/bin/Rscript
 suppressMessages(suppressWarnings(library(tools)))
 suppressMessages(suppressWarnings(library(Matrix)))
 suppressMessages(suppressWarnings(library(SummarizedExperiment)))
@@ -18,7 +18,7 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   
   variantFiles <- list(Afile, Cfile, Gfile, Tfile)
   metaFiles <- list(coverageFile, depthFile, referenceAlleleFile)
-  
+  print(variantFiles)
   nullout <- lapply(c(variantFiles, metaFiles), function(file){
     stopifnot(length(file) == 1)
   })
@@ -38,11 +38,13 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   }
   
   cov <- importDT(coverageFile)
-  
+  print('cov')
+  print(cov)
   # Make a long matrix of bq and Counts for non-reference alleles
   ref <- importDT(referenceAlleleFile)
   maxpos <- max(ref[[1]])
-  
+  print('maxpos')
+  print(head(maxpos))
   samplesOrder <- levels(cov[[2]])
   maxsamples <- length(samplesOrder)
   
@@ -56,6 +58,8 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   
   # Import Counts and qualities
   importSMs <- function(file){
+    print("File")
+    print(file)
     # fread the individual variant calls in
     if(tools::file_ext(file) == "gz"){
       dt <-  suppressMessages(data.table::fread(paste0("zcat < ", file), stringsAsFactors = TRUE))
@@ -67,15 +71,19 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
     
     # Encore same ordering as coverage for the sample factor 
     dt[[2]] <- factor(as.character(dt[[2]]), levels = samplesOrder)
-    
+    print('before creating matrix')
+    print('dim')
+    print(dim(dt))
     if(dim(dt)[2] == 6){
       # including base qualities
-      
+      print('dim 6')
       qual_fw <- Matrix::sparseMatrix(
         i = c(dt[[1]],maxpos),
         j = c(as.numeric(dt[[2]]), maxsamples),
         x = c(dt[[4]],0)
       )
+      print('qual_fw')
+      print(dim(qual_fw))
       
       qual_rev <- Matrix::sparseMatrix(
         i = c(dt[[1]],maxpos),
@@ -99,6 +107,7 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
       j = c(as.numeric(dt[[2]]), maxsamples),
       x = c(dt[[count_fw_idx]],0)
     )
+    print('counts_fw')
     
     counts_rev <- Matrix::sparseMatrix(
       i = c(dt[[1]],maxpos),
@@ -106,16 +115,20 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
       x = c(dt[[count_rev_idx]],0)
     )
     
+    
     remove(dt)
     
     # Return more substantial list only if there are base qualities involved
+
     if(base_quals){
+      print('base_quals')
       return(list("counts_fw" = counts_fw, "qual_fw" = qual_fw,
                   "counts_rev" = counts_rev, "qual_rev" = qual_rev))
     } else {
       return(list("counts_fw" = counts_fw, 
                   "counts_rev" = counts_rev))
     }
+
   }
   
   ACGT <- lapply(variantFiles, importSMs)
@@ -123,6 +136,9 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
   
   # Create colData
   depth <- data.frame(importDT(depthFile))
+  print('depth')
+  print(head(depth))
+  
   sdf <- merge(data.frame(sample = samplesOrder), depth, by.x = "sample", by.y = "V1")
   rownames(sdf) <- samplesOrder
   colnames(sdf) <- c("sample", "depth")
@@ -184,10 +200,10 @@ importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,
 # Function to parse the folder hierarchy
 #---------------------------------------
 
-importMito <- function(folder, ...){
+importMito <- function(folder, is_strand, ...){
   
   files <- list.files(folder, full.names = TRUE)
-  
+  print(files)
   checkGrep <- function(hit){
     if(length(hit) != 1){
       stop("Improper folder specification; file missing / extra file present. See documentation")
@@ -195,33 +211,71 @@ importMito <- function(folder, ...){
       return(hit)
     }
   }
-  
+
+  if (is_strand) {
+    Afile <- files[checkGrep(grep(".A.strands.txt.gz", files))]
+    Cfile <- files[checkGrep(grep(".C.strands.txt.gz", files))]
+    Gfile <- files[checkGrep(grep(".G.strands.txt.gz", files))]
+    Tfile <- files[checkGrep(grep(".T.strands.txt.gz", files))]
+    coverageFile <- files[checkGrep(grep(".coverage.strands.txt.gz", files))]
+  } else {
   # Set up file paths
   Afile <- files[checkGrep(grep(".A.txt", files))]
   Cfile <- files[checkGrep(grep(".C.txt", files))]
   Gfile <- files[checkGrep(grep(".G.txt", files))]
   Tfile <- files[checkGrep(grep(".T.txt", files))]
   coverageFile <- files[checkGrep(grep(".coverage.txt", files))]
+  
+  }
   depthFile <- files[checkGrep(grep(".depthTable.txt", files))]
-  referenceAlleleFile <- files[checkGrep(grep("refAllele.txt", files))]
+  referenceAlleleFile <- files[checkGrep(grep("chrM_refAllele.txt", files))]
   
   # Parse out the mitochondrial genome name from the file name
   sv <- strsplit(gsub("_refAllele.txt", "", basename(referenceAlleleFile)), split = "[.]")[[1]]
   mitoChr <- sv[length(sv)]
-  
+  print("mitoChr")
+  #print(mitoChr)
+  print(length(mitoChr))
+
   SElist <- importMito.explicit(Afile, Cfile, Gfile, Tfile,
                                 coverageFile, depthFile, referenceAlleleFile, mitoChr, ...)
   return(SElist)
 }
 
 
+
+# i/o
+####################
+#-----------------
+# hard-coded i/o
+#-----------------
+#folder <- "/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200/filters/minC100_minR50_topN0_hetT0.01_hetC10_hetCount5_bq30/" #"/data2/mito_lineage/data/processed/mttrace/jan21_2021/P2/MT/cellr_True/P2_200"
+#name <- "filter_mgatk/P2"
+##is_strand <- FALSE
+#Rscript R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} &> {log}
+
+
 #-----------------
 # Command line i/o
 #-----------------
 args <- commandArgs(trailingOnly = TRUE)
+print(args)
 folder <- args[1]
 name <- args[2]
+print('length')
+print(length(args))
+is_strand <- args[3]
+# print('is_strand')
+# print(is_strand).
+if (is_strand == "TRUE"){
+  is_strand <- TRUE
+} else{
+  is_strand<-FALSE
+  }
+####################
 
-SElist <- importMito(folder)
+print(sessionInfo())
+
+SElist <- importMito(folder, is_strand)
 saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
 saveRDS(SElist[[2]], file = paste0(folder, "/", name, ".signac.rds"))

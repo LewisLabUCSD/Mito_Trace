@@ -50,9 +50,16 @@ rule all:
            expand("data/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}", prefix=config["prefix"], name=config["samples"],
                   mt_minC=mt_minC,mt_minAF=mt_minAF),
            #expand("results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb", prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF),
-           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/flt3/multiplex.ipynb",
+           expand("data/{prefix}/chrM/output/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/{name}_multiplex.ipynb",prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells),
+           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb",
+                  prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop),
+           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb", prefix=config["prefix"], name=config["samples"],
+                  mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop),
+           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/dendrograms/af_dendro.ipynb",
+                  prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop),
+           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/enrichment/.status",
                   prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop)
-           #expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/pseudo.ipynb", prefix=config["prefix"], num_cells=num_cells, is_prop=is_prop, mt_minC=mt_minC, mt_minAF=mt_minAF)
+
 
 
 def get_bam(wildcards):
@@ -86,7 +93,7 @@ def get_mt_bam(wildcards):
 ########################################################################
 ## 1. Pseudo multiplex create
 ########################################################################
-rule cellSNP:
+rule VCF_cellSNP:
     """Converts 10x output to a cellSNP file. 
     
     Takes in coverage and number of cells thresholds to save memory.
@@ -104,7 +111,7 @@ rule cellSNP:
     shell:
         "cellsnp-lite -s {input} --exclFLAG {params.exclFLAG} -p 10 --minCOUNT {params.minCOUNT} --minMAF {params.minMAF} -O {output} -R {params.variants_f} -b {params.barcode_f} --printSkipSNPs --UMItag None --cellTAG CB 2> {log} "
 
-rule pseudo_bulk_create:
+rule VCF_pseudo_bulk_create:
     """Subsets and combines the samples to see if it can properly 
         deconvolve the two."""
     #TODO
@@ -119,7 +126,7 @@ rule pseudo_bulk_create:
     shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} > {log} 2>&1"
 
 
-rule vireo_psuedo:
+rule VCF_multiplex_psuedo:
     input:
         AD_F="data/{prefix}/vcf/pseudo/minC{minC}_minAF{minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx", #"data/{prefix}/vireo/pseudo/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx",
         notebook=join(ROOT_DIR, "src", "vireo", "vireoSNP_donors.ipynb")
@@ -135,7 +142,7 @@ rule vireo_psuedo:
 ########################################################################
 ## 2. chrMT pileups, lineage-tracing, and pseudo multiplex
 ########################################################################
-rule cellSNP_chrM:
+rule chrM_cellSNP:
     """Mode 2. Pileup across chrM
 
     Takes in coverage and number of cells thresholds to save memory.
@@ -151,23 +158,26 @@ rule cellSNP_chrM:
         exclFLAG=772 # Read unmapped, not primary alignment, read fails platform qc. Default minMapq is 20
     shell: "cellsnp-lite -s {input.bam_f} --exclFLAG {params.exclFLAG}  -b {input.barcode_f} -O {output} -p 20 --minMAF {params.minMAF} --minCOUNT {params.minCOUNT} --gzip --chrom chrM --printSkipSNPs --UMItag None --cellTAG CB 2> {log}"#chrM"
 
-rule vireo_chrM:
+rule chrM_multiplex_single:
+    """Run multiplex not with pseudo-aggregrate, just for one file"""
     input:
-        dat= "data/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}",
-        notebook=join(ROOT_DIR, "src", "vireo", "vireoSNP_clones.ipynb")
-    #"data/{prefix}/chrM/cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb"
-    output: "results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb" #"data/{prefix}/vireo/{name}_chrM.ipynb"
+        INDIR= "data/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}"
+    output:
+        out_note="data/{prefix}/chrM/output/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/{name}_multiplex.ipynb",
     params:
-        AD_F=lambda wildcards, input: join(input.dat, "cellSNP.tag.AD.mtx"),
-        DP_F=lambda wildcards, input: join(input.dat, "cellSNP.tag.DP.mtx"),
-        #VCF_F=lambda wildcards, input: join(input.dat, "cellSNP.base.vcf.gz")
-    shell: "papermill -p AD_F {params.AD_F} -p DP_F {params.DP_F} {input.notebook} {output}"
+        N_DONORS=config["N_DONORS"],
+        notebook=join(ROOT_DIR, "src", "vireo", "1_MT_Donors_multiplex_single.ipynb" ),
+        OUTDIR = lambda wildcards, output: dirname(output.out_note),
+    shell: "papermill -p INDIR {input.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+    # output: "results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb" #"data/{prefix}/vireo/{name}_chrM.ipynb"
+    # params:
+    #     AD_F=lambda wildcards, input: join(input.dat, "cellSNP.tag.AD.mtx"),
+    #     DP_F=lambda wildcards, input: join(input.dat, "cellSNP.tag.DP.mtx"),
+    #     #VCF_F=lambda wildcards, input: join(input.dat, "cellSNP.base.vcf.gz")
+    # shell: "papermill -p AD_F {params.AD_F} -p DP_F {params.DP_F} {input.notebook} {output}"
 
-
-#########################
 ## ChrMT Pseudo-multiplex
-#########################
-rule pseudo_bulk_create_chrM:
+rule chrM_pseudo_bulk_create:
     """Subsets and combines the samples to see if it can properly
         deconvolve the two."""
     #TODO
@@ -182,30 +192,73 @@ rule pseudo_bulk_create_chrM:
     shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix} > {log} 2>&1"
 
 
-rule pseudo_vireo_chrM:
-    input:
-        AD_F="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx",
-        notebook=join(ROOT_DIR, "src", "vireo", "vireoSNP_MT_Donors_proper.ipynb" )
-    output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/pseudo.ipynb"
-    params:
-        INDIR = lambda wildcards, input: dirname(input.AD_F),
-        #DP_F=lambda wildcards, input: join(dirname(input.AD_F), "cellSNP.tag.DP.mtx"),
-        #VCF_F=lambda wildcards, input: join(dirname(input.AD_F), "cellSNP.base.vcf.gz")
-    shell: "papermill -p INDIR {params.INDIR} {input.notebook} {output}"
-################################################################################
-
-rule flt3_vireo_chrM:
+rule chrM_multiplex_pseudo:
     input:
         AD_F="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx",
     output:
-        out_note="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/flt3/multiplex.ipynb",
+        out_note="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb",
     params:
         N_DONORS=config["N_DONORS"],
-        notebook=join(ROOT_DIR, "src", "vireo", "MT_Donors_flt3.ipynb" ),
+        notebook=join(ROOT_DIR, "src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
+        sample_names= ','.join(config["samples"]), # make it as a list
         INDIR = lambda wildcards, input: dirname(input.AD_F),
         OUTDIR = lambda wildcards, output: dirname(output.out_note),
-        sample_csv = config["sample_csv"]
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_csv {params.sample_csv} {params.notebook} {output}"
+        #sample_csv = config["sample_csv"]
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} {params.notebook} {output}"
+
+
+rule chrM_lineage_pseudo:
+    input: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
+    output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb"
+    params:
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["N_DONORS"],
+        notebook=join(ROOT_DIR, "src", "vireo", "2_MT_Lineage_Construct.ipynb"),
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+
+
+rule chrM_plotAF:
+    input:
+        #clone="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb",
+        mult="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
+    output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/dendrograms/af_dendro.ipynb"
+    params:
+        #INDIR = lambda wildcards, input: dirname(input[0]),
+        INDIR = lambda wildcards, input: dirname(input.mult),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["N_DONORS"],
+        sample_names= ','.join(config["samples"]), # make it as a list
+        notebook=join(ROOT_DIR, "src", "vireo", "3_MT_Donors_Dendrogram.ipynb"),
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS}  {params.notebook} {output}"
+
+
+rule chrM_enrichment:
+    input:
+        "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb",
+        "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb"
+    output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/enrichment/.status"
+    params:
+        donors_indir = lambda wildcards, input: dirname(input[0]),
+        clones_indir = lambda wildcards, input: dirname(input[1]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["N_DONORS"],
+        nclones= config["n_clone_list"],
+        script=join(ROOT_DIR, "src", "vireo", "lineage_enrichment.py"),
+    shell: "python {params.script} {params.donors_indir} {params.clones_indir} {params.OUTDIR} {params.N_DONORS} {params.nclones}"
+
+
+# rule chrM_pseudo_multiplex:
+#     input:
+#         AD_F="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/cellSNP.tag.AD.mtx",
+#         notebook=join(ROOT_DIR, "src", "vireo", "vireoSNP_MT_Donors_proper.ipynb" )
+#     output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/pseudo.ipynb"
+#     params:
+#         INDIR = lambda wildcards, input: dirname(input.AD_F),
+#         #DP_F=lambda wildcards, input: join(dirname(input.AD_F), "cellSNP.tag.DP.mtx"),
+#         #VCF_F=lambda wildcards, input: join(dirname(input.AD_F), "cellSNP.base.vcf.gz")
+#     shell: "papermill -p INDIR {params.INDIR} {input.notebook} {output}"
+# ################################################################################
 
 # rule deconvolve_individual:
 #     input: "data/{prefix}/{name}_cellSNP_minC{minC}_minAF{minAF}"
@@ -230,43 +283,43 @@ rule flt3_vireo_chrM:
 #     shell: "cellsnp-lite -s {input.bam_f} -b {input.barcode_f} -O cellsnp_output -p 20 --minMAF {params.minMAF} --minCOUNT {params.minCOUNT} --gzip"
 
 
-########################################
-rule pseudo_bam_create:
-    """Are the cell barcodes the same numbers"""
-    input: all_bams
-    output: "data/{prefix}/vcf/pseudo/mixed.bam"
-    run:
-        count = 1
-        tmp = []
-        to_divide = 1/len(input)*100 #Percent to subsample from each sample
-        to_divide = f"{to_divide:.0f}"
-        for b in input:
-            cmd = f"samtools view -bs 42.{to_divide} {b} > {output}.{count}"
-            count += 1
-            shell(f"{cmd}") # Subsamples. 42 is random int. .1 is 10 percent)
-            tmp.append(f"{output}.{count}")
-        shell(f"samtools merge {output} {' '.join(tmp)}")
-        shell(f"rm {' '.join(tmp)}")
+# ########################################
+# rule pseudo_bam_create:
+#     """Are the cell barcodes the same numbers"""
+#     input: all_bams
+#     output: "data/{prefix}/vcf/pseudo/mixed.bam"
+#     run:
+#         count = 1
+#         tmp = []
+#         to_divide = 1/len(input)*100 #Percent to subsample from each sample
+#         to_divide = f"{to_divide:.0f}"
+#         for b in input:
+#             cmd = f"samtools view -bs 42.{to_divide} {b} > {output}.{count}"
+#             count += 1
+#             shell(f"{cmd}") # Subsamples. 42 is random int. .1 is 10 percent)
+#             tmp.append(f"{output}.{count}")
+#         shell(f"samtools merge {output} {' '.join(tmp)}")
+#         shell(f"rm {' '.join(tmp)}")
+#
+#     #shell: "samtools view -bs 42.1 {input} > {output}" # Subsamples. 42 is random int. .1 is 10 percent
+# rule pseudo_bulk_cellSNP:
+#     input: "data/{prefix}/vcf/pseudo/mixed.bam"
+#     output: "data/{prefix}/vcf/pseudo/mixed"
+#     params:
+#         variants_f=config["variants_f"],
+#         barcode_f=get_barcodes
+#     log: "logs/{prefix}/psuedobulk_cellsnp.log"
+#     shell:
+#         "cellsnp-lite -s {input} -p 10 --minCOUNT 20 --minMAF 0.01 -O {output} -R {params.variants_f} -b {params.barcode_f} --printSkipSNPs --UMItag None --cellTAG CB 2> {log}"
+# ########################################
 
-    #shell: "samtools view -bs 42.1 {input} > {output}" # Subsamples. 42 is random int. .1 is 10 percent
-rule pseudo_bulk_cellSNP:
-    input: "data/{prefix}/vcf/pseudo/mixed.bam"
-    output: "data/{prefix}/vcf/pseudo/mixed"
-    params:
-        variants_f=config["variants_f"],
-        barcode_f=get_barcodes
-    log: "logs/{prefix}/psuedobulk_cellsnp.log"
-    shell:
-        "cellsnp-lite -s {input} -p 10 --minCOUNT 20 --minMAF 0.01 -O {output} -R {params.variants_f} -b {params.barcode_f} --printSkipSNPs --UMItag None --cellTAG CB 2> {log}"
-########################################
 
-
-rule pseudo_bulk_run_vireo:
-    """
-    """
-    shell: ""
-rule pseudo_bulk_qc:
-    """
-    """
-    shell: ""
-    #input:
+# rule pseudo_bulk_run_vireo:
+#     """
+#     """
+#     shell: ""
+# rule pseudo_bulk_qc:
+#     """
+#     """
+#     shell: ""
+#     #input:
