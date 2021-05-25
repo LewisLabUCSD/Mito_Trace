@@ -70,6 +70,7 @@ def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
                 cell_df.loc[cell, ind] = 0
     return cell_df
 
+
 def create_af_by_cell(af, cell_names, coverage_dir, num_proc):
     af_by_cell = pd.DataFrame(
         index=af.apply(lambda x: (str(x.name) + x["Nucleotide"]),
@@ -437,8 +438,6 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
     :param bq_thresh:
     :return:
     """
-
-
     # 0. Create stats df, and figure
     stats = pd.DataFrame(
         columns=["# Cells", "# Positions", "# Variants"])
@@ -506,12 +505,6 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
 
     # 4. Get the highest alt allele, store in af, which is the filtered AF Pos-by-[AF, BQ] df
     af = extract_af(nt_df, bq_df, mt_ref_fa)
-    # af_fig = plt.figure()
-    # plt.hist((af["AF"]).astype(float))
-    # plt.yscale('log')
-    # plt.title("AFs averaged over all cells")
-    # plt.xlabel('AF')
-    # plt.ylabel("Number of variants")
 
     # 5. Now that we called our alternate alleles, put them in
     #    cell-allele sparse form (no 0s), extracting from the sparse
@@ -545,8 +538,7 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
                                    min_het_cells=min_het_cells)
     af_by_cell = af_by_cell[het_filt]
     ad_by_cell = ad_by_cell[het_filt]
-    # depth_by_cell = depth_by_cell[het_filt]
-    # alleleDepth_by_cell = alleleDepth_by_cell[het_filt]
+
     stats = stats.append(
         pd.DataFrame([[af_by_cell.shape[0], af_by_cell.shape[1], 0]],
                      columns=["# Cells", "# Positions", "# Variants"],
@@ -574,9 +566,7 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
                                    min_het_cells=min_het_cells)
     af_by_cell = af_by_cell[het_filt]
     ad_by_cell = ad_by_cell[het_filt]
-    # bq_by_cell = bq_by_cell[het_filt]
-    # depth_by_cell = depth_by_cell[het_filt]
-    # alleleDepth_by_cell = alleleDepth_by_cell[het_filt]
+
     stats = stats.append(
         pd.DataFrame([[af_by_cell.shape[0], af_by_cell.shape[1], 0]],
                      columns=["# Cells", "# Positions", "# Variants"],
@@ -608,11 +598,6 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
     bq_by_cell = bq_by_cell[bq_filt]
     af_by_cell = af_by_cell[bq_filt]
     ad_by_cell = ad_by_cell[bq_filt]
-    # bq_average = bq_by_cell.mean(axis=0)
-    # bq_avg_filt = bq_by_cell.loc[:, bq_average >= bq_thresh].columns
-    # af_by_cell = af_by_cell[bq_avg_filt]
-    # bq_by_cell = bq_by_cell[bq_avg_filt]
-    # ad_by_cell = ad_by_cell[bq_avg_filt]
 
     # Create depth-by-cell
     depth_by_cell = cov_ad[(cov_ad["ID"].isin(af_by_cell.columns)) & (
@@ -690,23 +675,6 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
     else:
         return af_by_cell, bq_by_cell, af, bq_df, nt_df
 
-
-#
-# def main(concat_dir,
-#          af_f,
-#          min_cells,
-#          min_reads,
-#          topn,
-#          coverage_thresh,
-#          het_thresh,
-#          min_het_cells,
-#          ref_fa):
-#     #ref_fa = "/data2/mito_lineage/BWA-Primers-MT/MT_genome/MT.fasta"
-#     #maxbp = 16571
-#     calculate_af(concat_dir, af_f, ref_fa, topn=topn, min_cells=min_cells,
-#                  min_reads=min_reads, coverage_thresh=coverage_thresh,
-#                  het_thresh=het_thresh, min_het_cells=min_het_cells)
-#
 
 
 if __name__ == '__main__':

@@ -50,14 +50,14 @@ rule all:
            expand("data/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}", prefix=config["prefix"], name=config["samples"],
                   mt_minC=mt_minC,mt_minAF=mt_minAF),
            #expand("results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb", prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF),
-           expand("data/{prefix}/chrM/output/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/{name}_multiplex.ipynb",prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells),
+           #expand("data/{prefix}/chrM/output/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/{name}_multiplex.ipynb",prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells),
            expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb",
                   prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop),
            expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb", prefix=config["prefix"], name=config["samples"],
                   mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop),
            expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/dendrograms/af_dendro.ipynb",
                   prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop),
-           expand("data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/enrichment/.status",
+           expand("figures/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/enrichment/.status",
                   prefix=config["prefix"], name=config["samples"], mt_minC=mt_minC,mt_minAF=mt_minAF, num_cells=num_cells, is_prop=is_prop)
 
 
@@ -237,7 +237,7 @@ rule chrM_enrichment:
     input:
         "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb",
         "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb"
-    output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/enrichment/.status"
+    output: "figures/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/enrichment/.status"
     params:
         donors_indir = lambda wildcards, input: dirname(input[0]),
         clones_indir = lambda wildcards, input: dirname(input[1]),
@@ -245,8 +245,20 @@ rule chrM_enrichment:
         N_DONORS=config["N_DONORS"],
         nclones= config["n_clone_list"],
         script=join(ROOT_DIR, "src", "vireo", "lineage_enrichment.py"),
-    shell: "python {params.script} {params.donors_indir} {params.clones_indir} {params.OUTDIR} {params.N_DONORS} {params.nclones}"
+        samples=",".join(config['samples'])
+    shell: "python {params.script} {params.donors_indir} {params.clones_indir} {params.OUTDIR} {params.N_DONORS} {params.nclones} {params.samples}"
 
+
+rule type_variants:
+    input: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb"
+    params:
+        notebook=join(ROOT_DIR, "src", "vireo", join("5_MT_Donors_variantTypes.ipynb")),
+        INDIR = lambda wildcards, input: dirname(input.mult),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["N_DONORS"],
+        sample_names= ','.join(config["samples"]), # make it as a list
+    output: "data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/variants/variants.ipynb"
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
 
 # rule chrM_pseudo_multiplex:
 #     input:

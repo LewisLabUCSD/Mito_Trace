@@ -33,7 +33,7 @@ rule all:
         expand("{sample}/outs/possorted_bam.bam", sample=samples_df.index),
         expand("{sample}/outs/web_summary.html", sample=samples_df.index),
         #"aggregate/outs/web_summary.html",
-        #"reanalysis/outs/web_summary.html",
+        "reanalysis/outs/web_summary.html",
         expand("coverage/{sample}_coverage.bw", sample=samples_df.index),
          #expand("coverage/{sample}_coverage.tsv", sample=samples_df.index),
         expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
@@ -182,7 +182,7 @@ rule aggr_cellranger:
     output: "aggregate/outs/web_summary.html"
     params:
         ref = config["genome_dir"],
-    shell: "cellranger-atac aggr --id=aggregate --csv={input.aggr_csv}  --normalize=depth --reference={params.ref}"
+    shell: "cellranger-atac aggr --id=aggregate --csv={input.aggr_csv} --localmem=50 --normalize=depth --reference={params.ref}"
 
 rule reanalyze:
     input: "aggregate/outs/web_summary.html"
@@ -196,7 +196,7 @@ rule reanalyze:
     threads: 24
     shell:
          "cellranger-atac reanalyze --id=reanalysis \
-                --peaks={params.full_in}/peaks.bed \
-               --reference={params.ref} --localcores={threads} \
-               --fragments={params.full_in}/fragments.tsv.gz"
+          --peaks={params.full_in}/peaks.bed \
+          --reference={params.ref} --localcores={threads} --localmem=50 \
+          --fragments={params.full_in}/fragments.tsv.gz"
           #--params={params.full_out}/aggregation_csv.csv \

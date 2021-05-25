@@ -4,7 +4,7 @@ indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_C
 experiment: "CHIP_april08_2021"
 genome: "MTblacklist"
 
-
+chip_genes: ["TP53", "U2AF1", "SF3B1", "SRSF2", "TET2", "IDH1", "IDH2"]
 samples:
   - "Control"
   - "Flt3l"

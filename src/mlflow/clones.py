@@ -39,12 +39,12 @@ def read_af(files, sep='\t', to_transpose=False, **pdread_kwargs):
     return dfs
 
 
-def combine_dfs(dfs, use_key=True, key_label="Key", fillna=0,
-                update_col_names=False, col_inds=None):
+def combine_dfs(dfs, use_key=True, key_label="Key", naval=0,
+                update_col_names=False, col_inds=None, axis=1):
     """
 
-    :param dfs: dict of dfs, where keys are names to be used for a new column, and/or for add that as a suffix
-                to the column names.
+    :param dfs: dict of dfs, where keys are names to be used for a new column,
+                and/or for add that as a suffix to the column names.
     """
     for key in dfs:
         if use_key:
@@ -53,8 +53,8 @@ def combine_dfs(dfs, use_key=True, key_label="Key", fillna=0,
             dfs[key].columns = dfs[key].columns + "_" + key
         if col_inds is not None:
             dfs[key] = dfs[key].loc[:, dfs[key].columns.isin(col_inds)]
-    return pd.concat(dfs.values(), axis=1, sort=False).fillna(
-        fillna)  # return  pd.concat(dfs.values()).fillna(fillna)
+    return pd.concat(dfs.values(), axis=axis, sort=False).fillna(
+        naval)  # return  pd.concat(dfs.values()).fillna(fillna)
 
 
 ####

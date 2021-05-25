@@ -1,0 +1,7 @@
+name: new
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+prefix: /home/isshamie/software/anaconda2/envs/new
+

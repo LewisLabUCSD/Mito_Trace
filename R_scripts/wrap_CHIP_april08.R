@@ -1,4 +1,4 @@
-#source("toRDS.R")
+source("toRDS.R")
 source("variant_calling.R")
 
 low_coverage_threshold <- 10
@@ -51,12 +51,12 @@ wrap_var <- function(SE_f) {
     misc_df <- data.frame(rowData(mut_se))
     filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
     write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = gsub('.rds', ".coverage.tsv", SE_f), sep='\t')
-    write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', "af.tsv", SE_f), sep='\t')
-    write.table(filter_df, file = gsub('.rds', "af.mgatk.tsv", SE_f), sep='\t')
-    plot_mutations_qc(mut_se , f_save = gsub('.rds', 'variantQC.png', SE_f))
+    write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = gsub('.rds', ".af.tsv", SE_f), sep='\t')
+    write.table(filter_df, file = gsub('.rds', ".af.mgatk.tsv", SE_f), sep='\t')
+    plot_mutations_qc(mut_se , f_save = gsub('.rds', '.variantQC.png', SE_f))
   }
 }
 
 
-#apply(all, MARGIN=1, FUN=function(x) wrap_to_seurat(folder=x["indirs"],name=x["names"], is_strand = TRUE))
+apply(all, MARGIN=1, FUN=function(x) wrap_to_seurat(folder=x["indirs"],name=x["names"], is_strand = TRUE))
 apply(all, MARGIN=1, FUN=function(x) wrap_var(x["rds"]))
