@@ -23,11 +23,16 @@ main:
   - "multiplex"
 
 
+pipeline:
+  - filters
+  - variant
+  - demultiplex
+
+
 mttrace:
   use_cellr_barcode:
     - True
     #- False
-
 
   num_reads_filter:
     - 200
@@ -35,9 +40,7 @@ mttrace:
   mito_character: "chrM"
   maxBP: 16571
 
-#  mapq:
-#    - 20
-#    - 30
+
   base_quality: 20
 
 
@@ -134,4 +137,5 @@ multiplex:
       - 20
       #    - 200
       #- 1000
+
 

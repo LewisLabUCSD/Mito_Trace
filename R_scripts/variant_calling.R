@@ -18,13 +18,13 @@ suppressMessages(suppressWarnings(library(data.table)))
 "%ni%" <- Negate("%in%")
 
 call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_threshold = 10){
-  print(low_coverage_threshold)
+  
   # Determinie key coverage statistics every which way
   cov <- assays(SE)[["coverage"]]
   ref_allele <- toupper(as.character(rowRanges(SE)$refAllele))
-  print('mutations mgatk')
+  
   # Process mutation for one alternate letter
-  process_letter <- function(letter, low_coverage_threshold){
+  process_letter <- function(letter){
     print(letter)
     boo <- ref_allele != letter & ref_allele != "N"
     pos <- start(rowRanges(SE))
@@ -150,12 +150,10 @@ call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_thr
     return(se_new)
   }
   
-  return(SummarizedExperiment::rbind(process_letter("A",low_coverage_threshold), 
-                                     process_letter("C",low_coverage_threshold), 
-                                     process_letter("G",low_coverage_threshold), 
-                                     process_letter("T",low_coverage_threshold)))
+  return(SummarizedExperiment::rbind(process_letter("A"), process_letter("C"), process_letter("G"), process_letter("T")))
   
 }
+
 
 
 plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
@@ -166,9 +164,8 @@ plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
     misc_df <- mut_se
   }
   
-  #filter_df <- misc_df %>% filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation >strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
-  #print('filtered variants dimensions')
-  #print(dim(filter_df))
+  # filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation >strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
+  # dim(filter_df)
   # filter_df # Verify that 8202 and 8344 are there
   #
   # Make the standard variant calling plot
@@ -200,12 +197,13 @@ plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
 # args <- commandArgs(trailingOnly = TRUE)
 # #print(sessionInfo())
 # if (length(args) == 3) {
-#   
 #   SE_f <- args[1]
 #   low_coverage_threshold <- args[2]
 #   n_cells_thresh <- args[3] #2
 #   print(low_coverage_threshold)
 #   ####################
+# 
+# 
 #   
 #   SE <- readRDS(SE_f)
 #   strand_correlation_thresh <- 0.65
@@ -230,15 +228,20 @@ plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
 #     
 #     misc_df <- data.frame(rowData(mut_se))
 #     filter_df <- misc_df %>%  filter(n_cells_conf_detected >= n_cells_thresh & strand_correlation > strand_correlation_thresh & log10(vmr) > log_vmr_thresh)
-#     write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = paste(out_SE, ".coverage.tsv", sep = ""), sep='\t')
-#     write.table(as.data.frame(as.matrix(assay(mut_se, 1))), file = paste(out_SE, ".af.tsv", sep = ""), sep='\t')
+#     #write.table(as.data.frame(as.matrix(assay(mut_se, 2))), file = paste(out_SE, ".coverage.tsv", sep = ""), sep='\t')
+#     cov <- as.data.frame(as.matrix(assay(mut_se, 2)))
+#     cov -> cov %>% filter(row.names(cov) %in% row.names(filter_df))
+#     write.table(cov, file = paste(out_SE, ".coverage.tsv", sep = ""), sep='\t')
+#     af <- as.data.frame(as.matrix(assay(mut_se, 1)))
+#     af  -> af %>% filter(row.names(af) %in% row.names(filter_df))
+#     write.table(af, file = paste(out_SE, ".af.tsv", sep = ""), sep='\t')
 #     write.table(filter_df, file = paste(out_SE, ".af.mgatk.tsv", sep = ""), sep='\t')
 #     plot_mutations_qc(mut_se , f_save = paste(out_SE,'.variantQC.png', sep = ""))
 #   }
 # } else {
 #   print("Args not correct: SE_f; low_coverage_threshold; n_cells_thresh")
 # }
-#   
+  
 
 # # Find TF1 cells
 # rbind(read.table("../output/data1_meta.tsv", header = TRUE), 

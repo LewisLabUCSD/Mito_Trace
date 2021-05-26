@@ -1,3 +1,43 @@
+""" Merges vireo inputs together across different conditions.
+
+## Input:
+outdir, type=click.Path()): The directory to save output.
+indirs, type=click.Path(exists=True): Input directories.
+--cell_subsamp:
+--is_prop, default=False, type=click.BOOL: If True, subsampling preserves the proportion of each conditions cell counts.
+--num_cells, default=1000: Number of cells total to sample. If above the total number of cells, will use all cells.
+--samples, default="", Comma-separated string of the condition names. This will be added to the suffix of the cell labels.
+
+
+### Required files in input directories:
+- cellSNP.base.vcf.gz: tsv file with required columns ["#CHROM", "POS", "REF", "ALT"]
+- cellSNP.samples.tsv: Line separated file of cell labels.
+
+Vireo Matrix Market Format (vmmf)
+Matrix market format files with the first two lines are comments (contain '%').
+Sparse matrix (1-based index), where first column is position index, 2nd column is cell index, and 3rd is the count.
+Cell index refers to the cellSNP.samples.tsv file.
+Position index refers to cellSNP.base.vcf.gz file
+
+- cellSNP.tag.AD.mtx: Alternative allele depth in matrix market format (see below)
+- cellSNP.tag.DP.mtx: Total Depth in martix market format.
+- (optional) cellSNP.tag.OTH.mtx: Other (non Alt or Ref allele) depth.
+
+## Output files:
+1. variant_indices_{sampleIndex}.tsv: tsv file for each initial sample (index corresponds to the order of the input)
+                                  2 columns with no header, where first column is 1-based index of initial input vcf for that condition,
+                                  and the second column is the 1-based index for the output merged vcf file.
+2. cell_indices_{sampleIndex}.txt: csv file column headers a) old index, b) new index. Also 1-based index
+
+3. cell_labels.txt: csv file of cell labels with sample ID added as suffix.
+        header: ID,raw ID,new index
+        row example: AAACGAATCTTACTCA-1_Control,AAACGAATCTTACTCA-1,1
+4. cellSNP.base.vcf: vcf file as described above.
+5. cellSNP.tag.AD.mtx: same as above, vmmf files.
+6. cellSNP.tag.DP.mtx
+
+
+"""
 from os.path import join
 import os
 from numpy import random
@@ -395,7 +435,7 @@ def main(outdir, indirs, is_prop, num_cells, samples):
     subsample_sparse_matrices(outdir, indirs,
                               num_cells_total=num_cells,
                               is_proportional=is_prop,
-                              cell_subsample=0.1, sample_names=samples)
+                              cell_subsample=None, sample_names=samples)
     return
 
 

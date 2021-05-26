@@ -235,6 +235,7 @@ def concat_files(directory, samplename, nt):
     subp.check_call(str(cmd), shell=True)
     return
 
+
 rule scConcat:
     input:
         scPileup_dir = "{results}/{sample}/MT/{sample}_scPileup_{num_read}",
@@ -261,22 +262,6 @@ rule scPileup_concat_strands:
           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
     shell:
          "python src/scPileup_concat.py {params.concat_dir} {params.samplename}"
-
-# scPileup_concat with different strands
-# rule scPileup_concat_strands:
-#     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
-#     input:
-#         scPileup_dir = "{results}/{sample}/MT/{sample}_scPileup_{num_read}",
-#         # Added to save directly to /data/isshamie
-#         scBam = "/data/isshamie/mito_lineage/{results}/{sample}/MT/{sample}_scBam"
-#     output:
-#         all = "{results}/{sample}/MT/scPileup_concat_{num_read}/{sample}_{num_read}_all.coverage.strands.txt.gz"
-#     threads: 34
-#     params:
-#         samplename = lambda wildcards, output: output.all.split("_all.coverage.strands.txt.gz")[0]
-#           #"data/processed/{sample}/scPileup_concat/{sample}_{num_read}"
-#     shell:
-#          "python src/scPileup_concat.py {input.scPileup_dir} {params.samplename}"
 
 rule plot_CB_coverage:
     """Plot the MT coverage of the single cells"""
@@ -338,11 +323,6 @@ rule filter_cell_bc:
                 df = df.iloc[:,:3]
             df = df.sort_values(["CB", "Position"])
             df.to_csv(curr_out_f, header=None, index=None, compression='gzip')
-# for n in ["A", "C", "G", "T", "coverage"]:
-    #curr_f = input.all
-    #curr_f = curr_f.replace(".coverage.", "." + n + ".")
-    #out_f = output[0].replace(".coverage.", "." + n + ".")
-    #run_filter_cell(args=(output[0].replace(".coverage.strands.txt.gz", "", input.barcode_p, n)
 
 def get_ref(wildcards):
     w = wildcards
@@ -377,7 +357,7 @@ rule create_filters:
         concat_d = lambda wildcards, input: dirname(input.concat_dir),
         ref_fa = config['mt_ref_fa'],
         name = lambda wildcards: wildcards.sample,
-        filt_params = get_filt
+        filt_params = get_filt,
     resources:
         mem_mb=90000
     log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/.outcfg"
@@ -389,46 +369,6 @@ rule get_refAllele:
     params: config["chrM_refAllele"]
     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
     shell: 'cp {params} {output}'
-    # already done so just copied over for all
-    # run:
-    #     records = list(SeqIO.parse(input[0], "fasta"))
-    #     mt_seq = records[0].seq
-    #     for ind, val in enumerate(mt_seq):
-    #         if ind == 0:
-    #             ref_str = f"{ind+1}\t{val}"
-    #         else:
-    #             ref_str = f"{ref_str}\n{ind+1}\t{val}"
-    #     with open(output[0], "w") as f:
-    #         f.write(ref_str)
-
-
-
-# rule to_seurat:
-#     """ Extract the variants based on the specified parameters"""
-#     input:
-#         all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.txt",
-#         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-#         #depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-#         refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
-#     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.rds"
-#     params:
-#         data_dir=lambda wildcards, input: dirname(input.all),
-#         sample = lambda wildcards: wildcards.sample,
-#         rkernel = r_kernel
-#     log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/.to_seurat.log"
-#     shell:
-#         "./R_scripts/toRDS.R {params.data_dir} filter_mgatk/{params.sample} FALSE" # &> {log}"
-#
-#
-# rule callVariants_mgatk:
-#     input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.rds"
-#     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.lowC{low_cov_thresh}_cellT{ncells_thresh_mgatk}.variant.rds"
-#     params:
-#         low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh,
-#         rkernel = r_kernel,
-#         ncells_thresh=ncells_thresh_mgatk
-#     #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}.log"
-#     shell: "./R_scripts/variant_calling.R {input} {params.low_cov_thresh} {params.ncells_thresh}"# &> {log}"
 
 
 rule mgatk:
@@ -452,6 +392,46 @@ rule mgatk_to_vireoIn:
     shell:
         "python src/mgatk_to_vireo.py {params.AF} {output}"
 
+#
+# rule merged:
+#     input: lambda wildcards: expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn",
+#                                     sample=samples["sample_name"].values)# , minC=wildcards.minC, minAF=wildcards.minAF)
+#     params:
+#         num_cells=num_cells,
+#         is_prop = is_prop,
+#         outdir = lambda wildcards, output: dirname(output[0]),
+#         prefix= ','.join(config["samples"]) # make it as a list
+#     #log: "logs/{prefix}/vireo/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}.log"
+#     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/cellSNP.tag.AD.mtx"
+#     shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix}" # > {log} 2>&1"
+#
+#
+# rule multiplex:
+#     input: rules.mgatk_to_vireoIn.output
+#     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/"
+#     params:
+#         N_DONORS=config["N_DONORS"],
+#         notebook=join(ROOT_DIR, "src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
+#         sample_names= ','.join(config["samples"]), # make it as a list
+#         INDIR = lambda wildcards, input: dirname(input.AD_F),
+#         OUTDIR = lambda wildcards, output: dirname(output.out_note),
+#     shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} {params.notebook} {output}"
+#
+#
+#
+# rule clones:
+#     input: rules.multiplex.output
+#     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/"
+#     shell: ""
+#
+#
+# rule variants:
+#     input: rules.clones.output
+#     output:
+#         "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/variants/",
+#         report(directory("{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/variants/figures"))
+#     shell: ""
+#
 
 # B. Run mgatk before the filters
 rule raw_get_depth:
@@ -491,100 +471,4 @@ rule raw_mgatk:
     shell:
         "./R_scripts/wrap_mgatk.R {params.data_dir} mgatk/{params.sample} TRUE"
 
-# rule raw_to_seurat:
-#     """ Extract the variants based on the specified parameters"""
-#     input:
-#         #all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.txt",
-#         all = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-#         depth = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.depthTable.txt",
-#         refAllele = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read,[0-9]+}/chrM_refAllele.txt"
-#     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
-#     params:
-#         data_dir=lambda wildcards, input: dirname(input.all),
-#         sample = lambda wildcards: wildcards.sample,
-#         rkernel = r_kernel
-#     conda:
-#         "envs/new.yml"
-#     #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.to_seurat.log"
-#     shell:
-#         "./R_scripts/toRDS.R {params.data_dir} mgatk/{params.sample} TRUE" # &> {log}"
-#
-#
-# rule raw_callVariants_mgatk:
-#     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.rds"
-#     output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/{sample}.lowC{low_cov_thresh}_cellT{ncells_thresh}.variant.rds"
-#     params:
-#         rkernel = r_kernel,
-#         low_cov_thresh=lambda wildcards: wildcards.low_cov_thresh,
-#         ncells_thresh=ncells_thresh_mgatk
-#     conda:
-#         "envs/new.yml"
-#     #log: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/mgatk/.callVariants_mgatk.lowC{low_cov_thresh}_cellT{ncells_thresh}.log"
-#     shell: "./R_scripts/variant_calling.R {input} {params.low_cov_thresh} {params.ncells_thresh}"# &> {log}"
-#
 
-
-
-# C. Not finished. Generating the AF tensor
-# rule generate_allele_frequencies:
-#     """Create the AF-by-cell pickle file"""
-#     input:  "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/{sample}.coverage.strands.txt.gz",
-#     output:  "{results}/{sample}/MT/AF_min{num_read}.tensor.p"
-#     params: maxBP = config['maxBP']
-#     shell:
-#       "python src/calculate_AF.py {input} {output} -maxBP {params}"
-#
-#
-# #position_bq_thresh:
-# rule filter_af:
-#     """Create a text file of cell barcodes to keep"""
-#     input:
-#          af_f = "{results}/{sample}/MT/AF_min{num_read}.tensor.p",
-#          barcode_data = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_barcode_data.p"
-#         #"{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/sc_coverage.csv"
-#     output:
-#         af_filt_f = "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p"
-#     params:
-#         min_cells = "{min_cells}",
-#         min_reads = "{min_reads}",
-#         top_cells = "{top_cells}",
-#         top_pos = "{top_pos}",
-#         cell_mt_coverage = "{cell_mt_coverage}",
-#     shell: "python src/af_filters.py {input} {output} {params}"
-#
-#
-# rule aggregate_samples:
-#     input:
-#         expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/af_filt_{min_cells}_{min_reads}_{top_pos}_{top_cells}_{cell_mt_coverage}.p", results=res, sample=samples["sample"].values,
-#                mapq = mq, cellr_bc=config["use_cellr_barcode"],
-#                num_read=config["num_reads_filter"],
-#                min_cells=config["min_cells"],
-#                min_reads=config["min_reads"],
-#                top_pos = config["top_pos"],
-#                top_cells = config["top_cells"],
-#                cell_mt_coverage=config["cell_mt_coverage"])
-#     output: "{results}/mq_{mapq}_cellr_{cellr_bc}_nr_{num_reads}_mc_{min_cells}_mr_{min_reads}/aggregate_af.csv"
-#     shell: "python aggregate.py {input} {output}"
-
-
-rule plot_cells:
-    input: "{results}/cellr_{cellr_bc}_nr_{num_reads}_mc_{min_cells}_mr_{min_reads}/aggregate_af.csv"
-    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/cluster_{min_cells}_{min_reads}_{cell_mt_coverage}.png"
-    shell: "python plot_lineage.py {input} {output}"
-
-#
-# rule filter_positions:
-#""" Create a text file of variants to keep
-#     input:
-#     output:
-#     shell:
-#
-# rule generate_allele_frequencies:
-#"""Create the AF-by-cell csv file"""
-#     input:
-#     output:
-#     shell:
-
-
-#rule plot_allele_frequencies:
-#"""Plot the AF-by-cell heatmap"""

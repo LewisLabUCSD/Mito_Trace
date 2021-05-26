@@ -169,12 +169,7 @@ rule chrM_multiplex_single:
         notebook=join(ROOT_DIR, "src", "vireo", "1_MT_Donors_multiplex_single.ipynb" ),
         OUTDIR = lambda wildcards, output: dirname(output.out_note),
     shell: "papermill -p INDIR {input.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
-    # output: "results/{prefix}/chrM/{name}_cellSNP_minC{mt_minC}_minAF{mt_minAF}/lineage_chrM.ipynb" #"data/{prefix}/vireo/{name}_chrM.ipynb"
-    # params:
-    #     AD_F=lambda wildcards, input: join(input.dat, "cellSNP.tag.AD.mtx"),
-    #     DP_F=lambda wildcards, input: join(input.dat, "cellSNP.tag.DP.mtx"),
-    #     #VCF_F=lambda wildcards, input: join(input.dat, "cellSNP.base.vcf.gz")
-    # shell: "papermill -p AD_F {params.AD_F} -p DP_F {params.DP_F} {input.notebook} {output}"
+
 
 ## ChrMT Pseudo-multiplex
 rule chrM_pseudo_bulk_create:

@@ -346,7 +346,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
     <nav class="navbar fixed-top navbar-dark bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Snakemake Report</a>
       <ul class="nav navbar-nav navbar-right" style="padding-right: 10px;">
-        <li class="text-white">Tue May 25 22:18:13 2021 UTC</li>
+        <li class="text-white">Tue May 25 22:19:32 2021 UTC</li>
         <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 5.9.1</a></li>
       </ul>
       <!--<input id="searchbar" class="invisible form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
@@ -439,454 +439,6 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>scPileup_concat_strands</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-2bbd3b5d-a864-469b-a712-2bc8f4ec9780" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-2bbd3b5d-a864-469b-a712-2bc8f4ec9780">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/scPileup_concat_200/Input_200_all.coverage.strands.txt.gz</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/scPileup_concat_200/Control_200_all.coverage.strands.txt.gz</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/scPileup_concat_200/Flt3l_200_all.coverage.strands.txt.gz</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-2bbd3b5d-a864-469b-a712-2bc8f4ec9780" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-2bbd3b5d-a864-469b-a712-2bc8f4ec9780">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/scPileup_concat.py <span class="o">{</span>params.concat_dir<span class="o">}</span> <span class="o">{</span>params.samplename<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>raw_mgatk</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-c68131d4-8e2d-4348-8c3a-716799099c2c" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-c68131d4-8e2d-4348-8c3a-716799099c2c">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/mgatk/Input.variant.rds</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/mgatk/Control.variant.rds</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/mgatk/Flt3l.variant.rds</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-c68131d4-8e2d-4348-8c3a-716799099c2c" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-c68131d4-8e2d-4348-8c3a-716799099c2c">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>./R_scripts/wrap_mgatk.R <span class="o">{</span>params.data_dir<span class="o">}</span> mgatk/<span class="o">{</span>params.sample<span class="o">}</span> TRUE
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>plot_scPileup_MT_matrix</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-265c9e3d-eea7-4800-92f2-8c10ff95d441" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-265c9e3d-eea7-4800-92f2-8c10ff95d441">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200_MT_position.png</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200_MT_position_coverage.png</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200_MT_position.png</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200_MT_position_coverage.png</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200_MT_position.png</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200_MT_position_coverage.png</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-265c9e3d-eea7-4800-92f2-8c10ff95d441" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-265c9e3d-eea7-4800-92f2-8c10ff95d441">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/plot_heatmap_coverage.py plot <span class="o">{</span>input.sc_coverage_f<span class="o">}</span> <span class="o">{</span>output.save_f_heat<span class="o">}</span> <span class="o">{</span>output.save_f_coverage<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>mgatk</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-85a90d49-feff-4974-a1bd-3021f53d52b3" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-85a90d49-feff-4974-a1bd-3021f53d52b3">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/filter_mgatk/Input.variant.rds</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/filter_mgatk/Control.variant.rds</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/filter_mgatk/Flt3l.variant.rds</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-85a90d49-feff-4974-a1bd-3021f53d52b3" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-85a90d49-feff-4974-a1bd-3021f53d52b3">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>./R_scripts/wrap_mgatk.R <span class="o">{</span>params.data_dir<span class="o">}</span> filter_mgatk/<span class="o">{</span>params.sample<span class="o">}</span> FALSE
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>scConcat</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-b7e3a98d-5034-41d5-840e-5b106efa2076" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-b7e3a98d-5034-41d5-840e-5b106efa2076">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/scPileup_concat_200/Input_200_all.coverage.minus.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/scPileup_concat_200/Control_200_all.coverage.minus.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/scPileup_concat_200/Flt3l_200_all.coverage.minus.txt</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-b7e3a98d-5034-41d5-840e-5b106efa2076" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-b7e3a98d-5034-41d5-840e-5b106efa2076">
-                      <pre><code>source</code></pre>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>filter_cell_bc</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-aa50c86f-081e-4181-8ab3-d86e7eda347d" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-aa50c86f-081e-4181-8ab3-d86e7eda347d">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/Input.coverage.strands.txt.gz</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/Control.coverage.strands.txt.gz</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/Flt3l.coverage.strands.txt.gz</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-aa50c86f-081e-4181-8ab3-d86e7eda347d" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-aa50c86f-081e-4181-8ab3-d86e7eda347d">
-                      <pre><code>source</code></pre>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>raw_get_depth</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-d4ae8757-55c4-444b-9b55-18c8092c10fd" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-d4ae8757-55c4-444b-9b55-18c8092c10fd">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/Input.depthTable.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/Control.depthTable.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/Flt3l.depthTable.txt</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-d4ae8757-55c4-444b-9b55-18c8092c10fd" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-d4ae8757-55c4-444b-9b55-18c8092c10fd">
-                      <pre><code>source</code></pre>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>raw_get_refAllele</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-462e054f-2fc6-46a9-8421-bb59693fc430" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-462e054f-2fc6-46a9-8421-bb59693fc430">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/chrM_refAllele.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/chrM_refAllele.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/chrM_refAllele.txt</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-462e054f-2fc6-46a9-8421-bb59693fc430" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-462e054f-2fc6-46a9-8421-bb59693fc430">
-                      <pre><code>source</code></pre>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>scPileup_MT_matrix</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-a5a608a0-3b9f-4c17-820e-4570376b2701" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-a5a608a0-3b9f-4c17-820e-4570376b2701">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/sc_coverage.csv</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/sc_coverage.csv</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/sc_coverage.csv</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-a5a608a0-3b9f-4c17-820e-4570376b2701" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-a5a608a0-3b9f-4c17-820e-4570376b2701">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/plot_heatmap_coverage.py sc_mt <span class="o">{</span>input.barcode_p<span class="o">}</span> <span class="o">{</span>input.all<span class="o">}</span> <span class="o">{</span>output.sc_coverage_f<span class="o">}</span> <span class="o">{</span>maxBP<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>create_filters</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-b02f64f8-b868-4157-8166-9b17de111816" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-b02f64f8-b868-4157-8166-9b17de111816">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/af_by_cell.tsv</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Input.coverage.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/af_by_cell.tsv</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/af_by_cell.tsv</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-b02f64f8-b868-4157-8166-9b17de111816" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-b02f64f8-b868-4157-8166-9b17de111816">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/calculate_AF_by_cell.py <span class="o">{</span>params.concat_d<span class="o">}</span> <span class="o">{</span>output.af_f<span class="o">}</span> <span class="o">{</span>params.ref_fa<span class="o">}</span> <span class="o">{</span>params.name<span class="o">}</span> <span class="o">{</span>params.filt_params<span class="o">}</span> --log <span class="o">{</span>log<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>get_refAllele</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-e37bcf4e-ccda-4332-9ff8-6f5a79e35000" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-e37bcf4e-ccda-4332-9ff8-6f5a79e35000">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/chrM_refAllele.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/chrM_refAllele.txt</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/chrM_refAllele.txt</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-e37bcf4e-ccda-4332-9ff8-6f5a79e35000" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-e37bcf4e-ccda-4332-9ff8-6f5a79e35000">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>cp <span class="o">{</span>params<span class="o">}</span> <span class="o">{</span>output<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>scPileup</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-f483de06-35d5-4e2a-a9f2-81f0d121bbb9" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-f483de06-35d5-4e2a-a9f2-81f0d121bbb9">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/Input_scPileup_200</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/Control_scPileup_200</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/Flt3l_scPileup_200</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-f483de06-35d5-4e2a-a9f2-81f0d121bbb9" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-f483de06-35d5-4e2a-a9f2-81f0d121bbb9">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/scPileup_counts.py <span class="o">{</span>input.scBam<span class="o">}</span> <span class="o">{</span>output<span class="o">}</span> <span class="o">{</span>input.barcodes<span class="o">}</span> <span class="o">{</span>wildcards.num_read<span class="o">}</span> <span class="o">{</span>params.base_quality<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>scBam</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-75a3594d-03ab-4f0d-8779-558ca0377fcd" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-75a3594d-03ab-4f0d-8779-558ca0377fcd">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">/data/isshamie/mito_lineage/data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/Input_scBam</li>
-                      <li class="list-group-item">/data/isshamie/mito_lineage/data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/Control_scBam</li>
-                      <li class="list-group-item">/data/isshamie/mito_lineage/data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/Flt3l_scBam</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-75a3594d-03ab-4f0d-8779-558ca0377fcd" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-75a3594d-03ab-4f0d-8779-558ca0377fcd">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/split_by_CB.py <span class="o">{</span>input<span class="o">}</span> <span class="o">{</span>output<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>barcode_filter</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-9f0d1b0f-c109-41e0-83f9-0abcc3283a60" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-9f0d1b0f-c109-41e0-83f9-0abcc3283a60">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/cellr_True/Input_barcode_data.p</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/cellr_True/Control_barcode_data.p</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/cellr_True/Flt3l_barcode_data.p</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-9f0d1b0f-c109-41e0-83f9-0abcc3283a60" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-9f0d1b0f-c109-41e0-83f9-0abcc3283a60">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/filter_barcodes.py <span class="o">{</span>input<span class="o">}</span> <span class="o">{</span>params<span class="o">}</span> <span class="o">{</span>output<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>barcode_data</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-52f1e0ca-fb61-4f38-b804-3108301b1072" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-52f1e0ca-fb61-4f38-b804-3108301b1072">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/Input_barcode_data.p</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/Control_barcode_data.p</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/Flt3l_barcode_data.p</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-52f1e0ca-fb61-4f38-b804-3108301b1072" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-52f1e0ca-fb61-4f38-b804-3108301b1072">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python src/bam_barcodes_function.py <span class="o">{</span>input.mt_bam<span class="o">}</span> <span class="o">{</span>output<span class="o">}</span> <span class="o">{</span>params.mt_chr<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>sortCB</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-5b2d580f-c085-4c2c-b200-107689d5f7d4" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-5b2d580f-c085-4c2c-b200-107689d5f7d4">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/Input.MT.CB.bam</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/Control.MT.CB.bam</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/Flt3l.MT.CB.bam</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-5b2d580f-c085-4c2c-b200-107689d5f7d4" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-5b2d580f-c085-4c2c-b200-107689d5f7d4">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>samtools sort -t CB <span class="o">{</span>input.mt_bam<span class="o">}</span> &gt; <span class="o">{</span>output<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>MT_map</td>
-                <td>3</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-3103585c-e4a4-4f63-bf7c-8282b3fab179" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-3103585c-e4a4-4f63-bf7c-8282b3fab179">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/Input.MT.bam</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/MT/Input.MT.bam.bai</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/Control.MT.bam</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Control/MT/Control.MT.bam.bai</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/Flt3l.MT.bam</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/MT/Flt3l.MT.bam.bai</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-3103585c-e4a4-4f63-bf7c-8282b3fab179" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-3103585c-e4a4-4f63-bf7c-8282b3fab179">
-                      <pre><code>source</code></pre>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td>index_bam</td>
-                <td>2</td>
-                <td>
-                  <a data-toggle="collapse" role="button" href="#output-237dc421-4f57-4be3-bf11-e16f387753d9" aria-expanded="false" aria-controls="collapse-output"><span data-feather="plus-circle"></span></a>
-                  <div class="collapse" id="output-237dc421-4f57-4be3-bf11-e16f387753d9">
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Input/00_bam/Input.bam.bai</li>
-                      <li class="list-group-item">data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist/Flt3l/00_bam/Flt3l.bam.bai</li>
-                    </ul>
-                  </div>
-                </td>
-                <td></td>
-                <td>
-                </td>
-                <td>
-                    <a data-toggle="collapse" role="button" href="#code-237dc421-4f57-4be3-bf11-e16f387753d9" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                    <div class="collapse" id="code-237dc421-4f57-4be3-bf11-e16f387753d9">
-                      <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>samtools index <span class="o">{</span>input<span class="o">}</span>
-</code></pre></div>
-</td></tr></table>
-                    </div>
-                </td>
-              </tr>
             </tbody>
           </table>
         </main>
@@ -1409,8 +961,8 @@ action:function(){this[this.select.items()+"s"]().select()}},selectNone:{text:t(
     <script>
       var rulegraph_spec = {
         "$schema": "https://vega.github.io/schema/vega/v3.json",
-        "width": 723.64,
-        "height": 830.0,
+        "width": 452.0,
+        "height": 398.0,
         "padding": 0,
         "autosize": "none",
 
@@ -1440,11 +992,11 @@ action:function(){this[this.select.items()+"s"]().select()}},selectNone:{text:t(
         "data": [
           {
             "name": "node-data",
-            "values": [{'rule': 'MT_map', 'fx': 514.64, 'fy': 162.0}, {'rule': 'all', 'fx': 365.64, 'fy': 810.0}, {'rule': 'barcode_data', 'fx': 459.64, 'fy': 306.0}, {'rule': 'barcode_filter', 'fx': 428.64, 'fy': 522.0}, {'rule': 'create_filters', 'fx': 158.64, 'fy': 666.0}, {'rule': 'filter_cell_bc', 'fx': 596.64, 'fy': 594.0}, {'rule': 'get_refAllele', 'fx': 290.64, 'fy': 666.0}, {'rule': 'index_bam', 'fx': 514.64, 'fy': 90.0}, {'rule': 'link_bam', 'fx': 514.64, 'fy': 18.0}, {'rule': 'mgatk', 'fx': 290.64, 'fy': 738.0}, {'rule': 'plot_scPileup_MT_matrix', 'fx': 104.64, 'fy': 738.0}, {'rule': 'raw_get_depth', 'fx': 596.64, 'fy': 666.0}, {'rule': 'raw_get_refAllele', 'fx': 440.64, 'fy': 666.0}, {'rule': 'raw_mgatk', 'fx': 518.64, 'fy': 738.0}, {'rule': 'scBam', 'fx': 570.64, 'fy': 306.0}, {'rule': 'scConcat', 'fx': 593.64, 'fy': 450.0}, {'rule': 'scPileup', 'fx': 525.64, 'fy': 378.0}, {'rule': 'scPileup_MT_matrix', 'fx': 428.64, 'fy': 594.0}, {'rule': 'scPileup_concat_strands', 'fx': 603.64, 'fy': 522.0}, {'rule': 'sortCB', 'fx': 558.64, 'fy': 234.0}]
+            "values": [{'rule': 'all', 'fx': 141.0, 'fy': 378.0}, {'rule': 'chrM_cellSNP', 'fx': 66.0, 'fy': 18.0}, {'rule': 'chrM_enrichment', 'fx': 141.0, 'fy': 306.0}, {'rule': 'chrM_lineage_pseudo', 'fx': 215.0, 'fy': 234.0}, {'rule': 'chrM_multiplex_pseudo', 'fx': 133.0, 'fy': 162.0}, {'rule': 'chrM_plotAF', 'fx': 332.0, 'fy': 306.0}, {'rule': 'chrM_pseudo_bulk_create', 'fx': 133.0, 'fy': 90.0}]
           },
           {
             "name": "link-data",
-            "values": [{'target': 0, 'source': 2, 'value': 1}, {'target': 0, 'source': 19, 'value': 1}, {'target': 2, 'source': 16, 'value': 1}, {'target': 2, 'source': 3, 'value': 1}, {'target': 3, 'source': 5, 'value': 1}, {'target': 3, 'source': 17, 'value': 1}, {'target': 4, 'source': 9, 'value': 1}, {'target': 5, 'source': 13, 'value': 1}, {'target': 5, 'source': 11, 'value': 1}, {'target': 5, 'source': 4, 'value': 1}, {'target': 6, 'source': 9, 'value': 1}, {'target': 7, 'source': 0, 'value': 1}, {'target': 8, 'source': 7, 'value': 1}, {'target': 9, 'source': 1, 'value': 1}, {'target': 10, 'source': 1, 'value': 1}, {'target': 11, 'source': 13, 'value': 1}, {'target': 12, 'source': 13, 'value': 1}, {'target': 13, 'source': 1, 'value': 1}, {'target': 14, 'source': 15, 'value': 1}, {'target': 14, 'source': 16, 'value': 1}, {'target': 15, 'source': 18, 'value': 1}, {'target': 16, 'source': 15, 'value': 1}, {'target': 17, 'source': 10, 'value': 1}, {'target': 18, 'source': 1, 'value': 1}, {'target': 18, 'source': 5, 'value': 1}, {'target': 18, 'source': 17, 'value': 1}, {'target': 19, 'source': 14, 'value': 1}]
+            "values": [{'target': 1, 'source': 0, 'value': 1}, {'target': 1, 'source': 6, 'value': 1}, {'target': 2, 'source': 0, 'value': 1}, {'target': 3, 'source': 0, 'value': 1}, {'target': 3, 'source': 2, 'value': 1}, {'target': 4, 'source': 0, 'value': 1}, {'target': 4, 'source': 3, 'value': 1}, {'target': 4, 'source': 5, 'value': 1}, {'target': 4, 'source': 2, 'value': 1}, {'target': 5, 'source': 0, 'value': 1}, {'target': 6, 'source': 4, 'value': 1}]
           }
         ],
 
@@ -1535,7 +1087,7 @@ action:function(){this[this.select.items()+"s"]().select()}},selectNone:{text:t(
       var runtimes_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
         "description": "Shows the relationship between horsepower and the numbver of cylinders using tick marks.",
-        "data": {"values": [{'rule': 'MT_map', 'runtime': 1.0}, {'rule': 'MT_map', 'runtime': 0.0}, {'rule': 'MT_map', 'runtime': 0.0}, {'rule': 'barcode_data', 'runtime': 4758.0}, {'rule': 'barcode_data', 'runtime': 5054.0}, {'rule': 'barcode_data', 'runtime': 5788.0}, {'rule': 'barcode_filter', 'runtime': 12.0}, {'rule': 'barcode_filter', 'runtime': 28.0}, {'rule': 'barcode_filter', 'runtime': 232.0}, {'rule': 'create_filters', 'runtime': 405.0}, {'rule': 'create_filters', 'runtime': 631.0}, {'rule': 'create_filters', 'runtime': 1502.0}, {'rule': 'filter_cell_bc', 'runtime': 1.0}, {'rule': 'filter_cell_bc', 'runtime': 1.0}, {'rule': 'filter_cell_bc', 'runtime': 53.0}, {'rule': 'get_refAllele', 'runtime': 0.0}, {'rule': 'get_refAllele', 'runtime': 0.0}, {'rule': 'get_refAllele', 'runtime': 0.0}, {'rule': 'index_bam', 'runtime': 469.0}, {'rule': 'index_bam', 'runtime': 812.0}, {'rule': 'mgatk', 'runtime': 108.0}, {'rule': 'mgatk', 'runtime': 263.0}, {'rule': 'mgatk', 'runtime': 2270.0}, {'rule': 'plot_scPileup_MT_matrix', 'runtime': 109.0}, {'rule': 'plot_scPileup_MT_matrix', 'runtime': 152.0}, {'rule': 'plot_scPileup_MT_matrix', 'runtime': 249.0}, {'rule': 'raw_get_depth', 'runtime': 0.0}, {'rule': 'raw_get_depth', 'runtime': 0.0}, {'rule': 'raw_get_depth', 'runtime': 1.0}, {'rule': 'raw_get_refAllele', 'runtime': 0.0}, {'rule': 'raw_get_refAllele', 'runtime': 0.0}, {'rule': 'raw_get_refAllele', 'runtime': 0.0}, {'rule': 'raw_mgatk', 'runtime': 199.0}, {'rule': 'raw_mgatk', 'runtime': 448.0}, {'rule': 'raw_mgatk', 'runtime': 3296.0}, {'rule': 'scBam', 'runtime': 4335.242160797119}, {'rule': 'scBam', 'runtime': 4806.434376955032}, {'rule': 'scBam', 'runtime': 5450.637661933899}, {'rule': 'scConcat', 'runtime': 1.0}, {'rule': 'scConcat', 'runtime': 0.0}, {'rule': 'scConcat', 'runtime': 1.0}, {'rule': 'scPileup', 'runtime': 12594.0}, {'rule': 'scPileup', 'runtime': 19945.0}, {'rule': 'scPileup', 'runtime': 92209.0}, {'rule': 'scPileup_MT_matrix', 'runtime': 139.0}, {'rule': 'scPileup_MT_matrix', 'runtime': 270.0}, {'rule': 'scPileup_MT_matrix', 'runtime': 2036.0}, {'rule': 'scPileup_concat_strands', 'runtime': 2552.0}, {'rule': 'scPileup_concat_strands', 'runtime': 3872.0}, {'rule': 'scPileup_concat_strands', 'runtime': 25854.0}, {'rule': 'sortCB', 'runtime': 5602.0}, {'rule': 'sortCB', 'runtime': 5244.0}, {'rule': 'sortCB', 'runtime': 7563.0}]},
+        "data": {"values": []},
         "mark": "point",
         "encoding": {
           "x": {"field": "runtime", "type": "quantitative",
@@ -1552,7 +1104,7 @@ action:function(){this[this.select.items()+"s"]().select()}},selectNone:{text:t(
         "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
         "description": "Timeline of jobs.",
         "data": {
-          "values": [{'rule': 'MT_map', 'starttime': '2021-04-30T23:56:10', 'endtime': '2021-04-30T23:56:11'}, {'rule': 'MT_map', 'starttime': '2021-04-30T23:54:26', 'endtime': '2021-04-30T23:54:26'}, {'rule': 'MT_map', 'starttime': '2021-05-01T01:06:13', 'endtime': '2021-05-01T01:06:13'}, {'rule': 'barcode_data', 'starttime': '2021-04-30T23:56:11', 'endtime': '2021-05-01T01:15:29'}, {'rule': 'barcode_data', 'starttime': '2021-04-30T23:54:26', 'endtime': '2021-05-01T01:18:40'}, {'rule': 'barcode_data', 'starttime': '2021-05-01T01:06:13', 'endtime': '2021-05-01T02:42:41'}, {'rule': 'barcode_filter', 'starttime': '2021-05-05T23:34:33', 'endtime': '2021-05-05T23:34:45'}, {'rule': 'barcode_filter', 'starttime': '2021-05-05T23:34:33', 'endtime': '2021-05-05T23:35:01'}, {'rule': 'barcode_filter', 'starttime': '2021-05-05T23:34:33', 'endtime': '2021-05-05T23:38:25'}, {'rule': 'create_filters', 'starttime': '2021-05-17T22:50:39', 'endtime': '2021-05-17T22:57:24'}, {'rule': 'create_filters', 'starttime': '2021-05-17T22:50:40', 'endtime': '2021-05-17T23:01:11'}, {'rule': 'create_filters', 'starttime': '2021-05-17T22:50:39', 'endtime': '2021-05-17T23:15:41'}, {'rule': 'filter_cell_bc', 'starttime': '2021-05-17T08:26:30', 'endtime': '2021-05-17T08:26:31'}, {'rule': 'filter_cell_bc', 'starttime': '2021-05-17T08:32:23', 'endtime': '2021-05-17T08:32:24'}, {'rule': 'filter_cell_bc', 'starttime': '2021-05-17T10:23:58', 'endtime': '2021-05-17T10:24:51'}, {'rule': 'get_refAllele', 'starttime': '2021-05-18T01:28:54', 'endtime': '2021-05-18T01:28:54'}, {'rule': 'get_refAllele', 'starttime': '2021-05-18T01:28:54', 'endtime': '2021-05-18T01:28:54'}, {'rule': 'get_refAllele', 'starttime': '2021-05-18T01:28:54', 'endtime': '2021-05-18T01:28:54'}, {'rule': 'index_bam', 'starttime': '2021-04-30T22:44:03', 'endtime': '2021-04-30T22:51:52'}, {'rule': 'index_bam', 'starttime': '2021-04-30T22:54:49', 'endtime': '2021-04-30T23:08:21'}, {'rule': 'mgatk', 'starttime': '2021-05-21T01:46:28', 'endtime': '2021-05-21T01:48:16'}, {'rule': 'mgatk', 'starttime': '2021-05-21T01:46:28', 'endtime': '2021-05-21T01:50:51'}, {'rule': 'mgatk', 'starttime': '2021-05-21T01:46:28', 'endtime': '2021-05-21T02:24:18'}, {'rule': 'plot_scPileup_MT_matrix', 'starttime': '2021-05-06T00:37:08', 'endtime': '2021-05-06T00:38:57'}, {'rule': 'plot_scPileup_MT_matrix', 'starttime': '2021-05-06T00:37:09', 'endtime': '2021-05-06T00:39:41'}, {'rule': 'plot_scPileup_MT_matrix', 'starttime': '2021-05-06T01:11:05', 'endtime': '2021-05-06T01:15:14'}, {'rule': 'raw_get_depth', 'starttime': '2021-05-17T08:26:34', 'endtime': '2021-05-17T08:26:34'}, {'rule': 'raw_get_depth', 'starttime': '2021-05-17T08:51:02', 'endtime': '2021-05-17T08:51:02'}, {'rule': 'raw_get_depth', 'starttime': '2021-05-17T22:51:21', 'endtime': '2021-05-17T22:51:22'}, {'rule': 'raw_get_refAllele', 'starttime': '2021-05-17T08:58:13', 'endtime': '2021-05-17T08:58:13'}, {'rule': 'raw_get_refAllele', 'starttime': '2021-05-17T08:58:13', 'endtime': '2021-05-17T08:58:13'}, {'rule': 'raw_get_refAllele', 'starttime': '2021-05-17T08:58:13', 'endtime': '2021-05-17T08:58:13'}, {'rule': 'raw_mgatk', 'starttime': '2021-05-20T23:28:48', 'endtime': '2021-05-20T23:32:07'}, {'rule': 'raw_mgatk', 'starttime': '2021-05-20T23:28:47', 'endtime': '2021-05-20T23:36:15'}, {'rule': 'raw_mgatk', 'starttime': '2021-05-20T23:28:48', 'endtime': '2021-05-21T00:23:44'}, {'rule': 'scBam', 'starttime': '2021-05-01T01:29:33', 'endtime': '2021-05-01T02:41:48.242161'}, {'rule': 'scBam', 'starttime': '2021-05-01T01:21:50', 'endtime': '2021-05-01T02:41:56.434377'}, {'rule': 'scBam', 'starttime': '2021-05-01T03:12:16', 'endtime': '2021-05-01T04:43:06.637662'}, {'rule': 'scConcat', 'starttime': '2021-05-01T06:28:54', 'endtime': '2021-05-01T06:28:55'}, {'rule': 'scConcat', 'starttime': '2021-05-04T03:51:30', 'endtime': '2021-05-04T03:51:30'}, {'rule': 'scConcat', 'starttime': '2021-05-04T02:47:38', 'endtime': '2021-05-04T02:47:39'}, {'rule': 'scPileup', 'starttime': '2021-05-01T02:41:48', 'endtime': '2021-05-01T06:11:42'}, {'rule': 'scPileup', 'starttime': '2021-05-01T02:41:56', 'endtime': '2021-05-01T08:14:21'}, {'rule': 'scPileup', 'starttime': '2021-05-01T04:43:06', 'endtime': '2021-05-02T06:19:55'}, {'rule': 'scPileup_MT_matrix', 'starttime': '2021-05-05T23:34:45', 'endtime': '2021-05-05T23:37:04'}, {'rule': 'scPileup_MT_matrix', 'starttime': '2021-05-05T23:35:01', 'endtime': '2021-05-05T23:39:31'}, {'rule': 'scPileup_MT_matrix', 'starttime': '2021-05-06T00:37:09', 'endtime': '2021-05-06T01:11:05'}, {'rule': 'scPileup_concat_strands', 'starttime': '2021-05-01T06:28:55', 'endtime': '2021-05-01T07:11:27'}, {'rule': 'scPileup_concat_strands', 'starttime': '2021-05-04T03:51:30', 'endtime': '2021-05-04T04:56:02'}, {'rule': 'scPileup_concat_strands', 'starttime': '2021-05-04T06:55:13', 'endtime': '2021-05-04T14:06:07'}, {'rule': 'sortCB', 'starttime': '2021-04-30T23:56:11', 'endtime': '2021-05-01T01:29:33'}, {'rule': 'sortCB', 'starttime': '2021-04-30T23:54:26', 'endtime': '2021-05-01T01:21:50'}, {'rule': 'sortCB', 'starttime': '2021-05-01T01:06:13', 'endtime': '2021-05-01T03:12:16'}]
+          "values": []
         },
         "mark": "point",
         "encoding": {
