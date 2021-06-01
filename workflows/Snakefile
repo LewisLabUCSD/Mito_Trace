@@ -12,6 +12,7 @@ import pickle
 import subprocess as subp
 from datetime import datetime
 import copy
+import numpy as np
 
 # Flatten dictionary parameters
 if "mttrace" in config:
@@ -33,6 +34,8 @@ samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample
 
 ncells_thresh_mgatk=config['ncells_thresh_mgatk']
 
+num_cells = config['multiplex']["pseudo_multiplex"]["num_cells"]
+is_prop = config['multiplex']["pseudo_multiplex"]["is_proportional"]
 
 #print('index',samples.index)
 res = config["results"]
@@ -53,8 +56,19 @@ rule all:
                results=res,sample=samples["sample_name"].values,
                cellr_bc=cellr_bc, num_read=num_reads_filter,
                min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
-               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']) #, low_cov_thresh=config["low_cov_thresh"], ncells_thresh_mgatk=ncells_thresh_mgatk)
-
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']), #, low_cov_thresh=config["low_cov_thresh"], ncells_thresh_mgatk=ncells_thresh_mgatk)
+        expand("{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/cellSNP.tag.AD.mtx",
+               results=res,cellr_bc=cellr_bc, num_read=num_reads_filter,
+               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
+        expand("{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/clones.ipynb",
+               results=res,cellr_bc=cellr_bc, num_read=num_reads_filter,
+               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
+        expand("{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/dendrograms/af_dendro.ipynb",
+               results=res,cellr_bc=cellr_bc, num_read=num_reads_filter,
+               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
 
 
 # def get_sample_bai(wildcards):
@@ -64,7 +78,7 @@ rule all:
 
 def get_sample_bam(wildcards):
     bam = samples.loc[wildcards.sample,"bam_f"]
-    #print(bam)
+    print(bam)
     return bam # + ".bam"
 
 
@@ -101,7 +115,7 @@ def results_dir():
 rule link_bam:
     input: get_sample_bam
     output: "{results}/{sample}/00_bam/{sample}.bam"
-    shell: "ln -s {input} {output}"
+    shell: 'ln -sr {input} {output}'
 
 rule index_bam:
     """Index the bam file"""
@@ -386,43 +400,105 @@ rule mgatk:
 
 rule mgatk_to_vireoIn:
     input: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.variant.rds"
-    output: directory("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/")
+    output: "{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/cellSNP.tag.AD.mtx"
     params:
-        AF= lambda wildcards, input: join(dirname(input[0]), f'{wildcards.sample}.af.tsv')
+        indir = lambda wildcards, input: dirname(input[0]),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        sample = lambda wildcards: wildcards.sample
     shell:
-        "python src/mgatk_to_vireo.py {params.AF} {output}"
+        "python src/mgatk_to_vireo.py {params.indir} {params.outdir} {params.sample}"
 
+
+rule merged:
+    input:
+        lambda wildcards: expand("{{results}}/{sample}/MT/cellr_{{cellr_bc}}/{sample}_{{num_read}}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/cellSNP.tag.AD.mtx",
+                                        sample=samples["sample_name"].values)# , minC=wildcards.minC, minAF=wildcards.minAF)
+    #input: lambda wildcards: expand("data/{{prefix}}/chrM/{name}_cellSNP_minC{{mt_minC}}_minAF{{mt_minAF}}", name=config["samples"])
+    params:
+        num_cells=num_cells,
+        is_prop = is_prop,
+        indirs = lambda wildcards, input: [dirname(x) for x in input],
+        outdir = lambda wildcards, output: dirname(output[0]),
+        prefix= ','.join(samples["sample_name"])
+    #log: "logs/{prefix}/vireo/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}.log"
+    output: "{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/cellSNP.tag.AD.mtx"
+    shell: "python -m src.pseudo_batch {params.outdir} {params.indirs} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix}" # > {log} 2>&1"
+
+# from snakemake.utils import min_version
+# min_version("6.0")
+
+# module other_workflow:
+#     snakefile: "other_workflow/Snakefile"
 #
-# rule merged:
-#     input: lambda wildcards: expand("{results}/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn",
-#                                     sample=samples["sample_name"].values)# , minC=wildcards.minC, minAF=wildcards.minAF)
-#     params:
-#         num_cells=num_cells,
-#         is_prop = is_prop,
-#         outdir = lambda wildcards, output: dirname(output[0]),
-#         prefix= ','.join(config["samples"]) # make it as a list
-#     #log: "logs/{prefix}/vireo/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}.log"
-#     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/cellSNP.tag.AD.mtx"
-#     shell: "python -m src.pseudo_batch {params.outdir} {input} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix}" # > {log} 2>&1"
-#
-#
-# rule multiplex:
-#     input: rules.mgatk_to_vireoIn.output
-#     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/"
-#     params:
-#         N_DONORS=config["N_DONORS"],
-#         notebook=join(ROOT_DIR, "src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
-#         sample_names= ','.join(config["samples"]), # make it as a list
-#         INDIR = lambda wildcards, input: dirname(input.AD_F),
-#         OUTDIR = lambda wildcards, output: dirname(output.out_note),
-#     shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} {params.notebook} {output}"
-#
-#
-#
-# rule clones:
-#     input: rules.multiplex.output
-#     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/"
-#     shell: ""
+# use rule * from other_workflow as other_*
+rule multiplex:
+    input: rules.merged.output
+    output:
+        "{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/multiplex.ipynb"
+    params:
+        N_DONORS=config["multiplex"]["N_DONORS"],
+        notebook=join("src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
+        sample_names= ','.join(samples["sample_name"].values), # make it as a list
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        workdir = os.getcwd()
+    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} {params.notebook} {output}"
+
+
+rule clones:
+    input: rules.multiplex.output
+    output: "{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/clones.ipynb"
+    params:
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["multiplex"]["N_DONORS"],
+        notebook=join("src", "vireo", "2_MT_Lineage_Construct.ipynb"),
+        workdir = os.getcwd()
+    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+
+
+rule chrM_plotAF:
+    input:
+        #clone="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb",
+        mult=rules.multiplex.output[0]#"data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
+    output:
+        "{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/dendrograms/af_dendro.ipynb",
+        #report("{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/dendrograms/figures/")
+        report(expand("{{results}}/merged/MT/cellr_{{cellr_bc}}/numread_{{num_read}}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/dendrograms/figures/donor{n}_dendrogram.png",
+               n=np.arange(config["multiplex"]["N_DONORS"])))
+    params:
+        #INDIR = lambda wildcards, input: dirname(input[0]),
+        INDIR = lambda wildcards, input: dirname(input.mult),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["multiplex"]["N_DONORS"],
+        sample_names= ','.join(samples["sample_name"].values), # make it as a list
+        notebook=join("src", "vireo", "3_MT_Donors_Dendrogram.ipynb"),
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output[0]}"
+
+
+rule chrM_plotAF_clones:
+    input:
+        #clone="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb",
+        mult=rules.multiplex.output[0]#"data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
+    output:
+        "{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/dendrograms/clones.ipynb",
+        #report("{results}/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/nfigures/donor{n}_dendrogram.png")
+        report(expand("{{results}}/merged/MT/cellr_{{cellr_bc}}/numread_{{num_read}}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/clones/nclones_{nclones}/dendrograms/figures/donor{n}_dendrogram.png",
+                n=np.arange(config["multiplex"]["N_DONORS"]),
+                nclones=config['multiplex']["n_clone_list"]))
+    params:
+        #INDIR = lambda wildcards, input: dirname(input[0]),
+        INDIR = lambda wildcards, input: dirname(input.mult),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["multiplex"]["N_DONORS"],
+        sample_names= ','.join(samples["sample_name"].values), # make it as a list
+        notebook=join("src", "vireo", "3_MT_Donors_Dendrogram.ipynb"),
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output[0]}"
+
+
+# report(expand("clones/figures/donors_{donor}/nclones_{nclones}/scatterFisherEnrich.png"))
+#import snakemake
+#snakemake.io.wo
 #
 #
 # rule variants:
@@ -470,5 +546,4 @@ rule raw_mgatk:
         sample = lambda wildcards: wildcards.sample,
     shell:
         "./R_scripts/wrap_mgatk.R {params.data_dir} mgatk/{params.sample} TRUE"
-
 

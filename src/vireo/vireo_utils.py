@@ -9,7 +9,7 @@ import os
 from os.path import join, exists
 from joblib import Parallel, delayed
 from scipy.io import mmread
-from src.pseudo_batch import wrap_write_mtx_df
+from src.utils.data_io import wrap_write_mtx_df
 
 
 def run_single(ad_dp, n):
@@ -94,6 +94,13 @@ def extract_clusters(modelCA, prob_thresh, doublet_thresh, doublet_prob,
                 curr_sample_colors.to_csv(
                     join(outdir, f"{out_f}_{n}.labels.txt"))
     return cell_clusters
+
+
+def separate_clones(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
+                    doublet_prob, sample_colors,
+                    prob_thresh=0.9, doublet_thresh=0.9):
+
+    return
 
 
 def separate_donors(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
@@ -228,10 +235,23 @@ def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
     return None
 
 
-### Run lineage tracing for each cluster individually
 def run_elbo(ad, dp, out_f, sample_colors,
              n_clone_list=None, save_clusters=True,
              labels=None, rerun_model=True, n_cores=16, n_initials=50):
+    """ Sweep n-clones parameter in vireo and plot the ELBO
+
+    :param ad: Dense allele depth matrix
+    :param dp: Dense total depth matrix
+    :param out_f: Output prefix to save, include directory
+    :param sample_colors: Labels
+    :param n_clone_list:
+    :param save_clusters:
+    :param labels:
+    :param rerun_model:
+    :param n_cores:
+    :param n_initials:
+    :return:
+    """
     if n_clone_list is None:
         n_clone_list = np.arange(2, 5)
 

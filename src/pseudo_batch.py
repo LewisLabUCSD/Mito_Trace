@@ -16,6 +16,9 @@ indirs, type=click.Path(exists=True): Input directories.
 Vireo Matrix Market Format (vmmf)
 Matrix market format files with the first two lines are comments (contain '%').
 Sparse matrix (1-based index), where first column is position index, 2nd column is cell index, and 3rd is the count.
+The third line also has 3 columns, and the values are a) # of unique indices in 1st column,
+                                                      b) # indices in 2nd column,
+                                                      c) total number of observations (i.e. number of rows)
 Cell index refers to the cellSNP.samples.tsv file.
 Position index refers to cellSNP.base.vcf.gz file
 
@@ -37,6 +40,8 @@ Position index refers to cellSNP.base.vcf.gz file
 6. cellSNP.tag.DP.mtx
 
 
+## Temporary classes/variables used:
+vmmf_df: the sparse matrix, columns are Variant, Cell, integer
 """
 from os.path import join
 import os
@@ -46,6 +51,7 @@ import pandas as pd
 import click
 import sys
 import logging
+from src.utils.data_io import wrap_write_mtx_df, load_mtx_df, wrap_load_mtx_df, read_csv_multichar
 
 
 def run_batch(indirs, outdir, num_reads_total):
@@ -54,52 +60,6 @@ def run_batch(indirs, outdir, num_reads_total):
 
 
 ########################################
-# Read/write utils
-def load_mtx_df(in_f, skip_first=True, give_header=False):
-    df = pd.read_csv(in_f, comment="%", header=None, sep="\t")
-    df.columns = ["Variant", "Cell", "integer"]
-    if skip_first:
-        head = df.iloc[0]
-        df = df.iloc[1:] # Seems to be summary values
-    if give_header and skip_first:
-        return df, head
-    return df
-
-
-def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
-                      prefix=None, columns=('Variant', 'Cell', 'integer')):
-    if prefix is None:
-        prefix="cellSNP.tag"
-    print(prefix)
-    write_mtx_df(ad, outdir, f"{prefix}.AD.mtx", to_rm=to_rm,
-                 columns=columns)
-    write_mtx_df(dp, outdir, f"{prefix}.DP.mtx", to_rm=to_rm,
-                 columns=columns)
-    if oth is not None:
-        write_mtx_df(oth, outdir, f"{prefix}.OTH.mtx", to_rm=to_rm,
-                     columns=columns)
-    return
-
-
-def write_mtx_df(in_mtx, outdir, out_f, to_rm=True, columns=('Variant', 'Cell', 'integer')):
-    header = "%%MatrixMarket matrix coordinate integer general\n%\n"
-    if to_rm:
-        if os.path.exists(join(outdir, out_f)):
-            os.remove(join(outdir, out_f)) #"cellSNP.tag.DP.mtx"))
-    elif os.path.exists(join(outdir, out_f)):
-        logging.info("File already exists. To rerun, use to_rm")
-        return
-    with open(join(outdir, out_f), 'a') as file:
-        file.write(header)
-        full = pd.concat((pd.DataFrame(
-            {columns[0]: in_mtx[columns[0]].max(),
-             columns[1]: in_mtx[columns[1]].max(),
-             columns[2]: in_mtx.shape[0]}, index=["Meta"]),
-                             in_mtx.sort_values([columns[0], columns[1]])), sort=False)
-        full.to_csv(file, sep="\t", header=False, index=False)
-    return
-
-
 def add_suffix_to_labels(in_files, cells_kept=None, out_file=None, sample_names=None):
     """
     :param in_files: list of labels files
@@ -132,51 +92,52 @@ def add_suffix_to_labels(in_files, cells_kept=None, out_file=None, sample_names=
 ########################################
 
 
-def merge_vcf_ids(indirs, outdir=None):
+def merge_vcf_ids(indirs, outdir=None,prefix_vcf_in="cellSNP.base",
+                  prefix_vcf_out="cellSNP.base"):
     """ Merges the variant files called from cellSNP
 
     :param indirs:
     :return:
     """
 
-    curr_vcf = join(indirs[0], "cellSNP.base.vcf")
+    curr_vcf = join(indirs[0], f"{prefix_vcf_in}.vcf")
     if not os.path.exists(curr_vcf):
         if not os.path.exists(curr_vcf + ".gz"):
-            raise ValueError("VCF file not here!")
+            raise ValueError(f"VCF file {curr_vcf} not here!")
         else:
             curr_vcf = curr_vcf + ".gz"
-    variants = pd.read_csv(curr_vcf, skiprows=1, sep="\t")
+
+    variants = read_csv_multichar(curr_vcf, multicomment="##", sep='\t') # pd.read_csv(curr_vcf, skiprows=1, sep="\t")
+    #variants = pd.read_csv(curr_vcf, skiprows=1, sep="\t")
     variants["old " + indirs[0]] = variants.index.values.astype(int) + 1
-    print('variants')
-    print(variants.head())
-    print(variants.tail())
+
     old_variants = {}
     old_variants[indirs[0]] = variants.copy()
     old_variants[indirs[0]].loc[:, "old"] = 0
     old_variants[indirs[0]].loc[:, "old"] = old_variants[
                                                 indirs[0]].index + 1
-    # variants[indirs[0]] = variants.index.values + 1
+
     for ind, val in enumerate(indirs[1:]):
-        curr_vcf = join(val, "cellSNP.base.vcf")
+        curr_vcf = join(val, f"{prefix_vcf_in}.vcf")
         if not os.path.exists(curr_vcf):
             if not os.path.exists(curr_vcf + ".gz"):
-                raise ValueError("VCF file not here!")
+                raise ValueError(f"VCF file {curr_vcf} not here!")
             else:
                 curr_vcf = curr_vcf + ".gz"
-        curr = pd.read_csv(curr_vcf, skiprows=1,
-                           sep="\t")
+        curr = read_csv_multichar(curr_vcf, multicomment="##", sep='\t')
         # curr["old index"] = curr.index.values+1
         # curr[val] = curr.index.values + 1
         curr["old " + val] = curr.index.values.astype(int) + 1
         variants = pd.merge(variants, curr, on=["#CHROM", "POS", "ALT"],
                             how="outer")
 
-        print('variants')
-        print(variants.head())
-        print(variants.tail())
         old_variants[val] = curr.copy()
         old_variants[val]["old"] = 0
         old_variants[val]["old"] = curr.index.values + 1
+
+    print('variants')
+    print(variants.head())
+    print(variants.tail())
 
     # Loop again and map the coordinates
     vars_coords = dict()
@@ -185,13 +146,13 @@ def merge_vcf_ids(indirs, outdir=None):
 
     # what the new index should be.
     for val in indirs:
-        curr_vcf = join(val, "cellSNP.base.vcf")
+        curr_vcf = join(val, f"{prefix_vcf_in}.vcf")
         if not os.path.exists(curr_vcf):
             if not os.path.exists(curr_vcf + ".gz"):
-                raise ValueError("VCF file not here!")
+                raise ValueError(f"VCF file {curr_vcf} not here!")
             else:
                 curr_vcf = curr_vcf + ".gz"
-        curr_vars = pd.read_csv(curr_vcf, skiprows=1, sep="\t")
+        curr_vars = read_csv_multichar(curr_vcf, multicomment="##", sep='\t') # pd.read_csv(curr_vcf, skiprows=1, sep="\t")
         curr_vars["old index"] = curr_vars.index + 1
         curr_vars = pd.merge(curr_vars, full_vars, how="inner",
                              on=["#CHROM", "POS", "ALT"])
@@ -199,19 +160,24 @@ def merge_vcf_ids(indirs, outdir=None):
         vars_coords[val] = curr_vars["new ID"]  # Pandas series
 
     if outdir is not None:
-        variants.to_csv(join(outdir, "cellSNP.base.vcf"), sep='\t',
+        full_vars.to_csv(join(outdir, f"{prefix_vcf_out}.vcf"), sep='\t',
                         index=False)
         for ind, val in enumerate(indirs):
             out_f = join(outdir, f"variant_indices_{ind}.tsv")
             vars_coords[val].index.name = val
-            vars_coords[val].to_csv(out_f,
-                                    sep="\t")  # Use index + header
-    return vars_coords, variants
+            vars_coords[val].to_csv(out_f,sep="\t")  # Use index + header
+    return vars_coords, full_vars
+
 
 
 def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
                               num_cells_total=1000,
-                              is_proportional=False, sample_names=None):
+                              is_proportional=False, sample_names=None,
+                              prefix_tags_in="cellSNP.tag",
+                              prefix_vcf_in="cellSNP.base",
+                              prefix_tags_out="cellSNP.tag",
+                              prefix_vcf_out="cellSNP.base",
+                              prefix_samples_in="cellSNP"):
     """ Subsamples the cellSNP output matrices and combines into a new folder, with metadata saying which cell comes from which sample.
 
     :param indirs:
@@ -227,15 +193,16 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     if outdir in indirs:
         raise ValueError(
             "Outdir is one of the indirs. This cant be. Please change one.")
-    # Count number of cells first
+
+    # 1. Merge VCF files (union of them) and save new indices
+    vars_coords, variants = merge_vcf_ids(indirs, outdir=outdir,
+                                          prefix_vcf_in=prefix_vcf_in,
+                                          prefix_vcf_out=prefix_vcf_out)
+    # 2. Count the number of cells in each input to determine proportions
     cell_count = {}
     for i in indirs:
-        curr_dp_f = join(i, "cellSNP.tag.DP.mtx")
-        curr_ad_f = join(i, "cellSNP.tag.AD.mtx")
-        curr_oth_f = join(i, "cellSNP.tag.OTH.mtx")
-        dp = load_mtx_df(curr_dp_f)
-        ad = load_mtx_df(curr_ad_f)
-        oth = load_mtx_df(curr_oth_f)
+        ad, dp, oth = wrap_load_mtx_df(i, oth_f=True, prefix=prefix_tags_in,
+                     columns=('Variant', 'Cell', 'integer'))
         if len(ad) == 0:
             raise ValueError("The allele matrix is empty. It could have all been filtered out.")
         # cell_count[i] = len(set(dp["Cell"].values))
@@ -246,22 +213,22 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
         cell_count.values())
     print('cell proportion', cell_proportion)
 
-    vars_coords, variants = merge_vcf_ids(indirs, outdir=outdir)
     # ad["Variant"] = vars_coords[ad["Variant"]]
     # dp["Variant"] = vars_coords[dp["Variant"]]
     # oth["Variant"] = vars_coords[oth["Variant"]]
 
+    # 3. For each input, subsample based on either proportion or cell number, and remap the indices.
     ad_l = []
     dp_l = []
     oth_l = []
     cells_kept = dict()
     count = 0
     total_cells = 0
-    for i in indirs:
+    for curr_ind, i in enumerate(indirs):
         print('dir', i)
-        ad_f = join(i, "cellSNP.tag.AD.mtx")
-        dp_f = join(i, "cellSNP.tag.DP.mtx")
-        oth_f = join(i, "cellSNP.tag.OTH.mtx")
+        ad_f = join(i, f"{prefix_tags_in}.AD.mtx")
+        dp_f = join(i, f"{prefix_tags_in}.DP.mtx")
+        oth_f = join(i,f"{prefix_tags_in}.OTH.mtx")
 
         ad, ad_h = load_mtx_df(ad_f, give_header=True)
         dp, dp_h = load_mtx_df(dp_f, give_header=True)
@@ -288,9 +255,9 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
             # Split the number of cells based on num_cells_total and fraction
             print('is_proportional', is_proportional)
             if is_proportional:
-                print('here prop', cell_proportion[count])
+                print('here prop', cell_proportion[curr_ind])
                 cells_per_sample = int(
-                    round(cell_proportion[count] * num_cells_total))
+                    round(cell_proportion[curr_ind] * num_cells_total))
             else:
                 print('non prop', num_cells_total, len(indirs))
                 # Divide evenly
@@ -310,7 +277,10 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
         dp_filt = dp[dp["Cell"].isin(subs)].copy()
         oth_filt = oth[oth["Cell"].isin(subs)].copy()
         count += 1
-        # Merge the samples together
+
+        ##
+        # Create the cell coordinates old-new map.
+        ##
         # Change the cell coordinates to reflect the #cells in
         # across all samples. e.g. if 2 samples, 100  of each are used,
         # then the first cell in sample 2 will have int coordinate 101
@@ -328,6 +298,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
         oth_filt["Cell"] = oth_filt["Cell"].map(cell_coords_map)
         print('ad_filt after map')
         print(ad_filt["Cell"])
+
         # Change the variant coordinates as well after
         ad_filt["Variant"] = ad_filt["Variant"].map(
             vars_coords[i].to_dict())
@@ -336,13 +307,12 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
         oth_filt["Variant"] = oth_filt["Variant"].map(
             vars_coords[i].to_dict())
 
-        # merging with merge_vcf_ids above
-        # subsample_d["cell"].append(set(cell_coords_map.values()))
 
         cells_kept[i] = cell_coords_map
         ad_l.append(ad_filt)
         dp_l.append(dp_filt)
         oth_l.append(oth_filt)
+
 
     # # Since these are filtered, we have to remap again in case
     # # Some variants were removed.
@@ -360,18 +330,23 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     #     dp_l[ind]["Variant"] = dp_l[ind]["Variant"].map(new_vars_map).astype(int)
     #     oth_l[ind]["Variant"] = oth_l[ind]["Variant"].map(new_vars_map).astype(int)
 
-    # For each list of dataframes, merge and save
+    ####
+    # 5. Merge the dataframe matrices
+    ####
     ad_full = pd.concat(ad_l, axis=0)
     print('ad_full')
     print(ad_full.head())
     dp_full = pd.concat(dp_l)
     oth_full = pd.concat(oth_l)
 
+    ####
+    # . Save the matrices and the labels
+    ####
     # Save the order of IDs and the cell maps
-
     # Save the pseudo matrices
     # Need to also add in a row tha is max var, max cell, number of entries
-    wrap_write_mtx_df(outdir, ad_full, dp_full, oth=oth_full, to_rm=True)
+    wrap_write_mtx_df(outdir, ad_full, dp_full, oth=oth_full, to_rm=True,
+                      prefix=prefix_tags_out)
 
     # Save cell indices
     for ind, val in enumerate(indirs):
@@ -381,20 +356,12 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
                 curr = f"{curr}\n{k},{cells_kept[val][k]}"
             f.write(curr)
 
-    # # Recopy the cell labels
-    # for ind, val in enumerate(indirs):
-    #     cells = os.path.join(val, "cellSNP.samples.tsv")
-    #     out_f = join(outdir, f"cell_labels_{ind}.txt")
-    #     cmd = f"cp {cells} {out_f}"
-    #     os.system(cmd)
-
-    in_files = [os.path.join(val, "cellSNP.samples.tsv") for val in indirs]
+    in_files = [os.path.join(val, f"{prefix_samples_in}.samples.tsv") for val in indirs]
     logging.info('in_files')
     logging.info(in_files)
     add_suffix_to_labels(in_files, cells_kept,
                          join(outdir, "cell_labels.txt"),
                          sample_names=sample_names)
-
     return
 
 
@@ -403,7 +370,6 @@ def merge_vcf(vcf_files, out_vcf):
     print(cmd)
     os.system(cmd)
     return
-
 
 
 
@@ -420,22 +386,45 @@ def merge_vcf(vcf_files, out_vcf):
 @click.option("--is_prop", default=False, type=click.BOOL)
 @click.option("--num_cells", default=1000)
 @click.option("--samples", default="")
-def main(outdir, indirs, is_prop, num_cells, samples):
+@click.option("--prefix_in", default="")
+@click.option("--prefix_out", default="")
+@click.option("--prefix_tags_in", default="cellSNP.tag")
+@click.option("--prefix_vcf_in", default="cellSNP.base")
+@click.option("--prefix_tags_out", default="cellSNP.tag")
+@click.option("--prefix_vcf_out", default="cellSNP.base")
+@click.option("--prefix_samples_in", default="cellSNP")
+def main(outdir, indirs, is_prop, num_cells, samples,prefix_in,prefix_out,
+         prefix_tags_in, prefix_vcf_in, prefix_tags_out, prefix_vcf_out,
+         prefix_samples_in):
     logging.basicConfig(level=logging.DEBUG)
     logging.info('samples')
     logging.info(samples)
     logging.info(type(samples))
     if samples != "":
-        #exec(f"samples={samples}")
         samples = samples.split(',')
     if samples == []:
         samples=None
-
     logging.info(type(samples))
+
+    # Precedence of prefix if prefix_in and/or prefix_out are set
+    if prefix_in != "":
+        prefix_tags_in = prefix_in,
+        prefix_vcf_in = prefix_in
+        prefix_samples_in = prefix_in
+    if prefix_out != "":
+        prefix_tags_out = prefix_out
+        prefix_vcf_out = prefix_out
+
+
     subsample_sparse_matrices(outdir, indirs,
                               num_cells_total=num_cells,
                               is_proportional=is_prop,
-                              cell_subsample=None, sample_names=samples)
+                              cell_subsample=-1, sample_names=samples,
+                              prefix_tags_in=prefix_tags_in,
+                              prefix_vcf_in=prefix_vcf_in,
+                              prefix_tags_out=prefix_tags_out,
+                              prefix_vcf_out=prefix_vcf_out,
+                              prefix_samples_in=prefix_samples_in)
     return
 
 

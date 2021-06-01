@@ -158,6 +158,7 @@ rule chrM_cellSNP:
         exclFLAG=772 # Read unmapped, not primary alignment, read fails platform qc. Default minMapq is 20
     shell: "cellsnp-lite -s {input.bam_f} --exclFLAG {params.exclFLAG}  -b {input.barcode_f} -O {output} -p 20 --minMAF {params.minMAF} --minCOUNT {params.minCOUNT} --gzip --chrom chrM --printSkipSNPs --UMItag None --cellTAG CB 2> {log}"#chrM"
 
+
 rule chrM_multiplex_single:
     """Run multiplex not with pseudo-aggregrate, just for one file"""
     input:

@@ -33,10 +33,11 @@ rule all:
         expand("{sample}/outs/possorted_bam.bam", sample=samples_df.index),
         expand("{sample}/outs/web_summary.html", sample=samples_df.index),
         #"aggregate/outs/web_summary.html",
-        "reanalysis/outs/web_summary.html",
+        #"reanalysis/outs/web_summary.html",
         expand("coverage/{sample}_coverage.bw", sample=samples_df.index),
          #expand("coverage/{sample}_coverage.tsv", sample=samples_df.index),
         expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
+        "barcodes_conditionInfo.csv"
 
 
 def results_dir():
@@ -184,6 +185,7 @@ rule aggr_cellranger:
         ref = config["genome_dir"],
     shell: "cellranger-atac aggr --id=aggregate --csv={input.aggr_csv} --localmem=50 --normalize=depth --reference={params.ref}"
 
+
 rule reanalyze:
     input: "aggregate/outs/web_summary.html"
     output: "reanalysis/outs/web_summary.html"
@@ -200,3 +202,17 @@ rule reanalyze:
           --reference={params.ref} --localcores={threads} --localmem=50 \
           --fragments={params.full_in}/fragments.tsv.gz"
           #--params={params.full_out}/aggregation_csv.csv \
+
+from os.path import join
+rule create_barcodes:
+    input: "aggregate/outs/web_summary.html"
+    output: "barcodes_conditionInfo.csv"
+    params:
+        in_dir = lambda wildcards, input: os.path.dirname(input[0])
+    run:
+        samples = pd.read_csv("aggr.csv")
+        samples = samples["library_id"]
+        df = pd.read_csv(join(params.in_dir, "filtered_peak_bc_matrix", "barcodes.tsv"), header=None)
+        print('df', df.head())
+        df["Condition"] = df[0].apply(lambda x: samples[int(x.split("-")[-1])-1])
+        df.to_csv(output[0], header=None, index=False)
