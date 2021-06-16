@@ -3,7 +3,8 @@
 *.p 
 artifacts/
 software/
-output/
+#output/clones/CHIP_april08_2021/ #specific folder that has large data files and needs to be moved to data.
+output/clones/
 *.bam
 *.bai
 *.svg
