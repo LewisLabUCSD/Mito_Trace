@@ -1,2 +1,2 @@
 **Snakemake Report**
-_`Specific_`
+For parameter rules: see `Specific`_
