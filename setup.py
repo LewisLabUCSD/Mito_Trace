@@ -11,8 +11,4 @@ setup(
     install_requires=[
             'Click',
         ],
-    entry_points='''
-            [console_scripts]
-            bam_barcodes=src.bam_barcodes_function:main
-        '''
 )

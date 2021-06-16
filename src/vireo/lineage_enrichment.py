@@ -14,6 +14,8 @@ import click
 import pandas as pd
 import seaborn as sns
 from vireoSNP import Vireo
+import matplotlib as mpl
+mpl.use('Agg')
 #np.set_printoptions(formatter={'float': lambda x: format(x, '.5f')})
 
 #n_clone_list = [3, 5, 10, 20, 40]  # [2,3,4,5,6,7]
@@ -78,49 +80,61 @@ def run_enrichment(df, flt_var="Flt3"):
     enrichment_df.loc[enrichment_df["Fisher -log10p"] == np.infty, "Fisher -log10p"] = 0
     return enrichment_df.transpose()
 
-@click.command()
-@click.argument("donor_indir",  type=click.Path(exists=True))
-@click.argument("clones_indir",  type=click.Path(exists=True))
-@click.argument("outdir",  type=click.Path(exists=True))
-@click.argument("n_donors",type=click.INT)
-@click.argument("n_clone_list",type=click.INT, nargs=-1)
-@click.argument("samples", type=click.STRING)
-@click.option("--plot_ind", default=True)
-def main(donor_indir, clones_indir, outdir, n_donors, n_clone_list, samples, plot_ind):
+
+
+def lineage_enrichment(clones_indir, outdir, n_clone_list, samples, plot_ind):
     #n_clone_list=[20,100]
     samples = samples.split(",")
     all_enrich = {}
     all_enrich_norm ={}
-    for n in range(n_donors):
-        print("Donor N")
-        curr_ad_f = join(donor_indir, f"donor{n}.AD.mtx")
-        curr_dp_f = join(donor_indir, f"donor{n}.DP.mtx")
 
-        curr_ad = mmread(curr_ad_f).tocsc()
-        curr_dp = mmread(curr_dp_f).tocsc()
-        curr_labels = pd.read_csv(join(donor_indir, f"donor{n}.labels.txt"),
-                                  index_col=0)['sample ID']
-        #print(set(curr_labels))
-        #donor4.clones10.modelCA.p
-        in_f= join(clones_indir, f"donor{n}")
-
-        for k in n_clone_list:
-            curr_modelCA = pickle.load(
-                open(f"{in_f}.clones{k}.modelCA.p", "rb"))
-            cell_clusters, sample_labels = extract_clusters_matrix(curr_modelCA,
-                                                            curr_ad,
-                                                            curr_dp,
-                                                            curr_labels)
+    ###############################################################
+    ## Added 06/08
+    ###############################################################
+    for k in n_clone_list:
+        cells_meta = pd.read_csv(join(clones_indir, f"lineage{k}", "cells_meta.tsv"),
+                                 sep='\t')
+        for n, curr_donor in cells_meta.groupby("donor"):
             # Create counts df
-            index = [f"# {x} Cells in Cluster" for x in samples]
-            clust_counts = pd.DataFrame(index=index,
-                                        columns=sample_labels.keys())
-            for curr_k in clust_counts.columns:
-                for s in samples:
-                    clust_counts.at[
-                        f"# {s} Cells in Cluster", curr_k] = (
-                            sample_labels[curr_k]["sample ID"] == s).sum()
-            clust_counts = clust_counts.astype(np.double)
+            clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
+            clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
+
+    ###############################################################
+    ###############################################################
+    ## Replaces this part
+    # for n in range(n_donors):
+    #     print("Donor N")
+    #     curr_ad_f = join(donor_indir, f"donor{n}.AD.mtx")
+    #     curr_dp_f = join(donor_indir, f"donor{n}.DP.mtx")
+    #
+    #     curr_ad = mmread(curr_ad_f).tocsc()
+    #     curr_dp = mmread(curr_dp_f).tocsc()
+    #     curr_labels = pd.read_csv(join(donor_indir, f"donor{n}.labels.txt"),
+    #                               index_col=0)['sample ID']
+    #     #print(set(curr_labels))
+    #     #donor4.clones10.modelCA.p
+    #
+    #     for k in n_clone_list:
+    #         in_f = join(clones_indir, f"donor{n}")
+    #         curr_modelCA = pickle.load(
+    #             open(f"{in_f}.clones{k}.modelCA.p", "rb"))
+    #
+    #         cell_clusters, sample_labels = extract_clusters_matrix(curr_modelCA,
+    #                                                         curr_ad,
+    #                                                         curr_dp,
+    #                                                         curr_labels)
+    #
+    #         # Create counts df
+    #         index = [f"# {x} Cells in Cluster" for x in samples]
+    #         clust_counts = pd.DataFrame(index=index,
+    #                                     columns=sample_labels.keys())
+    #         for curr_k in clust_counts.columns:
+    #             for s in samples:
+    #                 clust_counts.at[
+    #                     f"# {s} Cells in Cluster", curr_k] = (
+    #                         sample_labels[curr_k]["sample ID"] == s).sum()
+            ###############################################################
+            clust_counts = clust_counts.astype('Int64')
             # Get enrichment
             #print('clust_conts')
             #print(clust_counts.index)
@@ -204,6 +218,17 @@ def main(donor_indir, clones_indir, outdir, n_donors, n_clone_list, samples, plo
     # dummy output variable
     with open(join(outdir,".status"), 'w') as f:
         f.write('Completed')
+    return
+
+
+@click.command()
+@click.argument("clones_indir", type=click.Path(exists=True))
+@click.argument("outdir",  type=click.Path(exists=True))
+@click.argument("n_clone_list",type=click.INT, nargs=-1)
+@click.argument("samples", type=click.STRING)
+@click.option("--plot_ind", default=True)
+def main(clones_indir, outdir, n_clone_list, samples, plot_ind):
+    lineage_enrichment(clones_indir, outdir, n_clone_list, samples, plot_ind)
 
     return
 
@@ -226,7 +251,7 @@ def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left',
                borderaxespad=0)
     if f_save is not None:
-        plt.savefig(f_save, bbox_inches='tight')
+        plt.savefig(f_save)#, bbox_inches='tight')
     plt.close()
     return
 
@@ -238,8 +263,7 @@ def create_enrich(clust, fold, enrich, fold_norm=None):
     else:
         enrich_stats = pd.concat(
             (clust, fold, enrich)).transpose()
-    enrich_stats['hypergeom p'] = enrich_stats['hypergeom p'].astype(
-        np.float32)
+    enrich_stats['hypergeom p'] = enrich_stats['hypergeom p'].astype(float)
     enrich_stats['-log10p'] = -np.log10(enrich_stats['hypergeom p'])
     enrich_stats.loc[enrich_stats["-log10p"] == np.infty, "-log10p"] = 0
     return enrich_stats

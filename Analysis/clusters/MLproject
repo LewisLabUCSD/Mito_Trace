@@ -1,0 +1,23 @@
+name: clusters
+#conda_env: conda.yaml
+
+entry_points:
+  results:
+    parameters:
+      parameters_f: {type: path}
+      data_uri: {type: path}
+#      merged_afs: {type: string, default: "merged_afs.csv"}
+#      merged_cov: {type: string, default: "merged_cov.csv"}
+#      variant_df: {type: string, default: "variant_df.csv"}
+#      MTexp_data: {type: string, default: ""}
+#      input_mode: {type: string, default: "mgatk", options: ['mgatk', 'mttrace', 'vireo', 'cassius']}
+#      output_mode: {type: string, default: "cluster", options: ['cluster', 'phylogeny']}
+    command: "python run.py results {parameters_f} --datauri {data_uri}"
+
+  main:
+    parameters:
+      parameters_f: {type: path}
+      input_mode: {type: string, default: "filters"} #, options: ['filters', 'mttrace', 'vireo', 'cassius']}
+
+    command: 'python run.py main {parameters_f} --preprocmode "{input_mode}"'
+

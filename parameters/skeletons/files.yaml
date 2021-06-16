@@ -1,0 +1,10 @@
+pipelines:
+  mttrace:
+    - ""
+    - ""
+  filters:
+    "coverage.txt"
+  multiplex:
+    vcf:
+      suffix: ".vcf"
+

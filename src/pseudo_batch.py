@@ -83,11 +83,13 @@ def add_suffix_to_labels(in_files, cells_kept=None, out_file=None, sample_names=
             inds_to_keep = np.array(list(cells_kept[os.path.dirname(f)].keys()))-1
             curr = curr.iloc[inds_to_keep]
             curr['new index'] = list(cells_kept[os.path.dirname(f)].values())
+            curr["condition"] = sample_names[ind]
         curr = curr.rename({0: "ID"}, axis=1)
         all.append(curr)
     df = pd.concat(all, ignore_index=True)
+
     if out_file is not None:
-        df.to_csv(out_file, index=False)
+        df.to_csv(out_file, index=False, sep='\t')
     return df
 ########################################
 
@@ -128,7 +130,7 @@ def merge_vcf_ids(indirs, outdir=None,prefix_vcf_in="cellSNP.base",
         # curr["old index"] = curr.index.values+1
         # curr[val] = curr.index.values + 1
         curr["old " + val] = curr.index.values.astype(int) + 1
-        variants = pd.merge(variants, curr, on=["#CHROM", "POS", "ALT"],
+        variants = pd.merge(variants, curr, on=["#CHROM", "POS", "REF", "ALT"],
                             how="outer")
 
         old_variants[val] = curr.copy()
@@ -360,7 +362,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     logging.info('in_files')
     logging.info(in_files)
     add_suffix_to_labels(in_files, cells_kept,
-                         join(outdir, "cell_labels.txt"),
+                         join(outdir, "cells_meta.tsv"),
                          sample_names=sample_names)
     return
 

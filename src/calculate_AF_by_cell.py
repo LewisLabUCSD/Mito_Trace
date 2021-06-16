@@ -16,7 +16,7 @@ from sklearn.mixture import GaussianMixture
 import matplotlib as mpl
 mpl.use('Agg')
 import logging
-
+logging.getLogger('matplotlib.font_manager').disabled = True
 
 def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
     """ Cell series where indices are the positions and columns are variant info.
@@ -186,12 +186,14 @@ def filter_positions_cells(sc_coverage, topN=500, min_cells=100, min_reads=100, 
     :return:
     """
     print("Filtering cells")
-
+    print("topN", topN)
     if topN == -1 or topN == 0: ## Keep them all
-        print("topN", topN)
-        topCells = sc_coverage.groupby("Cell").sum(axis=1)["Coverage"].sort_values(ascending=False)
+        topCells = sc_coverage.groupby("Cell").sum()["Coverage"].sort_values(ascending=False)
+
     else:
-        topCells = sc_coverage.groupby("Cell").sum(axis=1)["Coverage"].sort_values(ascending=False)[:topN]
+        topCells = sc_coverage.groupby("Cell").sum()["Coverage"].sort_values(ascending=False)[:topN]
+    print(topCells.shape)
+    print(topCells.head())
     cell_filter = topCells.index.values
 
     #above_thresh = sc_coverage.groupby("Cell").sum()["Coverage"]>coverage_thresh

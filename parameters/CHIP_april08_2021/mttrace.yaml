@@ -6,16 +6,17 @@ mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_apri
 samples: "parameters/CHIP_april08_2021/CHIP_april08_2021.csv"
 
 # mttrace parameters
-results: "data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist"
+results: "output/mttrace/CHIP_april08_2021/MTblacklist"
+
+#results: "data/processed/mttrace/CHIP_april08_2021/MTblacklist"
 #results: "data/processed/mttrace/jan21_2021"
-figures: "figures/mttrace/jan21_2021"
+figures: "figures/mttrace/CHIP_april08_2021"
 
 
 # Genome paths
 genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #
 ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
 mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
-
 
 
 main:
@@ -89,7 +90,7 @@ multiplex:
   mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist" #PBMC_J/mapq_0/PBMC_J.MT.bam"
   sample_csv: "/data2/mito_lineage/parameters/CHIP_april08_2021/CHIP_april08_2021.csv"
 
-  prefix: "CHIP_april08_2021/MTblacklist"
+  #prefix: "CHIP_april08_2021/MTblacklist"
 
 
   samples:
@@ -139,3 +140,7 @@ multiplex:
       #    - 200
       #- 1000
 
+
+annotations:
+  datadir: "/data2/mito_lineage/Analysis/annotation/data/granja_cd34"
+  name: "granja_published_C1.rds"

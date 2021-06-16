@@ -4,14 +4,7 @@
 ## changing directory.
 ####
 import os
-from os.path import abspath, dirname
-from shutil import rmtree
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import pyBigWig
-mpl.use('Agg')
+#mpl.use('Agg')
 import numpy as np
 samples_df = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["out_name"], drop=False)
 samples_df.columns = samples_df.columns.str.strip()

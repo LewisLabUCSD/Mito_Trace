@@ -28,7 +28,6 @@ def get_coverage(bam_dir, pileup_dir, barcode_f, reads_filter=-1, base_qual=0,
     CB_read_200 = set()
 
     for i in CB_read_number:
-
         if CB_read_number[i] >= reads_filter:
             CB_read_200.add(i)
     print(f"Number of cells: {len(CB_read_200)}")

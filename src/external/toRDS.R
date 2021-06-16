@@ -7,9 +7,9 @@ suppressMessages(suppressWarnings(library(data.table)))
 
 options(warn=-1)
 
-if(FALSE){
-  
-}
+# if(FALSE){
+#
+# }
 
 # Explicit import of mgatk output files
 importMito.explicit <- function(Afile, Cfile, Gfile, Tfile,

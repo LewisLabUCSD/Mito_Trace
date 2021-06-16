@@ -504,6 +504,7 @@ class MTExp(Protocol):
             self.mgatk_preprocess()
         else:
             raise ValueError(f"{mode} not implemented for preprocess")
+
     def mgatk_preprocess(self):
         print("loading mgatk variables")
         self.load_mgatk()

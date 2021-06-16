@@ -6,7 +6,7 @@ mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_202
 samples: "parameters/jan21_2021/jan21_2021.csv"
 
 # mttrace parameters
-results: "data/processed/mttrace/jan21_2021/MTblacklist"
+results: "output/mttrace/jan21_2021/MTblacklist"
 #results: "data/processed/mttrace/jan21_2021"
 figures: "figures/mttrace/jan21_2021"
 
@@ -125,7 +125,7 @@ multiplex:
       #    - 200
       #- 1000
 
-  n_clone_list: [5, 10, 20, 40, 100]
+  n_clone_list: [20, 40, 100]
   pre_variant:
     minMAF:
       # - 0

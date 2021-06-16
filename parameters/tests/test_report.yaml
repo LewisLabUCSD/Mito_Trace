@@ -1,0 +1,10 @@
+prefix: "data/processed/tests/workflows"
+p1:
+  - 5
+p2:
+  - "hi"
+  - "hey"
+p3:
+  - "lastnotleast"
+
+#pipeline:

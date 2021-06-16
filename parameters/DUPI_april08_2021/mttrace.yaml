@@ -81,7 +81,7 @@ multiplex:
   mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/DUPI_april08_2021_Croker/MTblacklist" #PBMC_J/mapq_0/PBMC_J.MT.bam"
   sample_csv: "/data2/mito_lineage/parameters/DUPI_april08_2021/DUPI_april08_2021_Croker.csv"
 
-  prefix: "DUPI_april08_2021/MTblacklist"
+  #prefix: "DUPI_april08_2021/MTblacklist"
 
 
   samples:
@@ -97,7 +97,7 @@ multiplex:
     rxn4: "rxn4"
 
 
-  N_DONORS: 5
+  N_DONORS: 8
 
   pseudo_multiplex:
     #Number Reads Total: 10000000

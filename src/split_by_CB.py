@@ -61,21 +61,24 @@ def split(in_f, out_d, to_overwrite=False):
     itr = 0
     # read in upsplit file and loop reads by line
     count = 0
+    v = pysam.set_verbosity(0)
     samfile = pysam.AlignmentFile(unsplit_file, "rb")
+    pysam.set_verbosity(v)
     for read in tqdm(samfile.fetch(until_eof=True)):
         # barcode itr for current read
         try:
             #if "CB" in read.tags():
             CB_itr = read.get_tag('CB')
             # if change in barcode or first line; open new file  
-            if( CB_itr!=CB_hold or itr==0):
+            if (CB_itr!=CB_hold or itr==0):
                 # close previous split file, only if not first read in file
-                if( itr!=0):
+                if (itr!=0):
                     split_file.close()
                 CB_hold = CB_itr
                 itr+=1
                 #print(join(out_dir,"CB_{}.bam".format(CB_itr)))
                 split_file = pysam.AlignmentFile(join(out_dir,"CB_{}.bam".format(CB_itr)), "wb", template=samfile)
+                pysam.set_verbosity(v)
             # write read with same barcode to file
             split_file.write(read)
         except KeyError:

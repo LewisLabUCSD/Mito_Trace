@@ -8,12 +8,10 @@ See README.rst for more details.
 import click
 import os
 
-
 import mlflow
 from mlflow.utils import mlflow_tags
 from mlflow.entities import RunStatus
 from mlflow.utils.logging_utils import eprint
-
 from mlflow.tracking.fluent import _get_experiment_id
 
 
@@ -74,6 +72,26 @@ def _get_or_run(entrypoint, parameters, git_commit, use_cache=True):
     submitted_run = mlflow.run(".", entrypoint, parameters=parameters,
                                use_conda=False)
     return mlflow.tracking.MlflowClient().get_run(submitted_run.run_id)
+
+
+
+def init_mlflow(self, mlflow_tracking_uri=None, run_id=None):
+    """
+    Sets the mlflow tracking uri, and adds run_id if provided.
+    :param mlflow_tracking_uri:
+    :param run_id:
+    :return:
+    """
+    if mlflow_tracking_uri is not None:
+        self.mlflow_tracking_uri = mlflow_tracking_uri
+
+        if run_id is not None:
+            self.run_id = run_id
+
+    mlflow.set_tracking_uri(self.mlflow_tracking_uri)
+    if self.experiment_name is not None:
+        mlflow.set_experiment(self.experiment_name)
+    return
 
 
 # @click.command()

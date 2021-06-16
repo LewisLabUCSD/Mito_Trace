@@ -1,5 +1,5 @@
 import pickle
-from vireoSNP import Vireo
+from vireoSNP import Vireo, vireo_wrap
 from vireoSNP.plot.base_plot import heat_matrix
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,10 +14,14 @@ from src.utils.data_io import wrap_write_mtx_df
 
 def run_single(ad_dp, n):
     _modelCA = Vireo(n_var=ad_dp[0].todense().shape[0],
-                     n_cell=ad_dp[0].todense().shape[1], n_donor=n, n_GT=2,
-                     fix_beta_sum=False, ASE_mode=True)
+                    n_cell=ad_dp[0].todense().shape[1], n_donor=n, n_GT=2,
+                    fix_beta_sum=False, ASE_mode=True)
     _modelCA.set_prior(beta_mu_prior=np.array([[0.01, 0.5]]))
     _modelCA.fit(ad_dp[0], ad_dp[1], min_iter=20, verbose=False)
+    # _modelCA = vireo_wrap(ad_dp[0], ad_dp[1], n_donor=n, learn_GT=True,
+    #                           n_extra_donor=0, ASE_mode=False,
+    #                           fix_beta_sum=False, n_init=50,
+    #                           check_doublet=True, random_seed=42)
     return _modelCA
 
 
@@ -67,10 +71,13 @@ def run_vireo(ad, dp, k, out_f=None, plot_qc=False, n_cores=24,
 ## separate_donors does. Need to merge at some point, but for now
 ## separate_donors for the multiplex, extract_clusters for lineage
 def extract_clusters(modelCA, prob_thresh, doublet_thresh, doublet_prob,
-                     sample_colors,
+                     cells_meta,
                      outdir=None, out_f="lineage"):
     low_conf_cells = np.flatnonzero(doublet_prob > doublet_thresh)
     cell_clusters = dict()
+
+    cells_meta[out_f] = np.nan
+    cells_meta[f"{out_f} "] = np.nan
     # cell_clusters_names = dict()
     for n in range(modelCA.ID_prob.shape[1]):
         # Drop low probability and/or high doublet probability
@@ -79,9 +86,9 @@ def extract_clusters(modelCA, prob_thresh, doublet_thresh, doublet_prob,
         cell_clusters[n] = cell_clusters[n][
             ~(np.isin(cell_clusters[n], low_conf_cells))]
 
-        if sample_colors is not None:
-            curr_sample_colors = sample_colors.iloc[cell_clusters[n]].copy()
-            curr_sample_colors = curr_sample_colors.reset_index()
+        if cells_meta is not None:
+            curr_cells_meta = cells_meta.iloc[cell_clusters[n]].copy()
+            curr_cells_meta = curr_cells_meta.reset_index()
 
         cell_clusters[n] += 1
         # Get their IDs
@@ -90,32 +97,34 @@ def extract_clusters(modelCA, prob_thresh, doublet_thresh, doublet_prob,
             curr_str = "\n".join(cell_clusters[n].astype(str))
             with open(curr_out, "w") as f:
                 f.write(curr_str)
-            if sample_colors is not None:
-                curr_sample_colors.to_csv(
+            if cells_meta is not None:
+                curr_cells_meta.to_csv(
                     join(outdir, f"{out_f}_{n}.labels.txt"))
     return cell_clusters
 
 
-def separate_clones(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
-                    doublet_prob, sample_colors,
+def separate_clones(AD, DP, modelCA, cells_meta, outdir, N_DONORS,
+                    doublet_prob,
                     prob_thresh=0.9, doublet_thresh=0.9):
 
     return
 
 
-def separate_donors(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
-                    doublet_prob, sample_colors,
-                    prob_thresh=0.9, doublet_thresh=0.9):
+def separate_donors(AD, DP, modelCA, cells_meta, outdir,
+                    doublet_prob,
+                    prob_thresh=0.9, doublet_thresh=0.9,
+                    cells_ind_col='new index',
+                    out_name="donor", prefix="",
+                    cells_filt_col=None, cells_filt_val=None, vars_meta=None):
     """Separates the matrices and labels by donor using the multiplex output.
 
     :param AD:
     :param DP:
     :param modelCA:
-    :param sample_labels:
-    :param OUTDIR:
+    :param cells_meta:
+    :param outdir:
     :param N_DONORS:
     :param doublet_prob:
-    :param sample_colors:
     :param prob_thresh:
     :param doublet_thresh:
     :return:
@@ -123,8 +132,16 @@ def separate_donors(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
     low_conf_cells = np.flatnonzero(doublet_prob > doublet_thresh)
     cell_clusters = dict()
 
+    # filter for certain columns
+    if cells_filt_col is not None and cells_filt_val is not None:
+        cells_meta = cells_meta[cells_meta[cells_filt_col]==cells_filt_val]
+    cells_meta = cells_meta.set_index(cells_ind_col)
+    cells_meta[out_name] = np.nan
+    cells_meta[f"{out_name}_index"] = np.nan
     # For each donor, extract their cells for their matrices and labels
-    for n in range(N_DONORS):
+    print('cell meta')
+    print(cells_meta.head())
+    for n in range(modelCA.ID_prob.shape[1]):
         # Drop low probability and/or high doublet probability
         cell_clusters[n] = np.flatnonzero(
             (modelCA.ID_prob[:, n] > prob_thresh))
@@ -132,10 +149,12 @@ def separate_donors(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
             ~(np.isin(cell_clusters[n], low_conf_cells))]
 
         # Get cell labels
-        curr_sample_colors = sample_colors.iloc[cell_clusters[n]].copy()
-        curr_sample_colors = curr_sample_colors.reset_index()
-        curr_sample_labels = sample_labels.iloc[cell_clusters[n]]
+        curr_cells_meta = cells_meta.iloc[cell_clusters[n]].copy()
+        curr_cells_meta = curr_cells_meta.reset_index()
 
+        cells_meta.loc[cell_clusters[n]+1, out_name] = n # df is 1-based index but model is 0-based
+        cells_meta.loc[cell_clusters[n]+1, f"{out_name}_index"] = np.arange(1,len(cell_clusters[n])+1)
+        cells_meta = cells_meta.astype({f"{out_name}_index": "Int64", out_name: "Int64"})
         # Change the index to the sparse matrix index
         curr_ad = pd.DataFrame(
             AD.todense()[:, cell_clusters[n]]).reset_index().melt(
@@ -146,9 +165,15 @@ def separate_donors(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
             id_vars='index', var_name="Cell",
             value_name="Count").rename({"index": "Position"}, axis=1)
         # Drop 0s to make sparse
+        curr_dp = curr_dp.loc[~(curr_ad["Count"] == 0)]
         curr_ad = curr_ad.loc[~(curr_ad["Count"] == 0)]
-        curr_dp = curr_dp.loc[~(curr_dp["Count"] == 0)]
-
+        if vars_meta is not None:
+            print(np.sort(curr_dp["Position"].unique())-1)
+            curr_vars_meta = vars_meta.iloc[np.sort(curr_dp["Position"].unique())-1]
+        #curr_dp_pos = curr_dp["Position"].unique()
+        #curr_dp_cell = curr_dp["Cell"].unique()
+        #curr_ad_pos = curr_ad["Position"].unique()
+        #curr_ad_cell = curr_ad["Cell"].unique()
         # Update the cell and position maps, making it 1-based
         curr_cell_map = {val: ind + 1 for ind, val in
                          enumerate(np.sort(curr_dp["Cell"].unique()))}
@@ -160,32 +185,37 @@ def separate_donors(AD, DP, modelCA, sample_labels, OUTDIR, N_DONORS,
         curr_dp["Cell"] = curr_dp["Cell"].map(curr_cell_map)
         curr_dp["Position"] = curr_dp["Position"].map(curr_pos_map)
 
-        print(f"Donor {n}: {len(cell_clusters[n])} cells ")
+        print(f"{out_name} {n}: {len(cell_clusters[n])} cells ")
         print(curr_dp.shape)
         print(curr_ad.shape)
 
         cell_clusters[n] += 1
         # Get their IDs
-        if OUTDIR != "" and exists(OUTDIR):
-            curr_out = join(OUTDIR, f"donor{n}_cells.txt")
+        if outdir != "" and exists(outdir):
+            curr_out = join(outdir, f"{prefix}{out_name}{n}_cells.txt")
             curr_str = "\n".join(cell_clusters[n].astype(str))
             with open(curr_out, "w") as f:
                 f.write(curr_str)
-            curr_sample_colors.to_csv(
-                join(OUTDIR, f"donor{n}.labels.txt"))
-            curr_sample_labels.to_csv(
-                join(OUTDIR, f"cell_labels.donor{n}.txt"))
+            curr_cells_meta.to_csv(
+                join(outdir, f"{prefix}{out_name}{n}.labels.txt"))
+            curr_cells_meta.to_csv(
+                join(outdir, f"cell_labels.{prefix}{out_name}{n}.txt"))
             print('curr_ad', curr_ad.head())
-            wrap_write_mtx_df(OUTDIR, curr_ad, curr_dp,
-                              oth=None, to_rm=True, prefix=f"donor{n}",
+            wrap_write_mtx_df(outdir, curr_ad, curr_dp,
+                              oth=None, to_rm=True, prefix=f"{prefix}{out_name}{n}",
                               columns=('Position', 'Cell', 'Count'))
-    if OUTDIR != "":
+            if vars_meta is not None:
+                curr_vars_meta.to_csv(join(outdir, f"{prefix}{out_name}{n}.vcf"), sep='\t', index   =False)
+    print('cell meta')
+    print(cells_meta.head())
+    if outdir != "" and exists(outdir):
+        cells_meta.to_csv(join(outdir, f"{prefix}cells_meta.tsv"),sep='\t')
         AF_SNPs = np.sum(
             modelCA.GT_prob * np.expand_dims(modelCA.beta_mu, 1),
             axis=2)
         pd.DataFrame(AF_SNPs, columns=[f"Cluster {x}" for x in
                                        range(AF_SNPs.shape[1])]).to_csv(
-            join(OUTDIR, "AF_SNPs.csv"), index=False)
+            join(outdir, "AF_SNPs.csv"), index=False)
     return cell_clusters
 
 #######################################################################
@@ -203,11 +233,13 @@ def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
                                                          columns=[
                                                              "Doublet"])),
                                  axis=1)
+
+        #curr = clust_df.sample(n=min(1000, clust_df.shape[0]))
         ch.plot_cluster(clust_df, cmap='Oranges', alpha=0.8,
                         to_row_clust=True, to_col_clust=False,
                         row_meta=labels, to_legend=True,
-                        white_name=None)
-        plt.suptitle("Cell-cluster probability")
+                        white_name=None, yticklabels=False)
+        plt.suptitle(f"Cell-cluster probability {clust_df.shape[0]}\nmax 1000 cells shown")
         plt.savefig(out_f + ".labels.png")  # plt.close()
 
 
@@ -224,6 +256,7 @@ def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
     #plt.subplot(1, 2, 2)
     AF_SNPs = np.sum(
         modelCA.GT_prob * np.expand_dims(modelCA.beta_mu, 1), axis=2)
+    print("AF_SNPs shape", AF_SNPs.shape)
 
     ch.plot_cluster(pd.DataFrame(AF_SNPs), cmap='Blues', alpha=0.8,
                     to_row_clust=True, to_col_clust=True,
@@ -235,7 +268,7 @@ def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
     return None
 
 
-def run_elbo(ad, dp, out_f, sample_colors,
+def run_elbo(ad, dp, out_f, cells_meta,
              n_clone_list=None, save_clusters=True,
              labels=None, rerun_model=True, n_cores=16, n_initials=50):
     """ Sweep n-clones parameter in vireo and plot the ELBO
@@ -243,7 +276,7 @@ def run_elbo(ad, dp, out_f, sample_colors,
     :param ad: Dense allele depth matrix
     :param dp: Dense total depth matrix
     :param out_f: Output prefix to save, include directory
-    :param sample_colors: Labels
+    :param cells_meta: Labels
     :param n_clone_list:
     :param save_clusters:
     :param labels:
@@ -278,16 +311,24 @@ def run_elbo(ad, dp, out_f, sample_colors,
         # Run plot_vireo_out and extract the cell IDs as well
         if save_clusters and not (out_f == ""):
             print('saving lineage tree for file:', curr_lineage_f)
-            doublet_prob = \
-            modelCA.predict_doublet(ad, dp, update_GT=False,
-                                    update_ID=False)[0].sum(axis=1)
+            try:
+                doublet_prob = \
+                modelCA.predict_doublet(AD, DP, update_GT=False,
+                                        update_ID=False)[0].sum(axis=1)
+            except AttributeError:  # New version of Vireo 2021
+                doublet_prob = \
+                vireoSNP.utils.vireo_doublet.predict_doublet(modelCA,
+                                                             AD, DP,
+                                                             update_GT=False,
+                                                             update_ID=False)[
+                    0].sum(axis=1)
             plot_vireo_out(modelCA, out_f=curr_lineage_f, to_sqrt=True,
                            labels=labels, doublet_prob=doublet_prob)
-
-            extract_clusters(modelCA, prob_thresh=0.9,
-                             doublet_thresh=0.9, doublet_prob=doublet_prob,
-                             sample_colors=sample_colors,
-                             outdir=out_f, out_f="lineage")
+            separate_donors(ad, dp, modelCA, cells_meta, out_f,
+                            doublet_prob, prob_thresh=0.9,
+                            doublet_thresh=0.9,
+                            cells_ind_col='donor index',
+                            out_name="lineage")
 
     print('_ELBO_mat', _ELBO_mat)
     if len(_ELBO_mat) > 1:
@@ -319,6 +360,7 @@ def run_lineage(n, indir, outdir, n_clone_list=(5, 10, 20, 40, 100),
     :return:
     """
     ##TODO: change the import names in the old scripts
+    cells_meta = join(indir, f"cells_meta.tsv")
     curr_ad_f = join(indir, f"donor{n}.AD.mtx")
     curr_dp_f = join(indir, f"donor{n}.DP.mtx")
     curr_labels_f = join(indir, f"donor{n}.labels.txt")
@@ -328,10 +370,12 @@ def run_lineage(n, indir, outdir, n_clone_list=(5, 10, 20, 40, 100),
     curr_ad = mmread(curr_ad_f).tocsc()
     curr_dp = mmread(curr_dp_f).tocsc()
     curr_labels = pd.read_csv(curr_labels_f, index_col=0)
-    curr_sample_labels = pd.read_csv(curr_labels_rawID, index_col=0)
-    print(curr_sample_labels.head())
+    curr_cells_meta = pd.read_csv(curr_labels_rawID, index_col=0)
+    cells_meta = pd.read_csv(cells_meta, sep='\t')
+    print(curr_cells_meta.head())
     run_elbo(curr_ad, curr_dp, join(outdir, f"donor{n}"), n_clone_list=n_clone_list,
              save_clusters=True, labels=curr_labels[["sample ID"]], rerun_model=rerun_model,
-             sample_colors=curr_sample_labels)
+             cells_meta=curr_cells_meta)
     return
+
 

@@ -10,7 +10,7 @@ import numpy as np
 import sys
 import click
 import matplotlib as mpl
-mpl.use('agg')
+#mpl.use('agg')
 
 
 def fill_df_coverage(df, pileup_dir, is_par=False):
@@ -81,8 +81,10 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     # else:
     #     sc_coverage = sc_coverage.loc[
     #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
-    f=plt.figure()
-    sns.heatmap(sc_coverage) #, row_cluster=False, col_cluster=False)
+    f, ax=plt.subplots()
+    print('sc_coverage')
+    print(sc_coverage.head())
+    sns.heatmap(sc_coverage, ax=ax) #, row_cluster=False, col_cluster=False)
     plt.title(f"Number of reads at each MT position in {top_n} cells")
     #g.ax_heatmap.set_title(f"Number of reads at each MT position by the top {top_n} covered cells")
     #g.ax_heatmap.set_yticks([])
@@ -92,6 +94,7 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     plt.ylabel("Cell")
     #g.ax_heatmap.set_ylabel("Cell")
     plt.savefig(savefig_f)
+    plt.close()
 
     log2_sc_coverage = np.log2(sc_coverage + 1)
     if not top_n == 0:
@@ -99,7 +102,8 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
             log2_sc_coverage.sum(axis=1).sort_values(ascending=False)[
             :top_n].index]
 
-    sns.heatmap(sc_coverage)
+    f, ax = plt.subplots()
+    sns.heatmap(log2_sc_coverage, ax=ax)
     plt.title(f"Log2 Number of reads at each MT position in {top_n} cells")
     #g = sns.clustermap(log2_sc_coverage, col_cluster=False)
     #g.ax_heatmap.set_title(f"Log2 number of reads at each MT position in {top_n} cells")

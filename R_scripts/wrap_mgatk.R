@@ -61,7 +61,7 @@ if (is_strand == "TRUE"){
 } else{
   is_strand<-FALSE
 }
-#wrap_to_seurat(folder, name, is_strand)
+wrap_to_seurat(folder, name, is_strand)
 SE_f <- file.path(folder, paste0(name, ".rds"))
 print("SE_f")
 print(SE_f)
