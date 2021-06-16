@@ -1,4 +1,4 @@
-prefix: "data/processed/tests/workflows"
+prefix: "output/tests/workflows"
 p1:
   - 5
 p2:

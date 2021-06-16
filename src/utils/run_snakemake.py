@@ -13,9 +13,19 @@ from src.utils.paramspace import Paramspace
 import mlflow
 import src.mlflow.mlflow_utils as mu
 from icecream import ic
+import subprocess
 
-def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master"):
+
+def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master",
+            branch='workflow_results'):
     assert(len(paths)>0)
+
+    # check if branch already made. 0 returncode means it is there
+    is_branch = subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"], universal_newlines=True).returncode
+    if is_branch==0:
+        os.system(f"git checkout {branch}")
+    else:
+        os.system(f"git checkout -b {branch}")
     for p in paths:
         cmd = f"git add {p}"
         os.system(cmd)
@@ -139,7 +149,7 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
     os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
     os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
     if to_git:
-        run_git([outdir], commit_msg=f"Ran pipeline for {smkfile}, {configfile} saved to {outdir}")
+        run_git([outdir], commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]")
     write_config_file(join(outdir, "params.outcfg"),config)
 
 
