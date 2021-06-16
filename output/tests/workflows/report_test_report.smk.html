@@ -401,7 +401,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://snakemake.readthedocs.io">Snakemake Report</a>
       <div class="nav navbar-nav navbar-center" id="brand"></div>
       <ul class="nav navbar-nav navbar-right" style="padding-right: 10px;">
-        <li class="text-white">Wed Jun 16 23:36:57 2021 UTC</li>
+        <li class="text-white">Wed Jun 16 23:53:03 2021 UTC</li>
         <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 6.4.1</a></li>
       </ul>
       <!--<input id="searchbar" class="invisible form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
@@ -1134,29 +1134,29 @@ if (typeof module !== 'undefined') {
 
     <script id="results">
       var results = {
-            "output/tests/workflows/01/p1_5__p2_hi/02/p3_lastnotleast.txt": {
+            "output/tests/workflows/01/p1_10__p2_hiya/02/p3_lastnotleast.txt": {
               name: "p3_lastnotleast.txt",
               filename: "p3_lastnotleast.txt",
-              path: "output/tests/workflows/01/p1_5__p2_hi/02/p3_lastnotleast.txt",
+              path: "output/tests/workflows/01/p1_10__p2_hiya/02/p3_lastnotleast.txt",
               size: "0 Bytes",
               caption: "<p><strong>Rule 2</strong></p>\n",
               job_properties: {
                 rule: "t02",
-                wildcards: "res=output/tests/workflows, p1=5, p2=hi, p3=lastnotleast",
+                wildcards: "res=output/tests/workflows, p1=10, p2=hiya, p3=lastnotleast",
                 params: "p3=lastnotleast, p4=p4"
               },
               data_uri: function() { return "data:text/plain;charset=utf8;filename=p3_lastnotleast.txt;base64,"; },
               thumbnail_uri: function() { return null; }
             },
-            "output/tests/workflows/01/p1_5__p2_hey/02/p3_lastnotleast.txt": {
+            "output/tests/workflows/01/p1_10__p2_heyy/02/p3_lastnotleast.txt": {
               name: "p3_lastnotleast.txt",
               filename: "p3_lastnotleast.txt",
-              path: "output/tests/workflows/01/p1_5__p2_hey/02/p3_lastnotleast.txt",
+              path: "output/tests/workflows/01/p1_10__p2_heyy/02/p3_lastnotleast.txt",
               size: "0 Bytes",
               caption: "<p><strong>Rule 2</strong></p>\n",
               job_properties: {
                 rule: "t02",
-                wildcards: "res=output/tests/workflows, p1=5, p2=hey, p3=lastnotleast",
+                wildcards: "res=output/tests/workflows, p1=10, p2=heyy, p3=lastnotleast",
                 params: "p3=lastnotleast, p4=p4"
               },
               data_uri: function() { return "data:text/plain;charset=utf8;filename=p3_lastnotleast.txt;base64,"; },
@@ -1171,8 +1171,8 @@ if (typeof module !== 'undefined') {
       var categories = {
         "0b85c4d8a4bac636c5e8f131ae39049132d237fce96defe8403896886db04a14": {
           "f97e9da0e3b879f0a9df979ae260a5f7e1371edb127c1862d4f861981166cdc1": [
-            "output/tests/workflows/01/p1_5__p2_hi/02/p3_lastnotleast.txt",
-            "output/tests/workflows/01/p1_5__p2_hey/02/p3_lastnotleast.txt"
+            "output/tests/workflows/01/p1_10__p2_hiya/02/p3_lastnotleast.txt",
+            "output/tests/workflows/01/p1_10__p2_heyy/02/p3_lastnotleast.txt"
           ]
         }
       };
@@ -1429,7 +1429,7 @@ if (typeof module !== 'undefined') {
       var runtimes_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Runtimes of jobs.",
-        "data": {"values": [{'rule': 't01', 'runtime': 0.0}, {'rule': 't01', 'runtime': 0.0}, {'rule': 't02', 'runtime': 0.0}, {'rule': 't02', 'runtime': 0.0}]},
+        "data": {"values": [{'rule': 't01', 'runtime': 0.0}, {'rule': 't01', 'runtime': 1.0}, {'rule': 't02', 'runtime': 0.0}, {'rule': 't02', 'runtime': 0.0}]},
         "mark": "point",
         "encoding": {
           "x": {"field": "runtime", "type": "quantitative",
@@ -1446,7 +1446,7 @@ if (typeof module !== 'undefined') {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Timeline of jobs.",
         "data": {
-          "values": [{'rule': 't01', 'starttime': '2021-06-16T23:13:08', 'endtime': '2021-06-16T23:13:08'}, {'rule': 't01', 'starttime': '2021-06-16T23:13:08', 'endtime': '2021-06-16T23:13:08'}, {'rule': 't02', 'starttime': '2021-06-16T23:13:08', 'endtime': '2021-06-16T23:13:08'}, {'rule': 't02', 'starttime': '2021-06-16T23:13:08', 'endtime': '2021-06-16T23:13:08'}]
+          "values": [{'rule': 't01', 'starttime': '2021-06-16T23:53:02', 'endtime': '2021-06-16T23:53:02'}, {'rule': 't01', 'starttime': '2021-06-16T23:53:02', 'endtime': '2021-06-16T23:53:03'}, {'rule': 't02', 'starttime': '2021-06-16T23:53:02', 'endtime': '2021-06-16T23:53:02'}, {'rule': 't02', 'starttime': '2021-06-16T23:53:03', 'endtime': '2021-06-16T23:53:03'}]
         },
         "mark": "point",
         "encoding": {
