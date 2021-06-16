@@ -1,8 +1,0 @@
-p1:
-- 5
-p2:
-- hi
-- hey
-p3:
-- lastnotleast
-prefix: output/tests/workflows
