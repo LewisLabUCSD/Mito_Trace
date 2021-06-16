@@ -100,7 +100,8 @@ def check_input(config, files_config, curr_p, git_commit=None,
 @click.option("--dryrun", default=False)
 @click.option("--mlflow", default=False)
 @click.option("--forcetargets", default=False)
-def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetargets):
+@click.option("--to_gitpush", default=False)
+def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetargets, to_gitpush):
     """ Runs snakemake and/or mlflow pipeline
 
 
@@ -149,7 +150,8 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
     os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
     os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
     if to_git:
-        run_git([outdir], commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]")
+        run_git([outdir], commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
+                to_push=to_gitpush)
     write_config_file(join(outdir, "params.outcfg"),config)
 
 
