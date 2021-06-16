@@ -1,2 +1,2 @@
 **Snakemake Report**
-_`Rule_`
+_`Specific_`
