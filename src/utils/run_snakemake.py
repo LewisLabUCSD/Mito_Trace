@@ -32,7 +32,7 @@ def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master"
     cmd = f'git commit -m "{commit_msg}"'
     os.system(cmd)
     if to_push:
-        cmd = f'git push {src} {remote}'
+        cmd = f'git push -u {src} {branch}'
         os.system(cmd)
     return
 

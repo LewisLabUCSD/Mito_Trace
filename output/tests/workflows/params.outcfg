@@ -1,8 +1,8 @@
 p1:
-- 5
+- 10
 p2:
-- hi
-- hey
+- hiya
+- heyy
 p3:
 - lastnotleast
 prefix: output/tests/workflows
