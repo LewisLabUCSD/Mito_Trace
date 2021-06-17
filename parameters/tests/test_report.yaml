@@ -1,9 +1,9 @@
 prefix: "output/tests/workflows"
 p1:
-  - 5
+  - 10
 p2:
-  - "hi"
-  - "hey"
+  - "hiya"
+  - "heyy"
 p3:
   - "lastnotleast"
 
