@@ -1,6 +1,7 @@
 import pickle
 from vireoSNP import Vireo, vireo_wrap
 from vireoSNP.plot.base_plot import heat_matrix
+import vireoSNP
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -10,7 +11,7 @@ from os.path import join, exists
 from joblib import Parallel, delayed
 from scipy.io import mmread
 from src.utils.data_io import wrap_write_mtx_df
-
+from icecream import ic
 
 def run_single(ad_dp, n):
     _modelCA = Vireo(n_var=ad_dp[0].todense().shape[0],
@@ -118,6 +119,137 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
                     cells_filt_col=None, cells_filt_val=None, vars_meta=None):
     """Separates the matrices and labels by donor using the multiplex output.
 
+    :param AD: sparse matrix, position-by-cell.
+    :param DP: sparse matrix, position-by-cell.
+    :param modelCA:
+    :param cells_meta:
+    :param outdir:
+    :param N_DONORS:
+    :param doublet_prob:
+    :param prob_thresh:
+    :param doublet_thresh:
+    :return:
+    """
+    low_conf_cells = np.flatnonzero(doublet_prob > doublet_thresh)
+    cell_clusters = dict()
+    ic("Before filtering")
+    ic(cells_meta.shape)
+
+    # filter for certain columns
+    if cells_filt_col is not None and cells_filt_val is not None:
+        cells_meta = cells_meta[cells_meta[cells_filt_col]==cells_filt_val]
+    cells_meta = cells_meta.reset_index()
+    ic("After filtering")
+    ic(cells_meta.shape)
+    allAD = pd.DataFrame(AD.todense())
+    allDP = pd.DataFrame(DP.todense())
+    ic(allAD.shape)
+    #ic(allAD.head())
+
+    #assert((min(cells_meta.index)==1))
+    cells_meta[out_name] = np.nan
+    cells_meta[f"{out_name}_index"] = np.nan # Add additional index
+    # For each donor, extract their cells for their matrices and labels
+    # print('cell meta')
+    # print(cells_meta.head())
+    for n in range(modelCA.ID_prob.shape[1]):
+        # Drop low probability and high doublet probability
+        cell_clusters[n] = np.sort(np.flatnonzero(
+            (modelCA.ID_prob[:, n] > prob_thresh)))
+        cell_clusters[n] = np.sort(cell_clusters[n][
+            ~(np.isin(cell_clusters[n], low_conf_cells))])
+
+        ## Extract specific AD+DP indices and re-index to 1-based
+        # 1. make dense 0-based and take only the cluster indices
+        curr_ad = allAD.loc[:, cell_clusters[n]].reset_index().melt(
+            id_vars='index', var_name="Cell",
+            value_name="Count").rename({"index": "Position"}, axis=1)
+
+        curr_dp = allDP.loc[:, cell_clusters[n]].reset_index().melt(
+            id_vars='index', var_name="Cell",
+            value_name="Count").rename({"index": "Position"}, axis=1)
+
+        #ic(curr_dp["Cell"].unique())
+
+        # 2. Then drop indices with AD=0 to make sparse to remove positions/cells.
+        #    This may remove some cells
+        curr_dp = curr_dp.loc[~(curr_ad["Count"] == 0)]
+        curr_ad = curr_ad.loc[~(curr_ad["Count"] == 0)]
+
+        #i for ind, valcell_clusters[n]
+        # 3. Assign cells_meta labels and indices based on curr_dp 0-based indices.
+
+        # If any labels were removed from step 2, remove
+        keep_inds = np.sort(list(set(cell_clusters[n]).intersection((set(curr_ad["Cell"].values)))))
+        ic(len(curr_dp["Cell"].unique())-len(keep_inds))
+        ic(cells_meta.shape)
+        cells_meta.loc[keep_inds, out_name] = n # df is 1-based index but model is 0-based
+        cells_meta.loc[keep_inds, f"{out_name}_index"] = np.arange(1,len(keep_inds)+1) # Set new index to 1-based
+        cells_meta = cells_meta.astype({f"{out_name}_index": "Int64", out_name: "Int64"})
+
+
+        # 4. Update the cell and position maps using dp, making it 1-based
+        #curr_cell_map = {val-1: val for val in cells_meta[f"{out_name}_index"].values} #1-based to 0-based
+        curr_cell_map = {val: ind + 1 for ind, val in
+                         enumerate(np.sort(curr_dp["Cell"].unique()))}
+        curr_pos_map = {val: ind + 1 for ind, val in enumerate(
+            np.sort(curr_dp["Position"].unique()))}
+        curr_ad["Cell"] = curr_ad["Cell"].map(curr_cell_map)
+        curr_ad["Position"] = curr_ad["Position"].map(curr_pos_map)
+        curr_dp["Cell"] = curr_dp["Cell"].map(curr_cell_map)
+        curr_dp["Position"] = curr_dp["Position"].map(curr_pos_map)
+
+        #ic(curr_cell_map)
+        # 5. Get only the passed variants
+        if vars_meta is not None:
+            curr_vars_meta = vars_meta.iloc[list(curr_pos_map.keys())]
+
+        print(f"{out_name} {n}: {len(cell_clusters[n])} cells ")
+        print(curr_dp.shape)
+        print(curr_ad.shape)
+
+        # Get cell labels for specific lineages
+        curr_cells_meta = cells_meta.loc[keep_inds].copy()
+        curr_cells_meta = curr_cells_meta.reset_index(drop=True) #make it 0-based
+        # Get their IDs
+        if outdir != "" and exists(outdir):
+            curr_out = join(outdir, f"{prefix}{out_name}{n}_cells.txt")
+            curr_str = "\n".join(cell_clusters[n].astype(str))
+            with open(curr_out, "w") as f:
+                f.write(curr_str)
+            curr_cells_meta.to_csv(
+                join(outdir, f"{prefix}{out_name}{n}.labels.txt"))
+            curr_cells_meta.to_csv(
+                join(outdir, f"cell_labels.{prefix}{out_name}{n}.txt"))
+            #print('curr_ad', curr_ad.head())
+            wrap_write_mtx_df(outdir, curr_ad, curr_dp,
+                              oth=None, to_rm=True, prefix=f"{prefix}{out_name}{n}",
+                              columns=('Position', 'Cell', 'Count'))
+            if vars_meta is not None:
+                curr_vars_meta.to_csv(join(outdir, f"{prefix}{out_name}{n}.vcf"), sep='\t', index   =False)
+
+    # cells_meta = cells_meta.sort_values(f"{out_name}_index")
+    # cells_meta = cells_meta.set_index(
+    #     cells_ind_col)  # Set to original col1-based index
+    if outdir != "" and exists(outdir):
+        cells_meta.to_csv(join(outdir, f"{prefix}cells_meta.tsv"),sep='\t', index=False)
+        AF_SNPs = np.sum(
+            modelCA.GT_prob * np.expand_dims(modelCA.beta_mu, 1),
+            axis=2)
+        pd.DataFrame(AF_SNPs, columns=[f"Cluster {x}" for x in
+                                       range(AF_SNPs.shape[1])]).to_csv(
+            join(outdir, "AF_SNPs.csv"), index=False)
+    return cell_clusters
+
+
+def old_separate_donors(AD, DP, modelCA, cells_meta, outdir,
+                    doublet_prob,
+                    prob_thresh=0.9, doublet_thresh=0.9,
+                    cells_ind_col='new index',
+                    out_name="donor", prefix="",
+                    cells_filt_col=None, cells_filt_val=None, vars_meta=None):
+    """Separates the matrices and labels by donor using the multiplex output.
+
     :param AD:
     :param DP:
     :param modelCA:
@@ -135,27 +267,27 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
     # filter for certain columns
     if cells_filt_col is not None and cells_filt_val is not None:
         cells_meta = cells_meta[cells_meta[cells_filt_col]==cells_filt_val]
-    cells_meta = cells_meta.set_index(cells_ind_col)
+    cells_meta = cells_meta.set_index(cells_ind_col) # Set to 1-based index from the col
+    assert((min(cells_meta.index)==1))
     cells_meta[out_name] = np.nan
-    cells_meta[f"{out_name}_index"] = np.nan
+    cells_meta[f"{out_name}_index"] = np.nan # Add additional index
     # For each donor, extract their cells for their matrices and labels
-    print('cell meta')
-    print(cells_meta.head())
+    # print('cell meta')
+    # print(cells_meta.head())
     for n in range(modelCA.ID_prob.shape[1]):
         # Drop low probability and/or high doublet probability
-        cell_clusters[n] = np.flatnonzero(
-            (modelCA.ID_prob[:, n] > prob_thresh))
-        cell_clusters[n] = cell_clusters[n][
-            ~(np.isin(cell_clusters[n], low_conf_cells))]
-
-        # Get cell labels
-        curr_cells_meta = cells_meta.iloc[cell_clusters[n]].copy()
-        curr_cells_meta = curr_cells_meta.reset_index()
+        cell_clusters[n] = np.sort(np.flatnonzero(
+            (modelCA.ID_prob[:, n] > prob_thresh)))
+        cell_clusters[n] = np.sort(cell_clusters[n][
+            ~(np.isin(cell_clusters[n], low_conf_cells))])
 
         cells_meta.loc[cell_clusters[n]+1, out_name] = n # df is 1-based index but model is 0-based
-        cells_meta.loc[cell_clusters[n]+1, f"{out_name}_index"] = np.arange(1,len(cell_clusters[n])+1)
+        cells_meta.loc[cell_clusters[n]+1, f"{out_name}_index"] = np.arange(1,len(cell_clusters[n])+1) # Set new index to 1-based
         cells_meta = cells_meta.astype({f"{out_name}_index": "Int64", out_name: "Int64"})
-        # Change the index to the sparse matrix index
+        cells_meta = cells_meta.sort_values(f"{out_name}_index")
+
+        ## Extract specific AD+DP indices and re-index to 1-based
+        # 1. make dense 0-based and take only the cluster indices
         curr_ad = pd.DataFrame(
             AD.todense()[:, cell_clusters[n]]).reset_index().melt(
             id_vars='index', var_name="Cell",
@@ -164,17 +296,15 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
             DP.todense()[:, cell_clusters[n]]).reset_index().melt(
             id_vars='index', var_name="Cell",
             value_name="Count").rename({"index": "Position"}, axis=1)
-        # Drop 0s to make sparse
+
+        # 2. Then drop 0s to make sparse to remove positions/cells.
+        #    This may remove some cells
         curr_dp = curr_dp.loc[~(curr_ad["Count"] == 0)]
         curr_ad = curr_ad.loc[~(curr_ad["Count"] == 0)]
-        if vars_meta is not None:
-            print(np.sort(curr_dp["Position"].unique())-1)
-            curr_vars_meta = vars_meta.iloc[np.sort(curr_dp["Position"].unique())-1]
-        #curr_dp_pos = curr_dp["Position"].unique()
-        #curr_dp_cell = curr_dp["Cell"].unique()
-        #curr_ad_pos = curr_ad["Position"].unique()
-        #curr_ad_cell = curr_ad["Cell"].unique()
-        # Update the cell and position maps, making it 1-based
+
+        # Update the cell and position maps using dp, making it 1-based
+        #curr_cell_map = {val-1: val for val in cells_meta[f"{out_name}_index"].values} #1-based to 0-based
+
         curr_cell_map = {val: ind + 1 for ind, val in
                          enumerate(np.sort(curr_dp["Cell"].unique()))}
         curr_pos_map = {val: ind + 1 for ind, val in enumerate(
@@ -185,11 +315,20 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
         curr_dp["Cell"] = curr_dp["Cell"].map(curr_cell_map)
         curr_dp["Position"] = curr_dp["Position"].map(curr_pos_map)
 
+        if vars_meta is not None:
+            print('positions to use')
+            print(np.sort(curr_dp["Position"].unique())-1)
+            curr_vars_meta = vars_meta.iloc[np.sort(curr_dp["Position"].unique())-1]
+
         print(f"{out_name} {n}: {len(cell_clusters[n])} cells ")
         print(curr_dp.shape)
         print(curr_ad.shape)
 
         cell_clusters[n] += 1
+
+        # Get cell labels for specific lineages
+        curr_cells_meta = cells_meta.iloc[cell_clusters[n]].copy()
+        curr_cells_meta = curr_cells_meta.reset_index() #make it 0-based
         # Get their IDs
         if outdir != "" and exists(outdir):
             curr_out = join(outdir, f"{prefix}{out_name}{n}_cells.txt")
@@ -200,7 +339,7 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
                 join(outdir, f"{prefix}{out_name}{n}.labels.txt"))
             curr_cells_meta.to_csv(
                 join(outdir, f"cell_labels.{prefix}{out_name}{n}.txt"))
-            print('curr_ad', curr_ad.head())
+            #print('curr_ad', curr_ad.head())
             wrap_write_mtx_df(outdir, curr_ad, curr_dp,
                               oth=None, to_rm=True, prefix=f"{prefix}{out_name}{n}",
                               columns=('Position', 'Cell', 'Count'))
@@ -217,6 +356,7 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
                                        range(AF_SNPs.shape[1])]).to_csv(
             join(outdir, "AF_SNPs.csv"), index=False)
     return cell_clusters
+
 
 #######################################################################
 def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
@@ -235,9 +375,14 @@ def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
                                  axis=1)
 
         #curr = clust_df.sample(n=min(1000, clust_df.shape[0]))
-        ch.plot_cluster(clust_df, cmap='Oranges', alpha=0.8,
+        rand_df = clust_df.sample(n=min(1000, clust_df.shape[0]))
+
+        rand_labels = labels.loc[rand_df.index]
+
+        print(rand_labels.head())
+        ch.plot_cluster(rand_df, cmap='Oranges', alpha=0.8,
                         to_row_clust=True, to_col_clust=False,
-                        row_meta=labels, to_legend=True,
+                        row_meta=rand_labels, to_legend=True,
                         white_name=None, yticklabels=False)
         plt.suptitle(f"Cell-cluster probability {clust_df.shape[0]}\nmax 1000 cells shown")
         plt.savefig(out_f + ".labels.png")  # plt.close()
@@ -258,7 +403,7 @@ def plot_vireo_out(modelCA, out_f, to_sqrt=False, labels=None,
         modelCA.GT_prob * np.expand_dims(modelCA.beta_mu, 1), axis=2)
     print("AF_SNPs shape", AF_SNPs.shape)
 
-    ch.plot_cluster(pd.DataFrame(AF_SNPs), cmap='Blues', alpha=0.8,
+    ch.plot_cluster(pd.DataFrame(AF_SNPs, columns=np.arange(1,AF_SNPs.shape[1]+1)), cmap='Blues', alpha=0.8,
                     to_row_clust=True, to_col_clust=True,
                     to_legend=True, white_name=None)
     plt.savefig(out_f + ".variants.labels.png")
@@ -313,12 +458,12 @@ def run_elbo(ad, dp, out_f, cells_meta,
             print('saving lineage tree for file:', curr_lineage_f)
             try:
                 doublet_prob = \
-                modelCA.predict_doublet(AD, DP, update_GT=False,
+                modelCA.predict_doublet(ad, dp, update_GT=False,
                                         update_ID=False)[0].sum(axis=1)
             except AttributeError:  # New version of Vireo 2021
                 doublet_prob = \
                 vireoSNP.utils.vireo_doublet.predict_doublet(modelCA,
-                                                             AD, DP,
+                                                             ad, dp,
                                                              update_GT=False,
                                                              update_ID=False)[
                     0].sum(axis=1)

@@ -1,12 +1,14 @@
 import pandas as pd
-from os.path import join, exists
-import os
+from os.path import join, exists, dirname, basename
 import logging
 import gzip
 import os
 from scipy.io import mmread
 from mplh.fig_utils import helper_save as hs
 import pickle
+import glob
+from icecream import ic
+from pandarallel import pandarallel
 
 ####
 ## config utils
@@ -46,25 +48,57 @@ def save_out(obj, fname, outdir, type, dat_type="pickle", **pd_kwargs):
 
     return
 
+
+def import_from_dir(indir, prefix="", suffix="", f_list=None):
+    if prefix is None:
+        prefix = ""
+    if f_list is not None:
+        files = []
+        for i in f_list:
+            curr_f = glob.glob(os.path.join(indir,
+                                            prefix+i+suffix))
+            if len(curr_f) > 1:
+                print(f"Two files show up for {i}. Please give more specific strings to specify the files")
+                return []
+            elif len(curr_f) == 0:
+                print(f"{i} not found in directory {indir}. Continuing "
+                      f"without adding it")
+            else:
+                files.append(curr_f[0])
+    else:
+        files = glob.glob(os.path.join(indir, prefix+"*"+suffix))
+    return files
+
+
 ####
 ## df and i/o utils
 ####
-def combine_dfs(dfs, use_key=True, key_label="Key", naval=0,
-                update_col_names=False, col_inds=None, axis=1):
+def combine_dfs(dfs, use_key=True, key_label="Key", na_val=0,
+                update_col_names=False, col_inds=None, axis=1,
+                return_meta=False):
     """
 
     :param dfs: dict of dfs, where keys are names to be used for a new column,
                 and/or for add that as a suffix to the column names.
     """
+    meta = {}
     for key in dfs:
         if use_key:
             dfs[key][key_label] = key
+            meta[key] = dfs[key][key_label]
         if update_col_names:
-            dfs[key].columns = dfs[key].columns + "_" + key
+            dfs[key].columns = dfs[key].columns.astype(str) + "_" + str(key)
         if col_inds is not None:
             dfs[key] = dfs[key].loc[:, dfs[key].columns.isin(col_inds)]
+
+    if return_meta:
+        all = pd.concat(dfs.values(), axis=axis, sort=False).fillna(na_val)
+        if use_key:
+            all = all.drop(key_label, axis=1)
+        return all, dfs
+
     return pd.concat(dfs.values(), axis=axis, sort=False).fillna(
-        naval)  # return  pd.concat(dfs.values()).fillna(fillna)
+        na_val)  # return  pd.concat(dfs.values()).fillna(fillna)
 
 
 def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', **pd_kwargs):
@@ -95,15 +129,14 @@ def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', **pd_kwargs):
 ##############################################
 ## Vireo spare mmf matrix format utils
 ##############################################
-
 # Read/write utils
 def load_mtx_df(in_f, skip_first=True, give_header=False,
-                columns=("Variant", "Cell", "integer")):
-    df = pd.read_csv(in_f, comment="%", header=None, sep="\t")
+                columns=("Variant", "Cell", "integer"), sep="\t"):
+    df = pd.read_csv(in_f, comment="%", header=None, sep=sep)
     df.columns = columns
     if skip_first:
         head = df.iloc[0]
-        df = df.iloc[1:] # Seems to be summary values
+        df = df.iloc[1:] # Number of elements listed here
     if give_header and skip_first:
         return df, head
     return df
@@ -157,10 +190,9 @@ def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
 
 #def load_with_ids():
 #    return
-
-
 def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
-                      prefix="cellSNP.tag", columns=('Variant', 'Cell', 'integer')):
+                      prefix="cellSNP.tag",
+                      columns=('Variant', 'Cell', 'integer')):
 
     print(prefix)
     write_mtx_df(ad, outdir, f"{prefix}.AD.mtx", to_rm=to_rm,
@@ -173,7 +205,8 @@ def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
     return
 
 
-def write_mtx_df(in_mtx, outdir, out_f, to_rm=True, columns=('Variant', 'Cell', 'integer')):
+def write_mtx_df(in_mtx, outdir, out_f, to_rm=True,
+                 columns=('Variant', 'Cell', 'integer'), sep="\t"):
     header = "%%MatrixMarket matrix coordinate integer general\n%\n"
     if to_rm:
         if exists(join(outdir, out_f)):
@@ -188,7 +221,7 @@ def write_mtx_df(in_mtx, outdir, out_f, to_rm=True, columns=('Variant', 'Cell', 
              columns[1]: in_mtx[columns[1]].max(),
              columns[2]: in_mtx.shape[0]}, index=["Meta"]),
                              in_mtx.sort_values([columns[0], columns[1]])), sort=False)
-        full.to_csv(file, sep="\t", header=False, index=False)
+        full.to_csv(file, sep=sep, header=False, index=False)
     return
 
 
@@ -241,11 +274,8 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
         lambda x: x.split(">")[1])
     af_meta = af_meta.rename({'position':"POS"}, axis=1)
     af_meta["#CHROM"] = "chrM"
-    af_meta = af_meta[["#CHROM", "POS", "REF", "ALT",
-                       "strand_correlation", "vmr", "n_cells_over_5",
-                       "n_cells_over_20"]]
-
     af_meta = af_meta.sort_values("POS")
+
     af = af.loc[af_meta.index]
     coverage = coverage.loc[af_meta.index]
 
@@ -266,7 +296,13 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
                                       var_name="Cell",
                                       value_name='integer')
 
-    af_meta.reset_index().to_csv(join(outdir, f"{out_name}.base.vcf"), sep="\t", index=False)
+    # Save files
+    af_meta = af_meta.reset_index()
+    af_meta = af_meta[["#CHROM", "POS", "REF", "ALT",
+                       "strand_correlation", "vmr", "n_cells_over_5",
+                       "n_cells_over_20", "index"]]
+    af_meta.to_csv(join(outdir, f"{out_name}.base.vcf"), sep="\t", index=False)
+
     with open(join(outdir, f"{out_name}.samples.tsv"),'w') as f:
         f.write("\n".join(cell_samples))
 
@@ -278,3 +314,51 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
 ##############################################
 ## Till here
 ##############################################
+
+
+##############################################
+## Filtered output of cellranger -> fragments.tsv.gz
+##############################################
+def sparse_to_cellranger_fragments(mtx_f, peaks_f, cells_f, out_f, cell_col="Group_Barcode", n_cpus=2):
+    ic(mtx_f, peaks_f, cells_f, out_f, cell_col)
+    frags = load_mtx_df(mtx_f, sep=' ')
+    #frags = frags.pivot(index='Variant', columns='Cell', values='integer')
+    #frags = frags.sort_index().sort_index(axis=1)
+    peaks = pd.read_csv(peaks_f, sep='\t', header=None, comment="#")
+    peaks.index = peaks.index + 1
+    peaks = peaks.rename({0:"Chr", 1:"Start", 2:"End"}, axis=1)
+    cells = pd.read_csv(cells_f, sep='\t')[cell_col]
+    cells.index = cells.index+1
+    frags["CB"] = frags["Cell"].map(cells)
+    frags = pd.merge(frags, peaks, left_on="Variant", right_index=True)
+    #df = pd.DataFrame(frags, index=peaks.index, columns=cells)
+
+    # Make sparse
+    #df.reset_index().melt(id_vars="Variant")
+
+    # Add bed file information (This is the information that is lost btwn using fragments and the bed file.
+    #df['Chr'] = df['Variant'].applymap(peaks[0])
+    #df['Start'] = df['Variant'].applymap(peaks[1])
+    #df['End'] = df['Variant'].applymap(peaks[2])
+    frags[['Chr','Start','End', "CB", "integer"]].to_csv(out_f, sep='\t', index=False, header= False)
+
+    pandarallel.initialize(nb_workers=n_cpus)
+    # Create position indices with format "chr:start-end"
+    frags["ID"] = frags.parallel_apply(lambda x: f"{x['Chr']}:{x['Start']}-{x['End']}", axis=1)\
+    #frags = frags.set_index("ID")
+
+
+    # Create sparse dgcMatrix, with index as peak, column CB, value is integer
+    frags[["ID", "CB", "integer"]].to_csv(f"{out_f}.counts.mtx",
+                                          sep="\t", header=None,
+                                          index=False)
+    # write_mtx_df(frags, outdir=dirname(out_f),
+    #              out_f=basename(out_f)+ ".counts.mtx",
+    #              columns=('ID', 'CB', 'integer'), sep=" ")
+    return frags
+
+# if __name__ == "__main__":
+#     sparse_to_cellranger_fragments("/data2/mito_lineage/data/external/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.mtx",
+#                                    "/data2/mito_lineage/data/external/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.peaks.bed",
+#                                    "/data2/mito_lineage/data/external/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.cell_barcodes.txt",
+#                                    out_f="/data2/mito_lineage/data/processed/external/granja_cd34/granja_cd34.fragments.tsv")

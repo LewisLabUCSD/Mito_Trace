@@ -130,7 +130,7 @@ def merge_vcf_ids(indirs, outdir=None,prefix_vcf_in="cellSNP.base",
         # curr["old index"] = curr.index.values+1
         # curr[val] = curr.index.values + 1
         curr["old " + val] = curr.index.values.astype(int) + 1
-        variants = pd.merge(variants, curr, on=["#CHROM", "POS", "REF", "ALT"],
+        variants = pd.merge(variants, curr, on=["index", "#CHROM", "POS", "REF", "ALT"],
                             how="outer")
 
         old_variants[val] = curr.copy()
@@ -169,7 +169,6 @@ def merge_vcf_ids(indirs, outdir=None,prefix_vcf_in="cellSNP.base",
             vars_coords[val].index.name = val
             vars_coords[val].to_csv(out_f,sep="\t")  # Use index + header
     return vars_coords, full_vars
-
 
 
 def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,

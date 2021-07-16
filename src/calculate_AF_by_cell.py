@@ -18,6 +18,7 @@ mpl.use('Agg')
 import logging
 logging.getLogger('matplotlib.font_manager').disabled = True
 
+
 def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
     """ Cell series where indices are the positions and columns are variant info.
 

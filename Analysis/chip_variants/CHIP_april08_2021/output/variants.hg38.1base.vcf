@@ -1,0 +1,30 @@
+##fileformat=VCFv4.2
+##reference=file:///data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa
+#CHROM	POS	ID	REF	ALT
+chrX	124063083	.	T	C
+chr12	11869955	.	T	C
+chr2	25282607	.	C	T
+chr7	148847211	.	T	G
+chr4	105275662	.	G	T
+chrX	77634786	.	A	C
+chrX	45090822	.	G	A
+chrX	45089836	.	T	G
+chr2	25234316	.	A	C
+chr9	130862953	.	A	G
+chrX	124066410	.	A	T
+chr7	102097414	.	C	G
+chr4	54733263	.	C	T
+chrX	45089836	.	T	G
+chr2	25240672	.	G	C
+chr2	25239153	.	C	T
+chr17	7675050	.	C	A
+chr9	130872310	.	A	G
+chrX	130050807	.	T	G
+chr4	105276127	.	A	C
+chr4	105275677	.	C	T
+chr4	54695676	.	A	T
+chr4	54695674	.	A	T
+chr21	34834653	.	G	C
+chr2	25244559	.	C	T
+chr2	25240654	.	C	A
+chr17	7675050	.	C	A

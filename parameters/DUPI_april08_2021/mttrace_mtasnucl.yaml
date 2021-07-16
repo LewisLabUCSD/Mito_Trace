@@ -4,25 +4,17 @@ fastq_dir: "/data2/isshamie/mito_lineage/data/raw/CHIP_april08_2021_Croker/" #ig
 mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/DUPI_april08_2021_Croker/MTblacklist_mtasnucl"
 
 samples: "parameters/DUPI_april08_2021/DUPI_april08_2021.csv"
-
 # mttrace parameters
-#results: "data/processed/mttrace/DUPI_april08_2021_Croker"
-results: "output/mttrace/DUPI_april08_2021/MTblacklist_mtasnucl"
-
+results: "data/processed/mttrace/DUPI_april08_2021_Croker"
 #results: "data/processed/mttrace/jan21_2021"
 figures: "figures/mttrace/jan21_2021"
 
 
 # Genome paths
-genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist_mtasnucl/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #
+genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #
 ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
 mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
 
-
-main:
-  - "mtscATAC"
-  - "mttrace"
-  - "multiplex"
 
 
 mttrace:
@@ -79,7 +71,7 @@ mgatk:
   ncells_thresh_mgatk: 5
 
 multiplex:
-  indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/DUPI_april08_2021/MTblacklist_mtasnucl"
+  indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist"
   variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/liftOver_chr_full_genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
   #genome: "hg38"
   genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
@@ -87,9 +79,8 @@ multiplex:
   #/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklistfasta
 
   use_mt_bam: True
-  #mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/DUPI_april08_2021/MTblacklist_mtasnucl" #PBMC_J/mapq_0/PBMC_J.MT.bam"
-  #sample_csv: "/data2/mito_lineage/parameters/DUPI_april08_2021/DUPI_april08_2021.csv"
-  #prefix: "DUPI_april08_2021/MTblacklist_mtasnucl"
+  mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/CHIP_april08_2021_Croker/MTblacklist" #PBMC_J/mapq_0/PBMC_J.MT.bam"
+  sample_csv: "/data2/mito_lineage/parameters/CHIP_april08_2021/CHIP_april08_2021.csv"
 
 
   samples:
@@ -104,9 +95,9 @@ multiplex:
     rxn3: "rxn3"
     rxn4: "rxn4"
 
+  tests: "A,pre,rxn1,post,rxn3;B,pre,rxn2,post,rxn4"
 
   N_DONORS: 8
-
 
   pseudo_multiplex:
     #Number Reads Total: 10000000
@@ -122,26 +113,18 @@ multiplex:
     #    - 0.1
     minCOUNT:
       - 200
-      #- 1
-      #    - 10
-      #    - 20
-      #    - 200
-      #- 1000
 
-  n_clone_list: [5, 10, 20, 40, 100]
-  pre_variant:
-    minMAF:
-      # - 0
-      - 0.1
-    #    - 0.2
-    #    - 0.4
-    minCOUNT:
-      # - 0
-      - 20
-      #    - 200
-      #- 1000
+  n_clone_list:
+    - 20
+    - 40
+    - 100
 
 
 annotations:
-  datadir: "/data2/mito_lineage/Analysis/annotation/data/granja_cd34"
-  name: "granja_published_C1.rds"
+  datadir: "/data2/mito_lineage/data/external/granja_cd34"
+  name: "granja_cd34"
+  #name: "granja_published_C1.rds"
+  cells_f: "GSE129785_scATAC-Hematopoiesis-CD34.cell_barcodes.txt"
+  mtx_f: "GSE129785_scATAC-Hematopoiesis-CD34.mtx"
+  peaks_f: "GSE129785_scATAC-Hematopoiesis-CD34.peaks.bed"
+

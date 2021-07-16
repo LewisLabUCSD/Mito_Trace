@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Session genome="hg38" hasGeneTrack="true" hasSequenceTrack="true" locus="chr17:7666402-7689550" nextAutoscaleGroup="2" path="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/igv_session_CHIPVariants_withFlt3lBam.xml" version="8">
+    <Resources>
+        <Resource path="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg38.bed"/>
+        <Resource path="/mnt/jabba/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist/aggregate/outs/peaks.bed"/>
+        <Resource path="/mnt/jabba/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist/Flt3l/outs/possorted_bam.bam"/>
+        <Resource path="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg19.1kb.bed"/>
+        <Resource path="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg38.1kb.bed"/>
+        <Resource path="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg19.bed"/>
+    </Resources>
+    <Panel height="93" name="DataPanel" width="1663">
+        <Track altColor="0,0,178" autoScale="false" color="0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="10" id="Reference sequence" name="Reference sequence" sortable="false" visible="true"/>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" colorScale="ContinuousColorScale;0.0;845.0;255,255,255;0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="18" height="35" id="hg38_genes" name="Gene" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="845.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+    </Panel>
+    <Panel height="236" name="Panel1625021957457" width="1663">
+        <Track altColor="0,0,178" autoScale="true" color="175,175,175" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="10" id="/mnt/jabba/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist/Flt3l/outs/possorted_bam.bam_coverage" name="possorted_bam.bam Coverage" showReference="false" snpThreshold="0.2" sortable="true" visible="true">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="60.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="10" height="60" id="/mnt/jabba/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist/Flt3l/outs/possorted_bam.bam_junctions" name="possorted_bam.bam Junctions" sortable="false" visible="false" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="60.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" color="0,0,178" displayMode="EXPANDED" featureVisibilityWindow="-1" fontSize="10" id="/mnt/jabba/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist/Flt3l/outs/possorted_bam.bam" name="possorted_bam.bam" sortable="true" visible="true">
+            <RenderOptions/>
+        </Track>
+    </Panel>
+    <Panel height="474" name="FeaturePanel" width="1663">
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="18" id="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg38.bed" name="variants.hg38.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count"/>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="18" id="/mnt/jabba/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist/aggregate/outs/peaks.bed" name="nuclear_peaks.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count"/>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" colorScale="ContinuousColorScale;0.0;6.0;255,255,255;0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="10" id="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg19.bed" name="variants.hg19.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="6.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" colorScale="ContinuousColorScale;0.0;6.0;255,255,255;0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="10" id="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg19.1kb.bed" name="variants.hg19.1kb.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="6.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="0,0,178" autoScale="false" clazz="org.broad.igv.track.FeatureTrack" color="0,0,178" displayMode="COLLAPSED" featureVisibilityWindow="-1" fontSize="10" id="/mnt/jabba/data2/mito_lineage/Analysis/chip_variants/CHIP_april08_2021/output/variants.hg38.1kb.bed" name="variants.hg38.1kb.bed" renderer="BASIC_FEATURE" sortable="false" visible="true" windowFunction="count"/>
+    </Panel>
+    <PanelLayout dividerFractions="0.1165644171779141,0.41226993865030676"/>
+    <HiddenAttributes>
+        <Attribute name="DATA FILE"/>
+        <Attribute name="DATA TYPE"/>
+        <Attribute name="NAME"/>
+    </HiddenAttributes>
+</Session>

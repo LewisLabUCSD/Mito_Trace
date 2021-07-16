@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
+import os
+
 
 def preprocess_variants(variants, style=">"):
-    print('variants')
-    print(variants)
     if style == ">":
         def split(x):
             s = x.split(">")
@@ -18,10 +18,19 @@ def preprocess_variants(variants, style=">"):
     return curr
 
 
+def annotate_vcf(vcf_in, gff_in, out_f):
+    cmd = f"bedtools annotate -i {vcf_in} -files {gff_in} > {out_f}"
+    print(cmd)
+    os.system(cmd)
+    return
+
+
 def variants_dense(AF_df, vars_to_plot, samples_d, donors_d,
                    variant_d=None, lineage_d=None):
     #var_sort = AF_df.mean(axis=1).argsort()[::-1]
     AF_df = AF_df.rename_axis("Cell", axis=1).rename_axis("Variant", axis=0)
+    if vars_to_plot is None:
+        vars_to_plot=len(AF_df)
     var_sort = AF_df.mean(axis=1).sort_values()[::-1].index[:vars_to_plot]
     variants_box=AF_df.loc[var_sort].reset_index().melt(id_vars='Variant',
                                                                               value_name='AF')
