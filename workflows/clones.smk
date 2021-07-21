@@ -61,10 +61,10 @@ rule all:
                sample=samples['sample_name'].values,
                results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
                het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
-        expand("{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/n_clones_{n_clones}/variants.ipynb",
-               sample=samples['sample_name'].values, n_clones=config['multiplex']["n_clone_list"],
-               results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
-               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'])
+        # expand("{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/n_clones_{n_clones}/variants.ipynb",
+        #        sample=samples['sample_name'].values, n_clones=config['multiplex']["n_clone_list"],
+        #        results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+        #        het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'])
 def get_input(wildcards, config, type='filters'):
     print(samples.loc[wildcards.sample, 'sample'])
     if type == 'mttrace':

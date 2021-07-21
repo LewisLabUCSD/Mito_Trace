@@ -357,6 +357,40 @@ def sparse_to_cellranger_fragments(mtx_f, peaks_f, cells_f, out_f, cell_col="Gro
     #              columns=('ID', 'CB', 'integer'), sep=" ")
     return frags
 
+
+def add_id_to_sparse(sparse, cell=None, pos=None,
+                     cell_col=None, pos_col=None,
+                     cell_name="Cell", pos_name="Pos", drop=False):
+    """ Adds id's to the indexed matrices using the index maps for cells
+    and the values
+
+    :param sparse: Sparse df, with  at least columns cell_col and pos_col.
+    :param cell: Map of index:cell_barcode where index is 1-based to the matrix file
+    :param pos: Map of index:data_barcode
+    :param cell_col: Column for the cell
+    :param pos_col: Column for data
+    :param cell_name: New name to use for cell (default: "Cell")
+    :param pos_name: New name to use for position (default: "Pos")
+    :param drop: To drop the iniial columns
+    :return:
+    """
+    #print('cell')
+    #print(cell)
+    # print('sparse')
+    # print(sparse.head())
+    if cell is not None:
+        sparse[cell_name] = sparse[cell_col].map(cell)
+    if pos is not None:
+        sparse[pos_name] = sparse[pos_col].map(pos)
+
+    if cell is not None and (drop and cell_col!=cell_name):
+        sparse = sparse.drop([cell_col], axis=1)
+    if pos is not None and (drop and pos_col != pos_name):
+        sparse = sparse.drop([pos_col], axis=1)
+    return sparse
+
+
+#def read_
 # if __name__ == "__main__":
 #     sparse_to_cellranger_fragments("/data2/mito_lineage/data/external/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.mtx",
 #                                    "/data2/mito_lineage/data/external/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.peaks.bed",

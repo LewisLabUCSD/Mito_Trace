@@ -29,7 +29,7 @@ if "mgatk" in config:
 
 print('config')
 print(config)
-cellr_bc = config["use_cellr_barcode"]
+cellr_bc = config["mttrace"]["use_cellr_barcode"]
 num_reads_filter = config["num_reads_filter"]
 maxBP = config["maxBP"]
 ref_fa = config["ref_fa"]
@@ -81,10 +81,10 @@ rule all:
                results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
                min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
                het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']['n_clone_list']),
-        expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
-               results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
-               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
-               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']['n_clone_list']),
+        # expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
+        #        results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
+        #        min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+        #        het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']['n_clone_list']),
         # expand("{results}/data/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/clones/clones.ipynb",
         #        results=res,sample=samples["sample_name"].values,
         #        cellr_bc=cellr_bc, num_read=num_reads_filter,
@@ -486,6 +486,7 @@ def get_comparisons(wildcards):
     if "comparisons" in config["multiplex"]:
         return config["comparisons"]
     return ""
+
 
 rule enrichment:
     input:
