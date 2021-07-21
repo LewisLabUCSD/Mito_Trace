@@ -6,9 +6,9 @@ mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_jun
 samples: "parameters/optim_june03_2021/optim_june03_2021.csv"
 
 # mttrace parameters
-results: "data/processed/mttrace/optim_june03_2021/MTblacklist"
+results: "output/mttrace/optim_june03_2021/MTblacklist"
 #results: "data/processed/mttrace/jan21_2021"
-figures: "figures/mttrace/jan21_2021"
+figures: "figures/mttrace/optim_june03_2021/MTblacklist"
 
 
 # Genome paths
@@ -78,53 +78,35 @@ mgatk:
   ncells_thresh_mgatk: 5
 
 multiplex:
-  indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist"
-  variants_f: "/data2/mito_lineage/data/external/cellSNP_variants/processed/liftOver_chr_full_genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf"
-  #genome: "hg38"
   genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
-
-  #/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklistfasta
-
   use_mt_bam: True
-  mttrace_dir: "/data2/mito_lineage/data/processed/mttrace/optim_june03_2021/MTblacklist" #PBMC_J/mapq_0/PBMC_J.MT.bam"
-  sample_csv: "/data2/mito_lineage/parameters/optim_june03_2021/optim_june03_2021.csv"
-
-  prefix: "optim_june03_2021/MTblacklist"
-
 
   samples:
-    - "Control"
-    - "Flt3l"
-    - "Input"
+    - "p0_1m5"
+    - "p0_5m5"
+    - "p1_0m5"
+    - "f1_0m10"
 
   sample_dict:
-    Control: "Control"
-    Flt3l: "Flt3l"
-    Input: "Input"
+    p0_1m5: "pfa 0.1% 5min"
+    p0_5m5: "pfa 0.5% 5min"
+    p1_0m5: "pfa 1% 5min"
+    f1_0m10: "form 1% 10min"
 
 
-
-  N_DONORS: 5
+  N_DONORS: 4 #UNCLEAR WHAT THE NUMBER IS
 
   pseudo_multiplex:
     #Number Reads Total: 10000000
-    num_cells: 100000 # high enough to choose all
+    num_cells: 10000000 # high enough to choose all
     is_proportional: False
 
   mt:
     minMAF:
       - 0.01
-      #- 0
-      #- 0.0001
 
-    #    - 0.1
     minCOUNT:
       - 200
-      #- 1
-      #    - 10
-      #    - 20
-      #    - 200
-      #- 1000
 
   n_clone_list: [5, 10, 20, 40, 100]
   pre_variant:

@@ -7,6 +7,7 @@ samples: "parameters/CHIP_april08_2021/CHIP_april08_2021.csv"
 
 # mttrace parameters
 results: "output/mttrace/CHIP_april08_2021/MTblacklist"
+old_results: "data/processed/mttrace/CHIP_april08_2021/MTblacklist"
 
 #results: "data/processed/mttrace/CHIP_april08_2021/MTblacklist"
 #results: "data/processed/mttrace/jan21_2021"
@@ -111,6 +112,7 @@ multiplex:
     #Number Reads Total: 10000000
     num_cells: 100000 # high enough to choose all
     is_proportional: False
+
 
   mt:
     minMAF:

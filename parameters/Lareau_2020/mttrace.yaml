@@ -91,14 +91,12 @@ multiplex:
 
 
   samples:
-    - "Control"
-    - "Flt3l"
-    - "Input"
+    - "CD34_rep1"
+    - "PBMC_rep1"
 
   sample_dict:
-    Control: "Control"
-    Flt3l: "Flt3l"
-    Input: "Input"
+    CD34_rep1: "CD34_rep1"
+    PBMC_rep1: "PBMC_rep1"
 
 
 

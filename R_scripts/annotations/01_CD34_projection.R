@@ -13,38 +13,6 @@ library(GenomicRanges)
 set.seed(1)
 "%ni%" <- Negate("%in%")
 
-# Import granja data
-if(FALSE){
-  granja_mat <- fread("../../../mtscATACpaper_large_data_files/source/other/GSE129785_scATAC-Hematopoiesis-CD34.mtx.gz", skip = 2)
-  sm <- sparseMatrix(i = granja_mat[["V1"]], j = granja_mat[["V2"]], x = granja_mat[["V3"]])
-  colData <- fread("../data/granja_cd34/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.cell_barcodes.txt") %>% data.frame()
-  peaks <- fread("../data/granja_cd34/GSE129785_scATAC-Hematopoiesis-CD34.peaks.bed") %>%
-    data.frame() %>% setnames(c('chr', 'start', 'end')) %>% makeGRangesFromDataFrame()
-  SEall <- SummarizedExperiment(
-    rowData = peaks,
-    colData = colData, 
-    assays = list(counts = sm)
-  )
-  cd34boo <- colData$Group %in% c("CD34_Progenitors_Rep1","CD34_Progenitors_Rep2")
-  c1boo <-  colData$Group %in% c("BM_pDC", "CLP", "CMP", "GMP", "HSC", "LMPP", "MEP", "Monocytes", "MPP")
-  SE_CD34 <- SEall[,cd34boo]
-  SE_C1 <- SEall[,c1boo]
-  saveRDS(SE_C1, file = "../data/granja_cd34/granja_published_C1.rds")
-  saveRDS(SE_CD34, file = "../../../mtscATACpaper_large_data_files/intermediate/granja_10X_CD34.rds")
-  
-}
-
-import_se <- function(library){
-  se <- readRDS(paste0("../../../mtscATACpaper_large_data_files/intermediate/",library,".rds"))
-  colnames(se) <- paste0(library, "_", colnames(se))
-  se
-}
-
-
-SE <- cbind(
-  import_se("CD34_G10"),
-  import_se("CD34_H8")
-)
 
 #Binarize Sparse Matrix
 binarizeMat <- function(mat){
@@ -212,59 +180,3 @@ classify_from_reference <- function(A, B){
   colnames(euklDist)[max.col(-1*euklDist, 'first')]  -> vec
   return(vec)
 }
-
-
-nTop = 25000
-
-#Run LSI 1st Iteration
-lsi1 <- calcLSI(assay(SE), nComponents = 25, binarize = TRUE, nFeatures = NULL)
-clust1 <- louvainIgraphClusters(lsi1[[1]], 10)
-
-#Make Pseudo Bulk Library
-message("Making PseudoBulk...")
-clusterSums <- groupSums(mat = assay(SE), groups = clust1, sparse = TRUE) #Group Sums
-logMat <- edgeR::cpm(clusterSums, log = TRUE, prior.count = 3) #log CPM matrix
-varPeaks <- head(order(matrixStats::rowVars(logMat), decreasing = TRUE), nTop) #Top variable peaks
-
-#Run LSI 2nd Iteration
-lsi2 <- calcLSI(assay(SE)[varPeaks,,drop=FALSE], nComponents = 25, binarize = TRUE, nFeatures = NULL)
-clust2 <- louvainIgraphClusters(lsi2[[1]][,c(2:25)], 30)
-length(unique(clust2))
-
-#UMAP
-set.seed(1)
-umap <- umap::umap(
-  lsi2$matSVD[,2:25], 
-  n_neighbors = 55, # original 55
-  min_dist = 0.45, # original 0.45
-  metric = "cosine", 
-  verbose = TRUE    )
-set.seed(10)
-
-# Multiply by -1 to make the pseudotime read left to right
-plot_df <- data.frame(umap$layout*-1, colData(SE), Clusters = clust2)
-
-p0 <- ggplot(plot_df, aes(x= X1, y = X2, color = Clusters)) +
-   geom_point(size = 0.5) +
-   labs(x = "UMAP1", y= "UMAP2", color = "") +
-  pretty_plot() + L_border() + theme(legend.position = "bottom")
-
-sel <- readRDS("../data/granja_cd34/granja_published_C1.rds")
-lsiProjection <- projectLSI((assay(sel)[varPeaks,]), lsi2)
-umapProjection <- round(predict(umap, data.matrix(lsiProjection[,2:25])), 2)
-
-projection_df <- data.frame(
-  celltype = c(gsub("BM_", "", colData(sel)$Group), rep("none", dim(plot_df)[1])),
-  umap1 = c(umapProjection[,1]*-1, plot_df$X1),
-  umap2 = c(umapProjection[,2]*-1, plot_df$X2)
-)
-
-p1 <- ggplot(projection_df[dim(projection_df)[1]:1,], aes(x= umap1, y = umap2, color = celltype, label = celltype)) +
-  geom_point(size = 0.5) +
-  labs(x = "UMAP1", y= "UMAP2", color = "C1 FACS ") +
-  pretty_plot() + L_border() + theme(legend.position = "bottom") +
-  scale_color_manual(values = c(ejc_color_maps, "none" = "lightgrey", "Monocytes" = "orange2"))
-p1
-
-save(projection_df, plot_df, file = "../output/CD34_umap_embedding_granja.rda")
-

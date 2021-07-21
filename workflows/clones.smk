@@ -53,8 +53,18 @@ rule all:
                het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
         expand("{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/dendrograms/af_dendro.ipynb",
                results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
-               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']["n_clone_list"])
-
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']["n_clone_list"]),
+        expand("{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
+                results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']["n_clone_list"]),
+        expand("{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones.ipynb",
+               sample=samples['sample_name'].values,
+               results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
+        # expand("{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/n_clones_{n_clones}/variants.ipynb",
+        #        sample=samples['sample_name'].values, n_clones=config['multiplex']["n_clone_list"],
+        #        results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+        #        het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'])
 def get_input(wildcards, config, type='filters'):
     print(samples.loc[wildcards.sample, 'sample'])
     if type == 'mttrace':
@@ -84,6 +94,14 @@ module main_wf:
 
 use rule get_refAllele from main_wf with:
     output: "{results}/{sample}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
+
+
+def get_aggr(in_d):
+    #bc = join(in_d, 'aggregate', 'outs', 'filtered_peak_bc_matrix', 'barcodes.tsv')
+    aggr_csv = join(in_d, 'aggr.csv')
+    return aggr_csv
+
+
 
 rule create_filters:
     input:
@@ -213,6 +231,7 @@ rule clones:
     shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
 
 
+
 rule enrichment:
     input:
         #rules.multiplex.output[0],
@@ -255,7 +274,7 @@ rule donors_type_variants:
         N_DONORS=config["multiplex"]["N_DONORS"],
         sample_names= ','.join(samples["sample_name"].values) # make it as a list
     output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/variants/variants.ipynb",
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output} && jupyter nbconvert --to pdf {output}"
 
 
 rule clones_plotAF:
@@ -290,6 +309,66 @@ rule clones_type_variants:
         var_thresh=0.001,
         vars_to_plot=10
     #output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/variants/variants.ipynb",
-    output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb"#, n_clones=config['multiplex']["n_clone_list"])
+    output: "{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb"
     #output: report(lambda wildcards: expand("{{results}}/merged/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb", n_clones=config['multiplex']["n_clone_list"]))
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p n_clones {params.n_clones} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} -p var_thresh {params.var_thresh} -p vars_to_plot {params.vars_to_plot} {params.notebook} {output}"
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR}  -p n_clones {params.n_clones} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} -p var_thresh {params.var_thresh} -p vars_to_plot {params.vars_to_plot} {params.notebook} {output} && jupyter nbconvert --to pdf {output}"
+
+
+
+rule clones_exp:
+    input: rules.multiplex.output
+    output: "{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones.ipynb"
+    params:
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["multiplex"]["N_DONORS"],
+        notebook=join("src", "vireo", "2_MT_Lineage_Construct_separateCond.ipynb"),
+        workdir = os.getcwd(),
+        exp = lambda wildcards: wildcards.sample
+    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p exp {params.exp} -p N_DONORS {params.N_DONORS} {params.notebook} {output} && jupyter nbconvert --to pdf {output}"
+
+
+rule clones_type_variants_exp:
+    input: rules.clones_exp.output[0]
+    params:
+        notebook=join("src", "vireo", join("6_MT_Clones_variantTypes_separateCond.ipynb")),
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS = config["multiplex"]["N_DONORS"],
+        sample_names = ','.join(config['multiplex']["samples"]), # make it as a list
+        n_clones = lambda wildcards: wildcards.n_clones, #config['multiplex']["n_clone_list"],#lambda wildcards: wildcards.n_clones,
+        var_thresh=0.001,
+        vars_to_plot=10,
+        exp = lambda wildcards: wildcards.sample
+    #output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/variants/variants.ipynb",
+    output: "{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/n_clones_{n_clones}/variants.ipynb"
+    #output: report(lambda wildcards: expand("{{results}}/merged/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb", n_clones=config['multiplex']["n_clone_list"]))
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p n_clones {params.n_clones} -p exp {params.exp} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} -p var_thresh {params.var_thresh} -p vars_to_plot {params.vars_to_plot} {params.notebook} {output} && jupyter nbconvert --to pdf {output}"
+
+
+use rule merge_lineage_nuclear_barcodes from main_wf with:
+    input:
+        cl="{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/clones.ipynb",
+        aggr=get_aggr(config['mtscATAC_OUTDIR']) #lambda wildcards: join(config['mtscATAC_OUTDIR'], 'aggr.csv')
+    output:
+        bc="{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
+        meta="{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_meta_aggr.tsv"
+
+# rule merge_lineage_nuclear_barcodes:
+#     input:
+#         "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/clones.ipynb",
+#         get_aggr(config['mtscATAC_OUTDIR'])
+#     params:
+#         N_DONORS=config["multiplex"]["N_DONORS"],
+#         cells_meta = lambda wildcards, output: join(dirname(input[0]),f'lineage{wildcards.n_clones}', "cells_meta.tsv"),
+#     output:
+#         "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv"
+#         "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_meta_aggr.tsv"
+#     run:
+#         cells_meta = pd.read_csv(params.cells_meta)
+#         aggr = pd.read_csv(input[1])
+#         aggr.index = aggr.index + 1 #1-based index
+#         samples_d = {val:i for i, val in enumerate(aggr['library'].values)}
+#         cells_meta['BC aggr'] = cells_meta.apply(lambda x: f"{x['raw ID'].replace('-1','')}-{samples_d[x['condition']]}", axis=1)
+#         cells_meta.to_csv(output[1], sep='\t', index=False)
+#         cells_meta['BC aggr'].to_csv(output[0], index=False, header=False)

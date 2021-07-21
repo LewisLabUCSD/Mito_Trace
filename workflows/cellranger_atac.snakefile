@@ -3,12 +3,22 @@
 ## Directory will be made if not already there. Will load the samples csv file before
 ## changing directory.
 ####
+import pandas as pd
 import os
+from os.path import dirname
+from shutil import rmtree
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pyBigWig
+from os.path import abspath
+from os.path import join
+
 #mpl.use('Agg')
 import numpy as np
 samples_df = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["out_name"], drop=False)
 samples_df.columns = samples_df.columns.str.strip()
 print(samples_df)
+
 
 if "mtscATAC_OUTDIR" in config:
     outdir = config["mtscATAC_OUTDIR"]
@@ -27,9 +37,9 @@ rule all:
         expand("{sample}/outs/web_summary.html", sample=samples_df.index),
         #"aggregate/outs/web_summary.html",
         #"reanalysis/outs/web_summary.html",
-        expand("coverage/{sample}_coverage.bw", sample=samples_df.index),
+        #expand("coverage/{sample}_coverage.bw", sample=samples_df.index),
          #expand("coverage/{sample}_coverage.tsv", sample=samples_df.index),
-        expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
+        #expand("plots/{sample}_coverage_chr.png", sample=samples_df.index),
         "barcodes_conditionInfo.csv"
 
 
@@ -196,7 +206,7 @@ rule reanalyze:
           --fragments={params.full_in}/fragments.tsv.gz"
           #--params={params.full_out}/aggregation_csv.csv \
 
-from os.path import join
+
 rule create_barcodes:
     input: "aggregate/outs/web_summary.html"
     output: "barcodes_conditionInfo.csv"

@@ -14,3 +14,5 @@
 # import click
 # import snakemake
 # import seaborn as sns
+
+from icecream import ic

@@ -5,6 +5,42 @@ experiment: "CHIP_april08_2021"
 genome: "MTblacklist"
 
 chip_genes: ["TP53", "U2AF1", "SF3B1", "SRSF2", "TET2", "IDH1", "IDH2"]
+
+
+flt3l_genes: 
+#https://www.bio-rad.com/en-us/prime-pcr-assays/pathway/growth-factors/development-flt3-signaling
+    - "FLT3"
+    - "Shc"
+    - "c-Src" 
+    - "Shc"
+    - "c-Cbl"
+    - "Gab1" 
+    - "Gab2"
+    - "GRB2"
+    - "SHP-2"
+    - "SHIP"
+    - "CrkL"
+    - "AKT"
+    - "ERK"
+    - "JNK1"
+    - "p38"
+ 
+immune_genes: 
+#from Lin et al, Nature Cell Biology 2021
+    cKit: "KIT"
+    Sca1: "LY6E"
+    CD11c: "ITGAX"
+    CD150: "SLAMF1"
+    CD34: "CD34"
+    CD16/32: "FCGR3A"
+    CD45.1: "PTPRC"
+    CD45.2: "PTPRC" 
+    CD48: "SLAMF2"
+    IL7Ra": "IL7R" 
+    CD11b: "ITGAM"
+    
+  
+
 samples:
   - "Control"
   - "Flt3l"

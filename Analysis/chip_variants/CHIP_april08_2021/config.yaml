@@ -1,0 +1,10 @@
+global: "PROJECT"
+variants_f: "data/processed/gilead_chip_profile/20210222_Croker_CD34_sample_ship_MW.txt"
+indir: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist"
+experiment: "CHIP_april08_2021"
+genome: "MTblacklist"
+ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa"
+samples: 
+    - Control
+    - Flt3l
+    - Input

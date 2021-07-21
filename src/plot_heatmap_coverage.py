@@ -10,7 +10,7 @@ import numpy as np
 import sys
 import click
 import matplotlib as mpl
-#mpl.use('agg')
+mpl.use('agg')
 
 
 def fill_df_coverage(df, pileup_dir, is_par=False):
