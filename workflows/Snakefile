@@ -81,6 +81,10 @@ rule all:
                results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
                min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
                het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']['n_clone_list']),
+        expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones_knn/donor{d}_clones.ipynb",
+               results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
+               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], d=np.arange(config["multiplex"]["N_DONORS"]))
         # expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
         #        results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
         #        min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
@@ -482,9 +486,38 @@ rule clones:
     shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
 
 
+# from snakemake.utils import R
+# rule merge_mgatk:
+#     input:
+#         expand("{{results}}/data/{sample}/MT/cellr_{{cellr_bc}}/{sample}_{{num_read}}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/{sample}.variant.rds",
+#                sample=samples["sample_name"].values)
+#     output:
+#         mgatk="{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/mgatk.variants.merged.rds",
+#
+#     run:
+#         R("""
+#           SE_list = lapply(input, readRDS)
+#           writeRDS(cbind(SE_list), {output.mgatk})
+#         """)
+#
+# rule clones_knn:
+#     input:
+#         mult="{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/multiplex.ipynb",
+#         mgatk="{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/mgatk.variants.merged.rds"
+#     output:
+#         "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones_knn/donor{d}_clones.ipynb"
+#     params:
+#         cells_f = lambda wildcards, input: join(dirname(input.mgatk),"cells_meta.tsv"),
+#         outdir = lambda wildcards, output: dirname(output[0]),
+#         notebook = join("R_scripts", "annotations/call_clones.ipynb"),
+#         cells_col = "donor"
+#     shell:
+#         "papermill -p mgatk_in {input.mgatk} -p outdir {params.outdir} -p cells_col {params.cells_col} {params.notebook} {output}  && jupyter nbconvert --to pdf {output}"
+
+
 def get_comparisons(wildcards):
     if "comparisons" in config["multiplex"]:
-        return config["comparisons"]
+        return f"--tests {config['comparisons']}"
     return ""
 
 
@@ -502,7 +535,7 @@ rule enrichment:
         script = join("src", "vireo", "lineage_enrichment.py"),
         samples = ",".join(config["multiplex"]['samples']),
         tests = get_comparisons
-    shell: "python {params.script} {params.clones_indir} {params.OUTDIR} {params.nclones} {params.samples} --tests {params.tests}"
+    shell: "python {params.script} {params.clones_indir} {params.OUTDIR} {params.nclones} {params.samples} {params.tests}"
 
 
 rule plotAF:

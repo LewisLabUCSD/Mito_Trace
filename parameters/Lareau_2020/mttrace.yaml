@@ -6,7 +6,7 @@ mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_20
 samples: "parameters/Lareau_2020/Lareau_2020.csv"
 
 # mttrace parameters
-results: "data/processed/mttrace/Lareau_2020/MTblacklist"
+results: "output/mttrace/Lareau_2020/MTblacklist"
 #results: "data/processed/mttrace/jan21_2021"
 figures: "figures/mttrace/jan21_2021"
 

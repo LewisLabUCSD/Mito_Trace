@@ -4,8 +4,7 @@ mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/PBMC_may1
 samples: "parameters/TcellDupi_may17_2021/TcellDupi_may17_2021.csv"
 
 # mttrace parameters
-results: "data/processed/mttrace/TcellDu
-pi_may17_2021/MTblacklist"
+results: "data/processed/mttrace/TcellDupi_may17_2021/MTblacklist"
 
 # Genome paths
 genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #

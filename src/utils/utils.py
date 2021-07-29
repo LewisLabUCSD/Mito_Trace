@@ -10,6 +10,10 @@ import numpy as np
 from scipy.stats import zscore
 mpl.use('Agg')
 from mplh.fig_utils import helper_save
+import tqdm
+from os.path import join
+from mplh.fig_utils import helper_save as hs
+from pandarallel import pandarallel
 
 
 def filter_barcodes_from_CB(CB_read_number, cellr_bc_f):
@@ -221,6 +225,49 @@ def compare_arbitrary_labels(l1, l2):
     print(l2_to_l1)
     l2_new = list(map(lambda x: l2_to_l1[x], l2))
     return l2_new
+
+
+def get_frag(indir):
+    df = pd.read_csv(join(indir, "fragments.tsv.gz"), sep="\t")
+    return
+
+
+def check_frag_in_peak(frag, peaks):
+    # print(((frag["Start"] <= peaks["End"]) & (frag["End"] >= peaks["Start"])).any())
+    return ((frag["Start"] <= peaks["End"]) & (
+                frag["End"] >= peaks["Start"])).any()
+
+
+def calc_frip_per_cell(frags, peaks=None, cells=None, to_annotate=False,
+                       to_parallel=False, nb_workers=12):
+    frags = (frags.copy())[frags["Cell"].isin(cells)]
+    if to_annotate:
+        if to_parallel:
+            pandarallel.initialize(nb_workers=nb_workers)
+            frags["in_peak"] = frags.parallel_apply(check_frag_in_peak,
+                                                    args=(peaks,),
+                                                    axis=1)
+        else:
+            frags["in_peak"] = frags.apply(check_frag_in_peak, args=(peaks,), axis=1)
+    cb_frags = frags.groupby("Cell")
+    frags_sum = cb_frags["Count"].sum()
+    frags_in_read_sum = \
+    frags.groupby("in_peak").get_group(True).groupby("Cell")[
+        "Count"].sum()
+    frip = frags_in_read_sum / frags_sum
+    frip_df = pd.concat((frags_sum.rename("Total frags"),
+                         frags_in_read_sum.rename("Frags in peak"),
+                         frip.rename("FRIP")), axis=1)
+    return frip_df
+
+
+def plot_frip_per_cell(frip_df, out_f=None):
+    f, ax = plt.subplots(nrows=2, ncols=1)
+    sns.violinplot(frip_df, y="frip", ax=ax[0])
+    sns.scatterplot(frip_df, x="frags_sum", y="frip", ax=ax[1])
+    hs(out_f)
+    return
+
 
 
 def test_compare_arbitrary_labels():

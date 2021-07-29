@@ -219,3 +219,5 @@ rule create_barcodes:
         print('df', df.head())
         df["Condition"] = df[0].apply(lambda x: samples[int(x.split("-")[-1])-1])
         df.to_csv(output[0], header=None, index=False)
+
+

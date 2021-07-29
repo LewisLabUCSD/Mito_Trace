@@ -101,7 +101,8 @@ def check_input(config, files_config, curr_p, git_commit=None,
 @click.option("--mlflow", default=False)
 @click.option("--forcetargets", default=False)
 @click.option("--to_gitpush", default=False)
-def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetargets, to_gitpush):
+@click.option("--template_cfg", default="")
+def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetargets, to_gitpush, template_cfg):
     """ Runs snakemake and/or mlflow pipeline
 
 
@@ -136,9 +137,10 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
     #validate_schema_files(parameters, parameters_schema)
     for p in pipeline:
         setup_files(outdir, configfile, pipe=p)
-        Paramspace(config[p], filename_params="*", param_sep='_')
+        if "params" in config[p]:
+            Paramspace(config[p], filename_params="*", param_sep='_')
 
-    snakemake.snakemake(smkfile, config=config,
+    snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun, forcetargets=forcetargets)
 
     # Make the report
@@ -146,13 +148,13 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
     if not dryrun:
         snakemake.snakemake(smkfile, configfiles=[configfile],
                             targets=targets, report=report)
-    # copy over snakemake and configfile to output:
-    os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
-    os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
-    if to_git:
-        run_git([outdir], commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
-                to_push=to_gitpush)
-    write_config_file(join(outdir, "params.outcfg"),config)
+        # copy over snakemake and configfile to output:
+        os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
+        os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
+        if to_git:
+            run_git([outdir], commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
+                    to_push=to_gitpush)
+        write_config_file(join(outdir, "params.outcfg"),config)
 
 
     return

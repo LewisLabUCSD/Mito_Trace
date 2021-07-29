@@ -9,6 +9,7 @@ import pickle
 import glob
 from icecream import ic
 from pandarallel import pandarallel
+import tqdm
 
 ####
 ## config utils
@@ -320,6 +321,16 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
 ## Filtered output of cellranger -> fragments.tsv.gz
 ##############################################
 def sparse_to_cellranger_fragments(mtx_f, peaks_f, cells_f, out_f, cell_col="Group_Barcode", n_cpus=2):
+    """ Filtered output of cellranger -> fragments.tsv.gz
+
+    :param mtx_f:
+    :param peaks_f:
+    :param cells_f:
+    :param out_f:
+    :param cell_col:
+    :param n_cpus:
+    :return:
+    """
     ic(mtx_f, peaks_f, cells_f, out_f, cell_col)
     frags = load_mtx_df(mtx_f, sep=' ')
     #frags = frags.pivot(index='Variant', columns='Cell', values='integer')
@@ -340,7 +351,7 @@ def sparse_to_cellranger_fragments(mtx_f, peaks_f, cells_f, out_f, cell_col="Gro
     #df['Chr'] = df['Variant'].applymap(peaks[0])
     #df['Start'] = df['Variant'].applymap(peaks[1])
     #df['End'] = df['Variant'].applymap(peaks[2])
-    frags[['Chr','Start','End', "CB", "integer"]].to_csv(out_f, sep='\t', index=False, header= False)
+    frags[['Chr','Start','End', "CB", "integer"]].sort_values(["Chr", "Start", "End"]).to_csv(out_f, sep='\t', index=False, header= False)
 
     pandarallel.initialize(nb_workers=n_cpus)
     # Create position indices with format "chr:start-end"
@@ -388,6 +399,107 @@ def add_id_to_sparse(sparse, cell=None, pos=None,
     if pos is not None and (drop and pos_col != pos_name):
         sparse = sparse.drop([pos_col], axis=1)
     return sparse
+
+
+def get_filt_indir(allConfig, filt_prefix, covDir_dict, use_cov_f=False):
+    allFilt = {}
+    for c in allConfig:
+        #print(c)
+        for s in allConfig[c]["multiplex"]["samples"]:
+            ###########################
+            # Get filtered cell indices
+            ###########################
+            f_in_data = join(allConfig[c]["results"], "data", s, "MT",
+                             "cellr_True", f"{s}_200", filt_prefix,
+                             "af_by_cell.DP.tsv")
+            f_in = join(allConfig[c]["results"], s, filt_prefix,
+                        "af_by_cell.DP.tsv")
+            if "old_results" in allConfig[c]:
+                f_in_old = join(allConfig[c]["old_results"], s, "MT",
+                                "cellr_True", f"{s}_200", filt_prefix,
+                                "af_by_cell.DP.tsv")
+            else:
+                f_in_old = ""
+            if c in covDir_dict:
+                f_in_covDir_dict = join(covDir_dict[c], s, filt_prefix,
+                                        "af_by_cell.DP.tsv")
+            else:
+                f_in_covDir_dict = ""
+            does_exist = False
+            for f in [f_in, f_in_data, f_in_covDir_dict, f_in_old]:
+                if exists(f):
+                    #print(f"Adding {f}")
+                    if use_cov_f:
+                        allFilt[(c, s)] = f.replace("af_by_cell.DP.tsv",
+                                                    f"{s}.coverage.txt")
+                    else:
+                        allFilt[(c, s)] = f
+                    does_exist = True
+            if not does_exist:
+                print(f"File for {c}, {s} not here")
+                continue
+    return allFilt
+
+
+def get_cov_indir(allConfig, covDir_dict):
+    allCov = {}
+    for c in allConfig:
+        for s in allConfig[c]["multiplex"]["samples"]:
+            f_in_data = join(allConfig[c]["results"], "data", s,
+                                 "MT","cellr_True", f"{s}_200",
+                                 f"{s}.coverage.strands.txt.gz")
+            f_in = join(allConfig[c]["results"], s, "MT","cellr_True", f"{s}_200",
+                                     f"{s}.coverage.strands.txt.gz")
+            if "old_results" in allConfig[c]:
+                f_in_old = join(allConfig[c]["old_results"], s,
+                                         "MT","cellr_True", f"{s}_200",
+                                         f"{s}.coverage.strands.txt.gz")
+            else:
+                f_in_old = ""
+            if c in covDir_dict:
+                f_in_covDir_dict = join(covDir_dict[c], s,
+                                         "MT","cellr_True", f"{s}_200",
+                                         f"{s}.coverage.strands.txt.gz")
+            else:
+                f_in_covDir_dict = ""
+            does_exist=False
+            for f in [f_in, f_in_data, f_in_covDir_dict, f_in_old]:
+                if exists(f):
+                    print(f"Using {f}")
+                    does_exist=True
+                    allCov[(c,s)] = f
+            if not does_exist:
+                print(f"File for {c}, {s} not here")
+                continue
+    return allCov
+
+
+def preproc_cellr_indir(allConfig, c, s):
+    samples = pd.read_table(allConfig[c]["samples"], sep=',',
+                            index_col=0).reset_index().set_index(
+        "sample_name", drop=False)
+    samples = samples.dropna(axis=1)
+    if s in samples.index:
+        curr_in = dirname(samples.loc[s, "barcode_f"])
+    else:
+        curr_in = dirname(
+            samples.set_index("sample").loc[s, "barcode_f"])
+    print(c, s)
+    curr_frags = pd.read_csv(join(dirname(curr_in), "fragments.tsv.gz"),
+                             sep="\t", header=None)
+    curr_frags.columns = ["Chr", "Start", "End", "Cell", "Count"]
+    curr_frags["Cell"] = curr_frags["Cell"] + "_" + s + "_" + c
+    peaks = pd.read_csv(join(curr_in, "peaks.bed"), sep="\t",
+                        header=None)
+    peaks = peaks.rename({0: "Chr", 1: "Start", 2: "End"}, axis=1)
+
+    cells = pd.read_csv(join(curr_in, "barcodes.tsv"), header=None)[0]
+    cells = cells + "_" + s + "_" + c
+    cells.index += 1  # 1-based map
+
+    frags = {"Cells": cells, "Peaks": peaks, "Frags": curr_frags}
+    return frags
+
 
 
 #def read_

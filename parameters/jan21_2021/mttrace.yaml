@@ -5,6 +5,7 @@ mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_202
 
 samples: "parameters/jan21_2021/jan21_2021.csv"
 
+prefix: "cd34norm"
 # mttrace parameters
 results: "data/processed/mttrace/jan21_2021/MTblacklist"
 #results: "data/processed/mttrace/jan21_2021"
@@ -24,9 +25,12 @@ main:
 
 
 pipeline:
-  - filters
-  - variant
-  - demultiplex
+  - mttrace
+  - mgatk
+  #- filters
+  #- variant
+  - multiplex
+
 
 
 mttrace:
@@ -138,4 +142,12 @@ multiplex:
       #    - 200
       #- 1000
 
+
+annotations:
+  datadir: "/data2/mito_lineage/data/external/granja_cd34"
+  name: "granja_cd34"
+  #name: "granja_published_C1.rds"
+  cells_f: "GSE129785_scATAC-Hematopoiesis-CD34.cell_barcodes.txt"
+  mtx_f: "GSE129785_scATAC-Hematopoiesis-CD34.mtx"
+  peaks_f: "GSE129785_scATAC-Hematopoiesis-CD34.peaks.bed"
 

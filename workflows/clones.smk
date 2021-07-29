@@ -61,10 +61,14 @@ rule all:
                sample=samples['sample_name'].values,
                results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
                het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh']),
+        expand("{results}/clones_knn/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/clones_knn.ipynb",
+               results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], d=np.arange(config["multiplex"]["N_DONORS"]))
         # expand("{results}/{sample}/clones/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/n_clones_{n_clones}/variants.ipynb",
         #        sample=samples['sample_name'].values, n_clones=config['multiplex']["n_clone_list"],
         #        results=res, min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
         #        het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'])
+
 def get_input(wildcards, config, type='filters'):
     print(samples.loc[wildcards.sample, 'sample'])
     if type == 'mttrace':
@@ -230,6 +234,32 @@ rule clones:
         workdir = os.getcwd()
     shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
 
+
+
+from snakemake.utils import R
+rule merge_mgatk:
+    input:
+         #"{results}/{sample}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.variant.rds"
+        expand("{{results}}/{sample}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/{sample}.variant.rds",
+               sample=samples["sample_name"].values)
+    output:
+        mgatk="{results}/clones_knn/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk.variants.merged.rds"
+    shell: "Rscript ./R_scripts/mergeVariants.R {input} {output.mgatk}"
+
+
+rule clones_knn:
+    input:
+        "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/multiplex.ipynb",
+        mgatk="{results}/clones_knn/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/mgatk.variants.merged.rds"
+    output:
+        "{results}/clones_knn/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/clones_knn.ipynb"
+    params:
+        cells_f = lambda wildcards, input: join(dirname(input.mgatk),"cells_meta.tsv"),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        notebook = join("R_scripts", "call_clones.ipynb"),
+        cells_col = "donor"
+    shell:
+        "papermill -p mgatk_in {input.mgatk} -p outdir {params.outdir} -p cells_f {params.cells_f} -p cells_col {params.cells_col} {params.notebook} {output}  && jupyter nbconvert --to pdf {output}"
 
 
 rule enrichment:

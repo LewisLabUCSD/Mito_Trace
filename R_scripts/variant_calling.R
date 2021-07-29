@@ -156,6 +156,7 @@ call_mutations_mgatk <- function(SE, stabilize_variance = TRUE, low_coverage_thr
 
 
 
+
 plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
   
   if (is_df == FALSE) { 
@@ -178,6 +179,7 @@ plot_mutations_qc <- function(mut_se, f_save, is_df = FALSE) {
     geom_hline(yintercept = -2, linetype = 2) + theme(legend.position = "none")
   cowplot::ggsave2(p1, file = paste(gsub('.png','', f_save),".png", sep=""), width = 1.7, height = 1.7)
 }
+
 
 
 # i/o
