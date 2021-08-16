@@ -10,6 +10,7 @@ import glob
 from icecream import ic
 from pandarallel import pandarallel
 import tqdm
+import numpy as np
 
 ####
 ## config utils
@@ -184,7 +185,6 @@ def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
             oth = load_mtx_df(join(indir, f"{prefix}.OTH.mtx"),
                               columns=columns)
             return ad, dp, oth
-
     return ad, dp
 
 
@@ -282,7 +282,7 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
 
     ## Create sparse vmmf files by converting index and columns to 1-based index and then to sparse
     # the order is same for vcf and samples
-    import numpy as np
+
     af.index = np.arange(1, af.shape[0]+1)
     af.columns= np.arange(1, af.shape[1] + 1)
     coverage.index=np.arange(1, coverage.shape[0]+1)

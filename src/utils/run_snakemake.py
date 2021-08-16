@@ -14,7 +14,7 @@ import mlflow
 import src.mlflow.mlflow_utils as mu
 from icecream import ic
 import subprocess
-
+import datetime
 
 def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master",
             branch='workflow_results'):
@@ -140,8 +140,10 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
         if "params" in config[p]:
             Paramspace(config[p], filename_params="*", param_sep='_')
 
-    snakemake.snakemake(smkfile, configfiles=[configfile],
+    out = snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun, forcetargets=forcetargets)
+    print("out")
+    print(out)
 
     # Make the report
     report = join(outdir, f"report_{basename(smkfile)}.html" )
@@ -156,6 +158,15 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
                     to_push=to_gitpush)
         write_config_file(join(outdir, "params.outcfg"),config)
 
+    # 3. Update _stateOfAnalysis.txt file
+    an_f = join(outdir, '_stateOfAnalysis.txt')
+    # Timestamp and update
+    s = 'Ran and Needs inspection\n' + 'Time:' +  datetime.datetime.now().strftime("%B/%d/%Y %H:%M:%S")
+
+    # Get a tree of files and folders after the pipeline
+    cmd = f"tree {outdir} > {outdir}/_tree.txt"
+
+    os.system(cmd)
 
     return
 
