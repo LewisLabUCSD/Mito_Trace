@@ -341,7 +341,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     oth_full = pd.concat(oth_l)
 
     ####
-    # . Save the matrices and the labels
+    # 4. Save the matrices and the labels
     ####
     # Save the order of IDs and the cell maps
     # Save the pseudo matrices
@@ -349,7 +349,7 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     wrap_write_mtx_df(outdir, ad_full, dp_full, oth=oth_full, to_rm=True,
                       prefix=prefix_tags_out)
 
-    # Save cell indices
+    # 5. Save cell indices
     for ind, val in enumerate(indirs):
         with open(join(outdir, f"cell_indices_{ind}.txt"), 'w') as f:
             curr = val + "\n" + "old index,new index"
