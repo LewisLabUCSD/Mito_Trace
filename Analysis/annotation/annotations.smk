@@ -15,7 +15,7 @@ res = config["results"]
 rule all:
     input:
         expand("output/data/{extrnl}/{extrnl}.fragments.tsv", extrnl=config['annotations']['name']),
-        expand("output/{results}/{sample}/{sample}.clusters.txt", results=res, sample=samples['sample_name'].values)
+        expand("output/{results}/{sample}/{sample}.clusters.csv", results=res, sample=samples['sample_name'].values)
         #f"data/processed/external/{extrnl}/{extrnl}.fragments.tsv"#, out=config['annotations']['name'])
 
 
@@ -45,24 +45,29 @@ def get_sample_barcodes(wildcards):
     print(wildcards)
     return samples.loc[wildcards.sample, "barcode_f"]
 
-
+import os
 rule createSE:
-    input: get_sample_barcodes
-    output: "output/{results}/{sample}/{sample}.merged.rds"
+    input:  get_sample_barcodes
+    output:
+        "output/{results}/{sample}/{sample}.merged.rds",
+        "output/{results}/{sample}/{sample}.merged.ipynb"
     params:
         outdir=lambda wildcards, output: dirname(output[0]),
-        indir=lambda wildcards, input: dirname(input[0]),
+        indir=lambda wildcards, input: join(config["mtscATAC_OUTDIR"], wildcards.sample, "outs"), #dirname(input[0]),
         rscript= join(ROOT_DIR, "R_scripts/annotations/create_SE.ipynb"), # The script defaults to the granja data
         exp = lambda wildcards: wildcards.sample,
-    shell: "Rscript R_scripts/annotations/create_SE.ipynb -p singlecell_sumstats_dir {params.indir} -p exp {params.exp} -p outdir {params.outdir}"
+        workdir = os.getcwd(),
+    shell: "papermill --cwd {params.workdir} -p singlecell_sumstats_dir {params.indir} -p exp {params.exp} -p outdir {params.outdir} {params.rscript} {output[1]}"
 
 
 rule annotation_peaks:
     input: "output/{results}/{sample}/{sample}.merged.rds"
-    output: "output/{results}/{sample}/{sample}.clusters.txt" # "output/{results}/{sample}/{sample}.clusters.txt"
+    output:
+        "output/{results}/{sample}/{sample}.clusters.csv", # "output/{results}/{sample}/{sample}.clusters.txt"
+        "output/{results}/{sample}/{sample}.clusters.ipynb"
     params:
         outdir=lambda wildcards, output: dirname(output[0]),
         exp = lambda wildcards: wildcards.sample,
         nTop = 25000,
         rscript= join(ROOT_DIR, "R_scripts/annotations/orig_01_CD34_projection.ipynb")
-    shell: "Rscript {params.rscript} -p exp {params.exp} -p nTop {params.nTop} -p outdir {params.outdir}"
+    shell: "papermill -p exp {params.exp} -p nTop {params.nTop} -p outdir {params.outdir} {params.rscript} {output[1]}"
