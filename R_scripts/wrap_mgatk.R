@@ -3,7 +3,7 @@ source("./R_scripts/toRDS.R")
 source("./R_scripts/variant_calling.R")
 
 low_coverage_threshold <- 10
-n_cells_thresh <- 1
+n_cells_thresh <- 5
 strand_correlation_thresh <- 0.65
 log_vmr_thresh <- -2
 

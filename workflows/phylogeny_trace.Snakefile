@@ -1,11 +1,11 @@
-
+import pandas as pd
 
 ref_fa = config["ref_fa"]
 samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 num_cells = config['multiplex']["pseudo_multiplex"]["num_cells"]
 is_prop = config['multiplex']["pseudo_multiplex"]["is_proportional"]
 res = config["results"]
-ft = config["filters"]
+#ft = config["filters"]
 
 
 rule all:

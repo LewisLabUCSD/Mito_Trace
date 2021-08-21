@@ -103,12 +103,16 @@ def combine_dfs(dfs, use_key=True, key_label="Key", na_val=0,
         na_val)  # return  pd.concat(dfs.values()).fillna(fillna)
 
 
-def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', **pd_kwargs):
+def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', verbose=False, **pd_kwargs):
+    if verbose:
+        ic.enable()
+    else:
+        ic.disable()
     if multicomment is None:
         return pd.read_csv(in_f, **pd_kwargs)
     else:
         if in_f.endswith(".gz"):
-            print('gz')
+            ic('gz')
             f = gzip.open(in_f, 'rt', encoding=encoding)
         else:
             f = open(in_f, "rt")
@@ -117,14 +121,13 @@ def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', **pd_kwargs):
             aline =  str(aline)
             if (len(multicomment) <= len(aline)) and \
                     (multicomment != aline[:len(multicomment)]):
-                print(f'skipping {curr} rows')
+                ic(f'skipping {curr} rows')
                 break
             else:
                 curr += 1
         f.close()
         return pd.read_csv(in_f, skiprows=curr, encoding=encoding,
                            **pd_kwargs)
-
 
 
 
@@ -146,13 +149,18 @@ def load_mtx_df(in_f, skip_first=True, give_header=False,
 
 def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
                      columns=('Variant', 'Cell', 'integer'), inc_af=False,
-                     as_dense=False, var_names=False, vcf_prefix="cellSNP.base"):
-    print(prefix)
+                     as_dense=False, var_names=False, vcf_prefix="cellSNP.base",
+                     verbose=True):
+    if not verbose:
+        ic.disable()
+    else:
+        ic.enable()
+    ic(prefix)
     curr_ad_f = join(indir, f"{prefix}.AD.mtx")
     curr_dp_f = join(indir, f"{prefix}.DP.mtx")
     if var_names:
         var_meta = read_csv_multichar(join(indir, f"{vcf_prefix}.vcf"),multicomment="##", sep='\t')
-        print(var_meta.head())
+        ic(var_meta.head())
     if inc_af or as_dense:
         curr_ad = mmread(curr_ad_f).tocsc()
         curr_dp = mmread(curr_dp_f).tocsc()
@@ -191,21 +199,6 @@ def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
 
 #def load_with_ids():
 #    return
-def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
-                      prefix="cellSNP.tag",
-                      columns=('Variant', 'Cell', 'integer')):
-
-    print(prefix)
-    write_mtx_df(ad, outdir, f"{prefix}.AD.mtx", to_rm=to_rm,
-                 columns=columns)
-    write_mtx_df(dp, outdir, f"{prefix}.DP.mtx", to_rm=to_rm,
-                 columns=columns)
-    if oth is not None:
-        write_mtx_df(oth, outdir, f"{prefix}.OTH.mtx", to_rm=to_rm,
-                     columns=columns)
-    return
-
-
 def write_mtx_df(in_mtx, outdir, out_f, to_rm=True,
                  columns=('Variant', 'Cell', 'integer'), sep="\t"):
     header = "%%MatrixMarket matrix coordinate integer general\n%\n"
@@ -224,6 +217,24 @@ def write_mtx_df(in_mtx, outdir, out_f, to_rm=True,
                              in_mtx.sort_values([columns[0], columns[1]])), sort=False)
         full.to_csv(file, sep=sep, header=False, index=False)
     return
+
+
+def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
+                      prefix="cellSNP.tag",
+                      columns=('Variant', 'Cell', 'integer')):
+
+    print(prefix)
+    write_mtx_df(ad, outdir, f"{prefix}.AD.mtx", to_rm=to_rm,
+                 columns=columns)
+    write_mtx_df(dp, outdir, f"{prefix}.DP.mtx", to_rm=to_rm,
+                 columns=columns)
+    if oth is not None:
+        write_mtx_df(oth, outdir, f"{prefix}.OTH.mtx", to_rm=to_rm,
+                     columns=columns)
+    return
+
+
+
 
 
 def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
