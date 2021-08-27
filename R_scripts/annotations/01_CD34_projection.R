@@ -1,7 +1,7 @@
 library(Matrix)
 library(SummarizedExperiment)
-install.packages("tidyverse")
-install.packages("umap")
+#install.packages("tidyverse")
+#install.packages("umap")
 library(tidyverse)
 library(umap)
 library(edgeR)
@@ -174,7 +174,7 @@ build_means_for_clusters <- function(LSI_mat, clusters){
 # B: A matrix of cells x PCs
 classify_from_reference <- function(A, B){
   
-  # Get the pair-wise euclidean distance msot-alike
+  # Get the pair-wise euclidean distance most-alike
   euklDist <- t(sqrt(apply(array(apply(B,1,function(x){(x-t(A))^2}),c(ncol(A),nrow(A),nrow(B))),2:3,sum)))
   colnames(euklDist) <- rownames(A)
   colnames(euklDist)[max.col(-1*euklDist, 'first')]  -> vec

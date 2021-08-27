@@ -1,33 +1,12 @@
-import glob
-import os
 import pandas as pd
-from tqdm import tqdm
 import numpy as np
-import pysam
-import time
-from collections import defaultdict
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sys
-import subprocess
-from os.path import join
 import matplotlib as mpl
 mpl.use('Agg')
-# FUNC_PATH = "/home/isshamie/software/mito-genotyping/exampleProcessing/"
-# BAM = "../data/raw/14515X1.MT.bam"
-# BARCODES = "../data/raw/Human2_002_Barcodes.txt"
-# NUM_CORES = 32
-# IN = "../data/raw/scBam"
-# OUT_DIR = "../data/raw/scPileup/"
-# BARCODE_INFO = "../data/scBam/barcode_data.p"
-# maxBP = 16571
-#
-# if not os.path.exists(OUT_DIR):
-#     os.mkdir(OUT_DIR)
-#
-# files = glob.glob(IN + "/*")
-# print(len(files))
+
 
 ## Load CB's, get ones that have over average read coverage of 1x
 def plot_coverage(barcode_data, f_save, maxBP=16571):
@@ -118,7 +97,6 @@ def plot_coverage_from_scPileup(scPileup_f, barcodes_f, f_save, cov_thresh=1, ma
     print('cov thresh', cov_thresh)
     cell_coverage_mt = cell_coverage_mt[cell_coverage_mt>cov_thresh]
     print('after cov filter', len(cell_coverage_mt.index))
-
 
 
     plt.figure()

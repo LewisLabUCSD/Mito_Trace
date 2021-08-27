@@ -59,7 +59,7 @@ def sc_mt_coverage(barcode_p, concat_coverage_f, save_f, maxBP):
     # Only use the + strand here
     sc_coverage = (df.pivot(index=1, columns=0, values=2)).fillna(0)
     sc_coverage.index = sc_coverage.index.str.replace(".bam", "")
-    sc_coverage = sc_coverage.loc[sc_coverage.index.isin(list(CB_read_number.keys()))]
+    sc_coverage = sc_coverage.loc[sc_coverage.index.isin(list(CB_read_number))]
     sc_coverage.to_csv(save_f)
     return
 
@@ -78,21 +78,14 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
             :min(top_n, sc_coverage.shape[0])].index]
     else:
         top_n = sc_coverage.shape[0]
-    # else:
-    #     sc_coverage = sc_coverage.loc[
-    #         sc_coverage.sum(axis=1).sort_values(ascending=False)]
+
     f, ax=plt.subplots()
     print('sc_coverage')
     print(sc_coverage.head())
     sns.heatmap(sc_coverage, ax=ax) #, row_cluster=False, col_cluster=False)
     plt.title(f"Number of reads at each MT position in {top_n} cells")
-    #g.ax_heatmap.set_title(f"Number of reads at each MT position by the top {top_n} covered cells")
-    #g.ax_heatmap.set_yticks([])
-    #g.ax_heatmap.set_xlabel("MT position")
     plt.xlabel("MT position")
-    #plt.legend(title="Coverage (Number of reads)")
     plt.ylabel("Cell")
-    #g.ax_heatmap.set_ylabel("Cell")
     plt.savefig(savefig_f)
     plt.close()
 
@@ -105,11 +98,6 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     f, ax = plt.subplots()
     sns.heatmap(log2_sc_coverage, ax=ax)
     plt.title(f"Log2 Number of reads at each MT position in {top_n} cells")
-    #g = sns.clustermap(log2_sc_coverage, col_cluster=False)
-    #g.ax_heatmap.set_title(f"Log2 number of reads at each MT position in {top_n} cells")
-    #g.ax_heatmap.set_yticks([])
-    #g.ax_heatmap.set_xlabel("MT position")
-    #g.ax_heatmap.set_ylabel("Cell")
     plt.xlabel("MT position")
     plt.title(os.path.basename(savefig_f))
     plt.ylabel("Cell")

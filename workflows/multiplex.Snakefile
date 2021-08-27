@@ -1,50 +1,60 @@
-from os.path import join, dirname
-
+from os.path import join, dirname, abspath
+import numpy as np
 samples = config["samples"]
+from snakemake.utils import min_version
+min_version("6.0")
+from pathlib import Path
+
+# rule all:
+#     input:
+#         "multiplex/multiplex.ipynb",
+#         expand("dendrograms/figures/donor{d}_dendrogram.png", d=np.arange(config["N_DONORS"])),
+#         "multiplex/variants/variants.ipynb",
+#
+
 
 rule multiplex:
-    input: rules.merged.output
+    input: "{outdir}/cellSNP.tag.AD.mtx"
     output:
-        "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/multiplex.ipynb",
-        results = report(multiext("{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/", "multiplex_AF_SNPs_all_afFilt.png", "multiplex_clusters_all.labels.png"))
+        note="{outdir}/multiplex/multiplex.ipynb",
+        results = report(multiext("{outdir}/multiplex/", "multiplex_AF_SNPs_all_afFilt.png", "multiplex_clusters_all.labels.png"))
     params:
-        N_DONORS=config["multiplex"]["N_DONORS"],
+        N_DONORS=config["N_DONORS"],
         notebook=join("src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
         sample_names= ','.join(samples["sample_name"].values), # make it as a list
         INDIR = lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
-        workdir = os.getcwd(),
         to_elbo = False
-    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} {params.notebook} {output}"
-
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} {params.notebook} {output.note}"
 
 
 rule donors_plotAF:
     input:
         #clone="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb",
-        mult=rules.multiplex.output[0]#"data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
+        "{outdir}/multiplex/multiplex.ipynb" #"data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
     output:
-        "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/dendrograms/af_dendro.ipynb",
-        #report("{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/dendrograms/figures/")
-        report(expand("{{results}}/merged/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/dendrograms/figures/donor{n}_dendrogram.png",
-               n=np.arange(config["multiplex"]["N_DONORS"])))
+        report(expand("{{outdir}}/multiplex/dendrograms/figures/donor{d}_dendrogram.png",
+               d=np.arange(config["N_DONORS"]))),
+        note="{{outdir}}/multiplex/dendrograms/multiplex_dendro.ipynb",
     params:
         #INDIR = lambda wildcards, input: dirname(input[0]),
-        INDIR = lambda wildcards, input: dirname(input.mult),
-        OUTDIR = lambda wildcards, output: dirname(output[0]),
-        N_DONORS=config['multiplex']['N_DONORS'], #config["multiplex"]["N_DONORS"],
-        sample_names= ",".join(config["multiplex"]['samples']), # make it as a list
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: Path(abspath(output[0])).parents[1], #go to the 'dendrograms' folder
+        out_notebook = lambda wildcards, output: join(Path(abspath(output[0])).parents[1], "af_dendro.ipynb"),
+        N_DONORS=config['N_DONORS'], #config["multiplex"]["N_DONORS"],
+        sample_names= ",".join(config['samples'].index), # make it as a list
         notebook=join("src", "vireo", "3_MT_Donors_Dendrogram.ipynb"),
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output[0]}"
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output.note}"
 
 
 rule donors_type_variants:
-    input: rules.multiplex.output[0]
+    input:
+        "{outdir}/multiplex/multiplex.ipynb"
+    output: "{outdir}/multiplex/variants/variants.ipynb",
     params:
         notebook=join("src", "vireo", join("5_MT_Donors_variantTypes.ipynb")),
         INDIR = lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
-        N_DONORS=config["multiplex"]["N_DONORS"],
-        sample_names= ','.join(samples["sample_name"].values) # make it as a list
-    output: "{results}/merged/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/variants/variants.ipynb",
+        N_DONORS=config["N_DONORS"],
+        sample_names= ",".join(config['samples'].index)
     shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output} && jupyter nbconvert --to pdf {output}"

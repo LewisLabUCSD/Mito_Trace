@@ -24,7 +24,6 @@ def setup_outdir(outdir, dirs=('figures', 'data','results')):
 
 def save_out(obj, fname, outdir, type, dat_type="pickle", **pd_kwargs):
     """
-
     :param obj:
     :param outdir:
     :param type:
@@ -129,6 +128,93 @@ def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', verbose=False,
         return pd.read_csv(in_f, skiprows=curr, encoding=encoding,
                            **pd_kwargs)
 
+
+
+
+##############################################
+## single-cell pileup data for each nucleotide. 'scPileup' format.
+##############################################
+def load_sc_pileup(sc_f):
+    """ Loads and sets the columns of the coverage pileup.
+    :param sc_f:
+    :return:
+    """
+    sc_coverage = pd.read_csv(glob.glob(sc_f)[0], header=None)
+    print(sc_coverage.head())
+    if len(sc_coverage.columns)>3:
+        sc_coverage.columns = ["Position", "CB", "Coverage", "Count Fw", "Count Rev"]
+        sc_coverage["Count Fw"] = sc_coverage["Count Fw"].astype(np.int64)
+        sc_coverage["Count Rev"] = sc_coverage["Count Rev"].astype(np.int64)
+    else:
+        sc_coverage.columns = ["Position", "Cell", "Coverage"]
+    sc_coverage["Cell"] = sc_coverage["Cell"].apply(lambda x: x.replace(".bam",""))
+    sc_coverage["Coverage"] = sc_coverage["Coverage"].astype(np.int64)
+    logging.info('sc_coverage head - {}'.format(sc_coverage.head().to_string()))
+    return sc_coverage
+
+
+def load_and_filter_nt_pileups(concat_dir, cell_inds, nt_pos,
+                               out_d=None, name=None, incl_cov=False,
+                               sum_cov=False, input_suffix=".strands.txt.gz",
+                               compression=False):
+
+    """ Filters the NT pileup and bq matrices and saves as pileups.
+
+    :param concat_dir:
+    :param cell_inds:
+    :param nt_pos:
+    :param out_d:
+    :param name:
+    :return:
+    """
+    print("Loading pileups")
+    nt_pileup = {}
+    for n in ["A", "C", "G", "T"]:
+        curr_f = glob.glob(os.path.join(concat_dir, f"*.{n}{input_suffix}"))[0]
+        df = pd.read_csv(curr_f, header=None)
+        # Only take the Forward reads since it is the one to compare against the reference
+        if len(df.columns) > 4:
+            print('num cols', len(df.columns))
+            df.columns = ["Position", "Cell", "Fw Coverage", "Fw BQ",
+                          "Rev Coverage", "Rev BQ"]
+            df = df.fillna(0)
+            df["Fw Coverage"] = df["Fw Coverage"].copy().astype(np.int64)
+            df["Rev Coverage"] = df["Rev Coverage"].copy().astype(np.int64)
+            curr_cov = df["Fw Coverage"] + df["Rev Coverage"]
+            df["BQ"] = df["Fw BQ"]*(df["Fw Coverage"]/curr_cov) + df["Rev BQ"] * (df["Rev Coverage"]/curr_cov)
+            if sum_cov:
+                df["Coverage"] = curr_cov
+        else:
+            df.columns = ["Position", "Cell", "Coverage", "BQ"]
+        df["Cell"] = df["Cell"].apply(lambda x: x.replace(".bam", ""))
+        df = df.copy()[df["Cell"].isin(cell_inds)]
+        df = df.copy()[df["Position"].isin(nt_pos)]
+        if not (out_d is None or name is None):
+            curr_out = join(out_d, f"{name}.{n}.txt")
+            #Drop any 0s
+            if "Coverage" in df.columns:
+                df = df.drop("Coverage", axis=1)
+            if "BQ" in df.columns:
+                df = df.drop("BQ", axis=1)
+            df = df.sort_values(["Cell", "Position"])
+            print('df no 0 shape', df[(df["Fw Coverage"] !=0 ) & (df["Rev Coverage"]!=0)].shape)
+            df[(df["Fw Coverage"] !=0 ) & (df["Rev Coverage"]!=0)].to_csv(curr_out, header=None, index=False)
+        nt_pileup[n] = df
+
+    if incl_cov:
+        df = load_sc_pileup(
+            os.path.join(concat_dir, f"*.coverage{input_suffix}"))
+        df = df.copy()[df["Cell"].isin(cell_inds)]
+        df = df.copy()[df["Position"].isin(nt_pos)]
+        df = df.fillna(0)
+
+        if not (out_d is None or name is None):
+            curr_out = join(out_d, f"{name}.coverage.txt")
+            df = df.sort_values(["Cell", "Position"])
+            df[(df["Coverage"] != 0)].to_csv(curr_out, header=None, index=False)
+            df.to_csv(curr_out, header=None, index=False)
+        nt_pileup["coverage"] = df
+    return nt_pileup
 
 
 ##############################################
@@ -236,7 +322,7 @@ def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
 
 
 
-
+###### MGATK output converted to the Vireo specified input ######
 def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
     """ Converts mgat output to vireo input.
 
@@ -259,6 +345,7 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
     print('in_coverage', in_coverage)
     print('in_af', in_af)
     af = pd.read_csv(in_af, sep="\t")
+    # Remove cells and positions that are all 0s
     af = af.loc[(~((af==0).all(axis=1)))]
     af = af.loc[:, (~((af == 0).all(axis=0)))]
     af_meta = pd.read_csv(in_af_meta, sep="\t")
@@ -296,7 +383,7 @@ def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
 
     af.index = np.arange(1, af.shape[0]+1)
     af.columns= np.arange(1, af.shape[1] + 1)
-    coverage.index=np.arange(1, coverage.shape[0]+1)
+    coverage.index = np.arange(1, coverage.shape[0]+1)
     coverage.columns = np.arange(1, coverage.shape[1] + 1)
     # Convert AF to AD, and then make sparse
     ad = (af*coverage).round().astype(int)
@@ -353,30 +440,18 @@ def sparse_to_cellranger_fragments(mtx_f, peaks_f, cells_f, out_f, cell_col="Gro
     cells.index = cells.index+1
     frags["CB"] = frags["Cell"].map(cells)
     frags = pd.merge(frags, peaks, left_on="Variant", right_index=True)
-    #df = pd.DataFrame(frags, index=peaks.index, columns=cells)
-
-    # Make sparse
-    #df.reset_index().melt(id_vars="Variant")
-
+    frags = frags.sort_values(["Chr", "Start", "End"])
     # Add bed file information (This is the information that is lost btwn using fragments and the bed file.
-    #df['Chr'] = df['Variant'].applymap(peaks[0])
-    #df['Start'] = df['Variant'].applymap(peaks[1])
-    #df['End'] = df['Variant'].applymap(peaks[2])
-    frags[['Chr','Start','End', "CB", "integer"]].sort_values(["Chr", "Start", "End"]).to_csv(out_f, sep='\t', index=False, header= False)
+    frags[['Chr','Start','End', "CB", "integer"]].to_csv(out_f, sep='\t', index=False, header= False, compression='gzip')
 
     pandarallel.initialize(nb_workers=n_cpus)
     # Create position indices with format "chr:start-end"
     frags["ID"] = frags.parallel_apply(lambda x: f"{x['Chr']}:{x['Start']}-{x['End']}", axis=1)\
-    #frags = frags.set_index("ID")
-
 
     # Create sparse dgcMatrix, with index as peak, column CB, value is integer
     frags[["ID", "CB", "integer"]].to_csv(f"{out_f}.counts.mtx",
                                           sep="\t", header=None,
                                           index=False)
-    # write_mtx_df(frags, outdir=dirname(out_f),
-    #              out_f=basename(out_f)+ ".counts.mtx",
-    #              columns=('ID', 'CB', 'integer'), sep=" ")
     return frags
 
 
@@ -396,10 +471,6 @@ def add_id_to_sparse(sparse, cell=None, pos=None,
     :param drop: To drop the iniial columns
     :return:
     """
-    #print('cell')
-    #print(cell)
-    # print('sparse')
-    # print(sparse.head())
     if cell is not None:
         sparse[cell_name] = sparse[cell_col].map(cell)
     if pos is not None:
@@ -452,25 +523,25 @@ def get_filt_indir(allConfig, filt_prefix, covDir_dict, use_cov_f=False):
     return allFilt
 
 
-def get_cov_indir(allConfig, covDir_dict):
+def get_cov_indir(allConfig, covDir_dict, input_suffix=".strands.txt.gz"):
     allCov = {}
     for c in allConfig:
         for s in allConfig[c]["multiplex"]["samples"]:
             f_in_data = join(allConfig[c]["results"], "data", s,
                                  "MT","cellr_True", f"{s}_200",
-                                 f"{s}.coverage.strands.txt.gz")
+                                 f"{s}.coverage{input_suffix}")
             f_in = join(allConfig[c]["results"], s, "MT","cellr_True", f"{s}_200",
-                                     f"{s}.coverage.strands.txt.gz")
+                                     f"{s}.coverage{input_suffix}")
             if "old_results" in allConfig[c]:
                 f_in_old = join(allConfig[c]["old_results"], s,
                                          "MT","cellr_True", f"{s}_200",
-                                         f"{s}.coverage.strands.txt.gz")
+                                         f"{s}.coverage{input_suffix}")
             else:
                 f_in_old = ""
             if c in covDir_dict:
                 f_in_covDir_dict = join(covDir_dict[c], s,
                                          "MT","cellr_True", f"{s}_200",
-                                         f"{s}.coverage.strands.txt.gz")
+                                         f"{s}.coverage{input_suffix}")
             else:
                 f_in_covDir_dict = ""
             does_exist=False

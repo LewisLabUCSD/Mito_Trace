@@ -1,35 +1,39 @@
 from os.path import dirname
 
+print('mgatk config')
 
-rule all:
-    input: expand("{sample}/mgatk/vireoIn/cellSNP.tag.AD.mtx",
-                  results=config["results"], sample=config["samples"])
+# rule all:
+#     input:
+#         expand("{sample}/mgatk/vireoIn/cellSNP.tag.AD.mtx", sample=config["samples"])
+#
 
 rule get_refAllele:
     #input: config["mt_ref_fa"],
-    params: config["chrM_refAllele"]
-    output: "{sample}/chrM_refAllele.txt"
+    params: config['mgatk']["chrM_refAllele"]
+    output: "{outdir}/chrM_refAllele.txt"
     shell: 'cp {params} {output}'
 
 
 rule mgatk:
     """ Run both toSeurat and call variants in one script"""
     input:
-        all = "coverage.txt",
-        refAllele = "chrM_refAllele.txt"
+        all = "{outdir}/{sample}.coverage.txt",
+        refAllele = "{outdir}/chrM_refAllele.txt"
     output:
-        vars_f = "{sample}/mgatk/{sample}.variant.rds",
-        vars_qc = report("mgatk/{sample}.variantQC.png")
+        vars_f = "{outdir}/mgatk/{sample}.variant.rds",
+        vars_qc = report("{outdir}/mgatk/{sample}.variantQC.png")
     params:
-        data_dir=lambda wildcards, input: dirname(input.all),
+        data_dir = lambda wildcards, input: dirname(input.all),
         sample = lambda wildcards: wildcards.sample,
+        outdir = lambda wildcards, output: dirname(output[0]),
+        #nCell = lambda wildcards: wildcards.nCell
     shell:
-        "./R_scripts/wrap_mgatk.R {params.data_dir} mgatk/{params.sample} FALSE"
+        "./R_scripts/wrap_mgatk.R {params.data_dir} mgatk/{params.sample} FALSE "
 
 
 rule mgatk_to_vireoIn:
-    input: "{sample}/mgatk/{sample}.variant.rds"
-    output: "{sample}/mgatk/vireoIn/cellSNP.tag.AD.mtx"
+    input: "{outdir}/mgatk/{sample}.variant.rds"
+    output: "{outdir}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
     params:
         indir = lambda wildcards, input: dirname(input[0]),
         outdir = lambda wildcards, output: dirname(output[0]),

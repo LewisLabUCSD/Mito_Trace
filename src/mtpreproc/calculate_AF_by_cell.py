@@ -12,11 +12,12 @@ from numpanpar import parallel_df as pardf
 from Bio import SeqIO
 import click
 from sklearn.mixture import GaussianMixture
-#from mplh.fig_utils import helper_save
 import matplotlib as mpl
 mpl.use('Agg')
 import logging
 logging.getLogger('matplotlib.font_manager').disabled = True
+
+from src.utils.data_io import load_sc_pileup, load_and_filter_nt_pileups
 
 
 def fill_af_by_cell_loop(cell_df, coverage_dir, type="coverage"):
@@ -233,68 +234,6 @@ def filter_allele_cells(af_by_cell, het_thresh=0, min_het_cells=0):
     return het_filt
 
 
-def load_and_filter_nt_pileups(concat_dir, cell_inds, nt_pos,
-                               out_d=None, name=None, incl_cov=False,
-                               avg_cov=False):
-    """ Filters the NT pileup and bq matrices and saves as pileups.
-
-    :param concat_dir:
-    :param cell_inds:
-    :param nt_pos:
-    :param out_d:
-    :param name:
-    :return:
-    """
-    print("Loading pileups")
-    nt_pileup = {}
-    for n in ["A", "C", "G", "T"]:
-        curr_f = glob.glob(os.path.join(concat_dir, f"*.{n}.strands.txt.gz"))[0]
-        df = pd.read_csv(curr_f, header=None)
-        # Only take the Forward reads since it is the one to compare against the reference
-        if len(df.columns) > 4:
-            print('num cols', len(df.columns))
-            df.columns = ["Position", "Cell", "Fw Coverage", "Fw BQ",
-                          "Rev Coverage", "Rev BQ"]
-            df = df.fillna(0)
-            df["Fw Coverage"] = df["Fw Coverage"].copy().astype(np.int64)
-            df["Rev Coverage"] = df["Rev Coverage"].copy().astype(np.int64)
-            curr_cov = df["Fw Coverage"] + df["Rev Coverage"]
-            df["BQ"] = df["Fw BQ"]*(df["Fw Coverage"]/curr_cov) + df["Rev BQ"] * (df["Rev Coverage"]/curr_cov)
-            if avg_cov:
-                df["Coverage"] = curr_cov
-        else:
-            df.columns = ["Position", "Cell", "Coverage", "BQ"]
-        df["Cell"] = df["Cell"].apply(lambda x: x.replace(".bam", ""))
-        df = df.copy()[df["Cell"].isin(cell_inds)]
-        df = df.copy()[df["Position"].isin(nt_pos)]
-        if not (out_d is None or name is None):
-            curr_out = join(out_d, f"{name}.{n}.txt")
-            #Drop any 0s
-            if "Coverage" in df.columns:
-                df = df.drop("Coverage", axis=1)
-            if "BQ" in df.columns:
-                df = df.drop("BQ", axis=1)
-            df = df.sort_values(["Cell", "Position"])
-            print('df no 0 shape', df[(df["Fw Coverage"] !=0 ) & (df["Rev Coverage"]!=0)].shape)
-            df[(df["Fw Coverage"] !=0 ) & (df["Rev Coverage"]!=0)].to_csv(curr_out, header=None, index=False)
-        nt_pileup[n] = df
-
-    if incl_cov:
-        df = load_sc_pileup(
-            os.path.join(concat_dir, f"*.coverage.strands.txt.gz"))
-        df = df.copy()[df["Cell"].isin(cell_inds)]
-        df = df.copy()[df["Position"].isin(nt_pos)]
-        df = df.fillna(0)
-
-        if not (out_d is None or name is None):
-            curr_out = join(out_d, f"{name}.coverage.txt")
-            df = df.sort_values(["Cell", "Position"])
-            df[(df["Coverage"] != 0)].to_csv(curr_out, header=None, index=False)
-            df.to_csv(curr_out, header=None, index=False)
-        nt_pileup["coverage"] = df
-    return nt_pileup
-
-
 def get_nt_bq(concat_dir, cell_inds, nt_pos):
     """ For each position, get the counts and average quality for each nt.
     :param concat_dir:
@@ -310,7 +249,7 @@ def get_nt_bq(concat_dir, cell_inds, nt_pos):
     cells = dict()
     nt_pileup = load_and_filter_nt_pileups(concat_dir,
                                            cell_inds, nt_pos,
-                                            out_d=None, name=None, avg_cov=True)
+                                           out_d=None, name=None, sum_cov=True)
     for n in nt_pileup:
         df = nt_pileup[n]
         cells[n] = set(df["Cell"].values)
@@ -328,25 +267,6 @@ def get_nt_bq(concat_dir, cell_inds, nt_pos):
     return nt_df, bq_df, cell_names
 
 
-def load_sc_pileup(sc_f):
-    """ Loads and sets the columns of the coverage pileup.
-    :param sc_f:
-    :return:
-    """
-    sc_coverage = pd.read_csv(glob.glob(sc_f)[0], header=None)
-    print(sc_coverage.head())
-    if len(sc_coverage.columns)>3:
-        sc_coverage.columns = ["Position", "CB", "Coverage", "Count Fw", "Count Rev"]
-        sc_coverage["Count Fw"] = sc_coverage["Count Fw"].astype(np.int64)
-        sc_coverage["Count Rev"] = sc_coverage["Count Rev"].astype(np.int64)
-    else:
-        sc_coverage.columns = ["Position", "Cell", "Coverage"]
-    sc_coverage["Cell"] = sc_coverage["Cell"].apply(lambda x: x.replace(".bam",""))
-    sc_coverage["Coverage"] = sc_coverage["Coverage"].astype(np.int64)
-
-    #logging.info('sc_cov', sc_coverage.head())
-    logging.info('sc_coverage head - {}'.format(sc_coverage.head().to_string()))
-    return sc_coverage
 
 
 def extract_af(nt_df, bq_df, ref_fasta):
@@ -393,33 +313,26 @@ def extract_af(nt_df, bq_df, ref_fasta):
 
 
 
-@click.command(help="Create AF by cell (nCells-by-nPositions-by-nNucs) for coverage along with BQ tensor for average quality")
-@click.argument('scpileup_dir', type=click.Path(exists=True))
-@click.argument('af_f', type=click.Path())
-@click.argument('mt_ref_fa', type=click.Path(exists=True))
-@click.argument('name', type=click.STRING)
-@click.argument('min_cells', type=click.INT)
-@click.argument('min_reads', type=click.INT)
-@click.argument('topn', type=click.INT)
-@click.argument('het_thresh', type=click.FLOAT)
-@click.argument('min_het_cells', type=click.INT)
-@click.argument('het_count_thresh', type=click.INT)
-@click.argument('bq_thresh', type=click.INT)
-@click.option("--log", default="", type=click.Path())
-def main(scpileup_dir, af_f, mt_ref_fa, name,
-                 min_cells=100, min_reads=100, topn=-1,
-                 het_thresh=0, min_het_cells=0, het_count_thresh=0,
-                 bq_thresh=0, log=""):
-    if log == "":
-        logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-    else:
-        logging.basicConfig(filename=log,
-                            format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-
-    run_filters(scpileup_dir, af_f, mt_ref_fa, name,
-                 min_cells, min_reads, topn,
-                 het_thresh, min_het_cells, het_count_thresh,
-                 bq_thresh)
+def plot_init(dp_by_cell, out_d):
+    f_init, ax = plt.subplots(nrows=3, ncols=1)
+    sns.heatmap(np.log2(dp_by_cell.iloc[:min(len(dp_by_cell), 500)] + 1), ax=ax[0])
+    ax[0].set_title("Log2 depth\nLowest 100 depth cells")
+    ax[0].set_xticks([])
+    ax[0].set_yticks([])
+    if len(dp_by_cell) > 5100:
+        sns.heatmap(np.log2(dp_by_cell.iloc[5000:5100] + 1), ax=ax[1])
+        ax[1].set_title("Middle 1000 depth cells")
+        ax[1].set_xticks([])
+        ax[1].set_yticks([])
+    sns.heatmap(np.log2(dp_by_cell.iloc[-100:] + 1), ax=ax[2])
+    ax[2].set_title("Highest 100 depth cells")
+    ax[2].set_xticks([])
+    ax[2].set_yticks([])
+    plt.subplots_adjust(hspace=1)
+    #plt.show()
+    f_init.savefig(join(out_d, "initial_cell_depth.png"), dpi=300)
+    plt.close(f_init)
+    return f_init
 
 
 def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
@@ -463,28 +376,9 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
                                    values="Coverage").fillna(0)
     logging.info('sorting depth')
     dp_by_cell = dp_by_cell.loc[dp_by_cell.sum(axis=1).sort_values().index]
-    f_init, ax = plt.subplots(nrows=3, ncols=1)
 
-    sns.heatmap(np.log2(dp_by_cell.iloc[:max(len(dp_by_cell), 500)] + 1), ax=ax[0])
-    ax[0].set_title("Lowest 100 depth cells")
-    ax[0].set_xticks([])
-    ax[0].set_yticks([])
+    plot_init(dp_by_cell, out_d)
 
-    if len(dp_by_cell) > 5100:
-
-        sns.heatmap(np.log2(dp_by_cell.iloc[5000:5100] + 1), ax=ax[1])
-        ax[1].set_title("Middle 1000 depth cells")
-        ax[1].set_xticks([])
-        ax[1].set_yticks([])
-
-    sns.heatmap(np.log2(dp_by_cell.iloc[-100:] + 1), ax=ax[2])
-    ax[2].set_title("Highest 100 depth cells")
-    ax[2].set_xticks([])
-    ax[2].set_yticks([])
-    plt.subplots_adjust(hspace=1)
-    #plt.show()
-    f_init.savefig(join(out_d, "initial_cell_depth.png"), dpi=300)
-    plt.close(f_init)
 
     # 2. Filter A: top cells by coverage, minimum coverage, minimum number of cells and certain number of reads
     pos_counts_filter, cell_filter = filter_positions_cells(sc_coverage,
@@ -524,7 +418,6 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
                                  columns="ID",
                                  values="Coverage").fillna(0)
     f_heat, ax = plt.subplots(nrows=4, ncols=3, figsize=(15, 15))
-
     if af_by_cell.shape[0]>1000:
         logging.info('sampling for the heatmap')
         samp_inds = np.random.choice(np.array(af_by_cell.shape[0]), size=1000, replace=False)
@@ -583,6 +476,7 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
 
     sns.heatmap(np.sqrt(af_by_cell.iloc[samp_inds]), vmin=0, vmax=0.3, ax=ax[2,0])
     ax[2,0].set_title("After filtering het Count")
+
     # Create depth-by-cell
     depth_by_cell = cov_ad[(cov_ad["ID"].isin(af_by_cell.columns)) & (
         cov_ad["Cell"].isin(af_by_cell.index))].pivot(index="Cell",
@@ -651,7 +545,7 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
         logging.info(name)
         load_and_filter_nt_pileups(scpileup_dir, final_cells,
                                    np.array(final_positions),
-                                   out_d, name, incl_cov=True, avg_cov=False)
+                                   out_d, name, incl_cov=True, sum_cov=False)
         # Save depth as well
         (depth_by_cell.sum(axis=1)/depth_by_cell.shape[1]).to_csv(join(out_d, name+".depthTable.txt"),
                                                                   header=False,
@@ -673,33 +567,40 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
         f_heat.suptitle(
             "Sqrt(allele freq), log2(depth count+1), log2(allele count+1)")
         f_heat.savefig(join(out_d, 'heatmap.png'), dpi=300)
-
         return
     else:
         return af_by_cell, bq_by_cell, af, bq_df, nt_df
 
 
+@click.command(help="Create AF by cell (nCells-by-nPositions-by-nNucs) for coverage along with BQ tensor for average quality")
+@click.argument('scpileup_dir', type=click.Path(exists=True))
+@click.argument('af_f', type=click.Path())
+@click.argument('mt_ref_fa', type=click.Path(exists=True))
+@click.argument('name', type=click.STRING)
+@click.argument('min_cells', type=click.INT)
+@click.argument('min_reads', type=click.INT)
+@click.argument('topn', type=click.INT)
+@click.argument('het_thresh', type=click.FLOAT)
+@click.argument('min_het_cells', type=click.INT)
+@click.argument('het_count_thresh', type=click.INT)
+@click.argument('bq_thresh', type=click.INT)
+@click.option("--log", default="", type=click.Path())
+def main(scpileup_dir, af_f, mt_ref_fa, name,
+                 min_cells=100, min_reads=100, topn=-1,
+                 het_thresh=0, min_het_cells=0, het_count_thresh=0,
+                 bq_thresh=0, log=""):
+    if log == "":
+        logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+    else:
+        logging.basicConfig(filename=log,
+                            format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+
+    run_filters(scpileup_dir, af_f, mt_ref_fa, name,
+                 min_cells, min_reads, topn,
+                 het_thresh, min_het_cells, het_count_thresh,
+                 bq_thresh)
+
+
 
 if __name__ == '__main__':
     main()
-    # from src.config import ROOT_DIR
-    # os.chdir(ROOT_DIR)
-    # scpileup = "data/processed/mttrace/jan21_2021/J2/MT/cellr_True/J2_200"
-    # af_f = "data/processed/mttrace/jan21_2021/J2/MT/cellr_True/J2_200/filters/minC100_minR50_topN0_hetT0.01_hetC50_hetCount50_bq30/af_by_cell.tsv"
-    # mt_ref_fa = "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
-    # name = "J2"
-    # min_cells = 100
-    # min_reads = 50
-    # topN = 0
-    # het_thresh = 0.01
-    # min_het_cells = 50
-    # het_count_thresh = 50
-    # bq_thresh = 30
-    #
-    #
-    # #data/processed/mttrace/jan21_2021,
-    # run_filters(scpileup, af_f, mt_ref_fa, name, min_cells,
-    #             min_reads, topN, het_thresh, min_het_cells,
-    #             het_count_thresh, bq_thresh)
-
-    # /data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta

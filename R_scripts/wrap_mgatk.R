@@ -3,7 +3,7 @@ source("./R_scripts/toRDS.R")
 source("./R_scripts/variant_calling.R")
 
 low_coverage_threshold <- 10
-n_cells_thresh <- 5
+
 strand_correlation_thresh <- 0.65
 log_vmr_thresh <- -2
 
@@ -17,6 +17,7 @@ wrap_to_seurat <- function(folder, name, is_strand){
   print(sessionInfo())
   SElist <- importMito(folder, is_strand)
   print(paste0(folder, "/", name, ".rds"))
+  #saveRDS(SElist[[1]], file = paste0(folder, "/", name,".nCell",low_coverage_threshold ".rds"))
   saveRDS(SElist[[1]], file = paste0(folder, "/", name, ".rds"))
   saveRDS(SElist[[2]], file = paste0(folder, "/", name, ".signac.rds"))
 }
@@ -56,6 +57,11 @@ print(sessionInfo())
 folder <- args[1]
 name <- args[2]
 is_strand <- args[3]
+if (length(args) == 4){
+  n_cells_thresh <-args[4]
+}else{
+  n_cells_thresh <- 5
+}
 if (is_strand == "TRUE"){
   is_strand <- TRUE
 } else{

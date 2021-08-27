@@ -1,0 +1,14 @@
+# Global parameters
+results: "test_aug202021" #"output/pipeline/TcellDupi_may17_2021/MTblacklist"
+params: "parameters/pipeline/params.csv"
+config: "parameters/pipeline/pipeline.yaml"
+prefix: "test_aug202021"
+
+fastq_dir: #"/data2/isshamie/mito_lineage/data/raw/TcellDupi_may17_2021/"
+mtscATAC_OUTDIR: #"output/data/mtscATAC/TcellDupi_may17_2021/MTblacklist"
+genome: "MTblacklist"
+samples: "parameters/samples_tests.csv"
+sample_dict:
+  pre: "pre"
+  post: "post"
+N_DONORS: 2

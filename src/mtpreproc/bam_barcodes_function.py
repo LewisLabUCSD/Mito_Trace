@@ -1,16 +1,8 @@
-import glob
-import os
-import pandas as pd
 from tqdm import tqdm
-import numpy as np
 import pysam
-import time
 from collections import defaultdict
 import pickle
-import matplotlib.pyplot as plt
 import click
-import seaborn as sns
-import sys
 
 
 def extract_barcode_info(bam_f, out_f,rm_slash=False, mt_chr="MT"):

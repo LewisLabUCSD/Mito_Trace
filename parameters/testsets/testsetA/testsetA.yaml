@@ -32,16 +32,16 @@ mttrace:
   maxBP: 16571
   base_quality: 20
 
-# For constructing the af_by_cell filter position_filter:
-filters:
-  #cell_depth: "Gaussian"
-  min_cells: 10
-  min_reads: 50
-  topN: 0
-  het_thresh: 0.001
-  min_het_cells: 10
-  het_count_thresh: 5
-  bq_thresh: 20
+  # For constructing the af_by_cell filter position_filter:
+  filters:
+    #cell_depth: "Gaussian"
+    min_cells: 10
+    min_reads: 50
+    topN: 0
+    het_thresh: 0.001
+    min_het_cells: 10
+    het_count_thresh: 5
+    bq_thresh: 20
 
 mgatk:
   # For mgatk to fill in low coverage cell positions
@@ -66,7 +66,7 @@ multiplex:
     minMAF: 0.01
     minCOUNT: 200
 
-  n_clone_list: [2, 3, 4 10, 20]
+  n_clone_list: [2, 3, 4, 10, 20]
 
 
 annotations:

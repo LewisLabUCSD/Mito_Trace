@@ -5,10 +5,8 @@
 ###################################################
 
 import sys
-import re
-import os
 import pysam
-
+pysam.set_verbosity(0)
 # bamfile = sys.argv[1] # Filepath to raw bamfile
 # outpre = sys.argv[2] # Prefix / basename for raw file output
 # maxBP = sys.argv[3] # Maximum length of mtDNA genome
@@ -33,6 +31,8 @@ def writeSparseMatrix2(mid, vec1, vec2, outpre, maxBP, sample):
 
 def run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality, use_strands=False):
 	n = int(maxBP)
+
+	is_corrupt = False
 	# BAQ
 	# initialize with a pseudo count to avoid dividing by zero
 	countsA = [0.00000001] * n
@@ -54,8 +54,11 @@ def run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality, use
 		neg_qualC = [0.0] * n
 		neg_qualG = [0.0] * n
 		neg_qualT = [0.0] * n
-
-	bam2 = pysam.AlignmentFile(bamfile, "rb")
+	try:
+		bam2 = pysam.AlignmentFile(bamfile, "rb")
+	except OSError:
+		print(f"{bamfile} corrupt. Skipping..")
+		return
 	for read in bam2:
 		seq = read.seq
 		quality = read.query_qualities
@@ -133,7 +136,6 @@ def run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality, use
 	countsT = [ int(round(elem)) for elem in countsT ]
 	# Allele Counts
 	minBP = 0
-	bam = pysam.AlignmentFile(bamfile, "rb")
 
 	writeSparseMatrix2("A", countsA, meanQualA, outpre, maxBP, sample)
 	writeSparseMatrix2("C", countsC, meanQualC, outpre, maxBP, sample)
@@ -155,9 +157,6 @@ def run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality, use
 		neg_countsG = [int(round(elem)) for elem in neg_countsG]
 		neg_countsT = [int(round(elem)) for elem in neg_countsT]
 		# Allele Counts
-		minBP = 0
-		bam = pysam.AlignmentFile(bamfile, "rb")
-
 		writeSparseMatrix2("A.minus", neg_countsA, neg_meanQualA, outpre, maxBP,
 						   sample)
 		writeSparseMatrix2("C.minus", neg_countsC, neg_meanQualC, outpre, maxBP,

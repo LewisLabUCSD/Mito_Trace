@@ -422,8 +422,6 @@ rule scPileup_filter_mgatk:
                     ## Filter by positions to keep and cells
                     filt_df[1] = filt_df[1] + "_" + params.sample[ind]
                     filt_df = filt_df[((filt_df[0].isin(pos_to_keep)) & (filt_df[1].isin(cells_to_keep)))]
-
-
                     nt_pileups[nuc] = nt_pileups[nuc].append(filt_df, ignore_index=True)
                 # Save coverage
                 nt_pileups[nuc].to_csv(join(dirname(output[int(d)]), f"d{d}.{nuc}.txt"), header=False, index=False)

@@ -115,7 +115,7 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
     # filter for certain columns
     if cells_filt_col is not None and cells_filt_val is not None:
         cells_meta = cells_meta[cells_meta[cells_filt_col]==cells_filt_val]
-    cells_meta = cells_meta.reset_index()
+    cells_meta = cells_meta.reset_index() # make 0-based
     ic("After filtering")
     ic(cells_meta.shape)
     allAD = pd.DataFrame(AD.todense())
