@@ -29,6 +29,7 @@ else:
 if not os.path.exists(outdir):
     os.makedirs(outdir)
 os.chdir(outdir)
+
 ##
 #report: "report/workflow.rst"
 rule all:

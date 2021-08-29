@@ -202,14 +202,24 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     # 2. Count the number of cells in each input to determine proportions
     cell_count = {}
     for i in indirs:
-        ad, dp, oth = wrap_load_mtx_df(i, oth_f=True, prefix=prefix_tags_in,
-                     columns=('Variant', 'Cell', 'integer'))
+        try:
+            ad, dp, oth = wrap_load_mtx_df(i, oth_f=True, prefix=prefix_tags_in,
+                         columns=('Variant', 'Cell', 'integer'))
+            is_oth = True
+        except :
+            ad, dp = wrap_load_mtx_df(i, oth_f=False, prefix=prefix_tags_in,
+                         columns=('Variant', 'Cell', 'integer'))
+            is_oth = False
         if len(ad) == 0:
             raise ValueError("The allele matrix is empty. It could have all been filtered out.")
         # cell_count[i] = len(set(dp["Cell"].values))
-        cell_count[i] = len(list(
-            set(dp["Cell"].values).union(set(ad["Cell"].values)).union(
-                set(oth["Cell"].values))))
+
+        if not is_oth:
+            cell_count[i] = len(list(set(dp["Cell"].values).union(
+                set(ad["Cell"].values))))
+        else:
+            cell_count[i] = len(list(set(dp["Cell"].values).union(
+                set(ad["Cell"].values)).union(set(oth["Cell"].values))))
     cell_proportion = np.array(list(cell_count.values())) / sum(
         cell_count.values())
     print('cell proportion', cell_proportion)
@@ -233,12 +243,12 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
 
         ad, ad_h = load_mtx_df(ad_f, give_header=True)
         dp, dp_h = load_mtx_df(dp_f, give_header=True)
-        oth, oth_h = load_mtx_df(oth_f, give_header=True)
+        if is_oth:
+            oth, oth_h = load_mtx_df(oth_f, give_header=True)
 
         # curr_cell_ids = np.sort(np.array(list(set(dp["Cell"].values).union(set(ad["Cell"].values)).union(set(oth["Cell"].values)))))
         curr_cell_ids = np.arange(1,
-                                  max(max(ad_h["Cell"], dp_h["Cell"]),
-                                      oth_h["Cell"]) + 1)
+                                  max(ad_h["Cell"], dp_h["Cell"]) + 1)
         print('curr_cell_ids', curr_cell_ids)
         curr_num_cells = len(curr_cell_ids)
         if num_cells_total is None:
@@ -276,7 +286,8 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
         # Filter
         ad_filt = ad[ad["Cell"].isin(subs)].copy()
         dp_filt = dp[dp["Cell"].isin(subs)].copy()
-        oth_filt = oth[oth["Cell"].isin(subs)].copy()
+        if is_oth:
+            oth_filt = oth[oth["Cell"].isin(subs)].copy()
         count += 1
 
         ##
@@ -296,7 +307,8 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
         print(ad_filt["Cell"])
         ad_filt["Cell"] = ad_filt["Cell"].map(cell_coords_map)
         dp_filt["Cell"] = dp_filt["Cell"].map(cell_coords_map)
-        oth_filt["Cell"] = oth_filt["Cell"].map(cell_coords_map)
+        if is_oth:
+            oth_filt["Cell"] = oth_filt["Cell"].map(cell_coords_map)
         print('ad_filt after map')
         print(ad_filt["Cell"])
 
@@ -305,14 +317,16 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
             vars_coords[i].to_dict())
         dp_filt["Variant"] = dp_filt["Variant"].map(
             vars_coords[i].to_dict())
-        oth_filt["Variant"] = oth_filt["Variant"].map(
-            vars_coords[i].to_dict())
+        if is_oth:
+            oth_filt["Variant"] = oth_filt["Variant"].map(
+                vars_coords[i].to_dict())
 
 
         cells_kept[i] = cell_coords_map
         ad_l.append(ad_filt)
         dp_l.append(dp_filt)
-        oth_l.append(oth_filt)
+        if is_oth:
+            oth_l.append(oth_filt)
 
 
     # # Since these are filtered, we have to remap again in case
@@ -338,7 +352,8 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     print('ad_full')
     print(ad_full.head())
     dp_full = pd.concat(dp_l)
-    oth_full = pd.concat(oth_l)
+    if is_oth:
+        oth_full = pd.concat(oth_l)
 
     ####
     # 4. Save the matrices and the labels
@@ -346,8 +361,12 @@ def subsample_sparse_matrices(outdir, indirs, cell_subsample=0.1,
     # Save the order of IDs and the cell maps
     # Save the pseudo matrices
     # Need to also add in a row tha is max var, max cell, number of entries
-    wrap_write_mtx_df(outdir, ad_full, dp_full, oth=oth_full, to_rm=True,
-                      prefix=prefix_tags_out)
+    if is_oth:
+        wrap_write_mtx_df(outdir, ad_full, dp_full, oth=oth_full, to_rm=True,
+                          prefix=prefix_tags_out)
+    else:
+        wrap_write_mtx_df(outdir, ad_full, dp_full, oth=None, to_rm=True,
+                          prefix=prefix_tags_out)
 
     # 5. Save cell indices
     for ind, val in enumerate(indirs):

@@ -12,7 +12,8 @@ import numpy as np
 print('config')
 print(config)
 ref_fa = config["ref_fa"]
-samples = config['multiplex']["samples"] #pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
+#samples = config['multiplex']["samples"]
+samples = pd.read_table(config["samples"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 num_cells = config['multiplex']["pseudo_multiplex"]["num_cells"]
 is_prop = config['multiplex']["pseudo_multiplex"]["is_proportional"]
 res = config["results"]
@@ -20,17 +21,13 @@ res = config["results"]
 rule all:
     input:
         expand("{results}/merged/enrichment/.status", results=res),
-        expand("{results}/merged/clones/n_clones_{n_clones}/variants.ipynb",
-                results=res),
         expand("{results}/merged/multiplex/variants/variants.ipynb",
                results=res),
         expand("{results}/merged/dendrograms/af_dendro.ipynb",
-               results=res, n_clones=config['multiplex']["n_clone_list"]),
-        expand("{results}/merged/clones/n_clones_{n_clones}/cells_BC.csv",
-                results=res),
-        expand("{results}/{sample}/clones/clones.ipynb",
-               sample=samples['sample_name'].values,
                results=res),
+        expand("{results}/merged/clones/n_clones_{n_clones}/variants.ipynb",
+                results=res, n_clones=config['multiplex']["n_clone_list"]),
+
 
 rule merged:
     input:
@@ -63,6 +60,17 @@ rule multiplex:
     shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} {params.notebook} {output}"
 
 
+# rule clones:
+#     input: rules.multiplex.output
+#     output: "{results}/merged/clones/clones.ipynb"
+#     params:
+#         INDIR = lambda wildcards, input: dirname(input[0]),
+#         OUTDIR = lambda wildcards, output: dirname(output[0]),
+#         N_DONORS=config["multiplex"]["N_DONORS"],
+#         notebook=join("src", "vireo", "2_MT_Lineage_Construct.ipynb"),
+#         workdir = os.getcwd()
+#     shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+#print(",".join(config['multiplex']['n_clone_list']))
 rule clones:
     input: rules.multiplex.output
     output: "{results}/merged/clones/clones.ipynb"
@@ -71,9 +79,9 @@ rule clones:
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         N_DONORS=config["multiplex"]["N_DONORS"],
         notebook=join("src", "vireo", "2_MT_Lineage_Construct.ipynb"),
-        workdir = os.getcwd()
-    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
-
+        workdir = os.getcwd(),
+        n_clone= ",".join([str(x) for x in config['multiplex']['n_clone_list']])
+    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p n_clone_list {params.n_clone} {params.notebook} {output}"
 
 rule enrichment:
     input:

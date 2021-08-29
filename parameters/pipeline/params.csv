@@ -1,0 +1,10 @@
+cellrbc,numreadsfilter,basequality,mincells,minreads,topN,hetthresh,minhetcells,hetcountthresh,bqthresh,lowcovthresh,ncellsthresh,nclonelist,variants,method
+True,200,20,10,50,0,0.001,10,5,20,10,5,100,simple,vireo
+True,200,20,10,50,0,0.001,5,2,20,10,5,100,simple,vireo
+True,200,20,10,50,0,0.001,5,5,20,10,5,100,simple,vireo
+True,200,20,10,50,0,0.001,10,5,20,10,5,40,simple,vireo
+True,200,20,10,50,0,0.001,5,2,20,10,5,40,simple,vireo
+True,200,20,10,50,0,0.001,5,5,20,10,5,40,simple,vireo
+True,200,20,10,50,0,0.001,10,5,20,10,5,20,mgatkdonor,vireo
+True,200,20,10,50,0,0.001,5,2,20,10,5,20,mgatkdonor,vireo
+True,200,20,10,50,0,0.001,5,5,20,10,5,20,mgatkdonor,vireo

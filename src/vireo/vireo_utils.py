@@ -13,9 +13,10 @@ from scipy.io import mmread
 from src.utils.data_io import wrap_write_mtx_df
 from icecream import ic
 
+
 def run_single(ad_dp, n):
-    _modelCA = Vireo(n_var=ad_dp[0].todense().shape[0],
-                    n_cell=ad_dp[0].todense().shape[1], n_donor=n, n_GT=2,
+    _modelCA = Vireo(n_var=ad_dp[1].todense().shape[0],
+                    n_cell=ad_dp[1].todense().shape[1], n_donor=n, n_GT=2,
                     fix_beta_sum=False, ASE_mode=True)
     _modelCA.set_prior(beta_mu_prior=np.array([[0.01, 0.5]]))
     _modelCA.fit(ad_dp[0], ad_dp[1], min_iter=20, verbose=False)
@@ -32,6 +33,7 @@ def run_vireo(ad, dp, k, out_f=None, plot_qc=False, n_cores=24,
     modelCA = _models_all[_idx]
     _losses = modelCA.ELBO_
 
+    print([x.ELBO_[-1] for x in _models_all])
     if plot_qc:
         plt.figure(figsize=(11, 4))
         plt.subplot(1, 2, 1)
@@ -113,7 +115,7 @@ def separate_donors(AD, DP, modelCA, cells_meta, outdir,
     # filter for certain columns
     if cells_filt_col is not None and cells_filt_val is not None:
         cells_meta = cells_meta[cells_meta[cells_filt_col]==cells_filt_val]
-    cells_meta = cells_meta.reset_index()
+    cells_meta = cells_meta.reset_index() # make 0-based
     ic("After filtering")
     ic(cells_meta.shape)
     allAD = pd.DataFrame(AD.todense())

@@ -81,11 +81,11 @@ rule all:
                results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
                min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
                het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']['n_clone_list']),
-        expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones_knn/donor{d}_clones.ipynb",
-               results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
-               min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
-               het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], d=np.arange(config["multiplex"]["N_DONORS"]))
-        # expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
+        # expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones_knn/donor{d}_clones.ipynb",
+        #        results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
+        #        min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
+        #        het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], d=np.arange(config["multiplex"]["N_DONORS"]))
+        # # expand("{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/n_clones_{n_clones}/cells_BC.csv",
         #        results=res, cellr_bc=cellr_bc, num_read=num_reads_filter,
         #        min_cells=ft['min_cells'],min_reads=ft['min_reads'],topN=ft["topN"],het_thresh=ft['het_thresh'],min_het_cells=ft['min_het_cells'],
         #        het_count_thresh=ft['het_count_thresh'], bq_thresh=ft['bq_thresh'], n_clones=config['multiplex']['n_clone_list']),
@@ -418,7 +418,9 @@ rule mgatk:
     input:
         all = "{results}/data/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/{sample}.coverage.txt",
         refAllele = "{results}/data/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/chrM_refAllele.txt"
-    output: "{results}/data/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.variant.rds"
+    output:
+        vars_f = "{results}/data/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.variant.rds",
+        vars_qc = report("{results}/data/{sample}/MT/cellr_{cellr_bc}/{sample}_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/{sample}.variantQC.png")
     params:
         data_dir=lambda wildcards, input: dirname(input.all),
         sample = lambda wildcards: wildcards.sample,
@@ -474,6 +476,102 @@ rule multiplex:
     shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} {params.notebook} {output}"
 
 
+
+# Extract pileups for each donor from original filter matrices
+rule scPileup_filter_mgatk:
+    input:
+        cov = expand("{{results}}/data/{sample}/MT/cellr_{{cellr_bc}}/{sample}_{{num_read}}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/{sample}.coverage.txt", sample=samples['sample_name'].values),
+        mult = "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/multiplex.ipynb"
+    output:
+        cov = expand("{{results}}/data/merged/MT/cellr_{{cellr_bc}}/numread_{{num_read}}/filters/minC{{min_cells}}_minR{{min_reads}}_topN{{topN}}_hetT{{het_thresh}}_hetC{{min_het_cells}}_hetCount{{het_count_thresh}}_bq{{bq_thresh}}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/d{d}.coverage.strands.txt.gz",
+                     d=config["multiplex"]["N_DONORS"])
+    params:
+        indir = lambda wildcards, input: dirname(input.cov),
+        outdir = lambda wildcards, output: dirname(output.cov),
+        cells_meta = lambda wildcards, input: join(dirname(input.mult), "cells_meta.csv"),
+        samples = lambda wildcards: wildcards.sample
+
+    run:
+        cells_meta = pd.read_csv(params.cells_meta, sep='\t')
+        for d, df in cells_meta.groupby('donor'):
+            nt_pileups = {}
+            cond_positions = {}
+            nt_pileups["coverage"] = pd.DataFrame()
+
+            for ind, curr_cov_f in enumerate(input.cov):
+                curr_samp_cov = pd.read_csv(curr_cov_f, header=None) #load sample coverage
+                condition = params.samples[ind]
+                curr_samp_donor_df = df[df["condition"]==condition]
+                filt_df = curr_samp_donor_df[curr_samp_cov[1].isin(curr_samp_donor_df["raw ID"])]
+                filt_df[1] = filt_df[1] + "_" + params.sample[ind]
+                cond_positions[params.sample[ind]] = set(filt_df[0].values)
+                nt_pileups["coverage"] = nt_pileups["coverage"].append(filt_df, ignore_index=True)
+            # Filter by overlapping positions:
+            pos_to_keep = list(cond_positions.values())[0].intersection(*list(cond_positions.values()))
+            nt_pileups["coverage"] = nt_pileups["coverage"][nt_pileups["coverage"][0].isin(pos_to_keep)]
+
+            # Save coverage and depth
+            nt_pileups["coverage"].to_csv(output.cov[d])
+            depth = nt_pileups["coverage"].groupby(1).sum()[2]/16569
+            depth.to_csv(join(dirname(output.cov[d]), f"d{d}.depthTable.txt"), sep='\t', header=False)
+
+            # Filter for the nucleotides as well
+            for nuc in ["C", "A", "G", "T"]:
+                nt_pileups[nuc] = pd.DataFrame()
+                for ind, curr_cov_f in enumerate(input.cov):
+                    curr_samp_cov = pd.read_csv(join(dirname(curr_cov_f), f"{params.samples[ind]}.{nuc}.txt"), header=None) #load sample coverage
+                    curr_samp_donor_df = df[df["condition"]==condition]
+                    filt_df = curr_samp_donor_df[curr_samp_cov[1].isin(curr_samp_donor_df["raw ID"])] # Filter by donor
+                    filt_df[1] = filt_df[1] + "_" + params.sample[ind]
+                    filt_df = filt_df[filt_df[1].isin(curr_samp_donor_df["ID"])] # Filter by cell ID from multiplex cells_meta
+                    filt_df = filt_df[filt_df[0].isin(pos_to_keep)]
+                    nt_pileups[nuc] = nt_pileups[nuc].append(filt_df, ignore_index=True)
+                # Save coverage
+                nt_pileups[nuc].to_csv(join(dirname(output.cov[d]), f"d{d}.{nuc}.txt"))
+            #shell: "python donor_filter_mgatk.py {params.indir} {params.cells_meta} {params.outdir}"
+
+
+rule donor_get_refAllele:
+    #input: config["mt_ref_fa"],
+    params: config["chrM_refAllele"]
+    output: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/chrM_refAllele.txt"
+    shell: 'cp {params} {output}'
+
+
+rule donor_mgatk:
+    input: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/d{d}.coverage.strands.txt.gz"
+    output: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/donor_mgatk/d{d}.variant.rds"
+    params:
+        data_dir =lambda wildcards, input: dirname(input[0]),
+        donor = lambda wildcards: f"d{wildcards.d}",
+    shell:
+        "./R_scripts/wrap_mgatk.R {params.data_dir} donor_mgatk/{params.donor} FALSE"
+
+
+rule donor_mgatk_to_vireoIn:
+    input: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/donor_mgatk/d{d}.variant.rds"
+    output: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/donor_mgatk/vireoIn/cellSNP.tag.AD.mtx"
+    params:
+        indir = lambda wildcards, input: dirname(input[0]),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        donor = lambda wildcards: f"d{wildcards.d}"
+    shell:
+        "python src/mgatk_to_vireo.py {params.indir} {params.outdir} {params.donor}"
+
+
+rule clones_donor_mgatk:
+    input: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/donor_mgatk/vireoIn/cellSNP.tag.AD.mtx"
+    output: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/donors_mgatk_in/donor{d}/donor_mgatk/vireoIn/clones/clones.ipynb"
+    params:
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        N_DONORS=config["multiplex"]["N_DONORS"],
+        notebook=join("src", "vireo", "2_MT_Lineage_Construct.ipynb"),
+        workdir = os.getcwd(),
+        n_clone=",".join([str(x) for x in config['multiplex']['n_clone_list']])
+    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p n_clone_list {params.n_clone} {params.notebook} {output}"
+
+
 rule clones:
     input: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/multiplex/multiplex.ipynb",
     output: "{results}/data/merged/MT/cellr_{cellr_bc}/numread_{num_read}/filters/minC{min_cells}_minR{min_reads}_topN{topN}_hetT{het_thresh}_hetC{min_het_cells}_hetCount{het_count_thresh}_bq{bq_thresh}/filter_mgatk/vireoIn/clones/clones.ipynb"
@@ -482,8 +580,9 @@ rule clones:
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         N_DONORS=config["multiplex"]["N_DONORS"],
         notebook=join("src", "vireo", "2_MT_Lineage_Construct.ipynb"),
-        workdir = os.getcwd()
-    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} {params.notebook} {output}"
+        workdir = os.getcwd(),
+        n_clone=",".join([str(x) for x in config['multiplex']['n_clone_list']])
+    shell: "papermill --cwd {params.workdir} -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p n_clone_list {params.n_clone} {params.notebook} {output}"
 
 
 # from snakemake.utils import R
@@ -532,7 +631,7 @@ rule enrichment:
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         N_DONORS = config["multiplex"]["N_DONORS"],
         nclones = config['multiplex']["n_clone_list"],
-        script = join("src", "vireo", "lineage_enrichment.py"),
+        script = join("src",  "lineage_enrichment.py"),
         samples = ",".join(config["multiplex"]['samples']),
         tests = get_comparisons
     shell: "python {params.script} {params.clones_indir} {params.OUTDIR} {params.nclones} {params.samples} {params.tests}"

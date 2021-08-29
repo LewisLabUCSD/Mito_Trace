@@ -15,6 +15,8 @@ import src.mlflow.mlflow_utils as mu
 from icecream import ic
 import subprocess
 import datetime
+import pandas as pd
+
 
 def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master",
             branch='workflow_results'):
@@ -66,6 +68,31 @@ def get_curr_dir(params, is_mlflow=True):
     return
 
 
+def create_params_combination(params, subset=None):
+    """ Creates all combinations of the different parameters given and puts
+    into long pandas df. This can then be input to snakemake
+
+    :param params: [{param:[param instances]}] list of the parameters to use and the instances
+    :param subset: subset of the params keys to use
+    :return:
+    """
+    from itertools import product
+    if subset is not None:
+        params = [list(p.keys())[0] for p in params if list(p.keys())[0] in subset]
+
+    params_df = pd.DataFrame(product([i.values() for i in params]),
+                    columns=[list(i.keys())[0] for i in params])
+    return params_df
+
+
+def create_params_combination_global(cfg):
+    params = {}
+    if 'pipeline' in cfg:
+        analyses = cfg["pipeline"]
+        for an in analyses:
+            params[an] = analyses["params"]
+    params_df = create_params_combination(params)
+    return params_df
 
 def check_input(config, files_config, curr_p, git_commit=None,
                 mlflow_tracking_uri=None):
@@ -90,6 +117,7 @@ def check_input(config, files_config, curr_p, git_commit=None,
 
         # If done, add
     return True
+
 
 @click.command()
 @click.argument("smkfile", type=click.Path(exists=True))

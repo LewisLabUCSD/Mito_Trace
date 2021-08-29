@@ -6,6 +6,7 @@ samples: "/data2/mito_lineage/parameters/TcellDupi_may17_2021/TcellDupi_may17_20
 
 # mttrace parameters
 results: "data/processed/mttrace/TcellDupi_may17_2021/MTblacklist"
+
 #figures: "figures/mttrace/jan21_2021"
 
 # Genome paths
@@ -38,34 +39,47 @@ mttrace:
   base_quality: 20
 
 
-  # For constructing the af_by_cell filter position_filter:
+files:
+  mttrace:
+    coverage:
+      pre: "data/processed/mttrace/PBMC_may17_2021/MTblacklist/pre/MT/cellr_True/pre_200/post.coverage.strands.txt.gz"
+      post: "data/processed/mttrace/PBMC_may17_2021/MTblacklist/post/MT/cellr_True/post_200/post.coverage.strands.txt.gz"
+
   filters:
-    #cell_depth: "Gaussian"
-    min_cells:
-      - 10
+    coverage:
+      pre: "data/processed/mttrace/TcellDupi_may17_2021/MTblacklist/pre/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/pre.coverage.txt"
+      post: "data/processed/mttrace/TcellDupi_may17_2021/MTblacklist/post/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/post.coverage.txt"
 
-    min_reads:
-      - 50
-  #    - 100
 
-    topN:
-      - 0
 
-    het_thresh:
-      - 0.001
+# For constructing the af_by_cell filter position_filter:
+filters:
+  #cell_depth: "Gaussian"
+  min_cells:
+    - 10
 
-    min_het_cells:
-      - 10
-      #- 50
-      #- 50
+  min_reads:
+    - 50
+#    - 100
 
-    het_count_thresh:
-      - 5
-     # - 2
-     # - 50
+  topN:
+    - 0
 
-    bq_thresh:
-      - 20
+  het_thresh:
+    - 0.001
+
+  min_het_cells:
+    - 10
+    #- 50
+    #- 50
+
+  het_count_thresh:
+    - 5
+   # - 2
+   # - 50
+
+  bq_thresh:
+    - 20
 
 mgatk:
   # For mgatk to fill in low coverage cell positions
