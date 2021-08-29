@@ -180,3 +180,5 @@ classify_from_reference <- function(A, B){
   colnames(euklDist)[max.col(-1*euklDist, 'first')]  -> vec
   return(vec)
 }
+
+

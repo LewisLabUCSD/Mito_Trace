@@ -284,7 +284,7 @@ rule enrichment:
     params:
         clones_indir = lambda wildcards, input: dirname(dirname(dirname(input[0]))),#lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
-        n_clones = config['multiplex']["n_clone_list"],
+        n_clones = lambda wildcards: wildcards.n_clone, #config['multiplex']["n_clone_list"],
         script = join("src", "lineage_enrichment.py"),
         samples=",".join(config["multiplex"]['samples'])
     shell: "python {params.script} {params.clones_indir} {params.OUTDIR} {params.n_clones} {params.samples}"

@@ -25,7 +25,7 @@ rule multiplex:
         INDIR = lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         to_elbo = False
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} {params.notebook} {output.note}"
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} --log-output {params.notebook} {output.note}"
 
 
 rule donors_plotAF:
@@ -35,8 +35,8 @@ rule donors_plotAF:
     output:
         report(expand("{{outdir}}/multiplex/dendrograms/figures/donor{d}_dendrogram.png",
                d=np.arange(config["N_DONORS"]))),
-        note="{{outdir}}/multiplex/dendrograms/multiplex_dendro.ipynb",
     params:
+        note = lambda wildcards, output: join(dirname(dirname(output[0])), "multiplex_dendro.ipynb"), # "{{outdir}}/multiplex/dendrograms/multiplex_dendro.ipynb",
         #INDIR = lambda wildcards, input: dirname(input[0]),
         INDIR = lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: Path(abspath(output[0])).parents[1], #go to the 'dendrograms' folder
@@ -44,7 +44,7 @@ rule donors_plotAF:
         N_DONORS=config['N_DONORS'], #config["multiplex"]["N_DONORS"],
         sample_names= ",".join(config['samples'].index), # make it as a list
         notebook=join("src", "vireo", "3_MT_Donors_Dendrogram.ipynb"),
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {output.note}"
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {params.note}"
 
 
 rule donors_type_variants:

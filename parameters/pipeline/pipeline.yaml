@@ -35,8 +35,8 @@ filters:
     minreads: [50]
     topN: [0]
     hetthresh: [0.001]
-    minhetcells: [10,5]
-    hetcountthresh: [5,2]
+    minhetcells: [10] #[10,5]
+    hetcountthresh: [5] #[5,2]
     bqthresh: [20]
 
 
@@ -78,7 +78,7 @@ clones:
       dpthresh: 2
   knn:
     params:
-      resolution: [3.5]
+      resolution: [10,3]
 
 annotations:
   datadir: "/data2/mito_lineage/data/external/granja_cd34/"

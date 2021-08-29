@@ -100,7 +100,7 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
     ###############################################################
     ## Added 06/08
     ###############################################################
-    cells_meta = pd.read_csv(join(clones_indir, f"lineage{nclones}", "cells_meta.tsv"),
+    cells_meta = pd.read_csv(join(clones_indir, "cells_meta.tsv"),
                              sep='\t')
     for d, curr_donor in cells_meta.groupby("donor"):
         # Create counts df
@@ -110,16 +110,16 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
         clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
         ###############################################################
         clust_counts = clust_counts.astype('Int64')
-        print('clust_counts')
-        print(clust_counts)
+        #print('clust_counts')
+        #print(clust_counts)
 
         # Get enrichment
         if "Input" in names:
             enrich_df = run_enrichment(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
         else:
             enrich_df = run_enrichment(clust_counts, flt_var=names[1])
-        print('enrich_df')
-        print(enrich_df)
+        # print('enrich_df')
+        # print(enrich_df)
 
         fold_df = pd.DataFrame(
                 (clust_counts.loc[f"# {names[1]} Cells in Cluster"] + 1) / (
@@ -137,8 +137,8 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
         ### Convert cluster numbers into probablilites.
         clust_counts_norm = (clust_counts+1).copy().astype(np.double)
         clust_counts_norm  = clust_counts_norm.div(clust_counts_norm.sum(axis=1), axis='rows')
-        print('clust_counts_norm')
-        print(clust_counts_norm)
+        # print('clust_counts_norm')
+        # print(clust_counts_norm)
         fold_df_norm = pd.DataFrame(
                     (clust_counts_norm.loc[f"# {names[1]} Cells in Cluster"] + 1) / (
                         clust_counts_norm.loc[f"# {names[0]} Cells in Cluster"] + 1)).transpose()
@@ -150,9 +150,7 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
 
         #enrich_stats = pd.concat((enrich_stats.transpose(), fold_df)).transpose()
         enrich_stats.to_csv(join(outdir, f"{name}enrichmentNorm_clones{nclones}_donor{d}.csv"))
-        print('enrich_stats')
-        print(enrich_stats)
-        print(enrich_stats.columns)
+        #print('enrich_stats')
         if plot_ind:
             plot_volcano(enrich_stats, f_save=join(outdir, f"{name}volcano_donor{d}.clones{nclones}_Fisher_foldNorm.png"), v=1, x=f"{names[1]} fold enrichment")
             plot_volcano(enrich_stats, f_save=join(outdir,f"{name}volcano_donor{d}.clones{nclones}_hyper_foldNorm.png"),y="-log10p", v=1, x=f"{names[1]} fold enrichment")
@@ -160,6 +158,7 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
 
     all_enrich_df = pd.concat(all_enrich_norm).reset_index().rename(
         {"level_0": "Donor", "level_1": "clones"}, axis=1)
+    print("Does donor have any cells")
     print((all_enrich_df["Donor"].isnull()).any())
     all_enrich_df["Donor"] = all_enrich_df["Donor"].astype(object)
 
@@ -220,12 +219,12 @@ def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
 
 
 def create_enrich(clust, fold, enrich, fold_norm=None):
-    print('clust')
-    print(clust.head())
-    print('fold')
-    print(fold.head())
-    print('enrich')
-    print(enrich.head())
+    # print('clust')
+    # print(clust.head())
+    # print('fold')
+    # print(fold.head())
+    # print('enrich')
+    # print(enrich.head())
     if fold_norm is not None:
         enrich_stats = pd.concat(
             (clust, fold, enrich, fold_norm)).transpose()
@@ -246,7 +245,7 @@ def plot_label_enrich(enrich_df, fold_df, clust_counts, outdir, n, k):
                 cbar=False,  # labels.reshape([1, len(labels)]),
                 cmap='RdYlGn', ax=ax[0])
     ax[0].set_title("Flt3 enrichment p-value")
-    print('fold_df', fold_df)
+    #print('fold_df', fold_df)
     sns.heatmap(fold_df, ax=ax[1], annot=True, fmt=".2f", cbar=False,
                 cmap="RdBu")
     ax[1].set_aspect('equal', adjustable='box')
@@ -296,7 +295,7 @@ def plot_clone_scatter(enrich_stats, outdir, samples, n, k, size='-log10p'):
 @click.command()
 @click.argument("clones_indir", type=click.Path(exists=True))
 @click.argument("outdir",  type=click.Path(exists=True))
-@click.argument("nclones",type=click.INT, nargs=-1)
+@click.argument("nclones",type=click.INT)
 @click.argument("samples", type=click.STRING)
 @click.option("--plot_ind", default=False)
 @click.option("--tests", default="")

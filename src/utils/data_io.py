@@ -16,6 +16,9 @@ import numpy as np
 ## config utils
 ####
 def setup_outdir(outdir, dirs=('figures', 'data','results')):
+    if not exists(outdir):
+        print("creating outdir", outdir)
+        os.mkdir(outdir)
     for i in dirs:
         if not exists(join(outdir, i)):
             os.mkdir(join(outdir, i))
