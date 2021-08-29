@@ -122,15 +122,17 @@ def check_input(config, files_config, curr_p, git_commit=None,
 @click.command()
 @click.argument("smkfile", type=click.Path(exists=True))
 @click.argument("configfile", type=click.Path(exists=True))
-@click.option("--outdir", default=".", type=click.Path(exists=True))
+@click.option("--pipename", "-p", default="pipeline", type=click.STRING)
+@click.option("--outdir", "-o", default=".", type=click.Path(exists=True))
 @click.option("--to_git", default=False)
 @click.option("--targets", "-t", type=click.STRING, multiple=True)
 @click.option("--dryrun", default=False)
 @click.option("--mlflow", default=False)
 @click.option("--forcetargets", default=False)
 @click.option("--to_gitpush", default=False)
+@click.option("--cores", default=4)
 @click.option("--template_cfg", default="")
-def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetargets, to_gitpush, template_cfg):
+def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow, forcetargets, to_gitpush, cores, template_cfg):
     """ Runs snakemake and/or mlflow pipeline
 
 
@@ -153,8 +155,13 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
 
     # Setup config output file names for the target
     config = read_config_file(configfile)
-    pipeline = config.get('pipeline', [])
-    outdir = join(outdir, config['prefix'])
+    #pipeline = config.get('pipeline', [])
+    if 'outdir' in config:
+        #config['outdir']
+        outdir = join(config['outdir'], pipename, config['prefix'])
+    else:
+        outdir = join(outdir, pipename, config['prefix'])
+
     ic(configfile)
     ic(outdir)
 
@@ -163,13 +170,15 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
 
     # Compare parameter file to schema
     #validate_schema_files(parameters, parameters_schema)
-    for p in pipeline:
-        setup_files(outdir, configfile, pipe=p)
-        if "params" in config[p]:
-            Paramspace(config[p], filename_params="*", param_sep='_')
+    # for p in pipeline:
+    #     setup_files(outdir, configfile, pipe=p)
+    #     if "params" in config[p]:
+    #         Paramspace(config[p], filename_params="*", param_sep='_')
 
     out = snakemake.snakemake(smkfile, configfiles=[configfile],
-                        targets=targets, dryrun=dryrun, forcetargets=forcetargets)
+                        targets=targets, dryrun=dryrun,
+                              forcetargets=forcetargets,
+                              cores=cores)
     print("out")
     print(out)
 
@@ -181,20 +190,24 @@ def main(smkfile, configfile, outdir, to_git, targets, dryrun, mlflow, forcetarg
         # copy over snakemake and configfile to output:
         os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
         os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
+        write_config_file(join(outdir, "params.outcfg"), config)
         if to_git:
-            run_git([outdir], commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
+            run_git([join(outdir,f"report_{basename(smkfile)}.html"),
+                     join(outdir,"params.outcfg"),
+                     join(outdir,f"{basename(smkfile)}.insmk"),
+                     join(outdir,f"{basename(smkfile)}.incfg")],
+                    commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
                     to_push=to_gitpush)
-        write_config_file(join(outdir, "params.outcfg"),config)
 
-    # 3. Update _stateOfAnalysis.txt file
-    an_f = join(outdir, '_stateOfAnalysis.txt')
-    # Timestamp and update
-    s = 'Ran and Needs inspection\n' + 'Time:' +  datetime.datetime.now().strftime("%B/%d/%Y %H:%M:%S")
 
-    # Get a tree of files and folders after the pipeline
-    cmd = f"tree {outdir} > {outdir}/_tree.txt"
+        # 3. Update _stateOfAnalysis.txt file
+        an_f = join(outdir, '_stateOfAnalysis.txt')
+        # Timestamp and update
+        s = 'Ran and Needs inspection\n' + 'Time:' +  datetime.datetime.now().strftime("%B/%d/%Y %H:%M:%S")
 
-    os.system(cmd)
+    # # Get a tree of files and folders after the pipeline
+    # cmd = f"tree -d {outdir} -L 3 > {outdir}/_tree.txt"
+    # os.system(cmd)
 
     return
 
