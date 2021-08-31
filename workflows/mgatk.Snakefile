@@ -21,14 +21,14 @@ rule mgatk:
         refAllele = "{outdir}/chrM_refAllele.txt"
     output:
         vars_f = "{outdir}/mgatk/{sample}.variant.rds",
-        vars_qc = report("{outdir}/mgatk/{sample}.variantQC.png")
+        vars_qc = report("{outdir}/mgatk/{sample}.variantQC.png", category="Variants")
     params:
         data_dir = lambda wildcards, input: dirname(input.all),
         sample = lambda wildcards: wildcards.sample,
-        outdir = lambda wildcards, output: dirname(output[0]),
+        outdir = "mgatk"
         #nCell = lambda wildcards: wildcards.nCell
     shell:
-        "./R_scripts/wrap_mgatk.R {params.data_dir} mgatk/{params.sample} FALSE "
+        "./R_scripts/wrap_mgatk.R {params.data_dir} {params.outdir}/{params.sample} FALSE "
 
 
 rule mgatk_to_vireoIn:

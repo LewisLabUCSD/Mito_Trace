@@ -24,6 +24,9 @@ samples = pd.read_table(join(ROOT_DIR, config["samples_meta"]), dtype=str,sep=',
 
 rule all:
     input:
+        expand("{outdir}/annotation/{prefix}/mergedSamples/allSamples.integrated.ipynb",
+               outdir=config['outdir'], prefix=config["prefix"]),
+
         expand("{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz",
                extrnl=config['annotations']['name'], outdir=config['outdir'],
                ),
@@ -65,7 +68,7 @@ def get_extrnl_frags(wildcards):
     return f"{wildcards.outdir}/annotation/data/{cfg_anno['name']}/{cfg_anno['name']}.fragments.sort.tsv.gz"
 
 
-rule createMergedSignac:
+rule createMergedExpSignac:
     """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
     The peaks are reduced to the overlapping sets, and if a fragments file is provided,
     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
@@ -123,3 +126,53 @@ rule annotation_anchors:
     shell: "papermill -p exp {params.exp} -p SE_f {input[0]} -p outdir {params.outdir} {params.rscript} {output[1]}"
 
 
+rule createMergedSignac:
+    """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
+    The peaks are reduced to the overlapping sets, and if a fragments file is provided,
+    Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
+
+    """
+    output:
+        "{outdir}/annotation/{prefix}/allSamples.integrated.ipynb",
+        "{outdir}/annotation/{prefix}/allSamples.integrated.rds",
+        report(expand("{{outdir}}/annotation/{{prefix}}/{f}",
+                      f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png", "lin.ImmuneGenes.dot.png"]))
+        #report("{outdir}/annotation/{prefix}/{sample}/{sample}.merged.lsi.Batchlabels.png")
+    params:
+        indir = config["mtscATAC_OUTDIR"],
+        outdir =lambda wildcards, output: dirname(output[0]),
+        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateMergedSignac.ipynb"), # The script defaults to the granja data
+        sample_names = ",".join(samples.index),
+        samples = ",".join(samples["cellr_ID"])
+        #workdir = os.getcwd(),
+    shell: "papermill  -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
+
+
+rule runDE:
+    input:
+        "{outdir}/annotation/{prefix}/allSamples.integrated.rds",
+    output:
+        report(expand("{{outdir}}/annotation/{{prefix}}/figures/{f}",
+                      f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png", "lin.ImmuneGenes.dot.png"]))
+    params:
+        indir = lambda wildcards, input: dirname(input[0]),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateMergedSignac.ipynb"), # The script defaults to the granja data
+
+    shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} {params.rscript} {output[0]}"
+
+
+# rule overlay_cells_meta:
+#     input:
+#         "{outdir}/annotation/{prefix}/allSamples.integrated.rds",
+#     output:
+#         "{outdir}/annotation/{prefix}/donors.png",
+#         "{outdir}/annotation/{prefix}/clones.png"
+#     params:
+#         indir = lambda wildcards, input: dirname(input[0]),
+#         outdir = lambda wildcards, output: dirname(output[0]),
+#         cells_meta = config["cells_meta"],
+#         rscript= join(ROOT_DIR, "R_scripts/annotations/lineageNuclear.ipynb"), # The script defaults to the granja data
+#
+#     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p cells_meta {params.cells_meta} {params.rscript} {output[0]}"
+#

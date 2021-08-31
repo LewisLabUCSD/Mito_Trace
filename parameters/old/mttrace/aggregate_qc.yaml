@@ -1,0 +1,9 @@
+configfiles:
+  CHIP: "parameters/CHIP_april08_2021/mttrace.yaml"
+  TcellDupi: "parameters/TcellDupi_may17_2021/mttrace.yaml"
+  cd34Norm: "parameters/jan21_2021/mttrace.yaml"
+  optim: "parameters/optim_june03_2021/mttrace.yaml"
+  pbmcDupi: "parameters/DUPI_april08_2021/mttrace_mtasnucl.yaml"
+  Lareau: "parameters/Lareau_2020/mttrace.yaml"
+
+results: "output/mttrace/figures/QC"

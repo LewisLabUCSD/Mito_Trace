@@ -37,8 +37,8 @@ def main(directory, samplename):
     for nt in ["A", "C", "G", "T"]:
         print(nt)
         print(join(directory, f"{samplename}_all.{nt}.txt"))
-        curr_fw = pd.read_csv(join(directory, f"{samplename}_all.{nt}.txt"), header=None, error_bad_lines=False)
-        curr_rev = pd.read_csv(join(directory, f"{samplename}_all.{nt}.minus.txt"), header=None, error_bad_lines=False)
+        curr_fw = pd.read_csv(join(directory, f"{samplename}_all.{nt}.txt.gz"), header=None, error_bad_lines=False)
+        curr_rev = pd.read_csv(join(directory, f"{samplename}_all.{nt}.minus.txt.gz"), header=None, error_bad_lines=False)
         curr_fw.columns = ["Position", "CB", "Count Fw", "BQ Fw"]
         curr_rev.columns = ["Position", "CB", "Count Rev", "BQ Rev"]
         curr = pd.merge(curr_fw, curr_rev, on=["Position","CB"], how="outer")
@@ -46,10 +46,9 @@ def main(directory, samplename):
         curr = curr[["Position", "CB", "Count Fw", "BQ Fw", "Count Rev", "BQ Rev"]]
         curr.to_csv(join(directory, f"{samplename}_all.{nt}.strands.txt.gz"),compression='gzip', index=None)
 
-
     print('Coverage')
-    curr_fw = pd.read_csv(join(directory,f"{samplename}_all.coverage.txt"), header=None, error_bad_lines=False)
-    curr_rev = pd.read_csv(join(directory,f"{samplename}_all.coverage.minus.txt"), header=None, error_bad_lines=False)
+    curr_fw = pd.read_csv(join(directory,f"{samplename}_all.coverage.txt.gz"), header=None, error_bad_lines=False)
+    curr_rev = pd.read_csv(join(directory,f"{samplename}_all.coverage.minus.txt.gz"), header=None, error_bad_lines=False)
     curr_fw.columns = ["Position", "CB", "Count Fw"]
     curr_rev.columns = ["Position", "CB", "Count Rev"]
 

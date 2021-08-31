@@ -6,7 +6,7 @@ config: "parameters/pipeline/pipeline.yaml"
 
 ## Experimental parameters
 prefix: "TcellDupi_may17_2021/MTblacklist"
-samples_meta: "/data2/mito_lineage/parameters/pipeline/TcellDupi_may17_2021.csv"
+samples_meta: "parameters/pipeline/TcellDupi_may17_2021.csv"
 fastq_dir: "/data2/isshamie/mito_lineage/data/raw/TcellDupi_may17_2021/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
 mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/PBMC_may17_2021/MTblacklist"
 genome: "MTBlacklist"

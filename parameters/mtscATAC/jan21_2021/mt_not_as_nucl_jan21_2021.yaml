@@ -1,3 +1,0 @@
-genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist_mtasnucl"
-OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist_mtasnucl"
-samples: "parameters/mtscATAC/jan21_2021/jan21_2021.csv"

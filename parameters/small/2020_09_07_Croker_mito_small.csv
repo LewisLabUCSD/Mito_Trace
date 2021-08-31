@@ -1,8 +1,0 @@
-sample,raw,bam,bam_f
-CD34_Flt3L_mt_PolydT,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_Flt3L_mt_PolydT_fiveprime/outs/possorted_genome_bam.bam
-CD34_mt_PolydT,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_mt_PolydT_fiveprime/outs/possorted_genome_bam.bam
-CD34_mt,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_mt_fiveprime/outs/possorted_genome_bam.bam
-CD34_Flt3L_mt,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_Flt3L_mt_fiveprime/outs/possorted_genome_bam.bam
-CD34_PolydT,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/CD34_PolydT_fiveprime/outs/possorted_genome_bam.bam
-PBMC_mt_PolydT,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/PBMC_mt_PolydT_fiveprime/outs/possorted_genome_bam.bam
-PBMC_mt,,,/data2/isshamie/mito_lineage/data/processed/2020_09_07_Croker_mito/PBMC_mt_fiveprime/outs/possorted_genome_bam.bam

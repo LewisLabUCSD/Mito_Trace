@@ -17,7 +17,7 @@ rule multiplex:
     input: "{outdir}/cellSNP.tag.AD.mtx"
     output:
         note="{outdir}/multiplex/multiplex.ipynb",
-        results = report(multiext("{outdir}/multiplex/", "multiplex_AF_SNPs_all_afFilt.png", "multiplex_clusters_all.labels.png"))
+        results = multiext("{outdir}/multiplex/", "multiplex_AF_SNPs_all_afFilt.png", "multiplex_clusters_all.labels.png")#, category="Multiplex")
     params:
         N_DONORS=config["N_DONORS"],
         notebook=join("src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
@@ -34,7 +34,7 @@ rule donors_plotAF:
         "{outdir}/multiplex/multiplex.ipynb" #"data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
     output:
         report(expand("{{outdir}}/multiplex/dendrograms/figures/donor{d}_dendrogram.png",
-               d=np.arange(config["N_DONORS"]))),
+               d=np.arange(config["N_DONORS"])), category="multiplex"),
     params:
         note = lambda wildcards, output: join(dirname(dirname(output[0])), "multiplex_dendro.ipynb"), # "{{outdir}}/multiplex/dendrograms/multiplex_dendro.ipynb",
         #INDIR = lambda wildcards, input: dirname(input[0]),
@@ -45,6 +45,7 @@ rule donors_plotAF:
         sample_names= ",".join(config['samples'].index), # make it as a list
         notebook=join("src", "vireo", "3_MT_Donors_Dendrogram.ipynb"),
     shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p sample_names {params.sample_names} -p N_DONORS {params.N_DONORS} {params.notebook} {params.note}"
+
 
 
 rule donors_type_variants:

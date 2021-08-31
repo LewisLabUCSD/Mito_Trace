@@ -1,4 +1,0 @@
-genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist"
-OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_2020/"
-samples: "parameters/mtscATAC/Lareau_2020/Lareau_2020.csv"
-

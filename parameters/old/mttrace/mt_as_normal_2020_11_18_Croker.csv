@@ -1,0 +1,2 @@
+sample,raw,barcode_f,bam_f
+PBMC_J,,/data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/MTblacklist_mtasnucl/PBMC_J/outs/filtered_peak_bc_matrix/barcodes.tsv,/data2/isshamie/mito_lineage/data/processed/mtscATAC/2020_11_18_Croker/MTblacklist_mtasnucl/PBMC_J/outs/possorted_bam.bam

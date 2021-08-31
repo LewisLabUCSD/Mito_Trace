@@ -1,0 +1,123 @@
+## Files that require full paths:
+#prefix: "optim_june03_2021/MTblacklist"
+fastq_dir: "/data2/isshamie/mito_lineage/data/raw/optim_june03_2021/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
+mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist"
+
+samples: "parameters/optim_june03_2021/optim_june03_2021.csv"
+
+# mttrace parameters
+results: "output/mttrace/optim_june03_2021/MTblacklist"
+#results: "data/processed/mttrace/jan21_2021"
+figures: "figures/mttrace/optim_june03_2021/MTblacklist"
+
+
+# Genome paths
+genome_dir: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #
+ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
+
+
+
+main:
+  - "mtscATAC"
+  - "mttrace"
+  - "multiplex"
+
+
+mttrace:
+  use_cellr_barcode:
+    - True
+    #- False
+
+
+  num_reads_filter:
+    - 200
+
+  mito_character: "chrM"
+  maxBP: 16571
+
+#  mapq:
+#    - 20
+#    - 30
+  base_quality: 20
+
+
+  # For constructing the af_by_cell filter position_filter:
+  filters:
+    #cell_depth: "Gaussian"
+    min_cells:
+      - 10
+
+    min_reads:
+      - 50
+  #    - 100
+
+    topN:
+      - 0
+
+    het_thresh:
+      - 0.001
+
+    min_het_cells:
+      - 10
+      #- 50
+      #- 50
+
+    het_count_thresh:
+      - 5
+     # - 2
+     # - 50
+
+    bq_thresh:
+      - 20
+
+mgatk:
+  # For mgatk to fill in low coverage cell positions
+  low_cov_thresh: 10
+  chrM_refAllele: "/data2/mito_lineage/data/external/chrM_refAllele.txt"
+  ncells_thresh_mgatk: 5
+
+multiplex:
+  genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+  use_mt_bam: True
+
+  samples:
+    - "p0_1m5"
+    - "p0_5m5"
+    - "p1_0m5"
+    - "f1_0m10"
+
+  sample_dict:
+    p0_1m5: "pfa 0.1% 5min"
+    p0_5m5: "pfa 0.5% 5min"
+    p1_0m5: "pfa 1% 5min"
+    f1_0m10: "form 1% 10min"
+
+
+  N_DONORS: 4 #UNCLEAR WHAT THE NUMBER IS
+
+  pseudo_multiplex:
+    #Number Reads Total: 10000000
+    num_cells: 10000000 # high enough to choose all
+    is_proportional: False
+
+  mt:
+    minMAF:
+      - 0.01
+
+    minCOUNT:
+      - 200
+
+  n_clone_list: [5, 10, 20, 40, 100]
+  pre_variant:
+    minMAF:
+      # - 0
+      - 0.1
+    #    - 0.2
+    #    - 0.4
+    minCOUNT:
+      # - 0
+      - 20
+      #    - 200
+      #- 1000
+

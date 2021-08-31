@@ -1,0 +1,3 @@
+sample,fastq_dir,out_name
+BC_10xATAC_PMBC_J,/data/isshamie/dropbox/ATACseq/2020_11_18_Croker/igm-storage2.ucsd.edu/201113_A00953_0185_AHN7TMDSXY,PBMC_J
+BC_10xATAC_PMBC_P,/data/isshamie/dropbox/ATACseq/2020_11_18_Croker/igm-storage2.ucsd.edu/201113_A00953_0185_AHN7TMDSXY,PBMC_P

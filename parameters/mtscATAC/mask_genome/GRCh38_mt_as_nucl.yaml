@@ -1,7 +1,0 @@
-name: "GRCh38_MT_blacklist_mtasnucl"
-config_file: "/data2/mito_lineage/parameters/mtscATAC/mask_genome/GRCh38_mt_as_nucl.config"
-#genome_dir: "/data/isshamie/software/refdata-cellranger-atac-GRCh38-1.2.0"
-OUTDIR: "/data/isshamie/mito_lineage/data/external/"
-genome_blacklist_f: "/data/isshamie/mito_lineage/data/external/genome_mtblacklist.fa"
-genome_in: "/data/isshamie/software/refdata-cellranger-atac-GRCh38-1.2.0/fasta/genome.fa"
-blacklist_f: "/data2/mito_lineage/data/external/Lareau_blacklist/hg38.full.blacklist.bed"

@@ -94,9 +94,11 @@ rule barcode_filter:
     input:
         barcode_p = "{output}/data/{sample}/MT/{sample}_barcode_data.p",
         cellr_f = get_sample_barcodes
-    output: "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p"
+    output:
+        "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p",
+        "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.txt"
     params: cellrbc =  lambda wildcards: wildcards.cellrbc
-    shell: "python src/mtpreproc/filter_barcodes.py {input} {params} {output}"
+    shell: "python src/mtpreproc/filter_barcodes.py {input[0]} {params} {output}"
 
 
 rule sortCB:
@@ -112,25 +114,28 @@ from os.path import join, dirname
 ######################################################################
 ## Create cell specfic files and then merge them into a pileup matrix
 ######################################################################
-rule extractCB_from_bam:
-    input:
-        "{output}/data/{sample}/MT/{sample}.MT.CB.bam",
-        cells="{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p"
-    output:
-        "{output}/data/{sample}/MT/{sample}.MT.CBfilt.bam",
-        head = temp("{output}/data/{sample}/MT/SAM_HEADER"),
-        sam = temp("{output}/data/{sample}/MT/filtered.sam")
-    shell:
-        "export BAM_FILE='{input[0]}'"
-        # Save the header lines
-        "samtools view -H $BAM_FILE > {output.head}"
-        # Filter alignments using filter.txt. Use LC_ALL=C to set C locale instead of UTF-8
-        "samtools view $BAM_FILE | LC_ALL=C grep -F -f {input.cells} > filtered_SAM_body"
-        # Combine header and body
-        "cat SAM_header filtered_SAM_body > {output.sam}"
-        # Convert filtered.sam to BAM format
-        "samtools view -b {output.sam} > {output[0]}"
-
+# rule extractCB_from_bam:
+#     input:
+#         "{output}/data/{sample}/MT/{sample}.MT.CB.bam",
+#         cells="{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.txt"
+#     output:
+#         "{output}/data/{sample}/MT/{sample}.MT.CBfilt.bam",
+#         head = temp("{output}/data/{sample}/MT/SAM_HEADER"),
+#         body = temp("{output}/data/{sample}/MT/filtered_SAM_body"),
+#         sam = temp("{output}/data/{sample}/MT/filtered.sam"),
+#         bam = temp("{output}/data/{sample}/MT/filtered.bam"),
+#
+#     run:
+#         shell(cmd="export BAM_FILE='{input[0]}'"),
+#         # Save the header lines
+#         shell("samtools view -H $BAM_FILE > {output.head}"),
+#         # Filter alignments using filter.txt. Use LC_ALL=C to set C locale instead of UTF-8
+#         shell("samtools view $BAM_FILE | LC_ALL=C grep -F -f {input.cells} > {output.filtered_body}")
+#         # Combine header and body
+#         shell("cat {output.head} {output.body} > {output.sam}")
+#         # Convert filtered.sam to BAM format
+#         shell("samtools view -b {output.sam} > {output.bam}")
+#
 
 rule scBam:
     """Extract each single-cell and put into respective bam file"""
@@ -148,7 +153,7 @@ rule scPileup:
     """Run the first part of the MT-genotype function by getting the read pileups for each bam file for each nucleotide and overall coverage"""
     input:
         scBam = "{output}/data/{sample}/MT/{sample}_scBam",
-        #scBam = "{output}/data/{sample}/MT/{sample}_scBam",
+        #scBam = "{output}/data/{sample}/MT/{sample}_scBam", "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.txt"
         barcodes = "{output}/data/{sample}/MT/{sample}_barcode_data.p",
     output:
           (directory("{output}/data/{sample}/MT/{sample}_scPileup_{num_read}"))
@@ -199,7 +204,7 @@ rule scPileup_concat:
 
 rule scPileup_mergeStrands:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
-    input:  "{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.minus.txt"
+    input:  "{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.minus.txt.gz"
     output:
         all = temp("{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.strands.txt.gz")
     params:
@@ -257,8 +262,8 @@ rule plot_sc_coverageBar_and_heat:
     input:
         sc_coverage_f = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/sc_coverage.csv"
     output:
-        save_f_coverage = report("{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png"),
-        save_f_heat = report("{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position.png"),
+        save_f_coverage = report("{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png", category="mtpreproc"),
+        save_f_heat = report("{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position.png", category="mtpreproc"),
     shell:
         "python src/figures/plot_heatmap_coverage.py plot {input.sc_coverage_f} {output.save_f_heat} {output.save_f_coverage}"
 

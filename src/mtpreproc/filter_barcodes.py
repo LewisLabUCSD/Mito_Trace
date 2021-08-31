@@ -49,7 +49,7 @@ def main(barcode_f, cellr_f, use_cellr, out_f):
     if cellr_f is not None:
         CB_read_number = filter_barcodes_from_CB(CB_read_number, cellr_f)
     pickle.dump(CB_read_number,file=open(out_f, "wb"))
-    with open(join(basename(out_f), "cellSamples.txt"), "w") as f:
+    with open(out_f.replace(".p", ".txt"), "w") as f:
         f.write("\n".join(list(CB_read_number.keys())))
     return
 

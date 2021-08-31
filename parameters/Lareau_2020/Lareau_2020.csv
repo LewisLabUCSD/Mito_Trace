@@ -1,3 +1,0 @@
-sample,raw,barcode_f,bam_f,out_name,sample_name
-CD34_rep1,,/data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_2020/CD34_rep1/outs/filtered_peak_bc_matrix/barcodes.tsv,/data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_2020/CD34_rep1/outs/possorted_bam.bam,CD34_rep1,CD34_rep1
-PBMC_rep1,,/data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_2020/PBMC_rep1/outs/filtered_peak_bc_matrix/barcodes.tsv,/data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_2020/PBMC_rep1/outs/possorted_bam.bam,PBMC_rep1,PBMC_rep1
