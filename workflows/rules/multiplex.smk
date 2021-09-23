@@ -33,8 +33,8 @@ rule donors_plotAF:
         #clone="data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/lineages/lineage.ipynb",
         "{outdir}/multiplex/multiplex.ipynb" #"data/{prefix}/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}/multiplex.ipynb"
     output:
-        report(expand("{{outdir}}/multiplex/dendrograms/figures/donor{d}_dendrogram.png",
-               d=np.arange(config["N_DONORS"])), category="multiplex"),
+        report(expand("{{outdir}}/multiplex/dendrograms/figures/donor{d}_dendrogram.{suf}",
+               d=np.arange(config["N_DONORS"]), suf=["png", "depth.png", "withHigh.png"]), category="multiplex"),
     params:
         note = lambda wildcards, output: join(dirname(dirname(output[0])), "multiplex_dendro.ipynb"), # "{{outdir}}/multiplex/dendrograms/multiplex_dendro.ipynb",
         #INDIR = lambda wildcards, input: dirname(input[0]),

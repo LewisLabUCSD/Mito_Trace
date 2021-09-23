@@ -27,13 +27,18 @@ rule all:
         expand("{outdir}/annotation/{prefix}/mergedSamples/allSamples.integrated.ipynb",
                outdir=config['outdir'], prefix=config["prefix"]),
 
-        expand("{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz",
-               extrnl=config['annotations']['name'], outdir=config['outdir'],
-               ),
-        expand("{outdir}/annotation/{prefix}/{sample}/lareau/{proj}/{sample}.clusters.csv",
-               outdir=config['outdir'], sample=samples.index,
-               proj=cfg_anno["lareau"]["proj_ref"],
-               prefix=config["prefix"]),
+        # expand("{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz",
+        #        extrnl=config['annotations']['name'], outdir=config['outdir'],
+        #        ),
+        # expand("{outdir}/annotation/{prefix}/{sample}/lareau/{proj}/{sample}.clusters.csv",
+        #        outdir=config['outdir'], sample=samples.index,
+        #        proj=cfg_anno["lareau"]["proj_ref"],
+        #        prefix=config["prefix"]),
+         expand("{outdir}/annotation/{prefix}/mergedSamples/DE/seuratImmuneDotPlot.png",
+                 outdir=config['outdir'],prefix=config["prefix"]),
+         expand("{outdir}/annotation/{prefix}/mergedSamples/DE/GSEA/GSEA.ipynb",
+                 outdir=config['outdir'],prefix=config["prefix"])
+
         # expand("{outdir}/annotation/{prefix}/{sample}/anchors/{assay}/{sample}.clusters.csv", sample=samples.index,
         #         assay=cfg_anno["anchors"]["assay"], outdir=config['outdir'],
         #         prefix=config["prefix"])
@@ -68,7 +73,7 @@ def get_extrnl_frags(wildcards):
     return f"{wildcards.outdir}/annotation/data/{cfg_anno['name']}/{cfg_anno['name']}.fragments.sort.tsv.gz"
 
 
-rule createMergedExpSignac:
+rule createMergedSignac:
     """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
     The peaks are reduced to the overlapping sets, and if a fragments file is provided,
     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
@@ -126,17 +131,17 @@ rule annotation_anchors:
     shell: "papermill -p exp {params.exp} -p SE_f {input[0]} -p outdir {params.outdir} {params.rscript} {output[1]}"
 
 
-rule createMergedSignac:
+rule createMergedExpSignac:
     """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
     The peaks are reduced to the overlapping sets, and if a fragments file is provided,
     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
 
     """
     output:
-        "{outdir}/annotation/{prefix}/allSamples.integrated.ipynb",
-        "{outdir}/annotation/{prefix}/allSamples.integrated.rds",
-        report(expand("{{outdir}}/annotation/{{prefix}}/{f}",
-                      f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png", "lin.ImmuneGenes.dot.png"]))
+        "{outdir}/annotation/{prefix}/mergedSamples/allSamples.integrated.ipynb",
+        "{outdir}/annotation/{prefix}/mergedSamples/allSamples.integrated.rds",
+        report(expand("{{outdir}}/annotation/{{prefix}}/mergedSamples/{f}",
+                      f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png"]))
         #report("{outdir}/annotation/{prefix}/{sample}/{sample}.merged.lsi.Batchlabels.png")
     params:
         indir = config["mtscATAC_OUTDIR"],
@@ -145,21 +150,43 @@ rule createMergedSignac:
         sample_names = ",".join(samples.index),
         samples = ",".join(samples["cellr_ID"])
         #workdir = os.getcwd(),
-    shell: "papermill  -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
+    shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
 
+
+def get_comps():
+    if "comparisons" in config:
+        return config["comparisons"]
+    else:
+        return 'NULL'
 
 rule runDE:
     input:
-        "{outdir}/annotation/{prefix}/allSamples.integrated.rds",
+        integrated = "{outdir}/annotation/{prefix}/mergedSamples/allSamples.integrated.rds",
     output:
-        report(expand("{{outdir}}/annotation/{{prefix}}/figures/{f}",
-                      f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png", "lin.ImmuneGenes.dot.png"]))
+        # report(expand(dir("{{outdir}}/annotation/{{prefix}}/DE/{d}"),
+        #               d=["clusters", "conditions_clusters", "conditions_conserved"])),
+        "{outdir}/annotation/{prefix}/mergedSamples/DE/DE.ipynb",
+        report(expand("{{outdir}}/annotation/{{prefix}}/mergedSamples/DE/{f}",
+                f=["seuratImmuneDotPlot.png", "linImmuneDotPlot.png"]))
     params:
-        indir = lambda wildcards, input: dirname(input[0]),
+       # indir = lambda wildcards, input: dirname(input[0]),
         outdir = lambda wildcards, output: dirname(output[0]),
-        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateMergedSignac.ipynb"), # The script defaults to the granja data
+        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesMergedSignac_DE.ipynb"), # The script defaults to the granja data
+        sample_names = ",".join(samples.index),
+        comps_f = get_comps()
+        #samples = ",".join(samples["cellr_ID"])
+    shell: "papermill -p integrated_f {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
 
-    shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} {params.rscript} {output[0]}"
+
+rule runGSEA:
+    input:
+        DE_out_path = "{outdir}/annotation/{prefix}/mergedSamples/DE/DE.ipynb",
+    output:
+        "{outdir}/annotation/{prefix}/mergedSamples/DE/GSEA/GSEA.ipynb",
+    params:
+        output = lambda wildcards, output: dirname(output[0]),
+        rscript = join(ROOT_DIR, "R_scripts/annotations/runGSEA.ipynb")
+    shell: "papermill -p DE.out.path {input} -p export.path {params.output} {params.rscript} {output[0]}"
 
 
 # rule overlay_cells_meta:

@@ -1,4 +1,3 @@
-from snakemake.utils import Paramspace
 import pandas as pd
 from src.utils.parse_config import read_config_file
 from os.path import dirname, join

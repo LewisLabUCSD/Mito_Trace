@@ -1,5 +1,5 @@
 ## Global params
-outdir: "/data/isshamie/mito_lineage/output" # Global output directory
+outdir: "/data2/isshamie/mito_lineage/output" # Global output directory
 config: "parameters/pipeline/pipeline.yaml"
 #params: "parameters/pipeline/params.csv"
 

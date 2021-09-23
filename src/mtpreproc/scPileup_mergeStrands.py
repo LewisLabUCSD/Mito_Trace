@@ -37,18 +37,18 @@ def main(directory, samplename):
     for nt in ["A", "C", "G", "T"]:
         print(nt)
         print(join(directory, f"{samplename}_all.{nt}.txt"))
-        curr_fw = pd.read_csv(join(directory, f"{samplename}_all.{nt}.txt.gz"), header=None, error_bad_lines=False)
-        curr_rev = pd.read_csv(join(directory, f"{samplename}_all.{nt}.minus.txt.gz"), header=None, error_bad_lines=False)
+        curr_fw = pd.read_csv(join(directory, f"{samplename}_all.{nt}.txt"), header=None)
+        curr_rev = pd.read_csv(join(directory, f"{samplename}_all.{nt}.minus.txt"), header=None)
         curr_fw.columns = ["Position", "CB", "Count Fw", "BQ Fw"]
         curr_rev.columns = ["Position", "CB", "Count Rev", "BQ Rev"]
         curr = pd.merge(curr_fw, curr_rev, on=["Position","CB"], how="outer")
         curr = curr.sort_values(["Position", "CB"])
         curr = curr[["Position", "CB", "Count Fw", "BQ Fw", "Count Rev", "BQ Rev"]]
-        curr.to_csv(join(directory, f"{samplename}_all.{nt}.strands.txt.gz"),compression='gzip', index=None)
+        curr.to_csv(join(directory, f"{samplename}_all.{nt}.strands.txt"), index=None)
 
     print('Coverage')
-    curr_fw = pd.read_csv(join(directory,f"{samplename}_all.coverage.txt.gz"), header=None, error_bad_lines=False)
-    curr_rev = pd.read_csv(join(directory,f"{samplename}_all.coverage.minus.txt.gz"), header=None, error_bad_lines=False)
+    curr_fw = pd.read_csv(join(directory,f"{samplename}_all.coverage.txt"), header=None, error_bad_lines=False)
+    curr_rev = pd.read_csv(join(directory,f"{samplename}_all.coverage.minus.txt"), header=None, error_bad_lines=False)
     curr_fw.columns = ["Position", "CB", "Count Fw"]
     curr_rev.columns = ["Position", "CB", "Count Rev"]
 
@@ -57,7 +57,7 @@ def main(directory, samplename):
     curr["Coverage"] = (curr["Count Fw"] + curr["Count Rev"])
     curr = curr.sort_values(["Position", "CB"])
     curr = curr[["Position", "CB", "Coverage", "Count Fw", "Count Rev"]]
-    curr.to_csv(join(directory, f"{samplename}_all.coverage.strands.txt.gz"), compression='gzip', index=None)
+    curr.to_csv(join(directory, f"{samplename}_all.coverage.strands.txt"), index=None)
     return
 
 

@@ -1,6 +1,6 @@
 ## Global parameters
 #results: "output/pipeline/TcellDupi_may17_2021/MTblacklist"
-outdir: "/data/isshamie/mito_lineage/output"
+outdir: "/data2/isshamie/mito_lineage/output"
 config: "parameters/pipeline/pipeline.yaml"
 #params: "parameters/pipeline/params.csv"
 
@@ -11,5 +11,4 @@ fastq_dir: "/data2/isshamie/mito_lineage/data/raw/TcellDupi_may17_2021/" #igm-st
 mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/PBMC_may17_2021/MTblacklist"
 genome: "MTBlacklist"
 N_DONORS: 2
-
 

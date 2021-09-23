@@ -48,14 +48,15 @@ def extract_clusters_matrix(modelCA, ad, dp, sample_colors, prob_thresh=0.9,
     return cell_clusters, sample_labels
 
 
-def run_enrichment(df, flt_var="Flt3"):
+def run_enrichment(df, flt_var="Flt3l"):
     """Runs hypergeometric for flt3 expansion.
 
     df: pd.DataFrame where index is Control and Flt3, columns are cluster labels, and elements are number of cells.
     """
     enrichment_df = pd.DataFrame(index=["hypergeom p", "Fisher p"],
                                  columns=df.columns, dtype=np.float128)
-
+    print('df')
+    print(df.head())
     # M: Total number of cells
     # n: Number of cells in the clone
     # N: Number of flt3 cells
@@ -104,14 +105,21 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
                              sep='\t')
     for d, curr_donor in cells_meta.groupby("donor"):
         # Create counts df
+        print('d', d)
+        print(curr_donor.groupby(["condition", "lineage"]).size())
+
         clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
+        if len(clust_counts) == 0:
+            print("No lineages detected in donor. Continuing")
+            continue
         clust_counts = clust_counts.rename({x:y for (x,y) in zip(samples, names)}, axis=0)
+
         #clust_counts.columns = clust_counts.columns.astype('Int64')
         clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
         ###############################################################
         clust_counts = clust_counts.astype('Int64')
-        #print('clust_counts')
-        #print(clust_counts)
+        print('clust_counts')
+        print(clust_counts)
 
         # Get enrichment
         if "Input" in names:
@@ -192,7 +200,6 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
     with open(join(outdir,".status"), 'w') as f:
         f.write('Completed')
     return
-
 
 
 def plot_volcano(enrich_stats, x="Flt3l fold enrichment",

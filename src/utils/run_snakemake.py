@@ -207,6 +207,13 @@ def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow,
         os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
         os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
         write_config_file(join(outdir, "params.outcfg"), config)
+
+        snakemake.snakemake(smkfile, configfiles=[configfile],
+                            targets=targets,
+                            printrulegraph=True)
+        cmd = f"snakemake -s {smkfile} --configfile {configfile} --dag | dot -Tsvg > {outdir}/dag.svg"
+        print(cmd)
+        os.system(cmd)
         if to_git:
             run_git([join(outdir,f"report_{basename(smkfile)}.html"),
                      join(outdir,"params.outcfg"),
