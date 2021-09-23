@@ -148,8 +148,8 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
         # print('clust_counts_norm')
         # print(clust_counts_norm)
         fold_df_norm = pd.DataFrame(
-                    (clust_counts_norm.loc[f"# {names[1]} Cells in Cluster"] + 1) / (
-                        clust_counts_norm.loc[f"# {names[0]} Cells in Cluster"] + 1)).transpose()
+                    (clust_counts_norm.loc[f"# {names[1]} Cells in Cluster"]) / (
+                        clust_counts_norm.loc[f"# {names[0]} Cells in Cluster"])).transpose()
         fold_df_norm = fold_df_norm.rename({0: f"{names[1]} fold enrichment norm"}, axis=0)
 
         print('fold_df_norm')
