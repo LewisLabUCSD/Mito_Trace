@@ -105,7 +105,7 @@ def extract_af_pileup(af, pileup_dir, cell_names):
     for n, curr_af in af.groupby("Nucleotide"):
         print(n)
         var_pos_to_keep = curr_af.index.unique()
-        curr_f = glob.glob(os.path.join(pileup_dir, f"*.{n}.strands.txt.gz"))[0]
+        curr_f = glob.glob(os.path.join(pileup_dir, f"*.{n}.strands.txt"))[0]
         df = pd.read_csv(curr_f, header=None)
         # Only take the Forward reads since it is the one to compare against the reference
         if len(df.columns) > 4:
@@ -127,7 +127,7 @@ def extract_af_pileup(af, pileup_dir, cell_names):
         af_nt_pileup[n] = df
 
     cov = load_sc_pileup(
-        os.path.join(pileup_dir, f"*.coverage.strands.txt.gz"))
+        os.path.join(pileup_dir, f"*.coverage.strands.txt"))
     cov = cov[cov["Cell"].isin(cell_names)]
     cov = cov[cov["Position"].isin(af.index)]
     af_sparse_df = pd.concat(af_nt_pileup.values(), axis=0)
@@ -249,7 +249,8 @@ def get_nt_bq(concat_dir, cell_inds, nt_pos):
     cells = dict()
     nt_pileup = load_and_filter_nt_pileups(concat_dir,
                                            cell_inds, nt_pos,
-                                           out_d=None, name=None, sum_cov=True)
+                                           out_d=None, name=None, sum_cov=True,
+                                           input_suffix=".strands.txt")
     for n in nt_pileup:
         df = nt_pileup[n]
         cells[n] = set(df["Cell"].values)
@@ -364,7 +365,8 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
         os.mkdir(out_d)
     # 1. Load the MTPos pileup matrix, take the average of the +/- strands
     sc_coverage = load_sc_pileup(
-        join(scpileup_dir, "*.coverage.strands.txt.gz"))
+        join(scpileup_dir, "*.coverage.strands.txt"))
+
     stats = stats.append(pd.DataFrame([[len(
         sc_coverage["Cell"].unique()), max(sc_coverage["Position"]),
                                         0]],
@@ -545,7 +547,9 @@ def run_filters(scpileup_dir, af_f, mt_ref_fa, name,
         logging.info(name)
         load_and_filter_nt_pileups(scpileup_dir, final_cells,
                                    np.array(final_positions),
-                                   out_d, name, incl_cov=True, sum_cov=False)
+                                   out_d, name, incl_cov=True, sum_cov=False,
+                                   input_suffix=".strands.txt"
+                                   )
         # Save depth as well
         (depth_by_cell.sum(axis=1)/depth_by_cell.shape[1]).to_csv(join(out_d, name+".depthTable.txt"),
                                                                   header=False,

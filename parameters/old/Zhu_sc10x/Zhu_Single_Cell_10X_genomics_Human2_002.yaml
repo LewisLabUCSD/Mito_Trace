@@ -1,0 +1,24 @@
+#raw_folder: data/raw/GSM3271867/
+#bam_f:
+#  Zhu_Single_Cell_10X_genomics_Human2_002_possorted_genome_bam.bam
+#name: Zhu_Single_Cell_10X_genomics_Human2_002
+#mito_character: MT
+#num_reads_filter: 16571 #MT genome in humans
+
+samples: "parameters/samples.tsv"
+
+#samples:
+#  Zhu_Single_Cell_10X_genomics_Human2_002: Zhu_Single_Cell_10X_genomics_Human2_002
+raw:
+  Zhu_Single_Cell_10X_genomics_Human2_002: data/raw/GSM3271867
+
+bam:
+  Zhu_Single_Cell_10X_genomics_Human2_002: data/raw/GSM3271867/Zhu_Single_Cell_10X_genomics_Human2_002_possorted_genome_bam.bam
+
+
+num_reads_filter:
+  - 200
+  #- 16571
+mito_character: MT
+maxBP: 16571
+ref_fa : external/mito-genotyping/exampleProcessing/mito_fastas/GRCh38.fasta

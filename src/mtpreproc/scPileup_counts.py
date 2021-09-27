@@ -9,7 +9,6 @@ from src.external.pileup_counts import run_pileup
 from numpanpar import parallel_ar as parar
 
 
-
 def parallel_run_pileup(CB_read_filt, bam_dir, pileup_dir, maxBP,
                         base_qual, alignment_qual):
 
@@ -18,10 +17,15 @@ def parallel_run_pileup(CB_read_filt, bam_dir, pileup_dir, maxBP,
         if len(glob.glob(bamfile)) == 0:
             print(f"file not done yet {bamfile}")
             continue
-        bamfile = glob.glob(bamfile)[0]
+        bamfile = glob.glob(bamfile)
+        if len(bamfile) > 1:
+            print(f"More than one cell matches {bamfile}")
+            continue
+        bamfile = bamfile[0]
         outpre = join(pileup_dir,
                       os.path.basename(bamfile.replace(".bam", "")))
         sample = os.path.basename(bamfile).split("_")[-1]
+        print('sample', sample)
         run_pileup(bamfile, outpre, maxBP, base_qual, sample,
                    alignment_qual, use_strands=True)
     return

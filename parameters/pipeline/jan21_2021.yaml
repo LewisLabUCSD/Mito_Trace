@@ -1,11 +1,11 @@
 ## Global params
-outdir: "/data/isshamie/mito_lineage/output" # Global output directory
+outdir: "/data2/isshamie/mito_lineage/output" # Global output directory
 config: "parameters/pipeline/pipeline.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
-samples_meta: "parameters/pipeline/jan21_2021.csv"
 prefix: "cd34norm/MTblacklist"
+samples_meta: "parameters/pipeline/jan21_2021.csv"
 genome: "MTBlacklist"
 fastq_dir: "/data2/isshamie/mito_lineage/data/raw/jan21_2021_Croker/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
 mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist"

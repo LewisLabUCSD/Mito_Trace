@@ -24,18 +24,34 @@ def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master"
 
     # check if branch already made. 0 returncode means it is there
     is_branch = subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"], universal_newlines=True).returncode
-    if is_branch==0:
-        os.system(f"git checkout {branch}")
-    else:
-        os.system(f"git checkout -b {branch}")
-    for p in paths:
-        cmd = f"git add {p}"
-        os.system(cmd)
+    try:
+        if is_branch==0:
+            try:
+                os.system(f"git checkout {branch}")
+            except:
+                print(f"Already on branch {branch}")
+        else:
+            os.system(f"git checkout -b {branch}")
+    except:
+        print("Failed to checkout git branch")
+        return
+    try:
+        for p in paths:
+            cmd = f"git add {p}"
+            os.system(cmd)
+    except:
+        print("Failed to add to git")
+        return
+
     cmd = f'git commit -m "{commit_msg}"'
     os.system(cmd)
+
     if to_push:
-        cmd = f'git push -u {src} {branch}'
-        os.system(cmd)
+        try:
+            cmd = f'git push -u {src} {branch}'
+            os.system(cmd)
+        except:
+            print("Failed to push to git")
     return
 
 
@@ -183,7 +199,7 @@ def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow,
     print(out)
 
     # Make the report
-    report = join(outdir, f"report_{basename(smkfile)}.html" )
+    report = join(outdir, f"report_{basename(smkfile)}_cfg_{basename(configfile)}.html" )
     if not dryrun:
         snakemake.snakemake(smkfile, configfiles=[configfile],
                             targets=targets, report=report)
@@ -191,6 +207,13 @@ def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow,
         os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
         os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
         write_config_file(join(outdir, "params.outcfg"), config)
+
+        snakemake.snakemake(smkfile, configfiles=[configfile],
+                            targets=targets,
+                            printrulegraph=True)
+        cmd = f"snakemake -s {smkfile} --configfile {configfile} --dag | dot -Tsvg > {outdir}/dag.svg"
+        print(cmd)
+        os.system(cmd)
         if to_git:
             run_git([join(outdir,f"report_{basename(smkfile)}.html"),
                      join(outdir,"params.outcfg"),

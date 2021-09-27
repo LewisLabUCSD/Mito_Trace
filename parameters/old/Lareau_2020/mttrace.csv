@@ -1,0 +1,2 @@
+use_cellr_barcode,num_reads_filter,base_quality,min_cells,min_reads,topN,het_thresh,min_het_cells,het_count_thresh,bq_thresh,low_cov_thresh,n_clone_list
+True,200,20,10,50,0,0.001,10,5,20,10,5;10;20;40;100

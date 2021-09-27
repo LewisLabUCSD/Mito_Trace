@@ -108,8 +108,6 @@ def run_pileup(bamfile, outpre, maxBP, base_qual, sample, alignment_quality, use
 
 		else:
 			for qpos, refpos in read.get_aligned_pairs(True):
-				print('qpos', qpos)
-				print('refpos', refpos)
 				if qpos is not None and refpos is not None and align_qual_read > alignment_quality:
 					if(seq[qpos] == "A" and quality[qpos] > base_qual):
 						qualA[refpos] += quality[qpos]
