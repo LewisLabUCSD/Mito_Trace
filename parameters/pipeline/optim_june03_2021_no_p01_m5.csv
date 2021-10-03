@@ -1,0 +1,4 @@
+sample,raw,barcode_f,bam_f,out_name,sample_name
+BC_10xATAC_0_5PFA,,/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist/p0_5m5/outs/filtered_peak_bc_matrix/barcodes.tsv,/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist/p0_5m5/outs/possorted_bam.bam,p0_5m5,p0_5m5
+BC_10xATAC_1PFA,,/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist/p1_0m5/outs/filtered_peak_bc_matrix/barcodes.tsv,/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist/p1_0m5/outs/possorted_bam.bam,p1_0m5,p1_0m5
+BC_10xATAC_1F,,/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist/f1_0m10/outs/filtered_peak_bc_matrix/barcodes.tsv,/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist/f1_0m10/outs/possorted_bam.bam,f1_0m10,f1_0m10

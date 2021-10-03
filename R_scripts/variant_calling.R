@@ -1,4 +1,6 @@
-#!/usr/bin/Rscript --vanilla
+#!/usr/bin/env Rscript
+
+##!/usr/bin/Rscript --vanilla
 
 # suppressMessages(suppressWarnings(library(tools)))
 # suppressMessages(suppressWarnings(library(Matrix)))

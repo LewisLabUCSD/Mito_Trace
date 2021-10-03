@@ -8,16 +8,14 @@ from src.utils.parse_config import read_config_file
 #configfile: "/data2/mito_lineage/parameters/DUPI_april08_2021/mttrace_mtasnucl.yaml"
 params = read_config_file(config["config"])
 
+
+# Merge config + params together, with config the default params used
 for p in params:
-    if p in config:
-        print(f"{p} is already in config. will not be overwritten")
-    else:
+    if p not in config:
         config[p] = params[p]
 
 cfg_anno = config['annotations']
 extrnl = cfg_anno["name"]
-
-
 samples = pd.read_table(join(ROOT_DIR, config["samples_meta"]), dtype=str,sep=',').set_index(["sample_name"], drop=False)
 #res = config["results"]
 

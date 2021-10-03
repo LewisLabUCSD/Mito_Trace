@@ -4,7 +4,7 @@ config: "parameters/pipeline/pipeline.yaml"
 
 fastq_dir: "/data2/isshamie/mito_lineage/data/raw/optim_june03_2021/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
 mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/optim_june03_2021/MTblacklist"
-samples_meta: "parameters/pipeline/optim_june03_2021.csv"
+samples_meta: "parameters/pipeline/optim_june03_2021_no_p01_m5.csv"
 
 #results: "output/pipeline/CHIP_april08_2021/MTblacklist"
 ## Experimental parameters

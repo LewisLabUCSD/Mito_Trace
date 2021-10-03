@@ -181,7 +181,7 @@ rule enrichment_vireo:
         clones_indir = lambda wildcards, input: dirname(dirname(dirname(input[0]))),#lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         nclones = lambda wildcards: wildcards.nclones, #clones_cfg['vireo']["params"]["nclonelist"],
-        script = join("src", "lineage_enrichment.py"),
+        script = join("src", "lineage", "lineage_enrichment.py"),
         samples=",".join(samples.index)
     shell: "python {params.script} {params.clones_indir} {params.OUTDIR} {params.nclones} {params.samples}"
 

@@ -10,8 +10,8 @@ from os.path import join, dirname
 res = config['results']
 samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
-print('samples')
-print(samples)
+# print('samples')
+# print(samples)
 mt = config['mtpreproc']
 mt_parms = mt["params"]
 ft = config['filters']
@@ -35,7 +35,7 @@ ft_parms = ft["params"]
 ######################################################################
 def get_sample_bam(wildcards):
     bam = samples.loc[wildcards.sample,"bam_f"]
-    print(bam)
+    #print(bam)
     return bam
 
 
@@ -105,41 +105,61 @@ rule barcode_filter:
 ######################################################################
 ## Create cell specfic files and then merge them into a pileup matrix
 ######################################################################
-rule extractCB_from_bam:
-    input:
+rule extractCB_from_bam_01:
+    input: 
         "{output}/data/{sample}/MT/{sample}.MT.bam",
-        "{output}/data/{sample}/MT/{sample}.MT.bam.bai",
+    output: 
+        head=temp("{output}/data/{sample}/MT/SAM_HEADER"),
+    shell: "samtools view -H {input[0]} > {output.head}"
+    
+rule extractCB_from_bam_02:
+    input: 
+        "{output}/data/{sample}/MT/{sample}.MT.bam",
         cells="{output}/data/{sample}/MT/cellr_True/{sample}_barcode_data.txt"
-    output:
-        head = temp("{output}/data/{sample}/MT/SAM_HEADER"),
+    output: 
         body = temp("{output}/data/{sample}/MT/filtered_SAM_body"),
-        sam = temp("{output}/data/{sample}/MT/filtered.sam"),
+    shell: "samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells} > {output.body}"
+    
+rule extractCB_from_bam_03:
+    input:
+        head = "{output}/data/{sample}/MT/SAM_HEADER",
+        body = "{output}/data/{sample}/MT/filtered_SAM_body"
+    output: 
+        sam = temp("{output}/data/{sample}/MT/filtered.sam"), 
+    shell: "cat {input.head} {input.body} > {output.sam}"
+
+rule extractCB_from_bam_04:
+    input: 
+        sam = "{output}/data/{sample}/MT/filtered.sam",
+    output:
         bam = temp("{output}/data/{sample}/MT/filtered.bam"),
-
-    shell:
-         """
-         export BAM_FILE='{input[0]}' &&
-         samtools view -H $BAM_FILE > {output.head} &&
-         samtools view $BAM_FILE | LC_ALL=C grep -F -f {input.cells} > {output.body} && 
-         cat {output.head} {output.body} > {output.sam} &&
-         samtools view -b {output.sam} > {output.bam} &&
-         samtools index {output.bam}
-         """
-        # shell(cmd="export BAM_FILE='{input[0]}'"),
-        # # Save the header lines
-        # shell("samtools view -H $BAM_FILE > {output.head}"),
-        # # Filter alignments using filter.txt. Use LC_ALL=C to set C locale instead of UTF-8
-        # shell("samtools view $BAM_FILE | LC_ALL=C grep -F -f {input.cells} > {output.filtered_body}")
-        # # Combine header and body
-        # shell("cat {output.head} {output.body} > {output.sam}")
-        # # Convert filtered.sam to BAM format
-        # shell("samtools view -b {output.sam} > {output.bam}")
-
+    shell: "samtools view -b {input.sam} > {output.bam}"
+    
+    
+# rule extractCB_from_bam:
+#     input:
+#         "{output}/data/{sample}/MT/{sample}.MT.bam",
+#         "{output}/data/{sample}/MT/{sample}.MT.bam.bai",
+#         cells="{output}/data/{sample}/MT/cellr_True/{sample}_barcode_data.txt"
+#     output:
+#         head = temp("{output}/data/{sample}/MT/SAM_HEADER"),
+#         body = temp("{output}/data/{sample}/MT/filtered_SAM_body"),
+#         sam = temp("{output}/data/{sample}/MT/filtered.sam"),
+#         bam = temp("{output}/data/{sample}/MT/filtered.bam"),
+#     # params:
+#     #     config["samtools_path"]
+#     run:
+#          shell("export BAM_FILE='{input[0]}'"),
+#          shell("samtools view -H {input[0]} > {output.head}"),
+#          shell("samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells} > {output.body}"),
+#          shell("cat {output.head} {output.body} > {output.sam}"),
+#          shell("samtools view -b {output.sam} > {output.bam}"),
+#          shell("samtools index {output.bam}")
 
 rule sortCB:
     input:
         mt_bam="{output}/data/{sample}/MT/filtered.bam",
-    output: "{output}/data/{sample}/MT/{sample}.MT.CB.bam"
+    output: temp("{output}/data/{sample}/MT/{sample}.MT.CB.bam")
     shell: "samtools sort -t CB {input.mt_bam} > {output}"
 
 
@@ -163,7 +183,7 @@ rule scPileup:
         #scBam = "{output}/data/{sample}/MT/{sample}_scBam", "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.txt"
         barcodes = "{output}/data/{sample}/MT/{sample}_barcode_data.p",
     output:
-          (directory("{output}/data/{sample}/MT/{sample}_scPileup_{num_read}"))
+          temp(directory("{output}/data/{sample}/MT/{sample}_scPileup_{num_read}"))
     params:
         base_quality = mt_parms['basequality'], # mean base quality threshold for each position-cell, otherwise 0.
         num_reads = lambda wildcards: wildcards.num_read,
@@ -176,10 +196,10 @@ rule scPileup:
 
 def concat_files(directory, samplename, nt):
     cmd = f"find {directory} -type f -name *.{nt}.txt -exec cat {{}} \; > {samplename}_all.{nt}.txt"
-    print(cmd)
+    #print(cmd)
     subp.check_call(str(cmd), shell=True)
     cmd = f"find {directory} -type f -name *.{nt}.minus.txt -exec cat {{}} \; > {samplename}_all.{nt}.minus.txt"
-    print(cmd)
+    #print(cmd)
     subp.check_call(str(cmd), shell=True)
 
     # # Gzip the files
@@ -213,10 +233,11 @@ rule scPileup_concat:
 rule scPileup_mergeStrands:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
     input:
-        "{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.minus.txt"
+        expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.minus.txt",
+               nt=["coverage", "A", "C", "G", "T"])
     output:
-        all = temp(expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
-                     nt=["coverage", "A", "C", "G", "T"]))
+        all = expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
+                     nt=["coverage", "A", "C", "G", "T"])
     params:
         concat_dir = lambda wildcards, input: dirname(input[0]),
         samplename = lambda wildcards, output: basename(output.all[0]).split("_all.coverage.strands.txt")[0]
@@ -229,16 +250,17 @@ rule scPileup_mergeStrands:
 rule filter_cell_bc:
     """Extracts only the relevant cell barcodes and removes the .bam from the barcode names."""
     input:
-        all = "{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.strands.txt",
+        all = expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
+                     nt=["coverage", "A", "C", "G", "T"]),
         barcode_p = "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p"
     output:
         "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt"
     run:
         for n in ["A", "C", "G", "T", "coverage"]:
-            print('n', n)
-            curr_f = input.all
+            #print('n', n)
+            curr_f = input.all[0]
             curr_f = curr_f.replace(".coverage.", "." + n + ".")
-            print('curr_f', curr_f)
+            #print('curr_f', curr_f)
             df = pd.read_csv(curr_f, sep=',')
             df["CB"] = df["CB"].str.replace(".bam","")
             barcodes = pickle.load(open(input.barcode_p, "rb"))
@@ -257,7 +279,7 @@ rule filter_cell_bc:
 rule scPileup_MT_matrix:
     """Create the position-by-cell coverage matrix"""
     input:
-        all = rules.scPileup_mergeStrands.output.all,  #"{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.strands.txt.gz",
+        all = rules.scPileup_mergeStrands.output.all[0],  #"{output}/data/{sample}/MT/scPileup_concat_{num_read}/numread_{num_read}_all.coverage.strands.txt.gz",
         barcode_p = rules.barcode_filter.output[0] #"{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p"
     output:
         sc_coverage_f = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/sc_coverage.csv"

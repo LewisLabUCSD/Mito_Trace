@@ -16,10 +16,11 @@ import seaborn as sns
 #from vireoSNP import Vireo
 import matplotlib as mpl
 mpl.use('Agg')
+
+from icecream import ic
 #np.set_printoptions(formatter={'float': lambda x: format(x, '.5f')})
 
 #n_clone_list = [3, 5, 10, 20, 40]  # [2,3,4,5,6,7]
-
 
 def extract_clusters_matrix(modelCA, ad, dp, sample_colors, prob_thresh=0.9,
                      doublet_thresh=0.9):
@@ -48,15 +49,15 @@ def extract_clusters_matrix(modelCA, ad, dp, sample_colors, prob_thresh=0.9,
     return cell_clusters, sample_labels
 
 
-def run_enrichment(df, flt_var="Flt3l"):
+def run_enrichment_stats(df, flt_var="Flt3l"):
     """Runs hypergeometric for flt3 expansion.
 
     df: pd.DataFrame where index is Control and Flt3, columns are cluster labels, and elements are number of cells.
     """
     enrichment_df = pd.DataFrame(index=["hypergeom p", "Fisher p"],
                                  columns=df.columns, dtype=np.float128)
-    print('df')
-    print(df.head())
+    ic('df')
+    ic(df.head())
     # M: Total number of cells
     # n: Number of cells in the clone
     # N: Number of flt3 cells
@@ -89,13 +90,13 @@ def wrap_lineage_enrichment(clones_indir, outdir, n_clone_list, samples,
                        plot_ind, name="", names=None)
 
 
+
 def lineage_enrichment(clones_indir, outdir, nclones, samples,
-                       plot_ind, name="", names=None):
-    #n_clone_list=[20,100]
-    #samples = samples.split(",")
+                       plot_ind, name="", names=None, pseudocount=1):
+
     if names is None:
         names = samples
-    all_enrich = {}
+    #all_enrich = {}
     all_enrich_norm ={}
 
     ###############################################################
@@ -103,12 +104,16 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
     ###############################################################
     cells_meta = pd.read_csv(join(clones_indir, "cells_meta.tsv"),
                              sep='\t')
+    cells_meta["lineage"] = cells_meta["lineage"].astype('Int64')
+    cells_meta["donor"] = cells_meta["donor"].astype('Int64')
     for d, curr_donor in cells_meta.groupby("donor"):
         # Create counts df
         print('d', d)
         print(curr_donor.groupby(["condition", "lineage"]).size())
 
         clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
+        clust_counts = clust_counts + pseudocount
+
         if len(clust_counts) == 0:
             print("No lineages detected in donor. Continuing")
             continue
@@ -123,27 +128,12 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
 
         # Get enrichment
         if "Input" in names:
-            enrich_df = run_enrichment(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
+            enrich_df = run_enrichment_stats(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
         else:
-            enrich_df = run_enrichment(clust_counts, flt_var=names[1])
-        # print('enrich_df')
-        # print(enrich_df)
-
-        fold_df = pd.DataFrame(
-                (clust_counts.loc[f"# {names[1]} Cells in Cluster"] + 1) / (
-                        clust_counts.loc[f"# {names[0]} Cells in Cluster"] + 1)).transpose()
-        fold_df = fold_df.rename({0: f"{names[1]} fold enrichment"}, axis=0)
-
-        enrich_stats = create_enrich(clust_counts, fold_df, enrich_df)
-        enrich_stats.to_csv(join(outdir, f"{name}enrichment_clones{nclones}_donor{d}.csv"))
-        all_enrich[(d, nclones)] = enrich_stats
-        if plot_ind:
-            plot_volcano(enrich_stats, f_save=join(outdir,f"{name}volcano_donor{d}.clones{nclones}_Fisher_fold.png"), x=f"{names[1]} fold enrichment")
-            plot_volcano(enrich_stats, f_save=join(outdir,f"{name}volcano_donor{d}.clones{nclones}_hyper_fold.png"), y="Fisher -log10p",
-                         x=f"{names[1]} fold enrichment",)
+            enrich_df = run_enrichment_stats(clust_counts, flt_var=names[1])
 
         ### Convert cluster numbers into probablilites.
-        clust_counts_norm = (clust_counts+1).copy().astype(np.double)
+        clust_counts_norm = (clust_counts).copy().astype(np.double)
         clust_counts_norm  = clust_counts_norm.div(clust_counts_norm.sum(axis=1), axis='rows')
         # print('clust_counts_norm')
         # print(clust_counts_norm)
@@ -154,30 +144,28 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
 
         print('fold_df_norm')
         print(fold_df_norm )
-        enrich_stats = create_enrich(clust_counts, fold_df_norm,  enrich_df, fold_df)
-
-        #enrich_stats = pd.concat((enrich_stats.transpose(), fold_df)).transpose()
+        enrich_stats = create_enrich(clust_counts, fold_df_norm,  enrich_df)
         enrich_stats.to_csv(join(outdir, f"{name}enrichmentNorm_clones{nclones}_donor{d}.csv"))
-        #print('enrich_stats')
         if plot_ind:
-            plot_volcano(enrich_stats, f_save=join(outdir, f"{name}volcano_donor{d}.clones{nclones}_Fisher_foldNorm.png"), v=1, x=f"{names[1]} fold enrichment")
-            plot_volcano(enrich_stats, f_save=join(outdir,f"{name}volcano_donor{d}.clones{nclones}_hyper_foldNorm.png"),y="-log10p", v=1, x=f"{names[1]} fold enrichment")
+            plot_volcano(enrich_stats, f_save=join(outdir, f"{name}volcano_donor{d}.clones{nclones}_Fisher_foldNorm.png"), v=1, x=f"{names[1]} fold enrichment norm")
+            plot_volcano(enrich_stats, f_save=join(outdir,f"{name}volcano_donor{d}.clones{nclones}_hyper_foldNorm.png"),y="-log10p", v=1, x=f"{names[1]} fold enrichment norm")
         all_enrich_norm[(d, nclones)] = enrich_stats
 
     all_enrich_df = pd.concat(all_enrich_norm).reset_index().rename(
         {"level_0": "Donor", "level_1": "clones"}, axis=1)
-    print("Does donor have any cells")
-    print((all_enrich_df["Donor"].isnull()).any())
+
+    #print("Does donor have any cells")
+    #print("Any null"(all_enrich_df["Donor"].isnull()).any())
     all_enrich_df["Donor"] = all_enrich_df["Donor"].astype(object)
 
-    for nclones, val in all_enrich_df.groupby("clones"):
+    for nclones_ind, val in all_enrich_df.groupby("clones"):
         # Main figure is Fisher norm results
         plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
                      size=f"# {names[1]} Cells in Cluster",
                      f_save=join(outdir, f"{name}volcano_Fisher_foldNorm.png"), v=1)
-        # Also plot without the norm
-        plot_volcano(val, hue="Donor", size=f"# {names[1]} Cells in Cluster",
-                     f_save=join(outdir, f"{name}volcano_Fisher_fold.png"), v=1, x=f"{names[1]} fold enrichment")
+        # # Also plot without the norm
+        # plot_volcano(val, hue="Donor", size=f"# {names[1]} Cells in Cluster",
+        #              f_save=join(outdir, f"{name}volcano_Fisher_fold.png"), v=1, x=f"{names[1]} fold enrichment")
         # Plot the hypergeometric p-value
         plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
                      size=f"# {names[1]} Cells in Cluster",
@@ -187,14 +175,6 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
                      size=f"# {names[0]} Cells in Cluster",
                      f_save=join(outdir, f"{name}volcano_Fisher_foldNorm_{names[0]}Size.png"), v=1)
 
-        # if "# Input Cells in Cluster" in val.columns:
-        #     plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
-        #                  size="# Input Cells in Cluster",
-        #                  f_save=join(outdir, f"{name}volcano.clones{nclones}_Fisher_foldNorm_inputSize.png"), v=1)
-        #     plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
-        #                  size="# Input Cells in Cluster",
-        #                  f_save=join(outdir, f"{name}volcano.clones{nclones}_HyperG_foldNorm_inputSize.png"), v=1, y = "-log10p")
-        #
 
     # dummy output variable
     with open(join(outdir,".status"), 'w') as f:
@@ -204,8 +184,17 @@ def lineage_enrichment(clones_indir, outdir, nclones, samples,
 
 def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
                  y="Fisher -log10p", hue=None, f_save=None, v=0,
-                 size=None):
-    f, ax = plt.subplots(figsize=(10, 10))
+                 size=None, to_close=True, to_log=False, ylim=None,
+                 xlim=None):
+    enrich_stats = enrich_stats.astype(float)
+
+    f, ax = plt.subplots(figsize=(10, 10), sharey=True, sharex=True)
+
+    if to_log:
+        enrich_stats[f"log2 {x}"] = np.log2(enrich_stats[x])
+        x = f"log2 {x}"
+        v=0
+
     if hue is None:
         n_clr=1
     else:
@@ -221,7 +210,52 @@ def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
                borderaxespad=0)
     if f_save is not None:
         plt.savefig(f_save, bbox_inches='tight')
-    plt.close()
+    if to_close:
+        plt.close()
+    return
+
+
+def wrap_plot_volcano(enrich_stats_all, x="Flt3l fold enrichment norm",
+                 y="Fisher -log10p", hue=None, f_save=None, v=0,
+                 size=None, to_close=False, to_log=False):
+
+    f, ax = plt.subplots(figsize=(15, 15), ncols=len(enrich_stats_all),
+                         sharey=True, sharex=True)
+
+    count = 0
+    for k in enrich_stats_all:
+        curr_ax = ax[count]
+
+        enrich_stats = enrich_stats_all[k].copy()
+        enrich_stats = enrich_stats.astype(float)
+
+        if to_log:
+            new_x = f"log2 {x}"
+            enrich_stats[new_x] = np.log2(enrich_stats[x])
+            v = 0
+        else:
+            new_x = x
+
+        if hue is None:
+            n_clr = 1
+        else:
+            n_clr = len(set(enrich_stats[hue]))
+        sns.scatterplot(data=enrich_stats, x=new_x, y=y, s=100, sizes=(20, 200),
+                        palette=sns.color_palette("Set1", n_clr),
+                        ax=curr_ax, hue=hue, size=size)
+
+        curr_ax.axvline(x=v)
+        # ax.plot([0.5], [0.5], transform=ax.transAxes, color='black')
+        # plt.axis('square')
+        curr_ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left',
+                  borderaxespad=0)
+        curr_ax.set_title(k)
+        count+=1
+    if f_save is not None:
+        plt.tight_layout()
+        plt.savefig(f_save, bbox_inches='tight', dpi=300)
+    if to_close:
+        plt.close()
     return
 
 
@@ -233,11 +267,15 @@ def create_enrich(clust, fold, enrich, fold_norm=None):
     # print('enrich')
     # print(enrich.head())
     if fold_norm is not None:
-        enrich_stats = pd.concat(
-            (clust, fold, enrich, fold_norm)).transpose()
+        enrich_stats = pd.concat((clust.transpose(), fold.transpose(),
+                                  enrich.transpose(), fold_norm.transpose()),
+                                  axis=1)
     else:
-        enrich_stats = pd.concat(
-            (clust, fold, enrich)).transpose()
+        enrich_stats = pd.concat((clust.transpose(), fold.transpose(),
+                                  enrich.transpose()),
+                                  axis=1)
+        # enrich_stats = pd.concat(
+        #     (clust, fold, enrich)).transpose()
     enrich_stats['hypergeom p'] = enrich_stats['hypergeom p'].astype(float)
     enrich_stats['-log10p'] = -np.log10(enrich_stats['hypergeom p'])
     enrich_stats.loc[enrich_stats["-log10p"] == np.infty, "-log10p"] = 0
@@ -266,8 +304,6 @@ def plot_label_enrich(enrich_df, fold_df, clust_counts, outdir, n, k):
     plt.savefig(join(outdir, f"donor{n}.clones{k}_labelEnrich.png"))
     plt.close()
 
-    # print('enrich_stats')
-    # print(enrich_stats.head())
     return
 
 
@@ -296,7 +332,6 @@ def plot_clone_scatter(enrich_stats, outdir, samples, n, k, size='-log10p'):
     #plt.show()
     plt.savefig(join(outdir, f"donor{n}.clones{k}_scatterEnrich.png"))
     plt.close()
-
 
 
 @click.command()
