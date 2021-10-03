@@ -307,7 +307,12 @@ def extract_af(nt_df, bq_df, ref_fasta):
     logging.info(f'# of positions with no variant detected: {no_alt_count}')
     af = af.dropna()
 
+
     # Create variant ID name (e.g. 18A-position 18 variant A)
+    print(f"number of positions: {len(af)}")
+    print('af head')
+    print(af.head())
+
     af["ID"] = af.apply(lambda x: (str(x.name) + x["Nucleotide"]),
                         axis=1)
     return af

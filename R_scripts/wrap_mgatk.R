@@ -1,4 +1,6 @@
-#!/usr/bin/Rscript --vanilla
+#!/usr/bin/env Rscript
+
+##!/usr/bin/Rscript --vanilla
 source("./R_scripts/toRDS.R")
 source("./R_scripts/variant_calling.R")
 

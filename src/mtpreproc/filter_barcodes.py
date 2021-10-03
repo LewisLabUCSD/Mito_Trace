@@ -50,7 +50,8 @@ def main(barcode_f, cellr_f, use_cellr, out_f):
         CB_read_number = filter_barcodes_from_CB(CB_read_number, cellr_f)
     pickle.dump(CB_read_number,file=open(out_f, "wb"))
     with open(out_f.replace(".p", ".txt"), "w") as f:
-        f.write("\n".join(list(CB_read_number.keys())))
+        f.write("\n".join([f"CB:Z:{x}" for x in list(CB_read_number.keys())]))
+
     return
 
 

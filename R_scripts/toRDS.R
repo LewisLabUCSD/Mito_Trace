@@ -1,4 +1,6 @@
-#!/usr/bin/Rscript --vanilla
+#!/usr/bin/env Rscript
+
+##!/usr/bin/Rscript --vanilla
 
 library(tools)
 library(Matrix)

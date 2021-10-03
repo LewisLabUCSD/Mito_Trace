@@ -61,6 +61,7 @@ def split(in_f, out_d, to_overwrite=False):
     itr = 0
     # read in upsplit file and loop reads by line
     count = 0
+    count_perm = 0
     v = pysam.set_verbosity(0)
     samfile = pysam.AlignmentFile(unsplit_file, "rb")
     pysam.set_verbosity(v)
@@ -73,12 +74,22 @@ def split(in_f, out_d, to_overwrite=False):
             if (CB_itr!=CB_hold or itr==0):
                 # close previous split file, only if not first read in file
                 if (itr!=0):
-                    split_file.close()
+                    try:
+                        split_file.close()
+                    except NameError:
+                        print("split file not here yet")
+                        continue
                 CB_hold = CB_itr
                 itr+=1
                 #print(join(out_dir,"CB_{}.bam".format(CB_itr)))
-                split_file = pysam.AlignmentFile(join(out_dir,"CB_{}.bam".format(CB_itr)), "wb", template=samfile)
                 pysam.set_verbosity(v)
+                try:
+                    split_file = pysam.AlignmentFile(join(out_dir,"CB_{}.bam".format(CB_itr)), "wb", template=samfile)
+                except PermissionError:
+                    print("CB permission error")
+                    count_perm += 1
+                    continue
+
             # write read with same barcode to file
             split_file.write(read)
         except KeyError:
@@ -87,6 +98,7 @@ def split(in_f, out_d, to_overwrite=False):
     samfile.close()
 
     print("no CBs: ", count)
+    print("no CBs permission", count_perm)
     return
 
 

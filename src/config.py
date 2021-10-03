@@ -3,7 +3,6 @@ import os
 import matplotlib as mpl
 mpl.use('agg')
 
-
 r_kernel = "/usr/bin/Rscript"
 
 ############
@@ -12,7 +11,7 @@ r_kernel = "/usr/bin/Rscript"
 path = os.path.abspath(__file__)
 dir_path = pathlib.Path(os.path.dirname(path))
 ROOT_DIR = dir_path.parents[0]
-print(f"Project Directory: {ROOT_DIR}")
+#print(f"Project Directory: {ROOT_DIR}")
 
 
 ############

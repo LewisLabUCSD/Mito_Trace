@@ -1,0 +1,23 @@
+This project uses conda as a package manager, and sets up our module in
+a package called 'src'. Two internal packages were also used. Setup is
+as follows.
+
+Download the Mito_Trace package from github. Once you download,
+go into the folder and type 'pip install -e .'. This will install
+the project.
+
+To install the dependencies, look at the environment.yaml file
+in environments. The way we installed our packages are as follows:
+Using miniconda3, python version 3.7.
+
+`conda update conda`
+`conda install -c rmg glibc`
+
+
+mamba install snakemake=6 pysam icecream pandarallel ruamel.yaml notebook seaborn click
+mamba install biopython pysam
+
+
+
+mamba install -y -c conda-forge r-base r-devtools r-cairo r-systemfonts r-irkernel
+mamba install -c bioconda r-signac r-seurat bioconductor-summarizedexperiment bioconductor-genomeinfodb bioconductor-ensdb.hsapiens.v75

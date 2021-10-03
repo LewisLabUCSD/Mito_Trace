@@ -7,6 +7,8 @@ main:
   - "DE"
 
 
+cellranger_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/"
+samtools_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/external/anaconda/bin"
 genome_path:
   #genome: "MTBlacklist" # ["MTBlacklist", "MTBlacklist_mtasnucl", "noblacklist_hg38"]
   MTBlacklist:
@@ -71,7 +73,7 @@ clones:
     - "knn" #["vireo", "phylogeny", "knn"]
   vireo:
     params:
-      nclonelist: [20, 40, 100]
+      nclonelist: [20] #, 40, 100]
   phylogeny:
     params:
       method: "missingV"

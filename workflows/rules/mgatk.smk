@@ -1,7 +1,4 @@
 from os.path import dirname
-
-print('mgatk config')
-
 # rule all:
 #     input:
 #         expand("{sample}/mgatk/vireoIn/cellSNP.tag.AD.mtx", sample=config["samples"])

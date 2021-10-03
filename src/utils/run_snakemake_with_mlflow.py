@@ -10,8 +10,8 @@ import snakemake
 from src.utils.parse_config import read_config_file, write_config_file
 #from snakemake.utils import para
 from src.utils.paramspace import Paramspace
-import src.mlflow.mlflow_utils as mu
 import mlflow
+import src.mlflow.mlflow_utils as mu
 from icecream import ic
 import subprocess
 import datetime
