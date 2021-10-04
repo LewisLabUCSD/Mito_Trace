@@ -90,6 +90,11 @@ def wrap_lineage_enrichment(clones_indir, outdir, n_clone_list, samples,
                        plot_ind, name="", names=None)
 
 
+def lineage_enrichment_new(indir, outdir, name, names, samples,
+                           plot_ind=False,
+                           pseudocount=1):
+    
+    return
 
 def lineage_enrichment(clones_indir, outdir, nclones, samples,
                        plot_ind, name="", names=None, pseudocount=1):
