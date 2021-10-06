@@ -59,6 +59,12 @@ rule all:
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
         #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
         #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], method=params_clones["method"], variants=params_clones["variants"]),
+        expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
+               output=res, cellrbc=cellrbc, num_read=num_reads_filter,
+               mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+               hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+               kparam=params_clones["knn"]["params"]["resolution"]),
+
         expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/.pipeline",
             output=res, cellrbc=cellrbc, num_read=num_reads_filter,
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
@@ -117,8 +123,6 @@ module multMod:
 module lineageMod:
     snakefile: "./rules/lineage.smk"
     config: params
-
-
 
 
 ## 1. Go from 10x output to filtered scPileup outdir.
@@ -186,6 +190,7 @@ use rule * from multMod
 use rule donors_type_variants from multMod with:
     output:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/variants/variants.ipynb",
+
 
 use rule donors_plotAF from multMod with:
     input:
@@ -363,7 +368,6 @@ rule vireo_mgatkdonor_concat:
                 all = all.drop('level_0', axis=1)
         ic('all')
         ic(all.head())
-
         all.to_csv(output[0], sep='\t', index=False)
 
 
@@ -418,12 +422,11 @@ rule enrichment_vireo:
     output:
         report("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/volcano_Fisher_foldNorm.png", category="enrichment"),
     params:
-        clones_indir = lambda wildcards, input: dirname(input[0]),#lambda wildcards, input: dirname(input[0]),
+        #clones_indir = lambda wildcards, input: dirname(input[0]),#lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
-        nclones = lambda wildcards: wildcards.nclones, #clones_cfg['vireo']["params"]["nclonelist"],
         script = join("src", "lineage", "lineage_enrichment.py"),
         samples=",".join(samples.index)
-    shell: "python {params.script} {params.clones_indir} {params.OUTDIR} {params.nclones} {params.samples}"
+    shell: "python {params.script} {input} {params.OUTDIR} {params.samples}"
 
 
 # Bring enrichment results into same space
@@ -454,7 +457,9 @@ rule knn:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{d}/mgatk_donor/d{d}.variant.rds"
     output:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
-        "{output}/data/merged/MT/cellrhttps://deltachildren.com/products/monterey-4-drawer-chest_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/donor{d}.variants.labels.png"
+        report("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/donor{d}.variants.labels.png",
+               category="enrichment")
+
     params:
         mgatk_in = lambda wildcards, input: input[0].replace(".variant.rds", ".af.tsv"),
         name = lambda wildcards: f"donor{wildcards.d}", #"/data2/mito_lineage/data/processed/mttrace/TcellDupi_may17_2021/MTblacklist/pre/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/filter_mgatk/pre.variant.rds"
@@ -468,16 +473,56 @@ rule knn:
         "papermill -k ir -p mgatk_in {params.mgatk_in} -p name {params.name} -p donor {params.donor} -p outdir {params.outdir} -p kparam {params.kparam} {params.note} {params.outdir}/output.ipynb"
 
 
+#
+# use rule donor_concat_clones from lineageMod with:
+#     input:
+#         expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv",
+#                d = np.arange(config["N_DONORS"])),
+#     output:
+#          "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/cells_meta.tsv"
+
+rule knn_mgatkdonor_concat:
+    input:
+        expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv",
+               d = np.arange(config["N_DONORS"])),
+    output:
+         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/cells_meta.tsv"
+    run:
+        all = []
+        for i in input:
+            all.append(pd.read_csv(i, sep='\t'))
+        all = pd.concat(all, ignore_index=True).sort_values(["donor", "lineage", "donor_index", "lineage_index"])
+        if 'level_0' in all.columns:
+                all = all.drop('level_0', axis=1)
+        ic('all')
+        ic(all.head())
+        all.to_csv(output[0], sep='\t', index=False)
+
+
+
+rule knn_enrichment:
+    input:
+        "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/cells_meta.tsv",
+    output:
+        report("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png", category="enrichment"),
+    params:
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        script = join("src", "lineage", "lineage_enrichment.py"),
+        samples=",".join(samples.index)
+    shell: "python {params.script} {input} {params.OUTDIR} {params.samples}"
+
 rule knn_process:
     input:
-        expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
-               kparam=params_clones["knn"]["params"]["resolution"], d=np.arange(config["N_DONORS"]))
+        expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
+               kparam=params_clones["knn"]["params"]["resolution"])
     output: "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/temp/.tmp"#.pipeline"
     shell:
         "touch {output}"
     #outdir <- ""#"/data2/mito_lineage/Analysis/annotation/output/data/TcellDupi_may17_2021/MTblacklist/"
         # Cluster parameters
         #
+
+
 
 # Sort of like an all rule to bring downstream results together.
 rule complete_lineage:
