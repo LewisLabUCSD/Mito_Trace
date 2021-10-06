@@ -66,7 +66,6 @@ def get_cellr_dir(wildcards):
     return join(config["mtscATAC_OUTDIR"], samples.loc[wildcards.sample, "cellr_ID"], "outs")
 
 
-
 def get_extrnl_frags(wildcards):
     return f"{wildcards.outdir}/annotation/data/{cfg_anno['name']}/{cfg_anno['name']}.fragments.sort.tsv.gz"
 
@@ -151,6 +150,8 @@ rule createMergedExpSignac:
     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
 
 
+
+
 def get_comps():
     if "comparisons" in config:
         return config["comparisons"]
@@ -176,15 +177,24 @@ rule runDE:
     shell: "papermill -p integrated_f {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
 
 
+rule runDE_rm_clust:
+    params:
+        clust_rm = config["clust_rm"]
+    output:
+        "{outdir}/annotation/{prefix}/mergedSamples/DE/DE.ipynb",
+    shell: "papermill -p clust_rm {params.clust_rm} -p integrated_f {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
+
+
 rule runGSEA:
     input:
         DE_out_path = "{outdir}/annotation/{prefix}/mergedSamples/DE/DE.ipynb",
     output:
         "{outdir}/annotation/{prefix}/mergedSamples/DE/GSEA/GSEA.ipynb",
     params:
+        input = lambda wildcards, input: join(dirname(input[0]), "clusters"),
         output = lambda wildcards, output: dirname(output[0]),
         rscript = join(ROOT_DIR, "R_scripts/annotations/runGSEA.ipynb")
-    shell: "papermill -p DE.out.path {input} -p export.path {params.output} {params.rscript} {output[0]}"
+    shell: "papermill -p DE.out.path {params.input} -p export.path {params.output} {params.rscript} {output[0]}"
 
 
 # rule overlay_cells_meta:

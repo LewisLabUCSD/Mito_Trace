@@ -204,3 +204,27 @@ rule complete_lineage:
         "{outdir}/mgatk/vireoIn/clones/variants_{variants}/{method}/temp/.tmp",
     output: "{outdir}/mgatk/vireoIn/clones/variants_{variants}/{method}/.completed"
     shell: "touch {output}"
+
+
+
+rule donor_concat_clones:
+    input:
+        expand("{{outdir}}/donor{d}/cells_meta.tsv",
+               d = np.arange(config["N_DONORS"])),
+    output:
+         "{outdir}/concat/cells_meta.tsv",
+    run:
+        all = []
+        cols = ["donor", "lineage"]
+        for i in input:
+            print(i)
+            all.append(pd.read_csv(i, sep='\t'))
+            print(all[-1].head())
+            if "donor_index" in all[-1].columns.values:
+                cols.append("donor_index")
+            if "lineage_index" in all[-1].columns.values:
+                cols.append("lineage_index")
+        all = pd.concat(all, ignore_index=True).sort_values(cols)
+        if 'level_0' in all.columns:
+                all = all.drop('level_0', axis=1)
+        all.to_csv(output[0], sep='\t', index=False)
