@@ -1,14 +1,69 @@
 from src.utils.parse_config import read_config_file
 from src.utils import run_snakemake
+import click
+from os.path import join
+
+
+def call_click_command(cmd, *args, **kwargs):
+    """ Wrapper to call a click command
+
+    :param cmd: click cli command function to call
+    :param args: arguments to pass to the function
+    :param kwargs: keywrod arguments to pass to the function
+    :return: None
+    """
+
+    # Get positional arguments from args
+    arg_values = {c.name: a for a, c in zip(args, cmd.params)}
+    args_needed = {c.name: c for c in cmd.params
+                   if c.name not in arg_values}
+
+    # build and check opts list from kwargs
+    opts = {a.name: a for a in cmd.params if isinstance(a, click.Option)}
+    for name in kwargs:
+        if name in opts:
+            arg_values[name] = kwargs[name]
+        else:
+            if name in args_needed:
+                arg_values[name] = kwargs[name]
+                del args_needed[name]
+            else:
+                raise click.BadParameter(
+                    "Unknown keyword argument '{}'".format(name))
+
+
+    # check positional arguments list
+    for arg in (a for a in cmd.params if isinstance(a, click.Argument)):
+        if arg.name not in arg_values:
+            raise click.BadParameter("Missing required positional"
+                                     "parameter '{}'".format(arg.name))
+
+    # build parameter lists
+    opts_list = sum(
+        [[o.opts[0], str(arg_values[n])] for n, o in opts.items()], [])
+    args_list = [str(v) for n, v in arg_values.items() if n not in opts]
+
+    # call the command
+    cmd(opts_list + args_list)
 
 
 def wrap_run_snakemake(config_f):
     config = read_config_file(config_f)#join(ROOT_DIR,"parameters/pipeline/wrap_annotation.yaml"))
+    print(config['indir'])
     for i in config["indir"]:
-        curr_config = (config["indir"][i])
-        run_snakemake.main(smkfile=config['snakefile'],
-                           configfile=curr_config,
-                           pipename=config['pipename'], outdir=None, to_git=True, targets='all',
-                           dryrun=True, mlflow=None,
-                           to_gitpush=True, cores=8)
+        print('i', i)
+        curr_config = join(config["params_dir"], config["indir"][i])
+        print(curr_config)
+        print(config['pipename'])
+        run_snakemake.run(smkfile=config['snakefile'],
+                          configfile = curr_config,
+                          pipename=config['pipename'],
+                          to_git=True,
+                          targets='all',
+                          dryrun= True,
+                          to_gitpush=True,
+                          cores=8,
+                          forcetargets=None,
+                          outdir=None)
+    return
 

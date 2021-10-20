@@ -54,7 +54,6 @@ rule index_bam:
     output: "{output}/data/{sample}/00_bam/{sample}.bam.bai"
     shell: "samtools index {input}"
 
-
 rule MT_map:
     """Extract the MT genome"""
     input:

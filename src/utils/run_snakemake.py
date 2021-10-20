@@ -135,39 +135,11 @@ def check_input(config, files_config, curr_p, git_commit=None,
     return True
 
 
-@click.command()
-@click.argument("smkfile", type=click.Path(exists=True))
-@click.argument("configfile", type=click.Path(exists=True))
-@click.option("--pipename", "-p", default="pipeline", type=click.STRING)
-@click.option("--outdir", "-o", default=".", type=click.Path(exists=True))
-@click.option("--to_git", default=False)
-@click.option("--targets", "-t", type=click.STRING, multiple=True)
-@click.option("--dryrun", default=False)
-@click.option("--mlflow", default=False)
-@click.option("--forcetargets", default=False)
-@click.option("--to_gitpush", default=False)
-@click.option("--cores", default=4)
-@click.option("--template_cfg", default="")
-def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow, forcetargets, to_gitpush, cores, template_cfg):
-    """ Runs snakemake and/or mlflow pipeline
-
-
-    OUTPUT Folders:
-    {Experiment Name (entrypoint)}/{PREFIX}/{mlflow#}/{folder
-    :param smkfile:
-    :param configfile:
-    :param outdir:
-    :param to_git:
-    :param target:
-    :param dryrun:
-    :return:
-    """
+def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetargets, to_gitpush, cores):
     ic(targets)
     if len(targets) == 0:
         targets=None
     ic(targets)
-    if mlflow:
-        mlflow.set_tracking_uri(outdir)
 
     # Setup config output file names for the target
     config = read_config_file(configfile)
@@ -180,16 +152,6 @@ def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow,
 
     ic(configfile)
     ic(outdir)
-
-    # Process each input file to get the full paths
-    #env_files = load_env_files(env)
-
-    # Compare parameter file to schema
-    #validate_schema_files(parameters, parameters_schema)
-    # for p in pipeline:
-    #     setup_files(outdir, configfile, pipe=p)
-    #     if "params" in config[p]:
-    #         Paramspace(config[p], filename_params="*", param_sep='_')
 
     out = snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun,
@@ -228,9 +190,37 @@ def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, mlflow,
         # Timestamp and update
         s = 'Ran and Needs inspection\n' + 'Time:' +  datetime.datetime.now().strftime("%B/%d/%Y %H:%M:%S")
 
-    # # Get a tree of files and folders after the pipeline
-    # cmd = f"tree -d {outdir} -L 3 > {outdir}/_tree.txt"
-    # os.system(cmd)
+    return
+
+
+@click.command()
+@click.argument("smkfile", type=click.Path(exists=True))
+@click.argument("configfile", type=click.Path(exists=True))
+@click.option("--pipename", "-p", default="pipeline", type=click.STRING)
+@click.option("--outdir", "-o", default=".", type=click.Path(exists=True))
+@click.option("--to_git", default=False)
+@click.option("--targets", "-t", type=click.STRING, multiple=True)
+@click.option("--dryrun", default=False)
+@click.option("--forcetargets", default=False)
+@click.option("--to_gitpush", default=False)
+@click.option("--cores", default=4)
+def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetargets, to_gitpush, cores):
+    """ Runs snakemake and/or mlflow pipeline
+
+    OUTPUT Folders:
+    {Experiment Name (entrypoint)}/{PREFIX}/{mlflow#}/{folder
+    :param smkfile:
+    :param configfile:
+    :param outdir:
+    :param to_git:
+    :param target:
+    :param dryrun:
+    :return:
+    """
+
+    run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun,
+        forcetargets, to_gitpush, cores)
+
 
     return
 

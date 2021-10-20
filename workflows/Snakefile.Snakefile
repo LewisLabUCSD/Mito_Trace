@@ -371,7 +371,6 @@ rule vireo_mgatkdonor_concat:
         all.to_csv(output[0], sep='\t', index=False)
 
 
-
 rule multiplex_report:
     input:
         multiext("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/", "multiplex_AF_SNPs_all_afFilt.png", "multiplex_clusters_all.labels.png")
@@ -415,7 +414,7 @@ rule clones_type_variants:
 
 
 ########################################################################
-rule enrichment_vireo:
+rule vireo_enrichment:
     version: '1.0' # no +1 norm error
     input:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/cells_meta.tsv"
@@ -489,15 +488,19 @@ rule knn_mgatkdonor_concat:
          "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/cells_meta.tsv"
     run:
         all = []
+        cols = ["donor", "lineage"]
         for i in input:
+            print(i)
             all.append(pd.read_csv(i, sep='\t'))
-        all = pd.concat(all, ignore_index=True).sort_values(["donor", "lineage", "donor_index", "lineage_index"])
+            print(all[-1].head())
+            if "donor_index" in all[-1].columns.values:
+                cols.append("donor_index")
+            if "lineage_index" in all[-1].columns.values:
+                cols.append("lineage_index")
+        all = pd.concat(all, ignore_index=True).sort_values(cols)
         if 'level_0' in all.columns:
                 all = all.drop('level_0', axis=1)
-        ic('all')
-        ic(all.head())
         all.to_csv(output[0], sep='\t', index=False)
-
 
 
 rule knn_enrichment:
@@ -511,6 +514,7 @@ rule knn_enrichment:
         samples=",".join(samples.index)
     shell: "python {params.script} {input} {params.OUTDIR} {params.samples}"
 
+
 rule knn_process:
     input:
         expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
@@ -521,8 +525,15 @@ rule knn_process:
     #outdir <- ""#"/data2/mito_lineage/Analysis/annotation/output/data/TcellDupi_may17_2021/MTblacklist/"
         # Cluster parameters
         #
-
-
+rule knn_process_simple:
+    """ dummy rule to not use simple for knn
+    """
+    # input:
+    #     expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_simple/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
+    #            kparam=params_clones["knn"]["params"]["resolution"])
+    output: "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_simple/knn/temp/.tmp"#.pipeline"
+    shell:
+        "touch {output}"
 
 # Sort of like an all rule to bring downstream results together.
 rule complete_lineage:

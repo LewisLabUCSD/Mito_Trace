@@ -272,7 +272,7 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
 
 def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
                  y="Fisher -log10p", hue=None, f_save=None, v=0,
-                 size=None, to_close=True, to_log=False, ylim=None,
+                 size=None, to_close=True, to_log=True, ylim=None,
                  xlim=None):
     enrich_stats = enrich_stats.astype(float)
 

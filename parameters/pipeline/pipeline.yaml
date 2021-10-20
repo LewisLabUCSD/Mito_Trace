@@ -23,6 +23,7 @@ genome_path:
     mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
 
 mtpreproc:
+  version: 02
   params:
     cellrbc: [True]
     numreadsfilter: [200]
@@ -65,7 +66,7 @@ multiplex:
 
 clones:
   variants:
-    #- "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
+    - "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
     - "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:

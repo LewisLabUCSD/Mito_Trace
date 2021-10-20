@@ -1,5 +1,5 @@
 ## Global parameters
-outdir: "/data2/isshamie/mito_lineage/output"
+outdir: "/data2/mito_lineage/output"
 config: "parameters/pipeline/pipeline.yaml"
 
 fastq_dir: "/data2/isshamie/mito_lineage/data/raw/optim_june03_2021/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"

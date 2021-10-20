@@ -1,0 +1,15 @@
+## Global params
+outdir: "/data2/mito_lineage/scrap" # Global output directory
+config: "parameters/pipeline/pipeline.yaml"
+#params: "parameters/pipeline/params.csv"
+
+## Experiment params
+prefix: "cd34norm/MTblacklist"
+samples_meta: "parameters/pipeline/jan21_2021.csv"
+genome: "MTBlacklist"
+fastq_dir: "/data2/isshamie/mito_lineage/data/raw/jan21_2021_Croker/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
+mtscATAC_OUTDIR: "/data2/isshamie/mito_lineage/data/processed/mtscATAC/jan21_2021/MTblacklist"
+#results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
+N_DONORS: 4
+
+
