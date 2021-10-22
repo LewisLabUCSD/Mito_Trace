@@ -1,0 +1,9 @@
+N_DONORS: 8
+comparisons: A,preA,postA;B,preB,postB
+config: parameters/pipeline/pipeline.yaml
+fastq_dir: /data2/isshamie/mito_lineage/data/raw/CHIP_april08_2021_Croker/
+genome: MTblacklist_mtasnucl
+mtscATAC_OUTDIR: /data2/isshamie/mito_lineage/data/processed/mtscATAC/DUPI_april08_2021_Croker/MTblacklist_mtasnucl
+outdir: /data2/mito_lineage/output
+prefix: DUPI_april08_2021/MTblacklist_mtasnucl
+samples_meta: parameters/pipeline/DUPI_april08_2021.csv
