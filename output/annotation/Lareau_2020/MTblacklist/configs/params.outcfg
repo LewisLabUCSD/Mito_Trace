@@ -1,0 +1,11 @@
+N_DONORS: 1
+config: parameters/pipeline/pipeline.yaml
+fastq_dir: /data2/isshamie/mito_lineage/data/raw/Lareau_2020/
+genome: MTBlacklist
+mtscATAC_OUTDIR: /data2/isshamie/mito_lineage/data/processed/mtscATAC/Lareau_2020/MTblacklist
+outdir: /data2/mito_lineage/output
+prefix: Lareau_2020/MTblacklist
+sample_dict:
+  CD34_rep1: CD34_rep1
+  PBMC_rep1: PBMC_rep1
+samples_meta: parameters/pipeline/Lareau_2020.csv
