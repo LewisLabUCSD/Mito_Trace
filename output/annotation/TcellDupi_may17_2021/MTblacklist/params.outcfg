@@ -1,0 +1,11 @@
+N_DONORS: 2
+config: parameters/pipeline/pipeline.yaml
+fastq_dir: /data2/isshamie/mito_lineage/data/raw/TcellDupi_may17_2021/
+genome: MTBlacklist
+mtscATAC_OUTDIR: /data2/isshamie/mito_lineage/data/processed/mtscATAC/PBMC_may17_2021/MTblacklist
+outdir: /data2/mito_lineage/output
+parameters:
+  annotation:
+    rmClust: 13,16,15
+prefix: TcellDupi_may17_2021/MTblacklist
+samples_meta: parameters/pipeline/TcellDupi_may17_2021.csv
