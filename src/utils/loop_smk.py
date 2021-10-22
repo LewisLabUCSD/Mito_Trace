@@ -47,7 +47,7 @@ def call_click_command(cmd, *args, **kwargs):
     cmd(opts_list + args_list)
 
 
-def wrap_run_snakemake(config_f):
+def wrap_run_snakemake(config_f, dryrun=True, targets=None):
     config = read_config_file(config_f)#join(ROOT_DIR,"parameters/pipeline/wrap_annotation.yaml"))
     print(config['indir'])
     for i in config["indir"]:
@@ -59,8 +59,8 @@ def wrap_run_snakemake(config_f):
                           configfile = curr_config,
                           pipename=config['pipename'],
                           to_git=True,
-                          targets='all',
-                          dryrun= True,
+                          targets=targets,
+                          dryrun=dryrun,
                           to_gitpush=True,
                           cores=8,
                           forcetargets=None,

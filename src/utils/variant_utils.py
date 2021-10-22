@@ -91,7 +91,7 @@ def variants_qc(af, dp, groups_d, include_lineage=True):
         other_dp = dp.loc[:, ~(dp.columns.isin(groups_d[group]))]
         other_qc_d = calc_variants_qc(other_af, other_dp,
                                 prefix="")
-        other_qc_d["variant"] = qc_d.index
+        other_qc_d["variant"] = other_qc_d.index
         other_qc_d["meta"] = "Other"
         other_qc_d["group"] = group
         if include_lineage:
@@ -136,7 +136,7 @@ def variants_dense(AF_df, vars_to_plot, samples_d, donors_d,
         vars_to_plot=len(AF_df)
     var_sort = AF_df.mean(axis=1).sort_values()[::-1].index[:vars_to_plot]
     variants_box=AF_df.loc[var_sort].reset_index().melt(id_vars='Variant',
-                                                                              value_name='AF')
+                                                        value_name='AF')
     variants_box['condition'] = variants_box['Cell'].map(samples_d)
     variants_box['donor'] = variants_box['Cell'].map(donors_d)
     #variants_box=variants_box.dropna().copy()

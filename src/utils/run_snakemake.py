@@ -19,7 +19,7 @@ import pandas as pd
 
 
 def run_git(paths:list, commit_msg, to_push=False, src="origin", remote="master",
-            branch='workflow_results'):
+            branch='master'):
     assert(len(paths)>0)
 
     # check if branch already made. 0 returncode means it is there
@@ -110,6 +110,7 @@ def create_params_combination_global(cfg):
     params_df = create_params_combination(params)
     return params_df
 
+
 def check_input(config, files_config, curr_p, git_commit=None,
                 mlflow_tracking_uri=None):
     """ Check if the input for each pipeline exists
@@ -137,21 +138,11 @@ def check_input(config, files_config, curr_p, git_commit=None,
 
 def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetargets, to_gitpush, cores):
     ic(targets)
-    if len(targets) == 0:
+    if targets==None or len(targets) == 0:
         targets=None
     ic(targets)
 
-    # Setup config output file names for the target
-    config = read_config_file(configfile)
-    #pipeline = config.get('pipeline', [])
-    if 'outdir' in config:
-        #config['outdir']
-        outdir = join(config['outdir'], pipename, config['prefix'])
-    else:
-        outdir = join(outdir, pipename, config['prefix'])
 
-    ic(configfile)
-    ic(outdir)
 
     out = snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun,
@@ -160,15 +151,42 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
     print("out")
     print(out)
 
-    # Make the report
-    report = join(outdir, f"report_{basename(smkfile)}_cfg_{basename(configfile)}.html" )
+    # Setup config output file names
+    config = read_config_file(configfile)
+    #pipeline = config.get('pipeline', [])
+    if 'outdir' in config:
+        #config['outdir']
+        if not os.path.exists(join(config["outdir"], pipename)):
+            raise OSError(f'Expected dir {join(config["outdir"], pipename)} but does not exist')
+        outdir = join(config['outdir'], pipename, config['prefix'], "configs")
+    else:
+        if not os.path.exists(join(outdir, pipename)):
+            raise OSError(f'Expected dir {join(outdir, pipename)} but does not exist')
+        outdir = join(outdir, pipename, config['prefix'], "configs")
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+
+    ic(configfile)
+    ic(outdir)
+
+
     if not dryrun:
+        # Make the report
+        report_f = join(outdir,
+                      f"report_{basename(smkfile)}_cfg_{basename(configfile)}.html")
         snakemake.snakemake(smkfile, configfiles=[configfile],
-                            targets=targets, report=report)
+                            targets=targets, report=report_f,
+                            force_incomplete=True)
+
+        ################
         # copy over snakemake and configfile to output:
-        os.system(f"cp {configfile} {outdir}/{basename(configfile)}.incfg")
-        os.system(f"cp {smkfile} {outdir}/{basename(smkfile)}.insmk")
-        write_config_file(join(outdir, "params.outcfg"), config)
+        ################
+        incfg_f = f"{outdir}/{basename(configfile)}.incfg"
+        insmk_f = f"{outdir}/{basename(configfile)}.insmk"
+        params_out_f = join(outdir, "params.outcfg")
+        os.system(f"cp {configfile} {incfg_f}")
+        os.system(f"cp {smkfile} {insmk_f}")
+        write_config_file(params_out_f, config)
 
         snakemake.snakemake(smkfile, configfiles=[configfile],
                             targets=targets,
@@ -176,13 +194,14 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
         cmd = f"snakemake -s {smkfile} --configfile {configfile} --dag | dot -Tsvg > {outdir}/dag.svg"
         print(cmd)
         os.system(cmd)
-        if to_git:
-            run_git([join(outdir,f"report_{basename(smkfile)}.html"),
-                     join(outdir,"params.outcfg"),
-                     join(outdir,f"{basename(smkfile)}.insmk"),
-                     join(outdir,f"{basename(smkfile)}.incfg")],
-                    commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
-                    to_push=to_gitpush)
+        # if to_git:
+        #     ## TODO
+        #     run_git([report_f,
+        #              params_out_f,
+        #              insmk_f,
+        #              incfg_f],
+        #             commit_msg=f"Ran pipeline for {basename(smkfile)}, {configfile} saved to {outdir} [results]",
+        #             to_push=to_gitpush)
 
 
         # 3. Update _stateOfAnalysis.txt file
