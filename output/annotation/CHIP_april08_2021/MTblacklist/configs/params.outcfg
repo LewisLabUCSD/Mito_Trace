@@ -1,0 +1,8 @@
+N_DONORS: 5
+config: parameters/pipeline/pipeline.yaml
+fastq_dir: /data2/isshamie/mito_lineage/data/raw/CHIP_april08_2021_Croker/
+genome: MTBlacklist
+mtscATAC_OUTDIR: /data2/isshamie/mito_lineage/data/processed/mtscATAC/CHIP_april08_2021_Croker/MTblacklist
+outdir: /data2/mito_lineage/output
+prefix: CHIP_april08_2021/MTblacklist
+samples_meta: parameters/pipeline/CHIP_april08_2021.csv
