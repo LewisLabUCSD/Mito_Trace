@@ -6,7 +6,7 @@ import snakemake
 
 
 cfg_f= join(ROOT_DIR, "parameters/pipeline/wrappers", "wrap_annotations.yaml")
-wrap_run_snakemake(cfg_f)
+wrap_run_snakemake(cfg_f, dryrun=False)
 
 # config = read_config_file(cfg_f)  # join(ROOT_DIR,"parameters/pipeline/wrap_annotation.yaml"))
 # print(config['indir'])

@@ -147,7 +147,7 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
     out = snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun,
                               forcetargets=forcetargets,
-                              cores=cores)
+                              cores=cores, force_incomplete=True)
     print("out")
     print(out)
 
