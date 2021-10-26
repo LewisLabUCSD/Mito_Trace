@@ -50,7 +50,7 @@ def get_comps():
 rule addClones:
     input:
         noc = "{outdir}/annotation_clones/data/{prefix}/mergedSamples/integrated.rds",
-        clones = "{outdir}/pipeline/published/{prefix}/data/clones/clones.txt",
+        clones = "{indir}/cells_meta.tsv",#"{outdir}/pipeline/published/{prefix}/data/clones/clones.txt",
     output:
         se_f = "{outdir}/annotation_clones/data/{prefix}/SE.rds",
         note = "{outdir}/annotation_clones/data/{prefix}/addClones.ipynb"
@@ -60,18 +60,30 @@ rule addClones:
     shell: "papermill -p cells_meta_f {input.clones} -p se_f {input.noc} -p outdir {params.outdir} {params.rscript} {output.note}"
 
 
-rule runDE:
+rule runDE_enrich:
     input:
-        clones = "{outdir}/annotation_clones/data/{prefix}/SE.rds"
+        se_f = "{outdir}/annotation_clones/data/{prefix}/SE.rds",
+        enrich_f = "{enrich_indir}/cells_meta.tsv",
     output:
-        "{outdir}/annotation_clones/data/{prefix}/DE/donor{n}/DE.ipynb",
+        "{outdir}/annotation_clones/data/{prefix}/DE/donor{d}/DE.ipynb"
     params:
-        outdir = lambda wildcards, output: dirname(output[0]),
-        rscript= join(ROOT_DIR, "R_scripts/annotations/clones/DE_clones.vCurrent.ipynb"), # The script defaults to the granja data
-        sample_names = ",".join(samples.index),
-        comps_f = get_comps()
-        #samples = ",".join(samples["cellr_ID"])
-    shell: "papermill -p se {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
+        d = lambda wildcards: wildcards.d,
+        outdir = lambda wildcards, output: dirname(output),
+        rscript= join(ROOT_DIR, "R_scripts/annotations/clones/addEnrichment.vCurrent.ipynb")
+    shell: "papermill -p enrich_f {input.enrich_f} -p se_f {input.se_f} -p outdir {params.outdir} {params.rscript} {output.note}"
+
+# rule runDE:
+#     input:
+#         clones = "{outdir}/annotation_clones/data/{prefix}/SE.rds"
+#     output:
+#         "{outdir}/annotation_clones/data/{prefix}/DE/donor{n}/DE.ipynb",
+#     params:
+#         outdir = lambda wildcards, output: dirname(output[0]),
+#         rscript= join(ROOT_DIR, "R_scripts/annotations/clones/DE_clones.vCurrent.ipynb"), # The script defaults to the granja data
+#         sample_names = ",".join(samples.index),
+#         comps_f = get_comps()
+#         #samples = ",".join(samples["cellr_ID"])
+#     shell: "papermill -p se {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
 
 
 rule runGSEA:

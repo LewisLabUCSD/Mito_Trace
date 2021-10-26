@@ -4,6 +4,7 @@ samples = config["samples"]
 from snakemake.utils import min_version
 min_version("6.0")
 from pathlib import Path
+import os
 
 # rule all:
 #     input:
@@ -14,21 +15,17 @@ from pathlib import Path
 
 def get_mult_input(wc):
     if config["N_DONORS"] == 1:
-        return [f"{wc.outdir}/multiplex/single_multiplex.ipynb",
-                  f"{wc.outdir}/multiplex/single_multiplex_AF_SNPs_all_afFilt.png",
-                  f"{wc.outdir}/multiplex/single_multiplex_clusters_all.labels.png"]
+        return [f"{wc.outdir}/multiplex/single_multiplex.ipynb"]
+    else: return [f"{wc.outdir}/multiplex/out_multiplex.ipynb"]
 
-    else: return [f"{wc.outdir}/multiplex/out_multiplex.ipynb",
-                  f"{wc.outdir}/multiplex/out_multiplex_AF_SNPs_all_afFilt.png",
-                  f"{wc.outdir}/multiplex/out_multiplex_clusters_all.labels.png"]
 
 
 rule multiplex:
     input: "{outdir}/cellSNP.tag.AD.mtx"
     output:
         note="{outdir}/multiplex/out_multiplex.ipynb",
-        results = multiext("{outdir}/multiplex/", "out_multiplex_AF_SNPs_all_afFilt.png",
-                           "out_multiplex_clusters_all.labels.png")#, category="Multiplex")
+        results = multiext("{outdir}/multiplex/", "multiplex_AF_SNPs_all_afFilt.png",
+                           "multiplex_clusters_all.labels.png")#, category="Multiplex")
     params:
         N_DONORS=config["N_DONORS"],
         notebook=join("src", "vireo", "1_MT_Donors_multiplex.ipynb" ),
@@ -45,8 +42,8 @@ rule multiplex_single:
     input: "{outdir}/cellSNP.tag.AD.mtx"
     output:
         "{outdir}/multiplex/single_multiplex.ipynb",
-        results = multiext("{outdir}/multiplex/", "single_multiplex_AF_SNPs_all_afFilt.png",
-                           "single_multiplex_clusters_all.labels.png")#, category="Multiplex")
+        # results = multiext("{outdir}/multiplex/", "single_multiplex_AF_SNPs_all_afFilt.png",
+        #                    "single_multiplex_clusters_all.labels.png")#, category="Multiplex")
     params:
         sample_names= ','.join(samples["sample_name"].values), # make it as a list
         INDIR = lambda wildcards, input: dirname(input[0]),
@@ -61,10 +58,10 @@ rule multiplex_single:
         new_cells_meta["donor_index"] = np.arange(1, new_cells_meta.shape[0]+1)
         new_cells_meta.to_csv(join(params.OUTDIR, "cells_meta.tsv"), sep='\t')
         new_cells_meta.to_csv(join(params.OUTDIR, "donor0.labels.txt"))
-        f = plt.figure() # save blank figure
-        print(output.results[0])
-        plt.savefig(output.results[0])
-        plt.savefig(output.results[1])
+        # f = plt.figure() # save blank figure
+        # print(output.results[0])
+        # plt.savefig(output.results[0])
+        # plt.savefig(output.results[1])
         cmd = f"touch {output[0]}"
         os.system(cmd)
         cmd = f"cp {params.INDIR}/cellSNP.base.vcf {params.OUTDIR}/donor0.vcf "
@@ -74,13 +71,14 @@ rule multiplex_single:
         cmd = f"cp {params.INDIR}/cellSNP.tag.DP.mtx {params.OUTDIR}/donor0.DP.mtx"
         os.system(cmd)
 
+
 rule agg_multiplex:
     input: get_mult_input
     output:
         "{outdir}/multiplex/multiplex.ipynb",
-        "{outdir}/multiplex/out_multiplex_AF_SNPs_all_afFilt.png",
-        "{outdir}/multiplex/out_multiplex_clusters_all.labels.png"
-    shell: "cp {input[0]} {output[0]} & cp {input[1]} {output[1]} & cp {input[2]} {output[2]}"
+        # "{outdir}/multiplex/out_multiplex_AF_SNPs_all_afFilt.png",
+        # "{outdir}/multiplex/out_multiplex_clusters_all.labels.png"
+    shell: "cp {input[0]} {output[0]}" # & cp {input[1]} {output[1]} & cp {input[2]} {output[2]}"
 
 
 rule donors_plotAF:

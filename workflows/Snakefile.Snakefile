@@ -125,6 +125,12 @@ module lineageMod:
     config: params
 
 
+# module annCloMod:
+#     snakefile: "./rules/annotation_clones.smk"
+#     config: params
+
+#use rule * from annCloMod
+
 ## 1. Go from 10x output to filtered scPileup outdir.
 use rule * from mtpreprocMod
 
@@ -516,6 +522,21 @@ rule knn_enrichment:
     shell: "python {params.script} {input} {params.OUTDIR} {params.samples}"
 
 
+rule clone_shuffle_stats:
+    input:
+        enrich_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
+        cells_meta_f = "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/cells_meta.tsv",
+    output:
+        "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.ipynb",
+        "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.clone_shuffle.png",
+        "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.clone_shuffle.csv"
+    params:
+        enrich_f = lambda wildcards, input: join(dirname(input[0]),
+                                                 f"enrichmentNorm_donor{wildcards.d}.csv"),
+        donor = lambda wildcards: wildcards.d,
+        note = join("src", "clones", "clones_enrich_shuffle.ipynb"),
+        samples=",".join(samples.index)
+    shell: "papermill -p enrich_f {params.enrich_f} -p cells_meta_f {input.cells_meta_f} -p filt_val {params.donor} -p samples {params.samples} {params.note} {output[0]}  "
 rule knn_process:
     input:
         expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
@@ -526,6 +547,7 @@ rule knn_process:
     #outdir <- ""#"/data2/mito_lineage/Analysis/annotation/output/data/TcellDupi_may17_2021/MTblacklist/"
         # Cluster parameters
         #
+
 rule knn_process_simple:
     """ dummy rule to not use simple for knn
     """
@@ -535,6 +557,16 @@ rule knn_process_simple:
     output: "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_simple/knn/temp/.tmp"#.pipeline"
     shell:
         "touch {output}"
+
+
+
+## Use annotation_clones to run DE on clones
+# use rule runDE_enrich from annCloMod with:
+#     input:
+#         "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/enrichmentNorm_donor{d}.csv"
+#     output:
+#         "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
+
 
 # Sort of like an all rule to bring downstream results together.
 rule complete_lineage:

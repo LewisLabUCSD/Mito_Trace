@@ -239,7 +239,7 @@ def load_mtx_df(in_f, skip_first=True, give_header=False,
 def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
                      columns=('Variant', 'Cell', 'integer'), inc_af=False,
                      as_dense=False, var_names=False, vcf_prefix="cellSNP.base",
-                     cell_names=False, cell_prefix="cellSNP.samples.tsv", cell_prefix_sep='\t',
+                     cell_names=False, cell_prefix="cellSNP.samples.tsv", cells_meta=None,
                      verbose=True):
     if not verbose:
         ic.disable()
@@ -252,8 +252,13 @@ def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
         var_meta = read_csv_multichar(join(indir, f"{vcf_prefix}.vcf"),multicomment="##", sep='\t')
         ic(var_meta.head())
     if cell_names:
-        cells = pd.read_csv(join(indir, cell_prefix, sep=cell_prefix_sep),
-                            header=None)[0].values
+        if cells_meta is not None:
+            cells = pd.read_csv(join(indir, cells_meta), sep='\t')[
+                "ID"].values
+        else:
+            cells = pd.read_csv(join(indir, cell_prefix),
+                                header=None)[0].values
+
     if inc_af or as_dense:
         curr_ad = mmread(curr_ad_f).tocsc()
         curr_dp = mmread(curr_dp_f).tocsc()

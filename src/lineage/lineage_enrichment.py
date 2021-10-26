@@ -56,6 +56,7 @@ def run_enrichment_stats(df, flt_var="Flt3l"):
     """
     enrichment_df = pd.DataFrame(index=["hypergeom p", "Fisher p"],
                                  columns=df.columns, dtype=np.float128)
+
     ic('df')
     ic(df.head())
     # M: Total number of cells
@@ -83,11 +84,57 @@ def run_enrichment_stats(df, flt_var="Flt3l"):
     return enrichment_df.transpose()
 
 
-def wrap_lineage_enrichment(clones_indir, outdir, n_clone_list, samples,
-                       plot_ind, name="", names=None):
-    for nclones in n_clone_list:
-        lineage_enrichment(join(clones_indir,"cells_meta.tsv"), outdir, nclones, samples,
-                       plot_ind, name="", names=None)
+# def wrap_lineage_enrichment(clones_indir, outdir, n_clone_list, samples,
+#                        plot_ind, name="", names=None):
+#     for nclones in n_clone_list:
+#         lineage_enrichment(join(clones_indir,"cells_meta.tsv"), outdir, nclones, samples,
+#                        plot_ind, name="", names=None)
+#
+
+def calc_enrich(df, samples, names=None, pseudocount=1, verbose=True):
+    if not verbose:
+        ic.disable()
+    else: ic.enable()
+
+    if names is None:
+        names = samples
+    clust_counts = df.groupby(
+        ["condition", "lineage"]).size().reset_index().pivot(
+        index='condition', columns='lineage', values=0).fillna(0)
+    clust_counts = clust_counts + pseudocount
+
+    if len(clust_counts) == 0:
+        print("No lineages detected in donor. Continuing")
+        return
+    clust_counts = clust_counts.rename(
+        {x: y for (x, y) in zip(samples, names)}, axis=0)
+    clust_counts.index = [f"# {x} Cells in Cluster" for x in
+                          clust_counts.index]
+    ###############################################################
+    clust_counts = clust_counts.astype('Int64')
+    # Get enrichment
+    enrich_df = run_enrichment_stats(clust_counts, flt_var=names[1])
+    return enrich_df, clust_counts
+
+
+def norm_clone_sizes(enrich_df,clust_counts, names):
+    ### Convert cluster numbers into probablilites.
+    clust_counts_norm = (clust_counts).copy().astype(np.double)
+    clust_counts_norm = clust_counts_norm.div(
+        clust_counts_norm.sum(axis=1), axis='rows')
+    # print('clust_counts_norm')
+    # print(clust_counts_norm)
+    fold_df_norm = pd.DataFrame(
+        (clust_counts_norm.loc[f"# {names[1]} Cells in Cluster"]) / (
+            clust_counts_norm.loc[
+                f"# {names[0]} Cells in Cluster"])).transpose()
+    fold_df_norm = fold_df_norm.rename(
+        {0: f"{names[1]} fold enrichment norm"}, axis=0)
+
+    ic('fold_df_norm')
+    ic(fold_df_norm)
+    enrich_stats = create_enrich(clust_counts, fold_df_norm, enrich_df)
+    return enrich_stats
 
 
 def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
@@ -109,41 +156,32 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
         # Create counts df
         print('d', d)
         print(curr_donor.groupby(["condition", "lineage"]).size())
+        # clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
+        # clust_counts = clust_counts + pseudocount
+        #
+        # if len(clust_counts) == 0:
+        #     print("No lineages detected in donor. Continuing")
+        #     continue
+        # clust_counts = clust_counts.rename({x:y for (x,y) in zip(samples, names)}, axis=0)
+        #
+        # #clust_counts.columns = clust_counts.columns.astype('Int64')
+        # clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
+        # ###############################################################
+        # clust_counts = clust_counts.astype('Int64')
+        # print('clust_counts')
+        # print(clust_counts)
+        #
+        # # Get enrichment
+        # if "Input" in names:
+        #     enrich_df = run_enrichment_stats(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
+        # else:
+        #     enrich_df = run_enrichment_stats(clust_counts, flt_var=names[1])
 
-        clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
-        clust_counts = clust_counts + pseudocount
-
-        if len(clust_counts) == 0:
-            print("No lineages detected in donor. Continuing")
-            continue
-        clust_counts = clust_counts.rename({x:y for (x,y) in zip(samples, names)}, axis=0)
-
-        #clust_counts.columns = clust_counts.columns.astype('Int64')
-        clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
-        ###############################################################
-        clust_counts = clust_counts.astype('Int64')
-        print('clust_counts')
-        print(clust_counts)
-
-        # Get enrichment
-        if "Input" in names:
-            enrich_df = run_enrichment_stats(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
-        else:
-            enrich_df = run_enrichment_stats(clust_counts, flt_var=names[1])
-
-        ### Convert cluster numbers into probablilites.
-        clust_counts_norm = (clust_counts).copy().astype(np.double)
-        clust_counts_norm  = clust_counts_norm.div(clust_counts_norm.sum(axis=1), axis='rows')
-        # print('clust_counts_norm')
-        # print(clust_counts_norm)
-        fold_df_norm = pd.DataFrame(
-                    (clust_counts_norm.loc[f"# {names[1]} Cells in Cluster"]) / (
-                        clust_counts_norm.loc[f"# {names[0]} Cells in Cluster"])).transpose()
-        fold_df_norm = fold_df_norm.rename({0: f"{names[1]} fold enrichment norm"}, axis=0)
-
-        print('fold_df_norm')
-        print(fold_df_norm )
-        enrich_stats = create_enrich(clust_counts, fold_df_norm,  enrich_df)
+        enrich_df, clust_counts = calc_enrich(curr_donor,
+                                              pseudocount=pseudocount,
+                                              samples=samples)
+        enrich_stats = norm_clone_sizes(enrich_df, clust_counts=clust_counts,
+                                        names=names)
         enrich_stats.to_csv(join(outdir, f"{name}enrichmentNorm_donor{d}.csv"))
         if plot_ind:
             plot_volcano(enrich_stats, f_save=join(outdir, f"{name}volcano_donor{d}_Fisher_foldNorm.png"), v=1, x=f"{names[1]} fold enrichment norm")
@@ -156,6 +194,7 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
     #print("Does donor have any cells")
     #print("Any null"(all_enrich_df["Donor"].isnull()).any())
     all_enrich_df["Donor"] = all_enrich_df["Donor"].astype(object)
+    all_enrich_df.to_csv(join(outdir, f"{name}enrichmentNorm.csv"))
 
     # Main figure is Fisher norm results
     plot_volcano(all_enrich_df, hue="Donor", x=f"{names[1]} fold enrichment norm",
@@ -179,95 +218,6 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
     return
 
 
-# def lineage_enrichment(clones_indir, outdir, nclones, samples,
-#                        plot_ind, name="", names=None, pseudocount=1):
-#
-#     if names is None:
-#         names = samples
-#     #all_enrich = {}
-#     all_enrich_norm ={}
-#
-#     ###############################################################
-#     ## Added 06/08
-#     ###############################################################
-#     cells_meta = pd.read_csv(join(clones_indir, "cells_meta.tsv"),
-#                              sep='\t')
-#     cells_meta["lineage"] = cells_meta["lineage"].astype('Int64')
-#     cells_meta["donor"] = cells_meta["donor"].astype('Int64')
-#     for d, curr_donor in cells_meta.groupby("donor"):
-#         # Create counts df
-#         print('d', d)
-#         print(curr_donor.groupby(["condition", "lineage"]).size())
-#
-#         clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
-#         clust_counts = clust_counts + pseudocount
-#
-#         if len(clust_counts) == 0:
-#             print("No lineages detected in donor. Continuing")
-#             continue
-#         clust_counts = clust_counts.rename({x:y for (x,y) in zip(samples, names)}, axis=0)
-#
-#         #clust_counts.columns = clust_counts.columns.astype('Int64')
-#         clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
-#         ###############################################################
-#         clust_counts = clust_counts.astype('Int64')
-#         print('clust_counts')
-#         print(clust_counts)
-#
-#         # Get enrichment
-#         if "Input" in names:
-#             enrich_df = run_enrichment_stats(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
-#         else:
-#             enrich_df = run_enrichment_stats(clust_counts, flt_var=names[1])
-#
-#         ### Convert cluster numbers into probablilites.
-#         clust_counts_norm = (clust_counts).copy().astype(np.double)
-#         clust_counts_norm  = clust_counts_norm.div(clust_counts_norm.sum(axis=1), axis='rows')
-#         # print('clust_counts_norm')
-#         # print(clust_counts_norm)
-#         fold_df_norm = pd.DataFrame(
-#                     (clust_counts_norm.loc[f"# {names[1]} Cells in Cluster"]) / (
-#                         clust_counts_norm.loc[f"# {names[0]} Cells in Cluster"])).transpose()
-#         fold_df_norm = fold_df_norm.rename({0: f"{names[1]} fold enrichment norm"}, axis=0)
-#
-#         print('fold_df_norm')
-#         print(fold_df_norm )
-#         enrich_stats = create_enrich(clust_counts, fold_df_norm,  enrich_df)
-#         enrich_stats.to_csv(join(outdir, f"{name}enrichmentNorm_clones{nclones}_donor{d}.csv"))
-#         if plot_ind:
-#             plot_volcano(enrich_stats, f_save=join(outdir, f"{name}volcano_donor{d}.clones{nclones}_Fisher_foldNorm.png"), v=1, x=f"{names[1]} fold enrichment norm")
-#             plot_volcano(enrich_stats, f_save=join(outdir,f"{name}volcano_donor{d}.clones{nclones}_hyper_foldNorm.png"),y="-log10p", v=1, x=f"{names[1]} fold enrichment norm")
-#         all_enrich_norm[(d, nclones)] = enrich_stats
-#
-#     all_enrich_df = pd.concat(all_enrich_norm).reset_index().rename(
-#         {"level_0": "Donor", "level_1": "clones"}, axis=1)
-#
-#     #print("Does donor have any cells")
-#     #print("Any null"(all_enrich_df["Donor"].isnull()).any())
-#     all_enrich_df["Donor"] = all_enrich_df["Donor"].astype(object)
-#
-#     for nclones_ind, val in all_enrich_df.groupby("clones"):
-#         # Main figure is Fisher norm results
-#         plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
-#                      size=f"# {names[1]} Cells in Cluster",
-#                      f_save=join(outdir, f"{name}volcano_Fisher_foldNorm.png"), v=1)
-#         # # Also plot without the norm
-#         # plot_volcano(val, hue="Donor", size=f"# {names[1]} Cells in Cluster",
-#         #              f_save=join(outdir, f"{name}volcano_Fisher_fold.png"), v=1, x=f"{names[1]} fold enrichment")
-#         # Plot the hypergeometric p-value
-#         plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
-#                      size=f"# {names[1]} Cells in Cluster",
-#                      f_save=join(outdir, f"{name}volcano_HyperG_foldNorm.png"), v=1, y = "-log10p")
-#         # Have the size be based on number of cells in baseline sample
-#         plot_volcano(val, hue="Donor", x=f"{names[1]} fold enrichment norm",
-#                      size=f"# {names[0]} Cells in Cluster",
-#                      f_save=join(outdir, f"{name}volcano_Fisher_foldNorm_{names[0]}Size.png"), v=1)
-#
-#
-#     # dummy output variable
-#     with open(join(outdir,".status"), 'w') as f:
-#         f.write('Completed')
-#     return
 
 
 def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
