@@ -17,6 +17,7 @@ min_version("6.0")
 # Setup parameters and outdir
 #res = config["results"]
 res = join(config["outdir"], "pipeline", config["prefix"])
+anno_res = join(config["outdir"], "annotation", "data", config["prefix"])
 
 params = read_config_file(config["config"])
 samples = pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
@@ -46,6 +47,7 @@ ncellsthreshmgatk = params_mgatk["params"]["ncellsthresh"]
 num_cells = params_mult["pseudo_multiplex"]["num_cells"]
 is_prop = params_mult["pseudo_multiplex"]["is_proportional"]
 
+nclonelist = params_clones['vireo']['params']['nclonelist']
 
 # def get_ref(wildcards):
 #     w = wildcards
@@ -85,7 +87,22 @@ rule all:
                output=res,cellrbc=cellrbc, num_read=num_reads_filter,
                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], d=np.arange(config["N_DONORS"])),
+         expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/shuffle_stats/donor{d}.ipynb",
+               output=res,cellrbc=cellrbc, num_read=num_reads_filter,
+               mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+               hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], d=np.arange(config["N_DONORS"]),
+                variants=params_clones["variants"], nclones=nclonelist),
 
+         expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.ipynb",
+                output=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], d=np.arange(config["N_DONORS"]),
+                kparam=params_clones["knn"]["params"]["resolution"]),
+        expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE/DE.ipynb",
+                output=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], #d=np.arange(config["N_DONORS"]),
+                variants=params_clones["variants"], nclones=nclonelist)
         # # C. Clones: Variant types
         # expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb",
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -125,11 +142,6 @@ module lineageMod:
     config: params
 
 
-# module annCloMod:
-#     snakefile: "./rules/annotation_clones.smk"
-#     config: params
-
-#use rule * from annCloMod
 
 ## 1. Go from 10x output to filtered scPileup outdir.
 use rule * from mtpreprocMod
@@ -209,7 +221,6 @@ use rule donors_plotAF from multMod with:
 
 ## 5. Detect clones, depending on the method parameter
 #use rule * from lineageMod
-nclonelist = params_clones['vireo']['params']['nclonelist']
 
 # use rule vireo_donor_mgatk from lineageMod with:
 #     input:
@@ -522,38 +533,46 @@ rule knn_enrichment:
     shell: "python {params.script} {input} {params.OUTDIR} {params.samples}"
 
 
+#########################################################################
+#########################################################################
 rule clone_shuffle_stats_vireo:
     input:
         enrich_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/volcano_Fisher_foldNorm.png",
-        cells_meta_f = "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones{nclones}/cells_meta.tsv",
+        cells_meta_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/cells_meta.tsv",
     output:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/shuffle_stats/donor{d}.ipynb",
-        "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/shuffle_stats/donor{d}.clone_shuffle.png",
+        "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/shuffle_stats/donor{d}.clone_shuffle.pdf",
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/shuffle_stats/donor{d}.clone_shuffle.csv"
     params:
+        outdir = lambda wildcards, output: dirname(output[0]),
         enrich_f = lambda wildcards, input: join(dirname(input[0]),
                                                  f"enrichmentNorm_donor{wildcards.d}.csv"),
         donor = lambda wildcards: wildcards.d,
         note = join("src", "clones", "clones_enrich_shuffle.ipynb"),
         samples=",".join(samples.index)
-    shell: "papermill -p enrich_f {params.enrich_f} -p cells_meta_f {input.cells_meta_f} -p filt_val {params.donor} -p samples {params.samples} {params.note} {output[0]}"
+    threads: 16
+    shell: "papermill -p enrich_f {params.enrich_f} -p cells_meta_f {input.cells_meta_f} -p OUTDIR {params.outdir} -p filt_val {params.donor} -p samples {params.samples} {params.note} {output[0]}"
+
 
 rule clone_shuffle_stats_knn:
     input:
         enrich_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
-        cells_meta_f = "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/cells_meta.tsv",
+        cells_meta_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/cells_meta.tsv",
     output:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.ipynb",
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.clone_shuffle.pdf",
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/shuffle_stats/donor{d}.clone_shuffle.csv"
     params:
+        outdir = lambda wildcards, output: dirname(output[0]),
         enrich_f = lambda wildcards, input: join(dirname(input[0]),
                                                  f"enrichmentNorm_donor{wildcards.d}.csv"),
         donor = lambda wildcards: wildcards.d,
         note = join("src", "clones", "clones_enrich_shuffle.ipynb"),
         samples=",".join(samples.index)
-    shell: "papermill -p enrich_f {params.enrich_f} -p cells_meta_f {input.cells_meta_f} -p filt_val {params.donor} -p samples {params.samples} {params.note} {output[0]}"
-
+    threads: 16
+    shell: "papermill -p enrich_f {params.enrich_f} -p cells_meta_f {input.cells_meta_f} -p OUTDIR {params.outdir} -p filt_val {params.donor} -p samples {params.samples} {params.note} {output[0]}"
+#########################################################################
+#########################################################################
 
 rule knn_process:
     input:
@@ -578,12 +597,56 @@ rule knn_process_simple:
 
 
 
+############################################
+## Clones DE
+############################################
+module annCloMod:
+    snakefile: "./rules/annotation_clones.smk"
+    config: params
+#use rule * from annCloMod
 ## Use annotation_clones to run DE on clones
-# use rule runDE_enrich from annCloMod with:
-#     input:
-#         "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/enrichmentNorm_donor{d}.csv"
-#     output:
-#         "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
+def get_anno_integrate():
+    return join(anno_res, "mergedSamples","allSamples.integrated.rds")
+
+
+use rule addClones from annCloMod with:
+    input:
+        noc = get_anno_integrate(), #"{anno_res}/mergedSamples/integrated.rds",
+        clones = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/cells_meta.tsv"
+    output:
+        note = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/addClones.ipynb",
+        se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/SE.rds"
+    params:
+        outdir = lambda wildcards, output: dirname(output[0]),
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/addClones.v01.vCurrent.ipynb"), # The script defaults to the granja data
+
+
+use rule runDE_enrich from annCloMod with:
+    input:
+        se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/SE.rds",
+        enrich_f = expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{{variants}}/vireo/nclones{{nclones}}/enrichment/enrichmentNorm_donor{d}.csv",
+                          d=range(config["N_DONORS"]))
+    output:
+        note = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE/DE.ipynb"
+    params:
+        N_DONORS = config["N_DONORS"],
+        enrich_d = lambda wildcards, input: dirname(input[0]),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/addEnrichment.vCurrent.ipynb")
+############################################
+############################################
+
+rule clones_donors_table:
+    input:
+        cells_meta_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/nclones{nclones}/cells_meta.tsv"
+    output:
+        summary_table = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/nclones{nclones}/summary/counts_summary.csv",
+        summary_fig = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/nclones{nclones}/summary/counts_summary.pdf"
+    params:
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        notebook = join(ROOT_DIR, "src", "clones")
+    shell: "papermill -p cells_meta_f {input.cells_meta_f} -p OUTDIR {params.OUTDIR} {params.notebook} {params.OUTDIR}/output.ipynb"
+
 
 
 # Sort of like an all rule to bring downstream results together.
