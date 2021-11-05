@@ -218,8 +218,8 @@ rule scPileup_concat:
         scPileup_dir = "{output}/data/{sample}/MT/{sample}_scPileup_{num_read}",
         #scBam = "{output}/data/{sample}/MT/{sample}_scBam"
     output:
-        temp(expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.minus.txt",
-             nt=["coverage", "A", "C", "G", "T"]))
+        temp(expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}{strand}.txt",
+             nt=["coverage", "A", "C", "G", "T"], strand=[".minus", ""]))
     threads: 28
     params:
         samplename = lambda wildcards, output: output[0].split("_all.coverage.minus.txt")[0]
@@ -232,7 +232,7 @@ rule scPileup_concat:
 rule scPileup_mergeStrands:
     """ Run the second part of the MT-genotype pipeline, which just concatenates all the pileup data for each nucleotide and overall."""
     input:
-        expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.minus.txt",
+        expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.txt",
                nt=["coverage", "A", "C", "G", "T"])
     output:
         all = expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",

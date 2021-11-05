@@ -100,3 +100,14 @@ annotations:
       - "RNA"
       - "ATAC"
 
+
+annotation_clones:
+  params:
+    cdf_thresh:
+      - 0.3
+    min_pct:
+      - 0.01
+      - 0
+    logfc_threshold:
+      - 0.1
+      - 0

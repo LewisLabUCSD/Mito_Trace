@@ -1,0 +1,2809 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count    min threads    max threads
+-----------------------  -------  -------------  -------------
+all                            1              1              1
+complete_lineage               3              1              1
+donor_copy_cells_meta          4              1              1
+donor_mgatk                    4              1              1
+donor_mgatk_to_vireoIn         4              1              1
+donor_report                   4              1              1
+donors_plotAF                  1              1              1
+knn                            8              1              1
+knn_enrichment                 2              1              1
+knn_mgatkdonor_concat          2              1              1
+knn_process                    1              1              1
+multiplex                      1              1              1
+multiplex_report               1              1              1
+scPileup_filter_mgatk          1              1              1
+terminate                      3              1              1
+vireo                          1              4              4
+vireo_enrichment               2              1              1
+vireo_mgatkdonor               4              4              4
+vireo_mgatkdonor_concat        1              1              1
+vireo_process                  2              1              1
+total                         50              1              4
+
+Select jobs to execute...
+
+[Thu Oct 21 16:43:37 2021]
+rule multiplex:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/cellSNP.tag.AD.mtx
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex_AF_SNPs_all_afFilt.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex_clusters_all.labels.png
+    jobid: 38
+    wildcards: outdir=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn
+    resources: tmpdir=/tmp
+
+Input Notebook:  src/vireo/1_MT_Donors_multiplex.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmpqs0u2kvt'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmpqq72z4ql'
+Executing notebook with kernel: python3
+Executing Cell 1---------------------------------------
+Ending Cell 1------------------------------------------
+Executing Cell 2---------------------------------------
+Ending Cell 2------------------------------------------
+Executing Cell 3---------------------------------------
+'/data2/mito_lineage'
+Ending Cell 3------------------------------------------
+Executing Cell 4---------------------------------------
+Ending Cell 4------------------------------------------
+Executing Cell 5---------------------------------------
+Ending Cell 5------------------------------------------
+Executing Cell 6---------------------------------------
+Ending Cell 6------------------------------------------
+Executing Cell 7---------------------------------------
+Ending Cell 7------------------------------------------
+Executing Cell 8---------------------------------------
+0.5.6
+
+Ending Cell 8------------------------------------------
+Executing Cell 9---------------------------------------
+Ending Cell 9------------------------------------------
+Executing Cell 10--------------------------------------
+Ending Cell 10-----------------------------------------
+Executing Cell 11--------------------------------------
+Ending Cell 11-----------------------------------------
+Executing Cell 12--------------------------------------
+  #CHROM  POS  REF ALT  strand_correlation_x     vmr_x  n_cells_over_5_x  \
+0   chrM   49  49A   G              0.905935  0.042452              18.0   
+1   chrM   64  64C   T              0.986767  0.685692            1639.0   
+2   chrM   73  73A   C              1.000000  0.067900               3.0   
+3   chrM   73  73A   G              0.988898  0.233772            4897.0   
+4   chrM   78  78C   T              0.974539  0.039218               7.0   
+
+   n_cells_over_20_x  index  \
+0                0.0  49A>G   
+1             1527.0  64C>T   
+2                0.0  73A>C   
+3             4799.0  73A>G   
+4                0.0  78C>T   
+
+   old /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/Control/vireoIn  \
+0                                                1.0                                                                                                                                       
+1                                                2.0                                                                                                                                       
+2                                                3.0                                                                                                                                       
+3                                                4.0                                                                                                                                       
+4                                                5.0                                                                                                                                       
+
+   strand_correlation_y     vmr_y  n_cells_over_5_y  n_cells_over_20_y  \
+0              0.833620  0.040460              51.0                0.0   
+1              0.982849  0.572380            4015.0             3670.0   
+2              1.000000  0.030665               3.0                0.0   
+3              0.985724  0.157778            9817.0             9564.0   
+4                   NaN       NaN               NaN                NaN   
+
+   old /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/Flt3l/vireoIn  \
+0                                                1.0                                                                                                                                   
+1                                                2.0                                                                                                                                   
+2                                                3.0                                                                                                                                   
+3                                                4.0                                                                                                                                   
+4                                                NaN                                                                                                                                   
+
+   new ID  
+0       1  
+1       2  
+2       3  
+3       4  
+4       5  
+Ending Cell 12-----------------------------------------
+Executing Cell 13--------------------------------------
+cells_meta                            ID              raw ID  new index condition
+0  AAACGAAAGAGGTCCA-1_Control  AAACGAAAGAGGTCCA-1          1   Control
+1  AAACGAAAGCGATACG-1_Control  AAACGAAAGCGATACG-1          2   Control
+2  AAACGAAAGTCGTGAG-1_Control  AAACGAAAGTCGTGAG-1          3   Control
+3  AAACGAACAATAGTGA-1_Control  AAACGAACAATAGTGA-1          4   Control
+4  AAACGAACACAATAAG-1_Control  AAACGAACACAATAAG-1          5   Control
+sample_names {0: 'Control', 1: 'Flt3l'}
+
+Ending Cell 13-----------------------------------------
+Executing Cell 14--------------------------------------
+AD_shape (711, 17406)
+
+Ending Cell 14-----------------------------------------
+Executing Cell 15--------------------------------------
+Ending Cell 15-----------------------------------------
+Executing Cell 16--------------------------------------
+Ending Cell 16-----------------------------------------
+Executing Cell 17--------------------------------------
+[-24402123.75691805, -24402239.798263587, -24433587.017496265, -13779100.88344222, -23952887.86492239, -13778344.818312056, -26978058.0319234, -13778551.261572488, -23736231.625756465, -24739401.482660726, -26101874.90465779, -26741348.688393883, -13778888.6582826, -13779987.001145754, -13778070.595252711, -24330881.835099027, -26125103.56131664, -24330209.95980245, -13778906.797544006, -25692145.583418414, -26079981.318770498, -24328429.077896826, -26416478.662695557, -13778518.381173484, -24049609.50129076, -13775564.901722256, -24436127.607122585, -26129036.987037696, -25981748.82139632, -23977420.37956758, -25991298.183635615, -26180991.42231682, -25980503.45214846, -13778296.434032839, -13780464.23463894, -26172236.183215596, -26811735.161994822, -23964642.324812695, -24050961.300255977, -26560856.578535043, -24138212.438789584, -23737189.035695, -13777904.140122466, -26169777.758599594, -25292887.159583807, -24120128.288636714, -24328253.435108475, -24374384.41659957, -23973710.520772144, -24025462.84060926]
+
+<Figure size 792x288 with 2 Axes>
+Ending Cell 17-----------------------------------------
+Executing Cell 18--------------------------------------
+Ending Cell 18-----------------------------------------
+Executing Cell 19--------------------------------------
+ic
+|
+ 
+'
+Before filtering
+'
+
+
+ic
+|
+ 
+cells_meta
+.
+shape
+:
+ 
+(
+17406
+,
+ 
+4
+)
+
+
+ic
+|
+ 
+'
+After filtering
+'
+
+
+ic
+|
+ 
+cells_meta
+.
+shape
+:
+ 
+(
+17406
+,
+ 
+5
+)
+
+
+ic
+|
+ 
+allAD
+.
+shape
+:
+ 
+(
+711
+,
+ 
+17406
+)
+
+
+ic
+|
+ 
+len
+(
+curr_dp
+[
+"
+Cell
+"
+]
+.
+unique
+(
+)
+)
+-
+len
+(
+keep_inds
+)
+:
+ 
+0
+
+
+ic
+|
+ 
+cells_meta
+.
+shape
+:
+ 
+(
+17406
+,
+ 
+7
+)
+
+
+donor 0: 4205 cells 
+(224869, 3)
+(224869, 3)
+donor0
+
+ic
+|
+ 
+len
+(
+curr_dp
+[
+"
+Cell
+"
+]
+.
+unique
+(
+)
+)
+-
+len
+(
+keep_inds
+)
+:
+ 
+0
+
+
+ic
+|
+ 
+cells_meta
+.
+shape
+:
+ 
+(
+17406
+,
+ 
+7
+)
+
+
+donor 1: 3853 cells 
+(195722, 3)
+(195722, 3)
+donor1
+
+ic
+|
+ 
+len
+(
+curr_dp
+[
+"
+Cell
+"
+]
+.
+unique
+(
+)
+)
+-
+len
+(
+keep_inds
+)
+:
+ 
+0
+
+
+ic
+|
+ 
+cells_meta
+.
+shape
+:
+ 
+(
+17406
+,
+ 
+7
+)
+
+
+donor 2: 3073 cells 
+(64480, 3)
+(64480, 3)
+donor2
+
+ic
+|
+ 
+len
+(
+curr_dp
+[
+"
+Cell
+"
+]
+.
+unique
+(
+)
+)
+-
+len
+(
+keep_inds
+)
+:
+ 
+0
+
+
+ic
+|
+ 
+cells_meta
+.
+shape
+:
+ 
+(
+17406
+,
+ 
+7
+)
+
+
+donor 3: 3751 cells 
+(187303, 3)
+(187303, 3)
+donor3
+
+{0: array([    2,     4,     9, ..., 17392, 17393, 17401]),
+ 1: array([    1,    10,    18, ..., 17398, 17400, 17403]),
+ 2: array([    5,     6,    11, ..., 17395, 17397, 17399]),
+ 3: array([    0,     3,     7, ..., 17394, 17404, 17405])}
+Ending Cell 19-----------------------------------------
+Executing Cell 20--------------------------------------
+Ending Cell 20-----------------------------------------
+Executing Cell 21--------------------------------------
+Ending Cell 21-----------------------------------------
+Executing Cell 22--------------------------------------
+      condition
+3964    Control
+12086     Flt3l
+13711     Flt3l
+13466     Flt3l
+13759     Flt3l
+clustering
+
+cmap Oranges
+
+AF_SNPs shape (711, 4)
+clustering
+cmap Blues
+
+<Figure size 720x720 with 5 Axes>
+<Figure size 720x720 with 4 Axes>
+Ending Cell 22-----------------------------------------
+Executing Cell 23--------------------------------------
+Control
+              AF 1          AF 2          AF 3          AF 4        Doublet
+0     2.876379e-07  1.852189e-07  3.788293e-08  1.000000e+00   0.000000e+00
+1     3.919438e-07  1.000000e+00  2.179600e-07  3.331990e-07   0.000000e+00
+2     1.000000e+00  1.311517e-07  1.064428e-07  4.715286e-07  1.883594e-213
+3     3.092398e-07  4.038086e-07  6.833736e-08  1.000000e+00   0.000000e+00
+4     1.000000e+00  3.788220e-07  4.625298e-07  4.856287e-07   0.000000e+00
+...            ...           ...           ...           ...            ...
+6198  1.823157e-08  1.000000e+00  2.510936e-07  1.001290e-07   0.000000e+00
+6199  3.836349e-07  1.000000e+00  1.215932e-07  1.765379e-07   0.000000e+00
+6200  1.000000e+00  3.953294e-07  3.806768e-07  3.805458e-07  9.773133e-296
+6201  1.000000e+00  9.280843e-08  4.243166e-07  1.822320e-07   1.000000e+00
+6202  4.764699e-07  4.162151e-07  1.000000e+00  3.204219e-07   0.000000e+00
+
+[6203 rows x 5 columns]
+clustering
+cmap Oranges
+
+/home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/seaborn/matrix.py:654: UserWarning: Clustering large matrix with scipy. Installing `fastcluster` may give better performance.
+  warnings.warn(msg)
+
+Flt3l
+               AF 1          AF 2          AF 3          AF 4        Doublet
+6203   1.000000e+00  3.906728e-07  3.889780e-07  4.223882e-08   0.000000e+00
+6204   1.890222e-07  1.000000e+00  4.970704e-07  3.800822e-07   1.000000e+00
+6205   2.685060e-07  1.597039e-07  1.000000e+00  2.909924e-07   1.000000e+00
+6206   1.176337e-07  1.000000e+00  2.650299e-07  4.515278e-07   0.000000e+00
+6207   3.609815e-07  2.529875e-07  1.000000e+00  2.125124e-07   0.000000e+00
+...             ...           ...           ...           ...            ...
+17401  1.000000e+00  2.614953e-07  6.639431e-08  2.432407e-07   0.000000e+00
+17402  1.000000e+00  4.885138e-07  1.801374e-07  2.329093e-07   1.000000e+00
+17403  1.792392e-09  1.000000e+00  1.443280e-07  3.615385e-07  7.947739e-285
+17404  1.888484e-07  2.114096e-07  3.421028e-07  1.000000e+00   0.000000e+00
+17405  2.100049e-07  1.966127e-07  3.975397e-07  1.000000e+00   0.000000e+00
+
+[11203 rows x 5 columns]
+clustering
+cmap Oranges
+
+/home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/seaborn/matrix.py:654: UserWarning: Clustering large matrix with scipy. Installing `fastcluster` may give better performance.
+  warnings.warn(msg)
+
+<Figure size 432x288 with 0 Axes>
+<Figure size 720x720 with 4 Axes>
+<Figure size 432x288 with 0 Axes>
+<Figure size 720x720 with 4 Axes>
+Ending Cell 23-----------------------------------------
+Executing Cell 24--------------------------------------
+<Figure size 432x288 with 1 Axes>
+Ending Cell 24-----------------------------------------
+[Thu Oct 21 16:49:31 2021]
+Finished job 38.
+1 of 50 steps (2%) done
+Select jobs to execute...
+
+[Thu Oct 21 16:49:31 2021]
+rule multiplex_report:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex_AF_SNPs_all_afFilt.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex_clusters_all.labels.png
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/results/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/multiplex.pdf
+    jobid: 99
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20
+    resources: tmpdir=/tmp
+
+
+[Thu Oct 21 16:49:31 2021]
+rule donor_copy_cells_meta:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor2/mgatk_donor/cells_meta.tsv
+    jobid: 80
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=2
+    resources: tmpdir=/tmp
+
+
+[Thu Oct 21 16:49:31 2021]
+rule donor_copy_cells_meta:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor1/mgatk_donor/cells_meta.tsv
+    jobid: 77
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=1
+    resources: tmpdir=/tmp
+
+
+[Thu Oct 21 16:49:31 2021]
+rule scPileup_filter_mgatk:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.coverage.txt
+    jobid: 5
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20
+    resources: tmpdir=/tmp
+
+[Thu Oct 21 16:49:31 2021]
+Finished job 77.
+2 of 50 steps (4%) done
+[Thu Oct 21 16:49:31 2021]
+Finished job 80.
+3 of 50 steps (6%) done
+Select jobs to execute...
+
+[Thu Oct 21 16:49:31 2021]
+rule donors_plotAF:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor0_dendrogram.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor0_dendrogram.depth.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor0_dendrogram.withHigh.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor1_dendrogram.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor1_dendrogram.depth.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor1_dendrogram.withHigh.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor2_dendrogram.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor2_dendrogram.depth.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor2_dendrogram.withHigh.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor3_dendrogram.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor3_dendrogram.depth.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/figures/donor3_dendrogram.withHigh.png
+    jobid: 95
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20
+    resources: tmpdir=/tmp
+
+
+[Thu Oct 21 16:49:31 2021]
+rule donor_copy_cells_meta:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor3/mgatk_donor/cells_meta.tsv
+    jobid: 83
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=3
+    resources: tmpdir=/tmp
+
+Select jobs to execute...
+[Thu Oct 21 16:49:31 2021]
+Finished job 83.
+4 of 50 steps (8%) done
+
+[Thu Oct 21 16:49:32 2021]
+rule donor_copy_cells_meta:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor0/mgatk_donor/cells_meta.tsv
+    jobid: 74
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=0
+    resources: tmpdir=/tmp
+
+[Thu Oct 21 16:49:32 2021]
+Finished job 74.
+5 of 50 steps (10%) done
+Select jobs to execute...
+Input Notebook:  src/vireo/3_MT_Donors_Dendrogram.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/dendrograms/multiplex_dendro.ipynb
+[Thu Oct 21 16:49:32 2021]
+Finished job 99.
+6 of 50 steps (12%) done
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmp59til589'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmptnjade44'
+Executing:   0%|          | 0/17 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing:   6%|▌         | 1/17 [00:01<00:27,  1.75s/cell]Executing:  24%|██▎       | 4/17 [00:02<00:07,  1.65cell/s]Executing:  35%|███▌      | 6/17 [00:02<00:04,  2.74cell/s]Executing:  53%|█████▎    | 9/17 [00:03<00:01,  4.75cell/s]Executing:  65%|██████▍   | 11/17 [00:19<00:01,  4.75cell/s]/data2/mito_lineage/src/donor_filter_mgatk.py:33: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  
+/data2/mito_lineage/src/donor_filter_mgatk.py:66: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  nt_pileups[nuc] = nt_pileups[nuc].append(filt_df,
+input /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+output  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.coverage.txt /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.coverage.txt /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.coverage.txt /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Control/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Control.coverage.txt
+curr_cov_f  /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/Flt3l/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/Flt3l.coverage.txt
+[Thu Oct 21 16:50:21 2021]
+Finished job 5.
+7 of 50 steps (14%) done
+
+[Thu Oct 21 16:50:21 2021]
+rule donor_mgatk:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/chrM_refAllele.txt
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.variant.rds, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.variantQC.png
+    jobid: 54
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=3
+    resources: tmpdir=/tmp
+
+
+[Thu Oct 21 16:50:21 2021]
+rule donor_mgatk:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/chrM_refAllele.txt
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.variant.rds, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.variantQC.png
+    jobid: 48
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=1
+    resources: tmpdir=/tmp
+
+
+[Thu Oct 21 16:50:21 2021]
+rule donor_mgatk:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/chrM_refAllele.txt
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.variant.rds, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.variantQC.png
+    jobid: 4
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=0
+    resources: tmpdir=/tmp
+
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+Loading required package: BiocGenerics
+Loading required package: parallel
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: parallel
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+Loading required package: IRanges
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+Loading required package: IRanges
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Loading required package: GenomeInfoDb
+Loading required package: GenomeInfoDb
+Loading required package: Biobase
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+
+Attaching package: ‘data.table’
+
+The following object is masked from ‘package:SummarizedExperiment’:
+
+    shift
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    shift
+
+The following object is masked from ‘package:IRanges’:
+
+    shift
+
+The following objects are masked from ‘package:S4Vectors’:
+
+    first, second
+
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1"
+[2] "mgatk_donor/d1"                                                                                                                                                                                            
+[3] "FALSE"                                                                                                                                                                                                     
+[1] "length"
+[1] 3
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.rds"
+
+Attaching package: ‘data.table’
+
+The following object is masked from ‘package:SummarizedExperiment’:
+
+    shift
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    shift
+
+The following object is masked from ‘package:IRanges’:
+
+    shift
+
+The following objects are masked from ‘package:S4Vectors’:
+
+    first, second
+
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0"
+[2] "mgatk_donor/d0"                                                                                                                                                                                            
+[3] "FALSE"                                                                                                                                                                                                     
+[1] "length"
+[1] 3
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.rds"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.T.txt"
+
+
+Attaching package: ‘data.table’
+
+The following object is masked from ‘package:SummarizedExperiment’:
+
+    shift
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    shift
+
+The following object is masked from ‘package:IRanges’:
+
+    shift
+
+The following objects are masked from ‘package:S4Vectors’:
+
+    first, second
+
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3"
+[2] "mgatk_donor/d3"                                                                                                                                                                                            
+[3] "FALSE"                                                                                                                                                                                                     
+[1] "length"
+[1] 3
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.rds"
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.T.txt"
+
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.T.txt"
+
+[1] "cov"
+           V1                         V2 V3
+     1:    49 AAACGAAAGTCGTGAG-1_Control 22
+     2:    64 AAACGAAAGTCGTGAG-1_Control 20
+     3:    73 AAACGAAAGTCGTGAG-1_Control 22
+     4:   103 AAACGAAAGTCGTGAG-1_Control 19
+     5:   146 AAACGAAAGTCGTGAG-1_Control  3
+    ---                                    
+928140: 16387   TTTGTGTTCGAGTTAC-1_Flt3l 56
+928141: 16463   TTTGTGTTCGAGTTAC-1_Flt3l 42
+928142: 16512   TTTGTGTTCGAGTTAC-1_Flt3l 70
+928143: 16519   TTTGTGTTCGAGTTAC-1_Flt3l 66
+928144: 16525   TTTGTGTTCGAGTTAC-1_Flt3l 70
+[1] "cov"
+           V1                         V2  V3
+     1:    49 AAACGAAAGCGATACG-1_Control 200
+     2:    64 AAACGAAAGCGATACG-1_Control 204
+     3:    73 AAACGAAAGCGATACG-1_Control 203
+     4:   103 AAACGAAAGCGATACG-1_Control 198
+     5:   146 AAACGAAAGCGATACG-1_Control 118
+    ---                                     
+851366: 16387   TTTGTGTTCGTGGTAT-1_Flt3l  38
+851367: 16463   TTTGTGTTCGTGGTAT-1_Flt3l  41
+851368: 16512   TTTGTGTTCGTGGTAT-1_Flt3l  21
+851369: 16519   TTTGTGTTCGTGGTAT-1_Flt3l  20
+851370: 16525   TTTGTGTTCGTGGTAT-1_Flt3l  24
+[1] "maxpos"
+[1] 16569
+[1] "maxpos"
+[1] 16569
+[1] "cov"
+           V1                         V2  V3
+     1:    49 AAACGAAAGAGGTCCA-1_Control 121
+     2:    64 AAACGAAAGAGGTCCA-1_Control 121
+     3:    73 AAACGAAAGAGGTCCA-1_Control 134
+     4:   103 AAACGAAAGAGGTCCA-1_Control 104
+     5:   146 AAACGAAAGAGGTCCA-1_Control  53
+    ---                                     
+827480: 16387   TTTGTGTTCTCCTTGG-1_Flt3l 115
+827481: 16463   TTTGTGTTCTCCTTGG-1_Flt3l  50
+827482: 16512   TTTGTGTTCTCCTTGG-1_Flt3l  87
+827483: 16519   TTTGTGTTCTCCTTGG-1_Flt3l  93
+827484: 16525   TTTGTGTTCTCCTTGG-1_Flt3l  98
+[1] "maxpos"
+[1] 16569
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.A.txt"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.A.txt"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.A.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 342731      6
+[1] "dim 6"
+[1] "before creating matrix"
+[1] "dim"
+[1] 293895      6
+[1] "dim 6"
+[1] "before creating matrix"
+[1] "dim"
+[1] 291504      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.C.txt"
+[1] "qual_fw"
+[1] 16569  3853
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.C.txt"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "counts_fw"
+[1] "before creating matrix"
+[1] "dim"
+[1] 150359      6
+[1] "dim 6"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.C.txt"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "before creating matrix"
+[1] "dim"
+[1] 121713      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3853
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.G.txt"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.G.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 127280      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.G.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 192873      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "before creating matrix"
+[1] "dim"
+[1] 206640      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3853
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.T.txt"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.T.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 187717      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.T.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 311392      6
+[1] "dim 6"
+[1] "before creating matrix"
+[1] "dim"
+[1] 308517      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "qual_fw"
+[1] 16569  3853
+[1] "before creating matrix"
+[1] "dim"
+[1] 279280      6
+[1] "dim 6"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "depth"
+                          V1        V2
+1   AAACGAAAGAGCTCCC-1_Flt3l 0.6284628
+2 AAACGAAAGTCGTGAG-1_Control 0.2724968
+3 AAACGAACACAATAAG-1_Control 0.7819422
+4   AAACGAACATTAAGGA-1_Flt3l 0.6469914
+5 AAACGAAGTAAGTCTC-1_Control 0.2286197
+6 AAACGAAGTGGATTCT-1_Control 0.8610658
+[1] "counts_fw"
+[1] "base_quals"
+[1] "counts_fw"
+[1] "depth"
+                          V1        V2
+1 AAACGAAAGCGATACG-1_Control 3.1190174
+2   AAACGAAAGTACAACA-1_Flt3l 0.7956425
+3 AAACGAAGTACCAAGG-1_Control 1.2817913
+4   AAACGAATCACTGGTA-1_Flt3l 0.3568713
+5   AAACTCGAGCAATAAC-1_Flt3l 1.1845012
+6   AAACTCGCAATGCACT-1_Flt3l 1.0511196
+[1] "base_quals"
+[1] "depth"
+                          V1        V2
+1 AAACGAAAGAGGTCCA-1_Control 1.3171585
+2 AAACGAACAATAGTGA-1_Control 1.2411129
+3 AAACGAACATCGTGAT-1_Control 5.0764077
+4 AAACGAAGTAACGGTG-1_Control 0.5502444
+5   AAACGAAGTACAACGG-1_Flt3l 0.6448790
+6   AAACGAAGTGGACCAA-1_Flt3l 2.0529905
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.T.txt"
+
+[1] "cov"
+           V1                         V2  V3
+     1:    49 AAACGAAAGAGGTCCA-1_Control 121
+     2:    64 AAACGAAAGAGGTCCA-1_Control 121
+     3:    73 AAACGAAAGAGGTCCA-1_Control 134
+     4:   103 AAACGAAAGAGGTCCA-1_Control 104
+     5:   146 AAACGAAAGAGGTCCA-1_Control  53
+    ---                                     
+827480: 16387   TTTGTGTTCTCCTTGG-1_Flt3l 115
+827481: 16463   TTTGTGTTCTCCTTGG-1_Flt3l  50
+827482: 16512   TTTGTGTTCTCCTTGG-1_Flt3l  87
+827483: 16519   TTTGTGTTCTCCTTGG-1_Flt3l  93
+827484: 16525   TTTGTGTTCTCCTTGG-1_Flt3l  98
+[1] "maxpos"
+[1] 16569
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.A.txt"
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7][1] tibble_3.1.5           "before creating matrix"
+ gtable_0.3.0           lattice_0.20-45       
+[1][10] "dim"
+ pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[1][13] 291504 DBI_1.1.1                   6
+ GenomeInfoDbData_1.2.6 withr_2.4.2           
+[1][16] "dim 6"
+ generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.T.txt"
+
+[1] "qual_fw"
+[1] 16569  3751
+[1] "counts_fw"
+[1] "cov"
+           V1                         V2  V3
+     1:    49 AAACGAAAGCGATACG-1_Control 200
+     2:    64 AAACGAAAGCGATACG-1_Control 204
+     3:    73 AAACGAAAGCGATACG-1_Control 203
+     4:   103 AAACGAAAGCGATACG-1_Control 198
+     5:   146 AAACGAAAGCGATACG-1_Control 118
+    ---                                     
+851366: 16387   TTTGTGTTCGTGGTAT-1_Flt3l  38
+851367: 16463   TTTGTGTTCGTGGTAT-1_Flt3l  41
+851368: 16512   TTTGTGTTCGTGGTAT-1_Flt3l  21
+851369: 16519   TTTGTGTTCGTGGTAT-1_Flt3l  20
+851370: 16525   TTTGTGTTCGTGGTAT-1_Flt3l  24
+[1] "maxpos"
+[1] 16569
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.T.txt"
+
+[1] "cov"
+           V1                         V2 V3
+     1:    49 AAACGAAAGTCGTGAG-1_Control 22
+     2:    64 AAACGAAAGTCGTGAG-1_Control 20
+     3:    73 AAACGAAAGTCGTGAG-1_Control 22
+     4:   103 AAACGAAAGTCGTGAG-1_Control 19
+     5:   146 AAACGAAAGTCGTGAG-1_Control  3
+    ---                                    
+928140: 16387   TTTGTGTTCGAGTTAC-1_Flt3l 56
+928141: 16463   TTTGTGTTCGAGTTAC-1_Flt3l 42
+928142: 16512   TTTGTGTTCGAGTTAC-1_Flt3l 70
+928143: 16519   TTTGTGTTCGAGTTAC-1_Flt3l 66
+928144: 16525   TTTGTGTTCGAGTTAC-1_Flt3l 70
+[1] "maxpos"
+[1] 16569
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.A.txt"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.C.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 127280      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "before creating matrix"
+[1] "dim"
+[1] 342731      6
+[1] "dim 6"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.G.txt"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "before creating matrix"
+[1] "dim"
+[1] 187717      6
+[1] "dim 6"
+[1] "counts_fw"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.C.txt"
+[1] "counts_fw"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.A.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 150359      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.G.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 293895      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3853
+[1] "before creating matrix"
+[1] "dim"
+[1] 192873      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  4205
+[1] "counts_fw"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.C.txt"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/d3.T.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 279280      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3751
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/d0.T.txt"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "depth"
+                          V1        V2
+1 AAACGAAAGAGGTCCA-1_Control 1.3171585
+2 AAACGAACAATAGTGA-1_Control 1.2411129
+3 AAACGAACATCGTGAT-1_Control 5.0764077
+4 AAACGAAGTAACGGTG-1_Control 0.5502444
+5   AAACGAAGTACAACGG-1_Flt3l 0.6448790
+6   AAACGAAGTGGACCAA-1_Flt3l 2.0529905
+[1] "before creating matrix"
+[1] "dim"
+[1] 311392      6
+[1] "dim 6"
+[1] "before creating matrix"
+[1] "dim"
+[1] 121713      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3853
+[1] "qual_fw"
+[1] 16569  4205
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.G.txt"
+[1] "counts_fw"
+[1] "before creating matrix"
+[1] "dim"
+[1] 206640      6
+[1] "dim 6"
+[1] "base_quals"
+[1] "depth"
+                          V1        V2
+1   AAACGAAAGAGCTCCC-1_Flt3l 0.6284628
+2 AAACGAAAGTCGTGAG-1_Control 0.2724968
+3 AAACGAACACAATAAG-1_Control 0.7819422
+4   AAACGAACATTAAGGA-1_Flt3l 0.6469914
+5 AAACGAAGTAAGTCTC-1_Control 0.2286197
+6 AAACGAAGTGGATTCT-1_Control 0.8610658
+[1] "qual_fw"
+[1] 16569  3853
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.rds"
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/d1.T.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 308517      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3853
+[1] "counts_fw"
+[1] "base_quals"
+[1] "depth"
+                          V1        V2
+1 AAACGAAAGCGATACG-1_Control 3.1190174
+2   AAACGAAAGTACAACA-1_Flt3l 0.7956425
+3 AAACGAAGTACCAAGG-1_Control 1.2817913
+4   AAACGAATCACTGGTA-1_Flt3l 0.3568713
+5   AAACTCGAGCAATAAC-1_Flt3l 1.1845012
+6   AAACTCGCAATGCACT-1_Flt3l 1.0511196
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.rds"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.rds"
+[1] "SE_f"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.rds"
+[1] "A"
+[1] "SE_f"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.rds"
+[1] "SE_f"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.rds"
+[1] "A"
+[1] "A"
+[1] "C"
+[1] "C"
+Executing:  71%|███████   | 12/17 [02:43<01:50, 22.02s/cell]Executing:  76%|███████▋  | 13/17 [02:44<01:13, 18.46s/cell][1] "C"
+Executing:  88%|████████▊ | 15/17 [02:50<00:27, 13.67s/cell]Executing:  94%|█████████▍| 16/17 [02:51<00:11, 11.18s/cell]Executing: 100%|██████████| 17/17 [02:51<00:00,  8.88s/cell]Executing: 100%|██████████| 17/17 [02:51<00:00, 10.09s/cell]
+[Thu Oct 21 16:52:24 2021]
+Finished job 95.
+8 of 50 steps (16%) done
+Select jobs to execute...
+
+[Thu Oct 21 16:52:24 2021]
+rule donor_mgatk:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.coverage.txt, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/chrM_refAllele.txt
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.variant.rds, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.variantQC.png
+    jobid: 51
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=2
+    resources: tmpdir=/tmp
+
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+
+Attaching package: ‘data.table’
+
+The following object is masked from ‘package:SummarizedExperiment’:
+
+    shift
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    shift
+
+The following object is masked from ‘package:IRanges’:
+
+    shift
+
+The following objects are masked from ‘package:S4Vectors’:
+
+    first, second
+
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2"
+[2] "mgatk_donor/d2"                                                                                                                                                                                            
+[3] "FALSE"                                                                                                                                                                                                     
+[1] "length"
+[1] 3
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.rds"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.T.txt"
+
+[1] "cov"
+           V1                         V2 V3
+     1:    49 AAACGAACACTGATAC-1_Control 39
+     2:    64 AAACGAACACTGATAC-1_Control 32
+     3:    73 AAACGAACACTGATAC-1_Control 40
+     4:   103 AAACGAACACTGATAC-1_Control 45
+     5:   146 AAACGAACACTGATAC-1_Control 16
+    ---                                    
+679088: 16387   TTTGTGTTCCTAGAGT-1_Flt3l 42
+679089: 16463   TTTGTGTTCCTAGAGT-1_Flt3l 22
+679090: 16512   TTTGTGTTCCTAGAGT-1_Flt3l 17
+679091: 16519   TTTGTGTTCCTAGAGT-1_Flt3l 15
+679092: 16525   TTTGTGTTCCTAGAGT-1_Flt3l 15
+[1] "maxpos"
+[1] 16569
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.A.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 261944      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.C.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 108842      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.G.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 132281      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.T.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 229841      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "depth"
+                          V1        V2
+1   AAACGAACAACGTACT-1_Flt3l 3.3883759
+2   AAACGAACAAGCGGTA-1_Flt3l 0.4829501
+3   AAACGAACACCTGGTG-1_Flt3l 1.8119380
+4   AAACGAACACGATATC-1_Flt3l 0.6897821
+5 AAACGAACACTGATAC-1_Control 0.4958658
+6 AAACGAACAGTAACCT-1_Control 0.3728650
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/isshamie/miniconda3/envs/mttrace/lib/libopenblasp-r0.3.17.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] parallel  stats4    tools     stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1               ggplot2_3.3.5              
+ [3] dplyr_1.0.7                 data.table_1.14.2          
+ [5] SummarizedExperiment_1.22.0 Biobase_2.52.0             
+ [7] GenomicRanges_1.44.0        GenomeInfoDb_1.28.4        
+ [9] IRanges_2.26.0              S4Vectors_0.30.1           
+[11] BiocGenerics_0.38.0         MatrixGenerics_1.4.3       
+[13] matrixStats_0.61.0          Matrix_1.3-4               
+
+loaded via a namespace (and not attached):
+ [1] compiler_4.1.1         pillar_1.6.3           XVector_0.32.0        
+ [4] bitops_1.0-7           zlibbioc_1.38.0        lifecycle_1.0.1       
+ [7] tibble_3.1.5           gtable_0.3.0           lattice_0.20-45       
+[10] pkgconfig_2.0.3        rlang_0.4.11           DelayedArray_0.18.0   
+[13] DBI_1.1.1              GenomeInfoDbData_1.2.6 withr_2.4.2           
+[16] generics_0.1.0         vctrs_0.3.8            grid_4.1.1            
+[19] tidyselect_1.1.1       glue_1.4.2             R6_2.5.1              
+[22] fansi_0.5.0            purrr_0.3.4            magrittr_2.0.1        
+[25] scales_1.1.1           ellipsis_0.3.2         assertthat_0.2.1      
+[28] colorspace_2.0-2       utf8_1.2.2             munsell_0.5.0         
+[31] RCurl_1.98-1.5         crayon_1.4.1          
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/cells_meta.tsv"    
+[2] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/chrM_refAllele.txt"
+[3] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.A.txt"          
+[4] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.C.txt"          
+[5] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.coverage.txt"   
+[6] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.depthTable.txt" 
+[7] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.G.txt"          
+[8] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.T.txt"          
+[9] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor"       
+[1] "mitoChr"
+[1] 1
+[[1]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.A.txt"
+
+[[2]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.C.txt"
+
+[[3]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.G.txt"
+
+[[4]]
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.T.txt"
+
+[1] "cov"
+           V1                         V2 V3
+     1:    49 AAACGAACACTGATAC-1_Control 39
+     2:    64 AAACGAACACTGATAC-1_Control 32
+     3:    73 AAACGAACACTGATAC-1_Control 40
+     4:   103 AAACGAACACTGATAC-1_Control 45
+     5:   146 AAACGAACACTGATAC-1_Control 16
+    ---                                    
+679088: 16387   TTTGTGTTCCTAGAGT-1_Flt3l 42
+679089: 16463   TTTGTGTTCCTAGAGT-1_Flt3l 22
+679090: 16512   TTTGTGTTCCTAGAGT-1_Flt3l 17
+679091: 16519   TTTGTGTTCCTAGAGT-1_Flt3l 15
+679092: 16525   TTTGTGTTCCTAGAGT-1_Flt3l 15
+[1] "maxpos"
+[1] 16569
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.A.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 261944      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.C.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 108842      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.G.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 132281      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "File"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/d2.T.txt"
+[1] "before creating matrix"
+[1] "dim"
+[1] 229841      6
+[1] "dim 6"
+[1] "qual_fw"
+[1] 16569  3073
+[1] "counts_fw"
+[1] "base_quals"
+[1] "depth"
+                          V1        V2
+1   AAACGAACAACGTACT-1_Flt3l 3.3883759
+2   AAACGAACAAGCGGTA-1_Flt3l 0.4829501
+3   AAACGAACACCTGGTG-1_Flt3l 1.8119380
+4   AAACGAACACGATATC-1_Flt3l 0.6897821
+5 AAACGAACACTGATAC-1_Control 0.4958658
+6 AAACGAACAGTAACCT-1_Control 0.3728650
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.rds"
+[1] "SE_f"
+[1] "/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.rds"
+[1] "A"
+[1] "G"
+[1] "G"
+[1] "G"
+[1] "C"
+[1] "G"
+[1] "T"
+[1] "T"
+[1] "T"
+[1] "T"
+[1] "mut_se"
+class: SummarizedExperiment 
+dim: 49704 3751 
+metadata(0):
+assays(2): allele_frequency coverage
+rownames(49704): 1G>A 3T>A ... 16567A>T 16569G>T
+rowData names(12): position nucleotide ... strand_correlation
+  mean_coverage
+colnames(3751): AAACGAAAGAGGTCCA-1_Control AAACGAACAATAGTGA-1_Control
+  ... TTTGTGTTCGTTACAG-1_Flt3l TTTGTGTTCTCCTTGG-1_Flt3l
+colData names(2): sample depth
+[1] "mut_se"
+class: SummarizedExperiment 
+dim: 49704 3853 
+metadata(0):
+assays(2): allele_frequency coverage
+rownames(49704): 1G>A 3T>A ... 16567A>T 16569G>T
+rowData names(12): position nucleotide ... strand_correlation
+  mean_coverage
+colnames(3853): AAACGAAAGCGATACG-1_Control AAACGAAAGTACAACA-1_Flt3l ...
+  TTTGTGTTCCTTTGCG-1_Flt3l TTTGTGTTCGTGGTAT-1_Flt3l
+colData names(2): sample depth
+[1] "mut_se"
+class: SummarizedExperiment 
+dim: 49704 4205 
+metadata(0):
+assays(2): allele_frequency coverage
+rownames(49704): 1G>A 3T>A ... 16567A>T 16569G>T
+rowData names(12): position nucleotide ... strand_correlation
+  mean_coverage
+colnames(4205): AAACGAAAGAGCTCCC-1_Flt3l AAACGAAAGTCGTGAG-1_Control ...
+  TTTGTGTTCCTAGAGT-1_Control TTTGTGTTCGAGTTAC-1_Flt3l
+colData names(2): sample depth
+[1] "mut_se"
+class: SummarizedExperiment 
+dim: 49704 3073 
+metadata(0):
+assays(2): allele_frequency coverage
+rownames(49704): 1G>A 3T>A ... 16567A>T 16569G>T
+rowData names(12): position nucleotide ... strand_correlation
+  mean_coverage
+colnames(3073): AAACGAACAACGTACT-1_Flt3l AAACGAACAAGCGGTA-1_Flt3l ...
+  TTTGTGTTCCTAGAGT-1_Flt3l TTTGTGTTCTTCCACG-1_Control
+colData names(2): sample depth
+[Thu Oct 21 16:59:32 2021]
+Finished job 48.
+9 of 50 steps (18%) done
+Select jobs to execute...
+
+[Thu Oct 21 16:59:32 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor1/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor1/donor1.variants.labels.png
+    jobid: 47
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=10, d=1
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor1/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:23,  1.33s/cell]Executing:  11%|█         | 2/19 [00:01<00:11,  1.53cell/s]Executing:  16%|█▌        | 3/19 [00:01<00:06,  2.47cell/s]Executing:  32%|███▏      | 6/19 [00:01<00:02,  5.83cell/s][Thu Oct 21 16:59:38 2021]
+Finished job 54.
+10 of 50 steps (20%) done
+Select jobs to execute...
+
+[Thu Oct 21 16:59:38 2021]
+rule donor_mgatk_to_vireoIn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor3/mgatk_donor/cellSNP.tag.AD.mtx
+    jobid: 82
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=3
+    resources: tmpdir=/tmp
+
+Executing:  47%|████▋     | 9/19 [00:13<00:19,  1.97s/cell]in_coverage /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.coverage.tsv
+in_af /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.af.tsv
+af
+         AAACGAAAGAGGTCCA-1_Control  ...  TTTGTGTTCTCCTTGG-1_Flt3l
+103G>A                          0.0  ...                       0.0
+318T>A                          0.0  ...                       0.0
+769G>A                          0.0  ...                       0.0
+1269T>A                         0.0  ...                       0.0
+1847T>A                         0.0  ...                       0.0
+
+[5 rows x 3749 columns]
+coverage
+         AAACGAAAGAGGTCCA-1_Control  ...  TTTGTGTTCTCCTTGG-1_Flt3l
+103G>A                          104  ...                        70
+318T>A                           42  ...                        36
+769G>A                          165  ...                        70
+1269T>A                         106  ...                        71
+1847T>A                          79  ...                        31
+
+[5 rows x 3751 columns]
+coverage
+         AAACGAAAGAGGTCCA-1_Control  ...  TTTGTGTTCTCCTTGG-1_Flt3l
+103G>A                          104  ...                        70
+318T>A                           42  ...                        36
+769G>A                          165  ...                        70
+1269T>A                         106  ...                        71
+1847T>A                          79  ...                        31
+
+[5 rows x 3749 columns]
+cellSNP.tag
+Executing:  58%|█████▊    | 11/19 [00:13<00:10,  1.37s/cell][Thu Oct 21 16:59:47 2021]
+Finished job 82.
+11 of 50 steps (22%) done
+Select jobs to execute...
+
+[Thu Oct 21 16:59:47 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor3/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor3/donor3.variants.labels.png
+    jobid: 53
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=10, d=3
+    resources: tmpdir=/tmp
+
+Executing:  68%|██████▊   | 13/19 [00:13<00:05,  1.02cell/s]Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor3/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:20,  1.11s/cell]Executing:  11%|█         | 2/19 [00:01<00:09,  1.78cell/s]Executing:  16%|█▌        | 3/19 [00:01<00:05,  2.84cell/s]Executing:  32%|███▏      | 6/19 [00:01<00:01,  6.56cell/s]Executing:  47%|████▋     | 9/19 [00:12<00:18,  1.84s/cell]Executing:  58%|█████▊    | 11/19 [00:12<00:10,  1.29s/cell]Executing:  68%|██████▊   | 13/19 [00:12<00:05,  1.09cell/s]Executing:  79%|███████▉  | 15/19 [00:29<00:12,  3.11s/cell][Thu Oct 21 17:00:03 2021]
+Finished job 51.
+12 of 50 steps (24%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:00:03 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor2/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor2/donor2.variants.labels.png
+    jobid: 60
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=3, d=2
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor2/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:20,  1.14s/cell]Executing:  11%|█         | 2/19 [00:01<00:09,  1.72cell/s]Executing:  16%|█▌        | 3/19 [00:01<00:05,  2.71cell/s]Executing:  26%|██▋       | 5/19 [00:01<00:02,  5.26cell/s]Executing:  37%|███▋      | 7/19 [00:01<00:01,  7.54cell/s]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  84%|████████▍ | 16/19 [00:34<00:10,  3.49s/cell]Executing:  95%|█████████▍| 18/19 [00:34<00:02,  2.33s/cell]
+Execution halted
+Executing: 100%|██████████| 19/19 [00:35<00:00,  1.87s/cell]
+[Thu Oct 21 17:00:09 2021]
+Finished job 47.
+13 of 50 steps (26%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:00:09 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor2/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor2/donor2.variants.labels.png
+    jobid: 50
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=10, d=2
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor2/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:25,  1.43s/cell]Executing:  16%|█▌        | 3/19 [00:01<00:07,  2.25cell/s]Executing:  32%|███▏      | 6/19 [00:01<00:02,  4.97cell/s]Executing:  47%|████▋     | 9/19 [00:11<00:20,  2.09s/cell]Executing:  53%|█████▎    | 10/19 [00:12<00:14,  1.66s/cell]Executing:  63%|██████▎   | 12/19 [00:12<00:07,  1.07s/cell]Executing:  74%|███████▎  | 14/19 [00:12<00:03,  1.39cell/s]Executing:  79%|███████▉  | 15/19 [00:29<00:12,  3.16s/cell][Thu Oct 21 17:00:17 2021]
+Finished job 4.
+14 of 50 steps (28%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:00:17 2021]
+rule donor_mgatk_to_vireoIn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor0/mgatk_donor/cellSNP.tag.AD.mtx
+    jobid: 73
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=0
+    resources: tmpdir=/tmp
+
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+********************Executing:  47%|████▋     | 9/19 [00:11<00:15,  1.57s/cell]*****Executing:  58%|█████▊    | 11/19 [00:11<00:08,  1.11s/cell]*****Executing:  63%|██████▎   | 12/19 [00:11<00:06,  1.07cell/s]*****Executing:  74%|███████▎  | 14/19 [00:11<00:03,  1.55cell/s]***************|
+in_coverage /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.coverage.tsv
+in_af /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.af.tsv
+af
+        AAACGAAAGAGCTCCC-1_Flt3l  ...  TTTGTGTTCGAGTTAC-1_Flt3l
+103G>A                       0.0  ...                       0.0
+185G>A                       0.0  ...                       0.0
+513G>A                       0.0  ...                       0.0
+634T>A                       0.0  ...                       0.0
+769G>A                       0.0  ...                       0.0
+
+[5 rows x 4200 columns]
+coverage
+        AAACGAAAGAGCTCCC-1_Flt3l  ...  TTTGTGTTCGAGTTAC-1_Flt3l
+103G>A                        81  ...                        67
+185G>A                        17  ...                        48
+513G>A                        51  ...                        62
+634T>A                        63  ...                        93
+769G>A                        76  ...                        91
+
+[5 rows x 4205 columns]
+coverage
+        AAACGAAAGAGCTCCC-1_Flt3l  ...  TTTGTGTTCGAGTTAC-1_Flt3l
+103G>A                        81  ...                        67
+185G>A                        17  ...                        48
+513G>A                        51  ...                        62
+634T>A                        63  ...                        93
+769G>A                        76  ...                        91
+
+[5 rows x 4200 columns]
+cellSNP.tag
+[Thu Oct 21 17:00:27 2021]
+Finished job 73.
+15 of 50 steps (30%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:00:27 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor3/mgatk_donor/d3.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor3/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor3/donor3.variants.labels.png
+    jobid: 61
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=3, d=3
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor3/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:20,  1.17s/cell]Executing:  11%|█         | 2/19 [00:01<00:10,  1.67cell/s]Executing:  16%|█▌        | 3/19 [00:01<00:05,  2.68cell/s]Executing:  32%|███▏      | 6/19 [00:01<00:02,  6.29cell/s]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  79%|███████▉  | 15/19 [00:23<00:11,  2.89s/cell]Executing:  79%|███████▉  | 15/19 [00:29<00:02,  1.39cell/s]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  47%|████▋     | 9/19 [00:11<00:16,  1.63s/cell]Executing:  58%|█████▊    | 11/19 [00:11<00:09,  1.14s/cell]Executing:  63%|██████▎   | 12/19 [00:11<00:06,  1.05cell/s]Executing:  74%|███████▎  | 14/19 [00:11<00:03,  1.54cell/s]Executing:  84%|████████▍ | 16/19 [00:35<00:12,  4.28s/cell]Executing:  95%|█████████▍| 18/19 [00:35<00:02,  2.92s/cell]
+Execution halted
+Executing: 100%|██████████| 19/19 [00:35<00:00,  1.87s/cell]
+[Thu Oct 21 17:00:40 2021]
+Finished job 60.
+16 of 50 steps (32%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:00:40 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor1/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor1/donor1.variants.labels.png
+    jobid: 59
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=3, d=1
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor1/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:24,  1.35s/cell]Executing:  16%|█▌        | 3/19 [00:01<00:06,  2.37cell/s]Executing:  32%|███▏      | 6/19 [00:01<00:02,  5.21cell/s]Executing:  47%|████▋     | 9/19 [00:11<00:16,  1.61s/cell]Executing:  58%|█████▊    | 11/19 [00:11<00:09,  1.14s/cell]Executing:  63%|██████▎   | 12/19 [00:11<00:06,  1.04cell/s]Executing:  74%|███████▎  | 14/19 [00:11<00:03,  1.51cell/s]Executing:  79%|███████▉  | 15/19 [00:26<00:13,  3.41s/cell]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  79%|███████▉  | 15/19 [00:27<00:14,  3.56s/cell]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  84%|████████▍ | 16/19 [00:31<00:11,  3.72s/cell]Executing:  95%|█████████▍| 18/19 [00:31<00:02,  2.32s/cell]
+Execution halted
+Executing: 100%|██████████| 19/19 [00:32<00:00,  1.70s/cell]
+[Thu Oct 21 17:01:13 2021]
+Finished job 59.
+17 of 50 steps (34%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:01:13 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor0/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor0/donor0.variants.labels.png
+    jobid: 58
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=3, d=0
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor0/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing:  84%|████████▍ | 16/19 [01:04<00:33, 11.25s/cell]Executing:  95%|█████████▍| 18/19 [01:05<00:06,  6.96s/cell]
+Execution halted
+Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:24,  1.35s/cell]Executing: 100%|██████████| 19/19 [01:05<00:00,  3.44s/cell]
+Executing:  16%|█▌        | 3/19 [00:01<00:06,  2.34cell/s]Executing:  26%|██▋       | 5/19 [00:01<00:03,  4.13cell/s][Thu Oct 21 17:01:15 2021]
+Finished job 50.
+18 of 50 steps (36%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:01:15 2021]
+rule donor_mgatk_to_vireoIn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor2/mgatk_donor/cellSNP.tag.AD.mtx
+    jobid: 79
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=2
+    resources: tmpdir=/tmp
+
+Executing:  37%|███▋      | 7/19 [00:01<00:02,  5.99cell/s]Executing:  84%|████████▍ | 16/19 [00:56<00:27,  9.28s/cell]Executing:  95%|█████████▍| 18/19 [00:56<00:05,  5.72s/cell]in_coverage /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.coverage.tsv
+in_af /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor2/mgatk_donor/d2.af.tsv
+af
+        AAACGAACAACGTACT-1_Flt3l  ...  TTTGTGTTCTTCCACG-1_Control
+103G>A                  0.000000  ...                         0.0
+185G>A                  0.064935  ...                         0.0
+318T>A                  0.000000  ...                         0.0
+513G>A                  0.000000  ...                         0.0
+634T>A                  0.000000  ...                         0.0
+
+[5 rows x 3071 columns]
+coverage
+        AAACGAACAACGTACT-1_Flt3l  ...  TTTGTGTTCTTCCACG-1_Control
+103G>A                       210  ...                         342
+185G>A                        77  ...                         151
+318T>A                       101  ...                         178
+513G>A                       260  ...                         300
+634T>A                       289  ...                         367
+
+[5 rows x 3073 columns]
+coverage
+        AAACGAACAACGTACT-1_Flt3l  ...  TTTGTGTTCTTCCACG-1_Control
+103G>A                       210  ...                         342
+185G>A                        77  ...                         151
+318T>A                       101  ...                         178
+513G>A                       260  ...                         300
+634T>A                       289  ...                         367
+
+[5 rows x 3071 columns]
+cellSNP.tag
+Executing: 100%|██████████| 19/19 [00:56<00:00,  2.98s/cell][Thu Oct 21 17:01:24 2021]
+Finished job 79.
+19 of 50 steps (38%) done
+Select jobs to execute...
+
+
+[Thu Oct 21 17:01:24 2021]
+rule knn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor0/mgatk_donor/d0.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor0/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor0/donor0.variants.labels.png
+    jobid: 3
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=10, d=0
+    resources: tmpdir=/tmp
+
+[Thu Oct 21 17:01:24 2021]
+Finished job 61.
+20 of 50 steps (40%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:01:24 2021]
+rule donor_mgatk_to_vireoIn:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.variant.rds
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor1/mgatk_donor/cellSNP.tag.AD.mtx
+    jobid: 76
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, d=1
+    resources: tmpdir=/tmp
+
+Input Notebook:  /data2/mito_lineage/R_scripts/knn_clones.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_10/donor0/output.ipynb
+Executing:   0%|          | 0/19 [00:00<?, ?cell/s]Executing:  47%|████▋     | 9/19 [00:11<00:18,  1.88s/cell]Executing:  58%|█████▊    | 11/19 [00:11<00:10,  1.25s/cell]Executing:  63%|██████▎   | 12/19 [00:11<00:07,  1.03s/cell]Executing:  74%|███████▎  | 14/19 [00:11<00:03,  1.45cell/s]Executing notebook with kernel: ir
+Executing:   5%|▌         | 1/19 [00:01<00:25,  1.42s/cell]Executing:  16%|█▌        | 3/19 [00:01<00:07,  2.26cell/s]Executing:  32%|███▏      | 6/19 [00:01<00:02,  4.98cell/s]in_coverage /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.coverage.tsv
+in_af /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/donor1/mgatk_donor/d1.af.tsv
+af
+        AAACGAAAGCGATACG-1_Control  ...  TTTGTGTTCGTGGTAT-1_Flt3l
+103G>A                         0.0  ...                       0.0
+185G>A                         0.0  ...                       0.0
+318T>A                         0.0  ...                       0.0
+634T>A                         0.0  ...                       0.0
+769G>A                         0.0  ...                       0.0
+
+[5 rows x 3840 columns]
+coverage
+        AAACGAAAGCGATACG-1_Control  ...  TTTGTGTTCGTGGTAT-1_Flt3l
+103G>A                         198  ...                        23
+185G>A                         131  ...                        11
+318T>A                         115  ...                        21
+634T>A                         256  ...                        47
+769G>A                         318  ...                        58
+
+[5 rows x 3853 columns]
+coverage
+        AAACGAAAGCGATACG-1_Control  ...  TTTGTGTTCGTGGTAT-1_Flt3l
+103G>A                         198  ...                        23
+185G>A                         131  ...                        11
+318T>A                         115  ...                        21
+634T>A                         256  ...                        47
+769G>A                         318  ...                        58
+
+[5 rows x 3840 columns]
+cellSNP.tag
+[Thu Oct 21 17:01:34 2021]
+Finished job 76.
+21 of 50 steps (42%) done
+Select jobs to execute...
+Executing:  47%|████▋     | 9/19 [00:11<00:16,  1.61s/cell]Executing:  58%|█████▊    | 11/19 [00:11<00:09,  1.14s/cell]Executing:  63%|██████▎   | 12/19 [00:11<00:06,  1.04cell/s]Executing:  74%|███████▎  | 14/19 [00:11<00:03,  1.52cell/s]Executing:  79%|███████▉  | 15/19 [00:29<00:16,  4.22s/cell]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  79%|███████▉  | 15/19 [00:29<00:02,  1.52cell/s]0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Executing:  84%|████████▍ | 16/19 [02:30<01:13, 24.53s/cell]Executing:  95%|█████████▍| 18/19 [02:31<00:16, 16.22s/cell]
+Execution halted
+Executing: 100%|██████████| 19/19 [02:31<00:00,  7.97s/cell]
+[Thu Oct 21 17:02:19 2021]
+Finished job 53.
+22 of 50 steps (44%) done
+Executing:  84%|████████▍ | 16/19 [01:24<00:47, 15.70s/cell]Executing:  95%|█████████▍| 18/19 [01:24<00:09,  9.55s/cell]Executing: 100%|██████████| 19/19 [01:24<00:00,  4.46s/cell]
+[Thu Oct 21 17:02:39 2021]
+Finished job 58.
+23 of 50 steps (46%) done
+
+[Thu Oct 21 17:02:39 2021]
+rule knn_mgatkdonor_concat:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor0/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor1/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor2/cells_meta.tsv, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor3/cells_meta.tsv
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/concat/cells_meta.tsv
+    jobid: 57
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=3
+    resources: tmpdir=/tmp
+
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor0/cells_meta.tsv
+                           ID  lineage  donor condition
+0    AAACGAAAGAGCTCCC-1_Flt3l       13      0     Flt3l
+1  AAACGAAAGTCGTGAG-1_Control        8      0   Control
+2  AAACGAACACAATAAG-1_Control       22      0   Control
+3    AAACGAACATTAAGGA-1_Flt3l       15      0     Flt3l
+4  AAACGAAGTAAGTCTC-1_Control       52      0   Control
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor1/cells_meta.tsv
+                           ID  lineage  donor condition
+0  AAACGAAAGCGATACG-1_Control        0      1   Control
+1    AAACGAAAGTACAACA-1_Flt3l       13      1     Flt3l
+2  AAACGAAGTACCAAGG-1_Control       15      1   Control
+3    AAACGAATCACTGGTA-1_Flt3l       27      1     Flt3l
+4    AAACTCGAGCAATAAC-1_Flt3l        4      1     Flt3l
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor2/cells_meta.tsv
+                           ID  lineage  donor condition
+0    AAACGAACAACGTACT-1_Flt3l        9      2     Flt3l
+1    AAACGAACAAGCGGTA-1_Flt3l        1      2     Flt3l
+2    AAACGAACACCTGGTG-1_Flt3l       16      2     Flt3l
+3    AAACGAACACGATATC-1_Flt3l        4      2     Flt3l
+4  AAACGAACACTGATAC-1_Control       11      2   Control
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/donor3/cells_meta.tsv
+                           ID  lineage  donor condition
+0  AAACGAAAGAGGTCCA-1_Control        9      3   Control
+1  AAACGAACAATAGTGA-1_Control       11      3   Control
+2  AAACGAACATCGTGAT-1_Control        2      3   Control
+3  AAACGAAGTAACGGTG-1_Control       36      3   Control
+4    AAACGAAGTACAACGG-1_Flt3l        8      3     Flt3l
+[Thu Oct 21 17:02:41 2021]
+Finished job 57.
+24 of 50 steps (48%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:02:41 2021]
+rule knn_enrichment:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/concat/cells_meta.tsv
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_3/enrichment/volcano_Fisher_foldNorm.png
+    jobid: 56
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, kparam=3
+    resources: tmpdir=/tmp
+
+ic| 'df'
+ic| df.head(): lineage                      0    1    2    3    4   ...  55  56  57  58  59
+               # Control Cells in Cluster   91   61  121  102  120  ...   2   2   2   2   6
+               # Flt3l Cells in Cluster    326  246  162  156  129  ...   2   2   2   2   3
+               
+               [2 rows x 60 columns]
+/home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/pandas/core/arraylike.py:364: RuntimeWarning: divide by zero encountered in log10
+  result = getattr(ufunc, method)(*inputs, **kwargs)
+ic| 'df'
+ic| df.head(): lineage                      0    1    2    3    4   ...  32  33  34  35  36
+               # Control Cells in Cluster   87   74   59   48   45  ...  17  10  12   3   3
+               # Flt3l Cells in Cluster    169  129  139  134  133  ...  16  21   4   2   1
+               
+               [2 rows x 37 columns]
+ic| 'df'
+ic| df.head(): lineage                      0    1    2    3   4   ...   34  35  36  37  38
+               # Control Cells in Cluster  101  113   98  123  94  ...  114   4   3   3   3
+               # Flt3l Cells in Cluster    284  168  155  114  87  ...   11   1   2   2   1
+               
+               [2 rows x 39 columns]
+/home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/pandas/core/arraylike.py:364: RuntimeWarning: divide by zero encountered in log10
+  result = getattr(ufunc, method)(*inputs, **kwargs)
+ic| 'df'
+ic| df.head(): lineage                      0    1    2    3    4   ...  34  35   36  37  38
+               # Control Cells in Cluster  168   90  156  106   42  ...   2   1  308   5   4
+               # Flt3l Cells in Cluster    429  438  198  125  150  ...   3   4  146   4   3
+               
+               [2 rows x 39 columns]
+/home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/pandas/core/arraylike.py:364: RuntimeWarning: divide by zero encountered in log10
+  result = getattr(ufunc, method)(*inputs, **kwargs)
+d 0
+condition  lineage
+Control    0           90
+           1           60
+           2          120
+           3          101
+           4          119
+                     ... 
+Flt3l      55           1
+           56           1
+           57           1
+           58           1
+           59           2
+Length: 120, dtype: int64
+clust_counts
+lineage                      0    1    2    3    4   ...  55  56  57  58  59
+# Control Cells in Cluster   91   61  121  102  120  ...   2   2   2   2   6
+# Flt3l Cells in Cluster    326  246  162  156  129  ...   2   2   2   2   3
+
+[2 rows x 60 columns]
+fold_df_norm
+lineage                           0         1   ...        58        59
+Flt3l fold enrichment norm  2.282062  2.568955  ...  0.637017  0.318509
+
+[1 rows x 60 columns]
+d 1
+condition  lineage
+Control    0          86
+           1          73
+           2          58
+           3          47
+           4          44
+                      ..
+Flt3l      31         15
+           32         15
+           33         20
+           34          3
+           35          1
+Length: 73, dtype: int64
+clust_counts
+lineage                      0    1    2    3    4   ...  32  33  34  35  36
+# Control Cells in Cluster   87   74   59   48   45  ...  17  10  12   3   3
+# Flt3l Cells in Cluster    169  129  139  134  133  ...  16  21   4   2   1
+
+[2 rows x 37 columns]
+fold_df_norm
+lineage                           0        1   ...        35        36
+Flt3l fold enrichment norm  0.928495  0.83324  ...  0.318655  0.159328
+
+[1 rows x 37 columns]
+d 2
+condition  lineage
+Control    0          100
+           1          112
+           2           97
+           3          122
+           4           93
+                     ... 
+Flt3l      32           1
+           33           1
+           34          10
+           36           1
+           37           1
+Length: 76, dtype: int64
+clust_counts
+lineage                      0    1    2    3   4   ...   34  35  36  37  38
+# Control Cells in Cluster  101  113   98  123  94  ...  114   4   3   3   3
+# Flt3l Cells in Cluster    284  168  155  114  87  ...   11   1   2   2   1
+
+[2 rows x 39 columns]
+fold_df_norm
+lineage                           0         1   ...        37        38
+Flt3l fold enrichment norm  2.396959  1.267344  ...  0.568293  0.284147
+
+[1 rows x 39 columns]
+d 3
+condition  lineage
+Control    0          167
+           1           89
+           2          155
+           3          105
+           4           41
+                     ... 
+Flt3l      34           2
+           35           3
+           36         145
+           37           3
+           38           2
+Length: 76, dtype: int64
+clust_counts
+lineage                      0    1    2    3    4   ...  34  35   36  37  38
+# Control Cells in Cluster  168   90  156  106   42  ...   2   1  308   5   4
+# Flt3l Cells in Cluster    429  438  198  125  150  ...   3   4  146   4   3
+
+[2 rows x 39 columns]
+fold_df_norm
+lineage                           0         1   ...        37        38
+Flt3l fold enrichment norm  1.437296  2.739238  ...  0.450286  0.422143
+
+[1 rows x 39 columns]
+[Thu Oct 21 17:02:51 2021]
+Finished job 56.
+25 of 50 steps (50%) done
+Select jobs to execute...
+Executing:  84%|████████▍ | 16/19 [12:22<05:59, 119.87s/cell]Executing:  95%|█████████▍| 18/19 [12:22<01:21, 81.74s/cell] Executing: 100%|██████████| 19/19 [12:23<00:00, 39.11s/cell]
+[Thu Oct 21 17:13:48 2021]
+Finished job 3.
+26 of 50 steps (52%) done
+
+[Thu Oct 21 17:13:48 2021]
+rule vireo_mgatkdonor:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor0/mgatk_donor/cellSNP.tag.AD.mtx, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor0/mgatk_donor/cells_meta.tsv
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor0.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor0.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor0_cells_meta.tsv
+    jobid: 72
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, nclones=20, d=0
+    threads: 4
+    resources: tmpdir=/tmp
+
+Input Notebook:  src/vireo/2b_MT_Lineage_Construct_mgatkDonors.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/output.ipynb
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmpd0h5v_ca'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmpt8k2p6jq'
+Executing:   0%|          | 0/15 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing:   7%|▋         | 1/15 [00:01<00:26,  1.93s/cell]Executing:  27%|██▋       | 4/15 [00:02<00:04,  2.51cell/s]Executing:  47%|████▋     | 7/15 [00:02<00:01,  4.90cell/s]Executing:  67%|██████▋   | 10/15 [00:03<00:01,  2.83cell/s]Executing:  80%|████████  | 12/15 [00:03<00:00,  3.75cell/s]Executing:  93%|█████████▎| 14/15 [00:04<00:00,  4.42cell/s]Executing:  93%|█████████▎| 14/15 [00:19<00:00,  4.42cell/s]Executing: 100%|██████████| 15/15 [03:22<00:00, 34.63s/cell]Executing: 100%|██████████| 15/15 [03:23<00:00, 13.54s/cell]
+[Thu Oct 21 17:17:14 2021]
+Finished job 72.
+27 of 50 steps (54%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:17:14 2021]
+rule vireo_mgatkdonor:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor3/mgatk_donor/cellSNP.tag.AD.mtx, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor3/mgatk_donor/cells_meta.tsv
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor3.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor3.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor3_cells_meta.tsv
+    jobid: 81
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, nclones=20, d=3
+    threads: 4
+    resources: tmpdir=/tmp
+
+Input Notebook:  src/vireo/2b_MT_Lineage_Construct_mgatkDonors.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/output.ipynb
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmp6xr2xmpv'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmp9qphkax0'
+Executing:   0%|          | 0/15 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing:   7%|▋         | 1/15 [00:01<00:26,  1.88s/cell]Executing:  27%|██▋       | 4/15 [00:01<00:04,  2.58cell/s]Executing:  40%|████      | 6/15 [00:02<00:02,  3.99cell/s]Executing:  60%|██████    | 9/15 [00:02<00:00,  6.66cell/s]Executing:  73%|███████▎  | 11/15 [00:03<00:01,  2.88cell/s]Executing:  87%|████████▋ | 13/15 [00:04<00:00,  3.74cell/s]Executing:  93%|█████████▎| 14/15 [00:19<00:00,  3.74cell/s]Executing: 100%|██████████| 15/15 [03:19<00:00, 30.23s/cell]Executing: 100%|██████████| 15/15 [03:20<00:00, 13.36s/cell]
+[Thu Oct 21 17:20:36 2021]
+Finished job 81.
+28 of 50 steps (56%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:20:36 2021]
+rule vireo_mgatkdonor:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor2/mgatk_donor/cellSNP.tag.AD.mtx, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor2/mgatk_donor/cells_meta.tsv
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor2.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor2.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor2_cells_meta.tsv
+    jobid: 78
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, nclones=20, d=2
+    threads: 4
+    resources: tmpdir=/tmp
+
+Input Notebook:  src/vireo/2b_MT_Lineage_Construct_mgatkDonors.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/output.ipynb
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmp_bq3v7xh'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmppkm_t7l5'
+Executing:   0%|          | 0/15 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing:   7%|▋         | 1/15 [00:01<00:26,  1.91s/cell]Executing:  27%|██▋       | 4/15 [00:02<00:04,  2.55cell/s]Executing:  47%|████▋     | 7/15 [00:02<00:01,  4.95cell/s]Executing:  67%|██████▋   | 10/15 [00:03<00:01,  2.72cell/s]Executing:  80%|████████  | 12/15 [00:04<00:00,  3.57cell/s]Executing:  93%|█████████▎| 14/15 [00:04<00:00,  4.27cell/s]Executing:  93%|█████████▎| 14/15 [00:20<00:00,  4.27cell/s]Executing: 100%|██████████| 15/15 [03:06<00:00, 31.85s/cell]Executing: 100%|██████████| 15/15 [03:06<00:00, 12.46s/cell]
+[Thu Oct 21 17:23:45 2021]
+Finished job 78.
+29 of 50 steps (58%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:23:45 2021]
+rule vireo_mgatkdonor:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor1/mgatk_donor/cellSNP.tag.AD.mtx, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/donor1/mgatk_donor/cells_meta.tsv
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor1.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor1.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/donor1_cells_meta.tsv
+    jobid: 75
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, nclones=20, d=1
+    threads: 4
+    resources: tmpdir=/tmp
+
+Input Notebook:  src/vireo/2b_MT_Lineage_Construct_mgatkDonors.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_mgatkdonor/vireo/nclones20/output.ipynb
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmptaj2a94d'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmpofxh6fcy'
+Executing:   0%|          | 0/15 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing:   7%|▋         | 1/15 [00:01<00:22,  1.58s/cell]Executing:  27%|██▋       | 4/15 [00:01<00:03,  3.02cell/s]Executing:  47%|████▋     | 7/15 [00:01<00:01,  5.76cell/s]Executing:  67%|██████▋   | 10/15 [00:03<00:01,  3.64cell/s]Executing:  80%|████████  | 12/15 [00:03<00:00,  4.77cell/s]Executing:  93%|█████████▎| 14/15 [00:03<00:00,  5.66cell/s]Executing:  93%|█████████▎| 14/15 [00:19<00:00,  5.66cell/s]Executing: 100%|██████████| 15/15 [02:55<00:00, 30.16s/cell]Executing: 100%|██████████| 15/15 [02:56<00:00, 11.76s/cell]
+[Thu Oct 21 17:26:43 2021]
+Finished job 75.
+30 of 50 steps (60%) done
+Select jobs to execute...
+
+[Thu Oct 21 17:26:43 2021]
+rule vireo:
+    input: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/multiplex.ipynb
+    output: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor0.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor1.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor2.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor3.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor0.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor1.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor2.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor3.variants.labels.png, /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/cells_meta.tsv
+    jobid: 66
+    wildcards: output=/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist, cellrbc=True, num_read=200, mincells=10, minreads=50, topN=0, hetthresh=0.001, minhetcells=10, hetcountthresh=5, bqthresh=20, nclones=20
+    threads: 4
+    resources: tmpdir=/tmp
+
+Input Notebook:  src/vireo/2_MT_Lineage_Construct.ipynb
+Output Notebook: /data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/output.ipynb
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/Grammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/Grammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmp1n5mbdvg'
+Generating grammar tables from /home/isshamie/miniconda3/envs/mttrace/lib/python3.7/site-packages/blib2to3/PatternGrammar.txt
+Writing grammar tables to /home/isshamie/.cache/black/21.9b0/PatternGrammar3.7.10.final.0.pickle
+Writing failed: [Errno 2] No such file or directory: '/home/isshamie/.cache/black/21.9b0/tmpnirm2hf2'
+Executing:   0%|          | 0/21 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing:   5%|▍         | 1/21 [00:01<00:32,  1.63s/cell]Executing:  19%|█▉        | 4/21 [00:01<00:05,  2.90cell/s]Executing:  33%|███▎      | 7/21 [00:01<00:02,  5.46cell/s]Executing:  48%|████▊     | 10/21 [00:02<00:01,  8.00cell/s]Executing:  62%|██████▏   | 13/21 [00:02<00:00, 10.55cell/s]Executing:  71%|███████▏  | 15/21 [00:03<00:01,  4.09cell/s]Executing:  81%|████████  | 17/21 [00:03<00:00,  5.16cell/s]Executing:  90%|█████████ | 19/21 [00:03<00:00,  5.29cell/s]Executing:  95%|█████████▌| 20/21 [00:20<00:00,  5.29cell/s]Executing: 100%|██████████| 21/21 [05:27<00:00, 46.71s/cell]Executing: 100%|██████████| 21/21 [05:28<00:00, 15.63s/cell]
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 387 of /data2/mito_lineage/workflows/Snakefile.Snakefile:
+Job Missing files after 5 seconds:
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor0.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor1.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor2.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor3.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor0.variants.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor1.variants.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor2.variants.labels.png
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/donor3.variants.labels.png
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Job id: 66 completed successfully, but some output files are missing. 66
+Removing output files of failed job vireo since they might be corrupted:
+/data2/mito_lineage/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_simple/vireo/nclones20/cells_meta.tsv
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /data2/mito_lineage/.snakemake/log/2021-10-21T164336.345916.snakemake.log

@@ -73,7 +73,50 @@ rule runDE_enrich:
         outdir = lambda wildcards, output: dirname(output[0]),
         N_DONORS = config["N_DONORS"],
         rscript= join(ROOT_DIR, "R_scripts/annotation_clones/addEnrichment.vCurrent.ipynb")
-    shell: "papermill -p enrich_d {params.enrich_d} -p se_f {input.se_f} -p outdir {params.outdir} -p N_DONORS {N_DONORS} {params.rscript} {output.note}"
+    shell: "papermill -p enrich_d {params.enrich_d} -p se_f {input.se_f} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} {params.rscript} {output.note}"
+
+
+rule setup_motifs_largeClones:
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note="{outdir}/annotation_clones/DE_large/output.ipynb",
+        largeclones_se = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
+    threads: 16
+    params:
+        outdir = lambda wildcards, output: dirname(output[0]),
+        n_donors = config["N_DONORS"],
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/setup_motifs_large_clones.ipynb")
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p n_donors {params.n_donors} {params.rscript} {output.note}"
+
+
+rule runDE_TF_largeClones:
+    input:
+        se_f = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
+    output:
+        note= "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
+    threads: 7
+    params:
+        indir = lambda wildcards, input: dirname(input[0]),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        n_donors = config["N_DONORS"],
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_clones.TF.vCurrent.ipynb"),
+        #min_pct = lambda wildcards
+    shell: "papermill -p indir {params.indir} -p outdir {params.outdir} -p min_pct {wildcards.minPct} -p logfc_thresh {wildcards.logThresh} -p n_donors {params.n_donors} {params.rscript} {output.note}"
+
+
+rule summary_TF_largeClones:
+    input:
+        de = "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb",
+        se_f = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
+    output:
+        note="{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb"
+    params:
+        indir = lambda wildcards, input: dirname(input.de),
+        se_indir = lambda wildcards, input: dirname(input.se_f),
+        n_donors = config["N_DONORS"],
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_clones.TF.summaryPlot.ipynb")
+    shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} {params.rscript} {output.note}"
 
 # rule runDE:
 #     input:

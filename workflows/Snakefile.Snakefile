@@ -75,10 +75,6 @@ rule all:
         expand("{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
                output=res,sample=samples.index, num_read=num_reads_filter, cellrbc=cellrbc),
          # B. Multiplex: Multiplexed VAF and depth dendrograms for each donor and selected variants
-        # expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/dendrograms/figures/donor{d}_dendrogram.png",
-        #        output=res,cellrbc=cellrbc, num_read=num_reads_filter,
-        #        mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-        #        hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], d=np.arange(config["N_DONORS"])),
         expand("{output}/results/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/donor{d}.pdf",
                output=res,cellrbc=cellrbc, num_read=num_reads_filter,
                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
@@ -98,11 +94,20 @@ rule all:
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
                 hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], d=np.arange(config["N_DONORS"]),
                 kparam=params_clones["knn"]["params"]["resolution"]),
-        expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE/DE.ipynb",
+        # expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE/DE.ipynb",
+        #         output=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], #d=np.arange(config["N_DONORS"]),
+        #         variants=params_clones["variants"], nclones=nclonelist),
+         expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
                 output=res,cellrbc=cellrbc, num_read=num_reads_filter,
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
                 hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], #d=np.arange(config["N_DONORS"]),
-                variants=params_clones["variants"], nclones=nclonelist)
+                variants=params_clones["variants"],
+                nclones=nclonelist,
+                logThresh=params["annotation_clones"]["params"]["logfc_threshold"], minPct = params["annotation_clones"]["params"]["min_pct"],
+                cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"])
+         #expand()
         # # C. Clones: Variant types
         # expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb",
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -603,6 +608,7 @@ rule knn_process_simple:
 module annCloMod:
     snakefile: "./rules/annotation_clones.smk"
     config: params
+
 #use rule * from annCloMod
 ## Use annotation_clones to run DE on clones
 def get_anno_integrate():
@@ -633,9 +639,32 @@ use rule runDE_enrich from annCloMod with:
         enrich_d = lambda wildcards, input: dirname(input[0]),
         outdir = lambda wildcards, output: dirname(output[0]),
         rscript= join(ROOT_DIR, "R_scripts/annotation_clones/addEnrichment.vCurrent.ipynb")
-############################################
-############################################
 
+
+use rule setup_motifs_largeClones from annCloMod with:
+    input:
+        se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/SE.rds"
+    output:
+        largeclones_se="{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/se.clonesfilt.rds",
+        note="{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/output.ipynb"
+
+use rule runDE_TF_largeClones from annCloMod with:
+    input:
+        se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/se.clonesfilt.rds",
+    output:
+        note = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
+
+use rule summary_TF_largeClones from annCloMod with:
+    input:
+        se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/se.clonesfilt.rds",
+        de = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
+    output:
+        note = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb"
+    # params:
+    #     n_donors = config["N_DONORS"]
+
+############################################
+############################################
 rule clones_donors_table:
     input:
         cells_meta_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/nclones{nclones}/cells_meta.tsv"
