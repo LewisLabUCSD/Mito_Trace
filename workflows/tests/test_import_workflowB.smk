@@ -7,9 +7,11 @@ rule all:
         expand("output/tests/pipelineB/long_{long}/{prefix}/{sample}/output.D.txt",
                prefix=["hi","hey"], sample=['A','B'], long=['X','Y'])
 
-rule a_long:
-    output: "output/tests/pipelineB/long_{long}/{prefix}/{prefix}.txt"
-    shell: "touch {output}"
+# rule a_long:
+#     output:
+#         "output/tests/pipelineB/long_{long}/{prefix}/{prefix}.txt",
+#         "output/tests/pipelineB/long_{long}/{prefix}/{prefix}.csv"
+#     shell: "touch {output}"
 
 
 module test_import_moduleB:
@@ -17,9 +19,18 @@ module test_import_moduleB:
 
 use rule * from test_import_moduleB
 
+
+# use rule a from test_import_moduleB with:
+#     output:
+#         "output/tests/pipelineB/long_{long}/{prefix}/foo.txt",
+#         "output/tests/pipelineB/long_{long}/{prefix}/foo.csv"
+
+
 use rule b from test_import_moduleB with:
     input:
-        "output/tests/pipelineB/long_{long}/{prefix}/{prefix}.txt"
+        #test_import_moduleB.rules
+        a="output/tests/pipelineB/long_{long}/{prefix}/foo.txt",
+        b="output/tests/pipelineB/long_{long}/{prefix}/foo.csv"
     output:
         "output/tests/pipelineB/long_{long}/{prefix}/{sample}/output.txt"
 

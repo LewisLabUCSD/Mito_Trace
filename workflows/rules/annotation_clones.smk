@@ -46,11 +46,14 @@ from src.utils.parse_config import read_config_file
 #     else:
 #         return 'NULL'
 
+def get_anno_integrate():
+    return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
+
 
 rule addClones:
     input:
-        noc = "{outdir}/annotation_clones/mergedSamples/allSamples.integrated.rds",
-        clones = "{indir}/cells_meta.tsv",#"{outdir}/pipeline/published/{prefix}/data/clones/clones.txt",
+        noc = get_anno_integrate(), #"{outdir}/annotation_clones/mergedSamples/allSamples.integrated.rds",
+        clones = "{outdir}/cells_meta.tsv",#"{outdir}/pipeline/published/{prefix}/data/clones/clones.txt",
     output:
         se_f = "{outdir}/annotation_clones/SE.rds",
         note = "{outdir}/annotation_clones/addClones.ipynb"

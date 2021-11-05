@@ -1,13 +1,20 @@
 ## This is a module that gets called later and has multiple steps that depend on each other
 
+
+rule pre:
+
 rule a:
-    output: "{outdir}/{prefix}/foo.txt"
+    input:
+    output:
+        "{outdir}/{prefix}/foo.txt",
+        "{outdir}/{prefix}/foo.csv"
     shell: "touch {output}"
 
 
 rule b:
     input:
-         "{outdir}/{prefix}/{prefix}.txt"  #"{prefix}/foo.txt",prefix=["hi","hey"]),
+         a="{outdir}/{prefix}/foo.txt",  #"{prefix}/foo.txt",prefix=["hi","hey"]),
+         b="{outdir}/{prefix}/foo.csv"
     output:
         "{outdir}/{prefix}/{sample}/output.txt",
     params:
