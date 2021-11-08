@@ -251,3 +251,5 @@ rule complete_lineage:
         "{outdir}/clones/variants_{variants}/{method}/temp/.tmp",
     output: "{outdir}/clones/variants_{variants}/{method}/.completed"
     shell: "touch {output}"
+
+

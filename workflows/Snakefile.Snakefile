@@ -102,7 +102,19 @@ rule all:
                 variants=params_clones["variants"],
                 nclones=nclonelist,
                 logThresh=params["annotation_clones"]["params"]["logfc_threshold"], minPct = params["annotation_clones"]["params"]["min_pct"],
-                cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"])
+                cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"]),
+         expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
+                output=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], #d=np.arange(config["N_DONORS"]),
+                kparam=params_clones["knn"]["params"]["resolution"],
+                logThresh=params["annotation_clones"]["params"]["logfc_threshold"], minPct = params["annotation_clones"]["params"]["min_pct"],
+                cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"]),
+
+         # expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/comparisons.ipynb",
+         #        output=res,cellrbc=cellrbc, num_read=num_reads_filter,
+         #        mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+         #        hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])
          # # C. Clones: Variant types
         # expand("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb",
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -146,7 +158,6 @@ use rule * from mtpreprocMod
 #     output:
 #         save_f_coverage="{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
 #         save_f_heat="{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position.png"
-
 
 # use rule create_filters from mtpreprocMod as cf with:
 #     output:
@@ -259,9 +270,6 @@ rule donor_mgatk:
         "./R_scripts/wrap_mgatk.R {params.data_dir} mgatk_donor/{params.donor} FALSE"
 
 
-## 5. Detect clones, depending on the method parameter
-#use rule * from lineageMod
-
 ########################################################################
 ## Workflow B: After multiplexing, separate by donor, grab variants from filters
 ## that overlap with both conditions, and then run mgatk to call variants again.
@@ -297,7 +305,7 @@ module lineageMod:
 use rule * from lineageMod as lin_*
 
 
-#
+## 5. Detect clones, depending on the method parameter
 use rule complete_lineage from lineageMod as lin_complete_lineage with:
     input:
         "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/temp/.tmp",
@@ -344,27 +352,26 @@ rule clone_shuffle_stats_knn:
     shell: "papermill -p enrich_f {params.enrich_f} -p cells_meta_f {input.cells_meta_f} -p OUTDIR {params.outdir} -p filt_val {params.donor} -p samples {params.samples} {params.note} {output[0]}"
 #########################################################################
 #########################################################################
-rule knn_process:
+
+
+############################################
+## Compare methods:
+############################################
+rule compare_methods:
     input:
-        expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
-               kparam=params_clones["knn"]["params"]["resolution"])
-    output: "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/temp/.tmp"#.pipeline"
+        expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/cells_meta.tsv",
+                kparam=params_clones["knn"]["params"]["resolution"]),
+        expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/cells_meta.tsv",
+                variants=params_clones["variants"], nclones=nclonelist)
+    output:
+        note="{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/comparisons.ipynb",
+        fig="{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/distance_heat.png",
+    params:
+        all = lambda wildcards, input: ",".join(x for x in input),
+        note = join("src", "clones_compare", "distance_matrix.ipynb"),
+        outdir = lambda wildcards, output: dirname(output[0])
     shell:
-        "touch {output}"
-    #outdir <- ""#"/data2/mito_lineage/Analysis/annotation/output/data/TcellDupi_may17_2021/MTblacklist/"
-        # Cluster parameters
-        #
-
-rule knn_process_simple:
-    """ dummy rule to not use simple for knn
-    """
-    # input:
-    #     expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_simple/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
-    #            kparam=params_clones["knn"]["params"]["resolution"])
-    output: "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_simple/knn/temp/.tmp"#.pipeline"
-    shell:
-        "touch {output}"
-
+        "papermill -p all_files {params.all} -p outdir {params.outdir} {params.note} {output.note}"
 
 
 ############################################
@@ -384,6 +391,16 @@ use rule summary_TF_largeClones from annCloMod as annClo_summary_TF_largeClones 
         de = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
     output:
         note = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb"
+
+
+## Use annotation_clones to run DE on clones
+use rule summary_TF_largeClones from annCloMod as annClo_summary_TF_largeClones with:
+    input:
+        #rules.annClo
+        se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/annotation_clones/DE_large/se.clonesfilt.rds",
+        de = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
+    output:
+        note = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/concat/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb"
 
 ############################################
 ############################################

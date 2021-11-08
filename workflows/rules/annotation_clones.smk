@@ -59,7 +59,7 @@ rule addClones:
         note = "{outdir}/annotation_clones/addClones.ipynb"
     params:
         outdir = lambda wildcards, output: dirname(output[0]),
-        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/addClones_v01.vCurrent.ipynb"), # The script defaults to the granja data
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/addClones.v01.vCurrent.ipynb"), # The script defaults to the granja data
     shell: "papermill -p cells_meta_f {input.clones} -p se_f {input.noc} -p outdir {params.outdir} {params.rscript} {output.note}"
 
 
