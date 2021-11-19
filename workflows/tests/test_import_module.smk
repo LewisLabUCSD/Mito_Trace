@@ -1,5 +1,6 @@
-## This is a module that gets called later and has multiple steps that depend on each other
+## Test comment to see if cosmo server can see it
 
+## This is a module that gets called later and has multiple steps that depend on each other
 rule a:
     output: "{prefix}/foo.txt"
     shell: "touch {output}"

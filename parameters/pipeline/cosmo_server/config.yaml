@@ -1,0 +1,2 @@
+outdir: "/home/isshamie/data/Projects/Mito_Trace/output"
+config: "parameters/pipeline/pipeline.yaml"

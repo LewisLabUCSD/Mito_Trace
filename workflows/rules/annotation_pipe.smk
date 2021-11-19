@@ -20,29 +20,29 @@ samples = pd.read_table(join(ROOT_DIR, config["samples_meta"]), dtype=str,sep=',
 #res = config["results"]
 
 
-rule all:
-    input:
-        expand("{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.ipynb",
-               outdir=config['outdir'], prefix=config["prefix"]),
-
-        # expand("{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz",
-        #        extrnl=config['annotations']['name'], outdir=config['outdir'],
-        #        ),
-        # expand("{outdir}/annotation/data/{prefix}/{sample}/lareau/{proj}/{sample}.clusters.csv",
-        #        outdir=config['outdir'], sample=samples.index,
-        #        proj=cfg_anno["lareau"]["proj_ref"],
-        #        prefix=config["prefix"]),
-         expand("{outdir}/annotation/data/{prefix}/mergedSamples/DE/seuratImmuneDotPlot.png",
-                 outdir=config['outdir'],prefix=config["prefix"]),
-
-        expand("{outdir}/annotation/data/{prefix}/mergedSamples/DE_TF/DE_TF.ipynb",
-                 outdir=config['outdir'],prefix=config["prefix"]),
-         expand("{outdir}/annotation/data/{prefix}/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
-                 outdir=config['outdir'],prefix=config["prefix"])
-
-        # expand("{outdir}/annotation/data/{prefix}/{sample}/anchors/{assay}/{sample}.clusters.csv", sample=samples.index,
-        #         assay=cfg_anno["anchors"]["assay"], outdir=config['outdir'],
-        #         prefix=config["prefix"])
+# rule all:
+#     input:
+#         expand("{outdir}/data/annotation/mergedSamples/allSamples.integrated.ipynb",
+#                outdir=config['outdir'], prefix=config["prefix"]),
+#
+#         # expand("{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz",
+#         #        extrnl=config['annotations']['name'], outdir=config['outdir'],
+#         #        ),
+#         # expand("{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.clusters.csv",
+#         #        outdir=config['outdir'], sample=samples.index,
+#         #        proj=cfg_anno["lareau"]["proj_ref"],
+#         #        prefix=config["prefix"]),
+#          expand("{outdir}/data/annotation/mergedSamples/DE/seuratImmuneDotPlot.png",
+#                  outdir=config['outdir'],prefix=config["prefix"]),
+#
+#         expand("{outdir}/data/annotation/mergedSamples/DE_TF/DE_TF.ipynb",
+#                  outdir=config['outdir'],prefix=config["prefix"]),
+#          expand("{outdir}/data/annotation/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
+#                  outdir=config['outdir'],prefix=config["prefix"])
+#
+#         # expand("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.clusters.csv", sample=samples.index,
+#         #         assay=cfg_anno["anchors"]["assay"], outdir=config['outdir'],
+#         #         prefix=config["prefix"])
 
 def get_cellr_input():
     out_d = cfg_anno['datadir']
@@ -84,9 +84,9 @@ rule createMergedSignac:
         #"{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz"
 
     output:
-        "{outdir}/annotation/data/{prefix}/{sample}/{sample}.merged.ipynb",
-        "{outdir}/annotation/data/{prefix}/{sample}/{sample}.merged.rds",
-        report("{outdir}/annotation/data/{prefix}/{sample}/{sample}.merged.lsi.Batchlabels.png")
+        "{outdir}/data/annotation{sample}/{sample}.merged.ipynb",
+        "{outdir}/data/annotation{sample}/{sample}.merged.rds",
+        report("{outdir}/data/annotation{sample}/{sample}.merged.lsi.Batchlabels.png")
     params:
         outdir=lambda wildcards, output: dirname(output[0]),
         exp = lambda wildcards: wildcards.sample,
@@ -101,11 +101,11 @@ rule createMergedSignac:
 
 #conda-env-mito_trace-r
 rule annotation_lareau:
-    input: "{outdir}/annotation/data/{prefix}/{sample}/{sample}.merged.rds"
+    input: "{outdir}/data/annotation{sample}/{sample}.merged.rds"
     output:
-        report("{outdir}/annotation/data/{prefix}/{sample}/lareau/{proj}/{sample}.clusters.csv"), # "{outdir}/annotation/{sample}/{sample}.clusters.txt"
-        report("{outdir}/annotation/data/{prefix}/{sample}/lareau/{proj}/{sample}.project.sample.cellLabels.abundace.png"),
-        note="{outdir}/annotation/data/{prefix}/{sample}/lareau/{proj}/{sample}.clusters.ipynb"
+        report("{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.clusters.csv"), # "{outdir}/annotation/{sample}/{sample}.clusters.txt"
+        report("{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.project.sample.cellLabels.abundace.png"),
+        note="{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.clusters.ipynb"
     params:
         outdir=lambda wildcards, output: dirname(output[0]),
         exp = lambda wildcards: wildcards.sample,
@@ -117,12 +117,12 @@ rule annotation_lareau:
 
 
 rule annotation_anchors:
-    input: "{outdir}/annotation/data/{prefix}/{sample}/{sample}.merged.rds"
+    input: "{outdir}/data/annotation{sample}/{sample}.merged.rds"
     output:
-        report("{outdir}/annotation/data/{prefix}/{sample}/anchors/{assay}/{sample}.clusters.csv"), # "{outdir}/annotation/{sample}/{sample}.clusters.txt"
-        report("{outdir}/annotation/data/{prefix}/{sample}/anchors/{assay}/{sample}.merged.anchors.sample.labels.png"),
-        report("{outdir}/annotation/data/{prefix}/{sample}/anchors/{assay}/{sample}.merged.anchors.labels.png"),
-        note="{outdir}/annotation/data/{prefix}/{sample}/anchors/{assay}/{sample}.clusters.ipynb"
+        report("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.clusters.csv"), # "{outdir}/annotation/{sample}/{sample}.clusters.txt"
+        report("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.merged.anchors.sample.labels.png"),
+        report("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.merged.anchors.labels.png"),
+        note="{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.clusters.ipynb"
     params:
         outdir=lambda wildcards, output: dirname(output[0]),
         exp = lambda wildcards: wildcards.sample,
@@ -140,11 +140,11 @@ rule annotation_anchors:
 #     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
 #     """
 #     output:
-#         "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.ipynb",
-#         "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.rds",
-#         report(expand("{{outdir}}/annotation/data/{{prefix}}/mergedSamples/{f}",
+#         "{outdir}/data/annotation/mergedSamples/allSamples.integrated.ipynb",
+#         "{outdir}/data/annotation/mergedSamples/allSamples.integrated.rds",
+#         report(expand("{{outdir}}/data/annotation/mergedSamples/{f}",
 #                       f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png"]))
-#         #report("{outdir}/annotation/data/{prefix}/{sample}/{sample}.merged.lsi.Batchlabels.png")
+#         #report("{outdir}/data/annotation{sample}/{sample}.merged.lsi.Batchlabels.png")
 #     params:
 #         indir = config["mtscATAC_OUTDIR"],
 #         outdir =lambda wildcards, output: dirname(output[0]),
@@ -164,10 +164,10 @@ rule createExpSignac:
     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
     """
     output:
-        "{outdir}/annotation/data/{prefix}/mergedSamples/createExpSignac.ipynb",
-        "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.rds",
-        report("{outdir}/annotation/data/{prefix}/mergedSamples/QC_01.png"),
-        report("{outdir}/annotation/data/{prefix}/mergedSamples/QC_01.pdf")
+        "{outdir}/data/annotation/mergedSamples/createExpSignac.ipynb",
+        "{outdir}/data/annotation/mergedSamples/allSamples.rds",
+        report("{outdir}/data/annotation/mergedSamples/QC_01.png"),
+        report("{outdir}/data/annotation/mergedSamples/QC_01.pdf")
     params:
         indir = config["mtscATAC_OUTDIR"],
         outdir =lambda wildcards, output: dirname(output[0]),
@@ -180,11 +180,11 @@ rule createExpSignac:
 
 rule integrateSignac:
     input:
-        "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.rds",
+        "{outdir}/data/annotation/mergedSamples/allSamples.rds",
     output:
-        "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.ipynb",
-        "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.rds",
-        report(expand("{{outdir}}/annotation/data/{{prefix}}/mergedSamples/{f}",
+        "{outdir}/data/annotation/mergedSamples/allSamples.integrated.ipynb",
+        "{outdir}/data/annotation/mergedSamples/allSamples.integrated.rds",
+        report(expand("{{outdir}}/data/annotation/mergedSamples/{f}",
                       f=["QC_02.png",
                          "integrated.merged.compare.png",
                          "integrated.batch.png",
@@ -205,12 +205,12 @@ def get_comps():
 
 rule runDE:
     input:
-        integrated = "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.rds",
+        integrated = "{outdir}/data/annotation/mergedSamples/allSamples.integrated.rds",
     output:
-        # report(expand(dir("{{outdir}}/annotation/data/{{prefix}}/DE/{d}"),
+        # report(expand(dir("{{outdir}}/data/annotationDE/{d}"),
         #               d=["clusters", "conditions_clusters", "conditions_conserved"])),
-        "{outdir}/annotation/data/{prefix}/mergedSamples/DE/DE.ipynb",
-        report(expand("{{outdir}}/annotation/data/{{prefix}}/mergedSamples/DE/{f}",
+        "{outdir}/data/annotation/mergedSamples/DE/DE.ipynb",
+        report(expand("{{outdir}}/data/annotation/mergedSamples/DE/{f}",
                 f=["seuratImmuneDotPlot.png", "linImmuneDotPlot.png"]))
     params:
        # indir = lambda wildcards, input: dirname(input[0]),
@@ -226,15 +226,15 @@ rule runDE:
 #     params:
 #         clust_rm = config["clust_rm"]
 #     output:
-#         "{outdir}/annotation/data/{prefix}/mergedSamples/DE/DE.ipynb",
+#         "{outdir}/data/annotation/mergedSamples/DE/DE.ipynb",
 #     shell: "papermill -p clust_rm {params.clust_rm} -p integrated_f {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
 
 
 rule runDE_TF:
     input:
-        integrated = "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.integrated.rds",
+        integrated = "{outdir}/data/annotation/mergedSamples/allSamples.integrated.rds",
     output:
-        "{outdir}/annotation/data/{prefix}/mergedSamples/DE_TF/DE_TF.ipynb",
+        note="{outdir}/data/annotation/mergedSamples/DE_TF/DE_TF.ipynb",
     params:
         outdir = lambda wildcards, output: dirname(output[0]),
         rscript= join(ROOT_DIR, "R_scripts/annotations/DE_TF.ipynb"), # The script defaults to the granja data
@@ -246,9 +246,9 @@ rule runDE_TF:
 
 rule runGSEA:
     input:
-        DE_out_path = "{outdir}/annotation/data/{prefix}/mergedSamples/DE/DE.ipynb",
+        DE_out_path = "{outdir}/data/annotation/mergedSamples/DE/DE.ipynb",
     output:
-        "{outdir}/annotation/data/{prefix}/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
+        note="{outdir}/data/annotation/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
     params:
         input = lambda wildcards, input: join(dirname(input[0]), "clusters"),
         output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
@@ -259,10 +259,10 @@ rule runGSEA:
 
 # rule overlay_cells_meta:
 #     input:
-#         "{outdir}/annotation/data/{prefix}/allSamples.integrated.rds",
+#         "{outdir}/data/annotationallSamples.integrated.rds",
 #     output:
-#         "{outdir}/annotation/data/{prefix}/donors.png",
-#         "{outdir}/annotation/data/{prefix}/clones.png"
+#         "{outdir}/data/annotationdonors.png",
+#         "{outdir}/data/annotationclones.png"
 #     params:
 #         indir = lambda wildcards, input: dirname(input[0]),
 #         outdir = lambda wildcards, output: dirname(output[0]),

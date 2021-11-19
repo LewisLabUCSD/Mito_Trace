@@ -5,6 +5,7 @@ main:
   - "clones"
   - "enrichment"
   - "DE"
+  - "annotation_clones"
 
 
 cellranger_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/"
@@ -13,14 +14,14 @@ genome_path:
   #genome: "MTBlacklist" # ["MTBlacklist", "MTBlacklist_mtasnucl", "noblacklist_hg38"]
   MTBlacklist:
     # Genome paths
-    genome_dir: "/data2/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #
-    ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
-    mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
+    genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
   MTblacklist_mtasnucl:
     # Genome paths
-    genome_dir: "/data2/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/" #"/data2/mito_lineage/data/external/GRCh38_MT_blacklist/" #
-    ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
-    mt_ref_fa: "/data2/mito_lineage/data/external/GRCh38_MT_blacklist/chrM.fasta"
+    genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
 
 mtpreproc:
   version: 02
@@ -45,9 +46,11 @@ filters:
 
 mgatk:
   params:
-    lowcovthresh: 2 # For mgatk to fill in low coverage cell positions
-    ncellsthresh: 5
-  chrM_refAllele: "/data2/mito_lineage/data/external/chrM_refAllele.txt"
+    lowcovthresh:
+      - 2 # For mgatk to fill in low coverage cell positions
+    ncellsthresh:
+      - 5
+  chrM_refAllele: "data/external/chrM_refAllele.txt"
 
 
 multiplex:
@@ -56,7 +59,7 @@ multiplex:
     #Number Reads Total: 10000000
     num_cells: 100000 # high enough to choose all
     is_proportional: False
-  genome_size: "/data/isshamie/mito_lineage/data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+  genome_size: "data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
 
   mt:
     minMAF:
@@ -85,7 +88,7 @@ clones:
       resolution: [10,3]
 
 annotations:
-  datadir: "/data2/mito_lineage/data/external/granja_cd34/"
+  datadir: "data/external/granja_cd34/"
   ID: "GSE129785_scATAC-Hematopoiesis-CD34"
   name: "granja_cd34"
   #file: "granja_published_C1.rds"

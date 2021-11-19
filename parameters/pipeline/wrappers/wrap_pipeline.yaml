@@ -1,4 +1,4 @@
-snakefile: "workflows/Snakefile.Snakefile"
+snakefile: "workflows/Snakefile"
 pipename: "pipeline"
 params_dir: "/data2/mito_lineage/parameters/pipeline"
 indir:

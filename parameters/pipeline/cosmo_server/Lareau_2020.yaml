@@ -1,0 +1,14 @@
+# mttrace parameters
+## Global params
+outdir: "/home/isshamie/data/Projects/Mito_Trace/output" # Global output directory
+config: "parameters/pipeline/pipeline.yaml"
+
+prefix: "Lareau_2020/MTblacklist"
+samples_meta: "parameters/pipeline/cosmo_server/Lareau_2020.csv"
+fastq_dir: "/data2/isshamie/mito_lineage/data/raw/Lareau_2020/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
+mtscATAC_OUTDIR: "/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/Lareau_2020/MTblacklist"
+genome: "MTBlacklist"
+#results: "output/pipeline/Lareau_2020/MTblacklist"
+
+
+N_DONORS: 1

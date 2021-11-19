@@ -338,7 +338,40 @@ def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
 
 
 
+def af_to_vireo(af,  coverage, outdir, out_name):
+    cell_samples = list(af.columns.values)
+    variants = list(af.index.values)
+    # Covert af_meta to vcf-like
+    # CHROM  POS     ID_x    REF_x   ALT
+    # "position"      "nucleotide"    "variant"
 
+    ## Create sparse vmmf files by converting index and columns to 1-based index and then to sparse
+    # the order is same for vcf and samples
+    af.index = np.arange(1, af.shape[0] + 1)
+    af.columns = np.arange(1, af.shape[1] + 1)
+    coverage.index = np.arange(1, coverage.shape[0] + 1)
+    coverage.columns = np.arange(1, coverage.shape[1] + 1)
+    # Convert AF to AD, and then make sparse
+    ad = (af.astype('float') * coverage.astype('float')).round().astype(int)
+
+    # Create vmmf files AD and DP
+    dp = coverage.rename_axis("Variant").reset_index().melt(id_vars="Variant",
+                                                            var_name="Cell",
+                                                            value_name='integer')
+    ad = ad.rename_axis("Variant").reset_index().melt(id_vars="Variant",
+                                                      var_name="Cell",
+                                                      value_name='integer')
+
+    # Save files
+    oth = pd.DataFrame(columns=ad.columns) # Dummy oth variable
+    wrap_write_mtx_df(outdir, ad, dp.astype(int), oth=oth, to_rm=True, prefix=f"{out_name}.tag",
+                      columns=('Variant', 'Cell', 'integer'))
+    with open(join(outdir, f"{out_name}.samples.tsv"), 'w') as f:
+        f.write("\n".join(cell_samples))
+    with open(join(outdir, f"{out_name}.variants.txt"), 'w') as f:
+        f.write("\n".join(variants))
+
+    return
 ###### MGATK output converted to the Vireo specified input ######
 def mgatk_to_vireo(in_af, in_af_meta, in_coverage, outdir, out_name):
     """ Converts mgat output to vireo input.

@@ -43,10 +43,16 @@ def get_sample_barcodes(wildcards):
     return samples.loc[wildcards.sample, "barcode_f"]
 
 
+# rule link_bam:
+#     input: get_sample_bam
+#     output: "{output}/data/{sample}/00_bam/{sample}.bam"
+#     shell: 'ln -sr {input} {output}'
+
 rule link_bam:
-    input: get_sample_bam
+    #input: get_sample_bam
     output: "{output}/data/{sample}/00_bam/{sample}.bam"
-    shell: 'ln -sr {input} {output}'
+    params: get_sample_bam
+    shell: 'ln -sr {params} {output}'
 
 rule index_bam:
     """Index the bam file"""
@@ -306,7 +312,7 @@ def get_filt(w):
 
 rule create_filters:
     input:
-        concat_dir = rules.filter_cell_bc.output[0] #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
+        concat_dir = (rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
     output:
         cov = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
         af = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv"

@@ -1,0 +1,3 @@
+sample_name,cellr_ID,fastq_ID,barcode_f,bam_f
+pre,pre,BC_10xATAC_pre,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/PBMC_may17_2021/MTblacklist/pre/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/PBMC_may17_2021/MTblacklist/pre/outs/possorted_bam.bam
+post,post,BC_10xATAC_post,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/PBMC_may17_2021/MTblacklist/post/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/PBMC_may17_2021/MTblacklist/post/outs/possorted_bam.bam

@@ -1,8 +1,8 @@
-""" Snakemake Script. Don't import snakemake."""
+""" Snakemake Script. Don't need to import snakemake."""
 
 import pandas as pd
 from os.path import dirname, join
-import click
+#import click
 
 print('input', snakemake.input)
 print('output ', snakemake.output)

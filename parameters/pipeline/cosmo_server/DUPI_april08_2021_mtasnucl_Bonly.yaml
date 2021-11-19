@@ -1,0 +1,24 @@
+# Global parameters
+outdir: "/home/isshamie/data/Projects/Mito_Trace/output2"
+#results: "output/pipeline/DUPI_april08_2021"
+config: "parameters/pipeline/pipeline.yaml"
+#params: "parameters/pipeline/params.csv"
+
+## Experimental parameters
+prefix: "DUPI_april08_2021/MTblacklist_mtasnucl_Bonly"
+samples_meta: "parameters/pipeline/cosmo_server/DUPI_april08_2021_Bonly.csv"
+
+
+## Files that require full paths:
+fastq_dir: "/home/isshamie/data/Projects/Mito_Trace/data/raw/CHIP_april08_2021_Croker/"
+mtscATAC_OUTDIR: "/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/DUPI_april08_2021_Croker/MTblacklist_mtasnucl"
+genome: "MTblacklist_mtasnucl"
+comparisons: 'B,preB,postB' #"A,pre,rxn1,post,rxn3;B,pre,rxn2,post,rxn4"
+#tests: "A,pre,preA,post,postA;B,pre,preB,post,postB"
+
+N_DONORS: 8
+
+
+#parameters:
+#  annotation:
+#    rmClust: "13,16,15"
