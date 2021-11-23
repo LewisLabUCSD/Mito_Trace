@@ -2,6 +2,7 @@
 
 import pandas as pd
 from os.path import dirname, join
+import numpy as np
 #import click
 #import snakemake
 from src.utils.data_io import af_to_vireo
@@ -12,6 +13,9 @@ print('params', snakemake.params)
 
 cells_meta = pd.read_csv(snakemake.params.cells_meta , sep='\t')
 sample = snakemake.params.sample
+ref_fa = pd.read_csv(snakemake.params.ref_mt, sep='\t',
+                     header=None, index_col=0)
+
 
 for d, curr_donor in cells_meta.groupby('donor'):
     d = int(d)
@@ -84,8 +88,8 @@ for d, curr_donor in cells_meta.groupby('donor'):
     dp_donor_df.to_csv(join(dirname(snakemake.output[int(d)]), "dp.tsv"),
                       sep='\t', index=True)
 
-    cells_meta = cells_meta[cells_meta["ID"].isin(af_donor_df.index)]
-    cells_meta.to_csv(join(dirname(snakemake.output[int(d)]), "cells_meta.tsv"),
+    curr_cells_meta = cells_meta[cells_meta["ID"].isin(af_donor_df.index)].copy()
+    curr_cells_meta.to_csv(join(dirname(snakemake.output[int(d)]), "cells_meta.tsv"),
                       sep='\t', index=False)
 
     # Create VireoIn
@@ -93,3 +97,16 @@ for d, curr_donor in cells_meta.groupby('donor'):
     af_to_vireo(af_donor_df.transpose(), dp_donor_df.transpose(),
                 outdir=dirname(snakemake.output[int(d)]),
                 out_name="cellSNP")
+
+    curr_vars = af_donor_df.columns
+    import pandas as pd
+
+    af_meta = pd.DataFrame({ "POS": [int(x[:-1]) for x in curr_vars],
+                                                    "ALT": [x[-1] for x in curr_vars],
+                                                    "index": np.arange(1,len(curr_vars)+1),
+                                                    "REF": [f"{ref_fa.loc[int(x[:-1]),1]}_{x[:-1]}" for x in curr_vars]
+                                                }
+                                            )
+    af_meta["#CHROM"] = "MT"
+    af_meta[["#CHROM", "POS", "REF","ALT", "index"]].to_csv(join(dirname(snakemake.output[d]), "cellSNP.base.vcf"),
+                   sep="\t", index=False)

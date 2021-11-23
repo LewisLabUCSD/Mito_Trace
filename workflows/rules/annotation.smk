@@ -177,7 +177,7 @@ rule createExpSignac:
         #workdir = os.getcwd(),
     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
 
-
+,
 rule integrateSignac:
     input:
         "{outdir}/annotation/data/{prefix}/mergedSamples/allSamples.rds",
@@ -242,6 +242,7 @@ rule runDE_TF:
         comps_f = get_comps(),
         genome=params["genome_path"][config["genome"]]["ref_fa"]
     shell: "papermill -p integrated_f {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} -p genome {params.genome} {params.rscript} {output[0]}"
+
 
 
 rule runGSEA:
