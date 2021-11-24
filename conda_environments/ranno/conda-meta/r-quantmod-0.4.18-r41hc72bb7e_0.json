@@ -1,0 +1,218 @@
+{
+  "build": "r41hc72bb7e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-curl",
+    "r-ttr >=0.2",
+    "r-xts >=0.9_0",
+    "r-zoo"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-quantmod-0.4.18-r41hc72bb7e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/quantmod/DESCRIPTION",
+    "lib/R/library/quantmod/INDEX",
+    "lib/R/library/quantmod/Meta/Rd.rds",
+    "lib/R/library/quantmod/Meta/demo.rds",
+    "lib/R/library/quantmod/Meta/features.rds",
+    "lib/R/library/quantmod/Meta/hsearch.rds",
+    "lib/R/library/quantmod/Meta/links.rds",
+    "lib/R/library/quantmod/Meta/nsInfo.rds",
+    "lib/R/library/quantmod/Meta/package.rds",
+    "lib/R/library/quantmod/NAMESPACE",
+    "lib/R/library/quantmod/NEWS.md",
+    "lib/R/library/quantmod/R/quantmod",
+    "lib/R/library/quantmod/R/quantmod.rdb",
+    "lib/R/library/quantmod/R/quantmod.rdx",
+    "lib/R/library/quantmod/demo/chartSeries.R",
+    "lib/R/library/quantmod/help/AnIndex",
+    "lib/R/library/quantmod/help/aliases.rds",
+    "lib/R/library/quantmod/help/paths.rds",
+    "lib/R/library/quantmod/help/quantmod.rdb",
+    "lib/R/library/quantmod/help/quantmod.rdx",
+    "lib/R/library/quantmod/html/00Index.html",
+    "lib/R/library/quantmod/html/R.css"
+  ],
+  "fn": "r-quantmod-0.4.18-r41hc72bb7e_0.tar.bz2",
+  "license": "GPL-3.0-only",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-quantmod-0.4.18-r41hc72bb7e_0",
+    "type": 1
+  },
+  "md5": "9f665cb513333754d98e9a3324ebd5a9",
+  "name": "r-quantmod",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-quantmod-0.4.18-r41hc72bb7e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/quantmod/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "109d2e32c9cbfdf5aec8b78c251dc9fc4a5ef3d2144265cf78ae094c61a9b5a9",
+        "sha256_in_prefix": "109d2e32c9cbfdf5aec8b78c251dc9fc4a5ef3d2144265cf78ae094c61a9b5a9",
+        "size_in_bytes": 1221
+      },
+      {
+        "_path": "lib/R/library/quantmod/INDEX",
+        "path_type": "hardlink",
+        "sha256": "10dbb7a78478810a8096b2eb6f02f6fcce5993475dcf5451ebdedca43c9ab6bb",
+        "sha256_in_prefix": "10dbb7a78478810a8096b2eb6f02f6fcce5993475dcf5451ebdedca43c9ab6bb",
+        "size_in_bytes": 3888
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "15bdfe3eb92c69eb08cff40c9f7fae5d5eb54666767565a5b75a3b9ecb7f3e85",
+        "sha256_in_prefix": "15bdfe3eb92c69eb08cff40c9f7fae5d5eb54666767565a5b75a3b9ecb7f3e85",
+        "size_in_bytes": 3525
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/demo.rds",
+        "path_type": "hardlink",
+        "sha256": "e49d69228c0fdfd3603b22906e6734008067c0e4bcc0f4ea043c2e921eef00ea",
+        "sha256_in_prefix": "e49d69228c0fdfd3603b22906e6734008067c0e4bcc0f4ea043c2e921eef00ea",
+        "size_in_bytes": 104
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "1537ae7e366eed500abab734445f053f36ecebf0e0980c6c299f17d2b4dc2351",
+        "sha256_in_prefix": "1537ae7e366eed500abab734445f053f36ecebf0e0980c6c299f17d2b4dc2351",
+        "size_in_bytes": 3557
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "5f86c1b236e12be36826bb4609cbb54f9dad34c063c3d4a61f5d7b4370fe3f5b",
+        "sha256_in_prefix": "5f86c1b236e12be36826bb4609cbb54f9dad34c063c3d4a61f5d7b4370fe3f5b",
+        "size_in_bytes": 2117
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "ff31736c78f86891d6cfdbfe672c6d330897ef0518b3af3917565f1bd89abdd4",
+        "sha256_in_prefix": "ff31736c78f86891d6cfdbfe672c6d330897ef0518b3af3917565f1bd89abdd4",
+        "size_in_bytes": 1980
+      },
+      {
+        "_path": "lib/R/library/quantmod/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "e2ce4a2a63e99e158d6f108bea3170c1025d61b4fc4505e5665b31890fdb4876",
+        "sha256_in_prefix": "e2ce4a2a63e99e158d6f108bea3170c1025d61b4fc4505e5665b31890fdb4876",
+        "size_in_bytes": 1160
+      },
+      {
+        "_path": "lib/R/library/quantmod/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "b4161f0407b14e355d9c1ba3ead1a68ac6917c4b3c237c2f2b8cf15f26abd35f",
+        "sha256_in_prefix": "b4161f0407b14e355d9c1ba3ead1a68ac6917c4b3c237c2f2b8cf15f26abd35f",
+        "size_in_bytes": 7697
+      },
+      {
+        "_path": "lib/R/library/quantmod/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "7cb79f73bcef8ba26b3da6c664b0d2657db8181ad9b8ce889d268f47fae8f59d",
+        "sha256_in_prefix": "7cb79f73bcef8ba26b3da6c664b0d2657db8181ad9b8ce889d268f47fae8f59d",
+        "size_in_bytes": 16840
+      },
+      {
+        "_path": "lib/R/library/quantmod/R/quantmod",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/quantmod/R/quantmod.rdb",
+        "path_type": "hardlink",
+        "sha256": "d73335ae7fc73b5405b32915db67df65a7b851844af827b462f19312dfeb0b25",
+        "sha256_in_prefix": "d73335ae7fc73b5405b32915db67df65a7b851844af827b462f19312dfeb0b25",
+        "size_in_bytes": 810006
+      },
+      {
+        "_path": "lib/R/library/quantmod/R/quantmod.rdx",
+        "path_type": "hardlink",
+        "sha256": "95b2f98c991d0688d77cc2819936ecee6810a0c87777f3de4685216117246ee0",
+        "sha256_in_prefix": "95b2f98c991d0688d77cc2819936ecee6810a0c87777f3de4685216117246ee0",
+        "size_in_bytes": 6084
+      },
+      {
+        "_path": "lib/R/library/quantmod/demo/chartSeries.R",
+        "path_type": "hardlink",
+        "sha256": "dfd92535a50702bd05bf57803a1410cb839967df7fa0145db0eec92113e2063b",
+        "sha256_in_prefix": "dfd92535a50702bd05bf57803a1410cb839967df7fa0145db0eec92113e2063b",
+        "size_in_bytes": 971
+      },
+      {
+        "_path": "lib/R/library/quantmod/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "d883bd6c8f158a856589ebdd9b0d95f8ae0517240c875049f09292c413966a73",
+        "sha256_in_prefix": "d883bd6c8f158a856589ebdd9b0d95f8ae0517240c875049f09292c413966a73",
+        "size_in_bytes": 5511
+      },
+      {
+        "_path": "lib/R/library/quantmod/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "0bdb11290fd2c2325c8e2380d31bdc653061f8d73628da244153ccd0e87e5bfd",
+        "sha256_in_prefix": "0bdb11290fd2c2325c8e2380d31bdc653061f8d73628da244153ccd0e87e5bfd",
+        "size_in_bytes": 1960
+      },
+      {
+        "_path": "lib/R/library/quantmod/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "888542eab09877fe57a8dfa6bab48c0d256a40a1c6ea8dce6a63c922a03f2249",
+        "sha256_in_prefix": "888542eab09877fe57a8dfa6bab48c0d256a40a1c6ea8dce6a63c922a03f2249",
+        "size_in_bytes": 747
+      },
+      {
+        "_path": "lib/R/library/quantmod/help/quantmod.rdb",
+        "path_type": "hardlink",
+        "sha256": "f42226021bd9511298bc79fb99aefa836fe1ad5a759ca64b9d1328fc6721a77f",
+        "sha256_in_prefix": "f42226021bd9511298bc79fb99aefa836fe1ad5a759ca64b9d1328fc6721a77f",
+        "size_in_bytes": 224158
+      },
+      {
+        "_path": "lib/R/library/quantmod/help/quantmod.rdx",
+        "path_type": "hardlink",
+        "sha256": "9707c01b642dc63d378cb1d5aa44159c28325bce0fd3bbcf9f2fa68c4c3ce0d9",
+        "sha256_in_prefix": "9707c01b642dc63d378cb1d5aa44159c28325bce0fd3bbcf9f2fa68c4c3ce0d9",
+        "size_in_bytes": 1611
+      },
+      {
+        "_path": "lib/R/library/quantmod/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "60b38a2b001aa9ef55746f45f25065f5aefbf3f418a121f21196d2b4ed59922a",
+        "sha256_in_prefix": "60b38a2b001aa9ef55746f45f25065f5aefbf3f418a121f21196d2b4ed59922a",
+        "size_in_bytes": 32012
+      },
+      {
+        "_path": "lib/R/library/quantmod/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "c40978c454c8b9c80bf401b3dfb9c83c7ebf5dff32f773e013fbc4a68a83a57f",
+  "size": 1074937,
+  "subdir": "noarch",
+  "timestamp": 1621845099733,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-quantmod-0.4.18-r41hc72bb7e_0.tar.bz2",
+  "version": "0.4.18"
+}

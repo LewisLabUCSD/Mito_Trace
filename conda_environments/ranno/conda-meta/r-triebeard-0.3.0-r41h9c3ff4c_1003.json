@@ -1,0 +1,311 @@
+{
+  "build": "r41h9c3ff4c_1003",
+  "build_number": 1003,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libstdcxx-ng >=9.3.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-rcpp"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-triebeard-0.3.0-r41h9c3ff4c_1003",
+  "features": "",
+  "files": [
+    "lib/R/library/triebeard/DESCRIPTION",
+    "lib/R/library/triebeard/INDEX",
+    "lib/R/library/triebeard/LICENSE",
+    "lib/R/library/triebeard/Meta/Rd.rds",
+    "lib/R/library/triebeard/Meta/features.rds",
+    "lib/R/library/triebeard/Meta/hsearch.rds",
+    "lib/R/library/triebeard/Meta/links.rds",
+    "lib/R/library/triebeard/Meta/nsInfo.rds",
+    "lib/R/library/triebeard/Meta/package.rds",
+    "lib/R/library/triebeard/Meta/vignette.rds",
+    "lib/R/library/triebeard/NAMESPACE",
+    "lib/R/library/triebeard/NEWS",
+    "lib/R/library/triebeard/R/triebeard",
+    "lib/R/library/triebeard/R/triebeard.rdb",
+    "lib/R/library/triebeard/R/triebeard.rdx",
+    "lib/R/library/triebeard/doc/index.html",
+    "lib/R/library/triebeard/doc/r_radix.R",
+    "lib/R/library/triebeard/doc/r_radix.Rmd",
+    "lib/R/library/triebeard/doc/r_radix.html",
+    "lib/R/library/triebeard/doc/rcpp_radix.R",
+    "lib/R/library/triebeard/doc/rcpp_radix.Rmd",
+    "lib/R/library/triebeard/doc/rcpp_radix.html",
+    "lib/R/library/triebeard/help/AnIndex",
+    "lib/R/library/triebeard/help/aliases.rds",
+    "lib/R/library/triebeard/help/paths.rds",
+    "lib/R/library/triebeard/help/triebeard.rdb",
+    "lib/R/library/triebeard/help/triebeard.rdx",
+    "lib/R/library/triebeard/html/00Index.html",
+    "lib/R/library/triebeard/html/R.css",
+    "lib/R/library/triebeard/include/radix.h",
+    "lib/R/library/triebeard/include/radix/radix_tree.hpp",
+    "lib/R/library/triebeard/include/radix/radix_tree_it.hpp",
+    "lib/R/library/triebeard/include/radix/radix_tree_node.hpp",
+    "lib/R/library/triebeard/libs/triebeard.so"
+  ],
+  "fn": "r-triebeard-0.3.0-r41h9c3ff4c_1003.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-triebeard-0.3.0-r41h9c3ff4c_1003",
+    "type": 1
+  },
+  "md5": "d5259ae9646cd27348c55da9f29da783",
+  "name": "r-triebeard",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-triebeard-0.3.0-r41h9c3ff4c_1003.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/triebeard/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "820956ed5371aacabb29ec6b831ad8a6a0baf662d0690b105bcafc5c4522e841",
+        "sha256_in_prefix": "820956ed5371aacabb29ec6b831ad8a6a0baf662d0690b105bcafc5c4522e841",
+        "size_in_bytes": 947
+      },
+      {
+        "_path": "lib/R/library/triebeard/INDEX",
+        "path_type": "hardlink",
+        "sha256": "32d09d64b439038cb75530ff15ed2aa58cd88b5a8c11df0f510a33dbc1e6227a",
+        "sha256_in_prefix": "32d09d64b439038cb75530ff15ed2aa58cd88b5a8c11df0f510a33dbc1e6227a",
+        "size_in_bytes": 339
+      },
+      {
+        "_path": "lib/R/library/triebeard/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "432dfa01fc03a7bcb46685d3f7a94a18e1640703d189df076a11bd9c0f7a812c",
+        "sha256_in_prefix": "432dfa01fc03a7bcb46685d3f7a94a18e1640703d189df076a11bd9c0f7a812c",
+        "size_in_bytes": 42
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "46ec09f029afac2e3467286d7eeceeafbcddbe5057a5b6822a3ad6c184f729b3",
+        "sha256_in_prefix": "46ec09f029afac2e3467286d7eeceeafbcddbe5057a5b6822a3ad6c184f729b3",
+        "size_in_bytes": 453
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "632ab60bd53aeef7019aff170295bc84ebb3c9dc66b6e19bb26cc4cb2d2dad09",
+        "sha256_in_prefix": "632ab60bd53aeef7019aff170295bc84ebb3c9dc66b6e19bb26cc4cb2d2dad09",
+        "size_in_bytes": 460
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "da5c67b0dcfdefbd11da030a650a3868fa5ec0bed126b1cf991989da19dd4b6f",
+        "sha256_in_prefix": "da5c67b0dcfdefbd11da030a650a3868fa5ec0bed126b1cf991989da19dd4b6f",
+        "size_in_bytes": 245
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "d19848f9f4bc046045317f0770b3a8edab4cd9c76cc684db5f8596dd0ddad01b",
+        "sha256_in_prefix": "d19848f9f4bc046045317f0770b3a8edab4cd9c76cc684db5f8596dd0ddad01b",
+        "size_in_bytes": 430
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "9b023c6a126494a2414231d89e8c3b50e6bb721987ca7167b48036f6736e644f",
+        "sha256_in_prefix": "9b023c6a126494a2414231d89e8c3b50e6bb721987ca7167b48036f6736e644f",
+        "size_in_bytes": 956
+      },
+      {
+        "_path": "lib/R/library/triebeard/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "8e66e5e79a231bfab2006f9fdef6d69be05b7666bc13c9c231154dcf204887b2",
+        "sha256_in_prefix": "8e66e5e79a231bfab2006f9fdef6d69be05b7666bc13c9c231154dcf204887b2",
+        "size_in_bytes": 224
+      },
+      {
+        "_path": "lib/R/library/triebeard/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "78464cb59527e00ea92651ebf1bc9c065d511240a3dc76dfdeb8ba11440c4bef",
+        "sha256_in_prefix": "78464cb59527e00ea92651ebf1bc9c065d511240a3dc76dfdeb8ba11440c4bef",
+        "size_in_bytes": 1435
+      },
+      {
+        "_path": "lib/R/library/triebeard/NEWS",
+        "path_type": "hardlink",
+        "sha256": "036e824d0cec4dbd40551dba2aa595983db239a60dafb5a393be3765d0e56c49",
+        "sha256_in_prefix": "036e824d0cec4dbd40551dba2aa595983db239a60dafb5a393be3765d0e56c49",
+        "size_in_bytes": 797
+      },
+      {
+        "_path": "lib/R/library/triebeard/R/triebeard",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/triebeard/R/triebeard.rdb",
+        "path_type": "hardlink",
+        "sha256": "7c2454cf47bc9b199d845c2c0e7b4ef9e728f4b0c40c5f0550d45792dc2e413b",
+        "sha256_in_prefix": "7c2454cf47bc9b199d845c2c0e7b4ef9e728f4b0c40c5f0550d45792dc2e413b",
+        "size_in_bytes": 27769
+      },
+      {
+        "_path": "lib/R/library/triebeard/R/triebeard.rdx",
+        "path_type": "hardlink",
+        "sha256": "d03d9d5d544b3f3f6493163b2c366b3fdab5b60baf3eacc9ffb0c7b1d03b3fc1",
+        "sha256_in_prefix": "d03d9d5d544b3f3f6493163b2c366b3fdab5b60baf3eacc9ffb0c7b1d03b3fc1",
+        "size_in_bytes": 1142
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "4116567f221eaa5e37789a3797c364fd7060536c00c5576915901e18d98c6fbc",
+        "sha256_in_prefix": "4116567f221eaa5e37789a3797c364fd7060536c00c5576915901e18d98c6fbc",
+        "size_in_bytes": 1833
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/r_radix.R",
+        "path_type": "hardlink",
+        "sha256": "797ecd9b73814c16382f3daaef456c67a3d8e9551fac177a4360ec94dac336b6",
+        "sha256_in_prefix": "797ecd9b73814c16382f3daaef456c67a3d8e9551fac177a4360ec94dac336b6",
+        "size_in_bytes": 2863
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/r_radix.Rmd",
+        "path_type": "hardlink",
+        "sha256": "0197a25f11d7b59242ff78be8f94c21d41b6be2dfa6b102200a795dddd62f906",
+        "sha256_in_prefix": "0197a25f11d7b59242ff78be8f94c21d41b6be2dfa6b102200a795dddd62f906",
+        "size_in_bytes": 5088
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/r_radix.html",
+        "path_type": "hardlink",
+        "sha256": "1c5f21a09a9546b07f692e1cc3081abb62443677e795d2172954197b7f1406b4",
+        "sha256_in_prefix": "1c5f21a09a9546b07f692e1cc3081abb62443677e795d2172954197b7f1406b4",
+        "size_in_bytes": 19928
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/rcpp_radix.R",
+        "path_type": "hardlink",
+        "sha256": "dc3f84ea0c38b5673daed56deec71f88f24f4fc84fa45b28d55c7106777de3ad",
+        "sha256_in_prefix": "dc3f84ea0c38b5673daed56deec71f88f24f4fc84fa45b28d55c7106777de3ad",
+        "size_in_bytes": 1391
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/rcpp_radix.Rmd",
+        "path_type": "hardlink",
+        "sha256": "9a43602d189e2a05d9bbadc4e681194b017da4ed278dc8a58306f4aa64d3bdfa",
+        "sha256_in_prefix": "9a43602d189e2a05d9bbadc4e681194b017da4ed278dc8a58306f4aa64d3bdfa",
+        "size_in_bytes": 3312
+      },
+      {
+        "_path": "lib/R/library/triebeard/doc/rcpp_radix.html",
+        "path_type": "hardlink",
+        "sha256": "19f1a9ce3b23ecbabbc47ef757ac886b51e1209bac8a0666ad5c0506b2695822",
+        "sha256_in_prefix": "19f1a9ce3b23ecbabbc47ef757ac886b51e1209bac8a0666ad5c0506b2695822",
+        "size_in_bytes": 12892
+      },
+      {
+        "_path": "lib/R/library/triebeard/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "ce400b775d82d292477655f988e33999ec408444501b5c8063ea5e14b1709558",
+        "sha256_in_prefix": "ce400b775d82d292477655f988e33999ec408444501b5c8063ea5e14b1709558",
+        "size_in_bytes": 235
+      },
+      {
+        "_path": "lib/R/library/triebeard/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "f1c95dd38770d5d42abcbba31cabe0ba10377e954dccad18acea0d29d70f26cf",
+        "sha256_in_prefix": "f1c95dd38770d5d42abcbba31cabe0ba10377e954dccad18acea0d29d70f26cf",
+        "size_in_bytes": 182
+      },
+      {
+        "_path": "lib/R/library/triebeard/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "825a35a0d7cde3734b4bfd7256a5df27fde4c3e36ddcc05d66c8a72a005eba34",
+        "sha256_in_prefix": "825a35a0d7cde3734b4bfd7256a5df27fde4c3e36ddcc05d66c8a72a005eba34",
+        "size_in_bytes": 219
+      },
+      {
+        "_path": "lib/R/library/triebeard/help/triebeard.rdb",
+        "path_type": "hardlink",
+        "sha256": "97a922706ef43c21f544f6b4e362ca359e0a0ea94a0381698b83779ff810e485",
+        "sha256_in_prefix": "97a922706ef43c21f544f6b4e362ca359e0a0ea94a0381698b83779ff810e485",
+        "size_in_bytes": 11088
+      },
+      {
+        "_path": "lib/R/library/triebeard/help/triebeard.rdx",
+        "path_type": "hardlink",
+        "sha256": "88a1e95669bfa556a5d37717ccbd2ac1525665ed3ee63b1f424bc23dd1eb9953",
+        "sha256_in_prefix": "88a1e95669bfa556a5d37717ccbd2ac1525665ed3ee63b1f424bc23dd1eb9953",
+        "size_in_bytes": 305
+      },
+      {
+        "_path": "lib/R/library/triebeard/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "df016e47024b77da1757cc6d6459858c8607934dbf5c8e668dbd4279e9b369a4",
+        "sha256_in_prefix": "df016e47024b77da1757cc6d6459858c8607934dbf5c8e668dbd4279e9b369a4",
+        "size_in_bytes": 2363
+      },
+      {
+        "_path": "lib/R/library/triebeard/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/triebeard/include/radix.h",
+        "path_type": "hardlink",
+        "sha256": "e24470a222118556590c36bd4038a658f7750a8be446c26dad14751e2b6c6b08",
+        "sha256_in_prefix": "e24470a222118556590c36bd4038a658f7750a8be446c26dad14751e2b6c6b08",
+        "size_in_bytes": 32
+      },
+      {
+        "_path": "lib/R/library/triebeard/include/radix/radix_tree.hpp",
+        "path_type": "hardlink",
+        "sha256": "9e2dabc0d1a4b209cd879a0c50c3165de88743b38f9dcf3bf4a9ce4ffa3f4389",
+        "sha256_in_prefix": "9e2dabc0d1a4b209cd879a0c50c3165de88743b38f9dcf3bf4a9ce4ffa3f4389",
+        "size_in_bytes": 12412
+      },
+      {
+        "_path": "lib/R/library/triebeard/include/radix/radix_tree_it.hpp",
+        "path_type": "hardlink",
+        "sha256": "26ae07562940eef246ee3c5fd4b0e739f8744c3f0ed8586210f1223053c98000",
+        "sha256_in_prefix": "26ae07562940eef246ee3c5fd4b0e739f8744c3f0ed8586210f1223053c98000",
+        "size_in_bytes": 3058
+      },
+      {
+        "_path": "lib/R/library/triebeard/include/radix/radix_tree_node.hpp",
+        "path_type": "hardlink",
+        "sha256": "6894f4228034763d830136e3632f68df84981e9d242269dbfae7865176f0663e",
+        "sha256_in_prefix": "6894f4228034763d830136e3632f68df84981e9d242269dbfae7865176f0663e",
+        "size_in_bytes": 1302
+      },
+      {
+        "_path": "lib/R/library/triebeard/libs/triebeard.so",
+        "path_type": "hardlink",
+        "sha256": "0352545113d65a0f4ede4211f73ff060586f1c34a7998599e816e646f2dc1d50",
+        "sha256_in_prefix": "0352545113d65a0f4ede4211f73ff060586f1c34a7998599e816e646f2dc1d50",
+        "size_in_bytes": 354224
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "6fbc2c6e504c09d48693f730239e207ca55e4863190b1a6460a3810b5dd17798",
+  "size": 175733,
+  "subdir": "linux-64",
+  "timestamp": 1621801452154,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-triebeard-0.3.0-r41h9c3ff4c_1003.tar.bz2",
+  "version": "0.3.0"
+}

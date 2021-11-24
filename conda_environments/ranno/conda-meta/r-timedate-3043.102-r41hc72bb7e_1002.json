@@ -1,0 +1,342 @@
+{
+  "build": "r41hc72bb7e_1002",
+  "build_number": 1002,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-timedate-3043.102-r41hc72bb7e_1002",
+  "features": "",
+  "files": [
+    "lib/R/library/timeDate/COPYRIGHT.html",
+    "lib/R/library/timeDate/DESCRIPTION",
+    "lib/R/library/timeDate/INDEX",
+    "lib/R/library/timeDate/Meta/Rd.rds",
+    "lib/R/library/timeDate/Meta/features.rds",
+    "lib/R/library/timeDate/Meta/hsearch.rds",
+    "lib/R/library/timeDate/Meta/links.rds",
+    "lib/R/library/timeDate/Meta/nsInfo.rds",
+    "lib/R/library/timeDate/Meta/package.rds",
+    "lib/R/library/timeDate/NAMESPACE",
+    "lib/R/library/timeDate/R/timeDate",
+    "lib/R/library/timeDate/R/timeDate.rdb",
+    "lib/R/library/timeDate/R/timeDate.rdx",
+    "lib/R/library/timeDate/help/AnIndex",
+    "lib/R/library/timeDate/help/aliases.rds",
+    "lib/R/library/timeDate/help/paths.rds",
+    "lib/R/library/timeDate/help/timeDate.rdb",
+    "lib/R/library/timeDate/help/timeDate.rdx",
+    "lib/R/library/timeDate/html/00Index.html",
+    "lib/R/library/timeDate/html/R.css",
+    "lib/R/library/timeDate/unitTests/Makefile",
+    "lib/R/library/timeDate/unitTests/runTests.R",
+    "lib/R/library/timeDate/unitTests/runit.AAA.R",
+    "lib/R/library/timeDate/unitTests/runit.Class.R",
+    "lib/R/library/timeDate/unitTests/runit.Coercion.R",
+    "lib/R/library/timeDate/unitTests/runit.DaylightSavingTime.R",
+    "lib/R/library/timeDate/unitTests/runit.FinCenter.R",
+    "lib/R/library/timeDate/unitTests/runit.HolidayCalendars.R",
+    "lib/R/library/timeDate/unitTests/runit.HolidayDates.R",
+    "lib/R/library/timeDate/unitTests/runit.MathOps.R",
+    "lib/R/library/timeDate/unitTests/runit.SpecialDates.R",
+    "lib/R/library/timeDate/unitTests/runit.Subsets.R",
+    "lib/R/library/timeDate/unitTests/runit.ZZZ.R",
+    "lib/R/library/timeDate/unitTests/runit.dayOfWeek.R",
+    "lib/R/library/timeDate/unitTests/runit.dayOfYear.R",
+    "lib/R/library/timeDate/unitTests/runit.isWeekday.R",
+    "lib/R/library/timeDate/unitTests/runit.isWeekend.R",
+    "lib/R/library/timeDate/unitTests/runit.seq.R"
+  ],
+  "fn": "r-timedate-3043.102-r41hc72bb7e_1002.tar.bz2",
+  "license": "GPL (>= 2)",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-timedate-3043.102-r41hc72bb7e_1002",
+    "type": 1
+  },
+  "md5": "fe1fbe20eedc64ffbdc3aa6841dfadf5",
+  "name": "r-timedate",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-timedate-3043.102-r41hc72bb7e_1002.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/timeDate/COPYRIGHT.html",
+        "path_type": "hardlink",
+        "sha256": "0a41739c1648c8ad3bac9f1dbcd157b7ee6d55df42deee6d40d401729ec913da",
+        "sha256_in_prefix": "0a41739c1648c8ad3bac9f1dbcd157b7ee6d55df42deee6d40d401729ec913da",
+        "size_in_bytes": 8457
+      },
+      {
+        "_path": "lib/R/library/timeDate/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "0638b8d796be553577169f34c1899985ce32d3835b9daed6dcf17942cd76fe07",
+        "sha256_in_prefix": "0638b8d796be553577169f34c1899985ce32d3835b9daed6dcf17942cd76fe07",
+        "size_in_bytes": 1192
+      },
+      {
+        "_path": "lib/R/library/timeDate/INDEX",
+        "path_type": "hardlink",
+        "sha256": "7bc1a544edefb87e851048ab52abafdbcad8d42e924c6938d98958dab62dd462",
+        "sha256_in_prefix": "7bc1a544edefb87e851048ab52abafdbcad8d42e924c6938d98958dab62dd462",
+        "size_in_bytes": 2981
+      },
+      {
+        "_path": "lib/R/library/timeDate/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "ca0a694291a255e264fb0597ada941003705a6d304a97ca80ca2e621a78ea126",
+        "sha256_in_prefix": "ca0a694291a255e264fb0597ada941003705a6d304a97ca80ca2e621a78ea126",
+        "size_in_bytes": 6444
+      },
+      {
+        "_path": "lib/R/library/timeDate/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/timeDate/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "676f8576fbff95bf160aaf06f353343d5c669f38301556bdd50a6d96127fe4df",
+        "sha256_in_prefix": "676f8576fbff95bf160aaf06f353343d5c669f38301556bdd50a6d96127fe4df",
+        "size_in_bytes": 6580
+      },
+      {
+        "_path": "lib/R/library/timeDate/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "224f70a96fe5c7630956f1a2f2a7907c72accad0b437109ea9e6cbc5882d6e55",
+        "sha256_in_prefix": "224f70a96fe5c7630956f1a2f2a7907c72accad0b437109ea9e6cbc5882d6e55",
+        "size_in_bytes": 5810
+      },
+      {
+        "_path": "lib/R/library/timeDate/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "702fff4d39643856e9f3315c2397fc3c0e73878c7db0fe8a63935fa07b40d6de",
+        "sha256_in_prefix": "702fff4d39643856e9f3315c2397fc3c0e73878c7db0fe8a63935fa07b40d6de",
+        "size_in_bytes": 4745
+      },
+      {
+        "_path": "lib/R/library/timeDate/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "83f2b11096cda8d2318fa8ecde4640a5b4f47ca2aac5e22699e18e15eb63f106",
+        "sha256_in_prefix": "83f2b11096cda8d2318fa8ecde4640a5b4f47ca2aac5e22699e18e15eb63f106",
+        "size_in_bytes": 1149
+      },
+      {
+        "_path": "lib/R/library/timeDate/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "5daf7ba543c6effdb365e2f8eaaf6e676dc05709ed5d995dbc419694165589f6",
+        "sha256_in_prefix": "5daf7ba543c6effdb365e2f8eaaf6e676dc05709ed5d995dbc419694165589f6",
+        "size_in_bytes": 14390
+      },
+      {
+        "_path": "lib/R/library/timeDate/R/timeDate",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/timeDate/R/timeDate.rdb",
+        "path_type": "hardlink",
+        "sha256": "5dbf496f83755e7515e9f83010e2ff71cfec2acd0e69c105ae9c97b155ac0c94",
+        "sha256_in_prefix": "5dbf496f83755e7515e9f83010e2ff71cfec2acd0e69c105ae9c97b155ac0c94",
+        "size_in_bytes": 1483844
+      },
+      {
+        "_path": "lib/R/library/timeDate/R/timeDate.rdx",
+        "path_type": "hardlink",
+        "sha256": "ab63b0c2078d17c939cb8da740e787efd23a335312e4a9491d87aa249086290e",
+        "sha256_in_prefix": "ab63b0c2078d17c939cb8da740e787efd23a335312e4a9491d87aa249086290e",
+        "size_in_bytes": 10660
+      },
+      {
+        "_path": "lib/R/library/timeDate/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "b913d2f91cf669fe0e8b418121b6cc0b55e5cf6e05fa00daf3178abe6f19896b",
+        "sha256_in_prefix": "b913d2f91cf669fe0e8b418121b6cc0b55e5cf6e05fa00daf3178abe6f19896b",
+        "size_in_bytes": 24314
+      },
+      {
+        "_path": "lib/R/library/timeDate/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "c342be0b8c65f894b7c356387203049590e205fcc898d6174f62e128b0f4abbf",
+        "sha256_in_prefix": "c342be0b8c65f894b7c356387203049590e205fcc898d6174f62e128b0f4abbf",
+        "size_in_bytes": 5851
+      },
+      {
+        "_path": "lib/R/library/timeDate/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "14b8e3b5eb2e9e9e0189d66b73732a443fda91e362e2fa34f7d64ede78810bc9",
+        "sha256_in_prefix": "14b8e3b5eb2e9e9e0189d66b73732a443fda91e362e2fa34f7d64ede78810bc9",
+        "size_in_bytes": 715
+      },
+      {
+        "_path": "lib/R/library/timeDate/help/timeDate.rdb",
+        "path_type": "hardlink",
+        "sha256": "2e632cec308604fe050b754e5453667e0a4f2f369ff7ed5930143df47bdcf73d",
+        "sha256_in_prefix": "2e632cec308604fe050b754e5453667e0a4f2f369ff7ed5930143df47bdcf73d",
+        "size_in_bytes": 170794
+      },
+      {
+        "_path": "lib/R/library/timeDate/help/timeDate.rdx",
+        "path_type": "hardlink",
+        "sha256": "ac32995cdeda04f5befaac042d42af8616b15c44ae5aa8f47bb1a0b4b34a5f65",
+        "sha256_in_prefix": "ac32995cdeda04f5befaac042d42af8616b15c44ae5aa8f47bb1a0b4b34a5f65",
+        "size_in_bytes": 1538
+      },
+      {
+        "_path": "lib/R/library/timeDate/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "535497abc43b8f3f16841a4dbf2333338f7563a4fbc07a2b222a6c677b56c42c",
+        "sha256_in_prefix": "535497abc43b8f3f16841a4dbf2333338f7563a4fbc07a2b222a6c677b56c42c",
+        "size_in_bytes": 90908
+      },
+      {
+        "_path": "lib/R/library/timeDate/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/Makefile",
+        "path_type": "hardlink",
+        "sha256": "c02c46da0adc1595cf02c587d87d783d87b65ffc975a9d01004ee1dbef6bdf21",
+        "sha256_in_prefix": "c02c46da0adc1595cf02c587d87d783d87b65ffc975a9d01004ee1dbef6bdf21",
+        "size_in_bytes": 273
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runTests.R",
+        "path_type": "hardlink",
+        "sha256": "0d5c759a8c646cfec8c6bb89b956fd49d390ed23bc87afbaea026dc91f520394",
+        "sha256_in_prefix": "0d5c759a8c646cfec8c6bb89b956fd49d390ed23bc87afbaea026dc91f520394",
+        "size_in_bytes": 2392
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.AAA.R",
+        "path_type": "hardlink",
+        "sha256": "85503850540a2ded8c5af1457e2ffbe9a84142145f330325cc09080e23876a3e",
+        "sha256_in_prefix": "85503850540a2ded8c5af1457e2ffbe9a84142145f330325cc09080e23876a3e",
+        "size_in_bytes": 138
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.Class.R",
+        "path_type": "hardlink",
+        "sha256": "d99f461731bb7c8b3521a88e2ae817ad775c3c08f21599d86ce61488920b76cb",
+        "sha256_in_prefix": "d99f461731bb7c8b3521a88e2ae817ad775c3c08f21599d86ce61488920b76cb",
+        "size_in_bytes": 20249
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.Coercion.R",
+        "path_type": "hardlink",
+        "sha256": "f0f73525777c98eefc050b58febd5a2185a8e1dbddd51f72a84831195d3599aa",
+        "sha256_in_prefix": "f0f73525777c98eefc050b58febd5a2185a8e1dbddd51f72a84831195d3599aa",
+        "size_in_bytes": 5057
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.DaylightSavingTime.R",
+        "path_type": "hardlink",
+        "sha256": "72dcbfe0a180f1bf49084c59178173766fcb951f32fefabb10bec83b8969668a",
+        "sha256_in_prefix": "72dcbfe0a180f1bf49084c59178173766fcb951f32fefabb10bec83b8969668a",
+        "size_in_bytes": 10110
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.FinCenter.R",
+        "path_type": "hardlink",
+        "sha256": "ddc7917d7c4a490d056afcc81de08d58e2c77499c9e609f3fbd148df62f82cf1",
+        "sha256_in_prefix": "ddc7917d7c4a490d056afcc81de08d58e2c77499c9e609f3fbd148df62f82cf1",
+        "size_in_bytes": 2457
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.HolidayCalendars.R",
+        "path_type": "hardlink",
+        "sha256": "918d561939d8738ceb19b073b815af711253810c5e48ebefcf3e372e00f1e779",
+        "sha256_in_prefix": "918d561939d8738ceb19b073b815af711253810c5e48ebefcf3e372e00f1e779",
+        "size_in_bytes": 10180
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.HolidayDates.R",
+        "path_type": "hardlink",
+        "sha256": "5bc84cee040da20343ca6c0964a241dfa4f8232e5d78a675a690ac6add46a184",
+        "sha256_in_prefix": "5bc84cee040da20343ca6c0964a241dfa4f8232e5d78a675a690ac6add46a184",
+        "size_in_bytes": 2374
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.MathOps.R",
+        "path_type": "hardlink",
+        "sha256": "a85bfb45c247572de8b95ecfc74002f51947f561cd5ab0a4226dcd649d030c0d",
+        "sha256_in_prefix": "a85bfb45c247572de8b95ecfc74002f51947f561cd5ab0a4226dcd649d030c0d",
+        "size_in_bytes": 5894
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.SpecialDates.R",
+        "path_type": "hardlink",
+        "sha256": "6b9c45663a2f2844dd32857c9277c8d12e224aa2dee59e48e9fd527762f38c42",
+        "sha256_in_prefix": "6b9c45663a2f2844dd32857c9277c8d12e224aa2dee59e48e9fd527762f38c42",
+        "size_in_bytes": 4701
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.Subsets.R",
+        "path_type": "hardlink",
+        "sha256": "eeb3e2f8d30c18d131600a7d4b5a20ced23b151c0723c49461a4bdec6a9b35e5",
+        "sha256_in_prefix": "eeb3e2f8d30c18d131600a7d4b5a20ced23b151c0723c49461a4bdec6a9b35e5",
+        "size_in_bytes": 7831
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.ZZZ.R",
+        "path_type": "hardlink",
+        "sha256": "9e8c57e7ffb8c448cfa3622986f76da52c25adbc91a7686ecc047ca2ece8822e",
+        "sha256_in_prefix": "9e8c57e7ffb8c448cfa3622986f76da52c25adbc91a7686ecc047ca2ece8822e",
+        "size_in_bytes": 169
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.dayOfWeek.R",
+        "path_type": "hardlink",
+        "sha256": "fbfbb5cd3dc9d46c47875516c95bab02b1772d4b0448974a005532224e7468bc",
+        "sha256_in_prefix": "fbfbb5cd3dc9d46c47875516c95bab02b1772d4b0448974a005532224e7468bc",
+        "size_in_bytes": 1183
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.dayOfYear.R",
+        "path_type": "hardlink",
+        "sha256": "2ff54082d6991f523389287589b98a7e55930084704d03981f8814e7aa555bc5",
+        "sha256_in_prefix": "2ff54082d6991f523389287589b98a7e55930084704d03981f8814e7aa555bc5",
+        "size_in_bytes": 1170
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.isWeekday.R",
+        "path_type": "hardlink",
+        "sha256": "86bc8bf272de3c814625bda19837ecf8f2b92c9749048ea471471ab7c22c8840",
+        "sha256_in_prefix": "86bc8bf272de3c814625bda19837ecf8f2b92c9749048ea471471ab7c22c8840",
+        "size_in_bytes": 1321
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.isWeekend.R",
+        "path_type": "hardlink",
+        "sha256": "0a7c59310121cef0c7f95b9780ef6027a9f9239d64ad086fd52a4839b92ea369",
+        "sha256_in_prefix": "0a7c59310121cef0c7f95b9780ef6027a9f9239d64ad086fd52a4839b92ea369",
+        "size_in_bytes": 1327
+      },
+      {
+        "_path": "lib/R/library/timeDate/unitTests/runit.seq.R",
+        "path_type": "hardlink",
+        "sha256": "e66b8b8f8c764d6421d6d0d1e0fe4f2c5d31cb9003269cdd94433a1599a847a9",
+        "sha256_in_prefix": "e66b8b8f8c764d6421d6d0d1e0fe4f2c5d31cb9003269cdd94433a1599a847a9",
+        "size_in_bytes": 4236
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "9f344a0591b4d565bcd770b1004b17fa876ab1af70ea60e7563f778525688f50",
+  "size": 1627309,
+  "subdir": "noarch",
+  "timestamp": 1621844592902,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-timedate-3043.102-r41hc72bb7e_1002.tar.bz2",
+  "version": "3043.102"
+}

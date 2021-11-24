@@ -1,0 +1,299 @@
+{
+  "build": "r41hcfec24a_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.4.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-class",
+    "r-mass",
+    "r-nnet",
+    "r-prodlim",
+    "r-rpart >=3.1_8",
+    "r-survival"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-ipred-0.9_12-r41hcfec24a_0",
+  "features": "",
+  "files": [
+    "lib/R/library/ipred/COPYRIGHTS",
+    "lib/R/library/ipred/DESCRIPTION",
+    "lib/R/library/ipred/INDEX",
+    "lib/R/library/ipred/Meta/Rd.rds",
+    "lib/R/library/ipred/Meta/data.rds",
+    "lib/R/library/ipred/Meta/features.rds",
+    "lib/R/library/ipred/Meta/hsearch.rds",
+    "lib/R/library/ipred/Meta/links.rds",
+    "lib/R/library/ipred/Meta/nsInfo.rds",
+    "lib/R/library/ipred/Meta/package.rds",
+    "lib/R/library/ipred/Meta/vignette.rds",
+    "lib/R/library/ipred/NAMESPACE",
+    "lib/R/library/ipred/NEWS",
+    "lib/R/library/ipred/R/ipred",
+    "lib/R/library/ipred/R/ipred.rdb",
+    "lib/R/library/ipred/R/ipred.rdx",
+    "lib/R/library/ipred/data/DLBCL.rda",
+    "lib/R/library/ipred/data/GlaucomaMVF.rda",
+    "lib/R/library/ipred/data/Smoking.rda",
+    "lib/R/library/ipred/data/dystrophy.rda",
+    "lib/R/library/ipred/doc/index.html",
+    "lib/R/library/ipred/doc/ipred-examples.R",
+    "lib/R/library/ipred/doc/ipred-examples.Rnw",
+    "lib/R/library/ipred/doc/ipred-examples.pdf",
+    "lib/R/library/ipred/help/AnIndex",
+    "lib/R/library/ipred/help/aliases.rds",
+    "lib/R/library/ipred/help/ipred.rdb",
+    "lib/R/library/ipred/help/ipred.rdx",
+    "lib/R/library/ipred/help/paths.rds",
+    "lib/R/library/ipred/html/00Index.html",
+    "lib/R/library/ipred/html/R.css",
+    "lib/R/library/ipred/libs/ipred.so"
+  ],
+  "fn": "r-ipred-0.9_12-r41hcfec24a_0.tar.bz2",
+  "license": "GPL-2.0-or-later",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-ipred-0.9_12-r41hcfec24a_0",
+    "type": 1
+  },
+  "md5": "ffcd9f0377cc4fb3024f6112e9df5b4a",
+  "name": "r-ipred",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-ipred-0.9_12-r41hcfec24a_0.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/ipred/COPYRIGHTS",
+        "path_type": "hardlink",
+        "sha256": "764b92dec830225f90c87ad480cc4a17787d31f3bf0f78b87dbc4e2083f88ceb",
+        "sha256_in_prefix": "764b92dec830225f90c87ad480cc4a17787d31f3bf0f78b87dbc4e2083f88ceb",
+        "size_in_bytes": 573
+      },
+      {
+        "_path": "lib/R/library/ipred/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "5f45de5b028f22d6e88f1b916b5684ff69e51713efc2312179225cf60bc7c31e",
+        "sha256_in_prefix": "5f45de5b028f22d6e88f1b916b5684ff69e51713efc2312179225cf60bc7c31e",
+        "size_in_bytes": 1171
+      },
+      {
+        "_path": "lib/R/library/ipred/INDEX",
+        "path_type": "hardlink",
+        "sha256": "5bfabe0ad233b77d4a6aafb61fc4532bfe481e451f2516a94e1c046378fb707a",
+        "sha256_in_prefix": "5bfabe0ad233b77d4a6aafb61fc4532bfe481e451f2516a94e1c046378fb707a",
+        "size_in_bytes": 1747
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "0e8d67712b39a377c8091105003d9de9d9a22653a4c8237fbafdcd5eb2fcc5c8",
+        "sha256_in_prefix": "0e8d67712b39a377c8091105003d9de9d9a22653a4c8237fbafdcd5eb2fcc5c8",
+        "size_in_bytes": 1425
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "7fdd508e78ed25ba02566363bb8de996643bf235e753af5d207a44603b2f5e83",
+        "sha256_in_prefix": "7fdd508e78ed25ba02566363bb8de996643bf235e753af5d207a44603b2f5e83",
+        "size_in_bytes": 200
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "sha256_in_prefix": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "size_in_bytes": 123
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "1c911c90f5cfd0cf78c58871b2c1ee85681f46342394df89f30697073dd57714",
+        "sha256_in_prefix": "1c911c90f5cfd0cf78c58871b2c1ee85681f46342394df89f30697073dd57714",
+        "size_in_bytes": 1419
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "762f1c123818d5302b8ba60fa9c5f97db949cef6c8f72054146ffdd7575926bc",
+        "sha256_in_prefix": "762f1c123818d5302b8ba60fa9c5f97db949cef6c8f72054146ffdd7575926bc",
+        "size_in_bytes": 766
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "b247fd5d0f767607465c23afe04802d04220dadca3e0f39e8d2c27cfa1cefbf6",
+        "sha256_in_prefix": "b247fd5d0f767607465c23afe04802d04220dadca3e0f39e8d2c27cfa1cefbf6",
+        "size_in_bytes": 805
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "17f45b452fc4d35bc0afea216a4a0fa666a2ec362604762e4c91ee357058b2e6",
+        "sha256_in_prefix": "17f45b452fc4d35bc0afea216a4a0fa666a2ec362604762e4c91ee357058b2e6",
+        "size_in_bytes": 1089
+      },
+      {
+        "_path": "lib/R/library/ipred/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "114f97eed8e25e73ceb88c5da04058f1a5a5ce231e58b8e41a3e250c03f792ab",
+        "sha256_in_prefix": "114f97eed8e25e73ceb88c5da04058f1a5a5ce231e58b8e41a3e250c03f792ab",
+        "size_in_bytes": 236
+      },
+      {
+        "_path": "lib/R/library/ipred/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "7d8f8675b44a1ed7ecb95c2704ff53b0744bc36652294af97b0d644e82675da8",
+        "sha256_in_prefix": "7d8f8675b44a1ed7ecb95c2704ff53b0744bc36652294af97b0d644e82675da8",
+        "size_in_bytes": 2225
+      },
+      {
+        "_path": "lib/R/library/ipred/NEWS",
+        "path_type": "hardlink",
+        "sha256": "4455ffff2fe2bcc9ef7eedb94fa2560d6ee0f26776be8212e4564ee95c660213",
+        "sha256_in_prefix": "4455ffff2fe2bcc9ef7eedb94fa2560d6ee0f26776be8212e4564ee95c660213",
+        "size_in_bytes": 6829
+      },
+      {
+        "_path": "lib/R/library/ipred/R/ipred",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/ipred/R/ipred.rdb",
+        "path_type": "hardlink",
+        "sha256": "f18620b1c53016cd23a20abdf4b5bcec612c975412fc3806f41708069a20743d",
+        "sha256_in_prefix": "f18620b1c53016cd23a20abdf4b5bcec612c975412fc3806f41708069a20743d",
+        "size_in_bytes": 146998
+      },
+      {
+        "_path": "lib/R/library/ipred/R/ipred.rdx",
+        "path_type": "hardlink",
+        "sha256": "5e3a362fb764c05db952ec8fec187efcd405bcb10f0fa0e6a1272d4319af926d",
+        "sha256_in_prefix": "5e3a362fb764c05db952ec8fec187efcd405bcb10f0fa0e6a1272d4319af926d",
+        "size_in_bytes": 1267
+      },
+      {
+        "_path": "lib/R/library/ipred/data/DLBCL.rda",
+        "path_type": "hardlink",
+        "sha256": "98cc34fba7aeda0a073d766b2c7e42ffd3619c1676d6d6dcca842bae010e4589",
+        "sha256_in_prefix": "98cc34fba7aeda0a073d766b2c7e42ffd3619c1676d6d6dcca842bae010e4589",
+        "size_in_bytes": 4067
+      },
+      {
+        "_path": "lib/R/library/ipred/data/GlaucomaMVF.rda",
+        "path_type": "hardlink",
+        "sha256": "04c37ee05b6590fbd8075731f88cf5956986e28c5fc5b7a6c4a926106ae82ce1",
+        "sha256_in_prefix": "04c37ee05b6590fbd8075731f88cf5956986e28c5fc5b7a6c4a926106ae82ce1",
+        "size_in_bytes": 19144
+      },
+      {
+        "_path": "lib/R/library/ipred/data/Smoking.rda",
+        "path_type": "hardlink",
+        "sha256": "cb7c8ca2f430e746fb40159a1866b29ad6aa387bf44c997dbb402cea05fba7e1",
+        "sha256_in_prefix": "cb7c8ca2f430e746fb40159a1866b29ad6aa387bf44c997dbb402cea05fba7e1",
+        "size_in_bytes": 1314
+      },
+      {
+        "_path": "lib/R/library/ipred/data/dystrophy.rda",
+        "path_type": "hardlink",
+        "sha256": "872c4337546c8a521211c07e9672bc29340aaad9de1e38d84f7f130a84b76f87",
+        "sha256_in_prefix": "872c4337546c8a521211c07e9672bc29340aaad9de1e38d84f7f130a84b76f87",
+        "size_in_bytes": 3173
+      },
+      {
+        "_path": "lib/R/library/ipred/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "925046d0c8b6d03a57f94892d8c1df8a4f0243e02fbb87327cf533e64ab14ace",
+        "sha256_in_prefix": "925046d0c8b6d03a57f94892d8c1df8a4f0243e02fbb87327cf533e64ab14ace",
+        "size_in_bytes": 1505
+      },
+      {
+        "_path": "lib/R/library/ipred/doc/ipred-examples.R",
+        "path_type": "hardlink",
+        "sha256": "b39483b95d822270da89f10c847de7f4ab950a708b3d6445e219c8f2207039d8",
+        "sha256_in_prefix": "b39483b95d822270da89f10c847de7f4ab950a708b3d6445e219c8f2207039d8",
+        "size_in_bytes": 4748
+      },
+      {
+        "_path": "lib/R/library/ipred/doc/ipred-examples.Rnw",
+        "path_type": "hardlink",
+        "sha256": "bffeed438b0e87aa47186a15b2104dfd485cd02c9c5ab74263d48cb6302e91c7",
+        "sha256_in_prefix": "bffeed438b0e87aa47186a15b2104dfd485cd02c9c5ab74263d48cb6302e91c7",
+        "size_in_bytes": 17860
+      },
+      {
+        "_path": "lib/R/library/ipred/doc/ipred-examples.pdf",
+        "path_type": "hardlink",
+        "sha256": "650dfafa99412601819a48dc51b34d15bad59768c29c7f89e6ed1afd15c6adc2",
+        "sha256_in_prefix": "650dfafa99412601819a48dc51b34d15bad59768c29c7f89e6ed1afd15c6adc2",
+        "size_in_bytes": 81962
+      },
+      {
+        "_path": "lib/R/library/ipred/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "deb97efb4bf86ea8de437d5b23db4fe58c4e7bc094f611105b80511e26ace20d",
+        "sha256_in_prefix": "deb97efb4bf86ea8de437d5b23db4fe58c4e7bc094f611105b80511e26ace20d",
+        "size_in_bytes": 1827
+      },
+      {
+        "_path": "lib/R/library/ipred/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "e7c6c7b4abe2e172cea0f5bd26d5a7234dc37a64d24ec335ff8c7c80f0272ea4",
+        "sha256_in_prefix": "e7c6c7b4abe2e172cea0f5bd26d5a7234dc37a64d24ec335ff8c7c80f0272ea4",
+        "size_in_bytes": 600
+      },
+      {
+        "_path": "lib/R/library/ipred/help/ipred.rdb",
+        "path_type": "hardlink",
+        "sha256": "82a55c0a6814cbfde5d717ffa0c8176dcf9fc7e93d6687ad8cf7680e29f16d51",
+        "sha256_in_prefix": "82a55c0a6814cbfde5d717ffa0c8176dcf9fc7e93d6687ad8cf7680e29f16d51",
+        "size_in_bytes": 104441
+      },
+      {
+        "_path": "lib/R/library/ipred/help/ipred.rdx",
+        "path_type": "hardlink",
+        "sha256": "f02b7dbc7f15f1fdc1a1fadd9bd721f61eb4c02858d56c3321cc6a7f1c59e2d5",
+        "sha256_in_prefix": "f02b7dbc7f15f1fdc1a1fadd9bd721f61eb4c02858d56c3321cc6a7f1c59e2d5",
+        "size_in_bytes": 841
+      },
+      {
+        "_path": "lib/R/library/ipred/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "49344d4e30c99ebc84b4a338cb254b500bb06e98bb76b919d4f85b24c2ee7961",
+        "sha256_in_prefix": "49344d4e30c99ebc84b4a338cb254b500bb06e98bb76b919d4f85b24c2ee7961",
+        "size_in_bytes": 418
+      },
+      {
+        "_path": "lib/R/library/ipred/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "50a29b9b56091b778c0096f15dd56da5590eeef548e3a73efef1f82675fd963e",
+        "sha256_in_prefix": "50a29b9b56091b778c0096f15dd56da5590eeef548e3a73efef1f82675fd963e",
+        "size_in_bytes": 10424
+      },
+      {
+        "_path": "lib/R/library/ipred/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/ipred/libs/ipred.so",
+        "path_type": "hardlink",
+        "sha256": "1f7d9794dff23bf681f8465444f82bb17d5644840da363213ba9f7368e7bea5f",
+        "sha256_in_prefix": "1f7d9794dff23bf681f8465444f82bb17d5644840da363213ba9f7368e7bea5f",
+        "size_in_bytes": 15672
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "aa529bb792d06f815aa6639d0bce67c4d14ff69fba643a5ea2142647bf51de26",
+  "size": 405291,
+  "subdir": "linux-64",
+  "timestamp": 1631711772352,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-ipred-0.9_12-r41hcfec24a_0.tar.bz2",
+  "version": "0.9_12"
+}

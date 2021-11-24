@@ -1,0 +1,231 @@
+{
+  "build": "r41h859d828_1004",
+  "build_number": 1004,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libgfortran-ng",
+    "libgfortran5 >=9.3.0",
+    "r-base >=4.1,<4.2.0a0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-randomforest-4.6_14-r41h859d828_1004",
+  "features": "",
+  "files": [
+    "lib/R/library/randomForest/CITATION",
+    "lib/R/library/randomForest/DESCRIPTION",
+    "lib/R/library/randomForest/INDEX",
+    "lib/R/library/randomForest/Meta/Rd.rds",
+    "lib/R/library/randomForest/Meta/data.rds",
+    "lib/R/library/randomForest/Meta/features.rds",
+    "lib/R/library/randomForest/Meta/hsearch.rds",
+    "lib/R/library/randomForest/Meta/links.rds",
+    "lib/R/library/randomForest/Meta/nsInfo.rds",
+    "lib/R/library/randomForest/Meta/package.rds",
+    "lib/R/library/randomForest/NAMESPACE",
+    "lib/R/library/randomForest/NEWS",
+    "lib/R/library/randomForest/R/randomForest",
+    "lib/R/library/randomForest/R/randomForest.rdb",
+    "lib/R/library/randomForest/R/randomForest.rdx",
+    "lib/R/library/randomForest/data/imports85.rda",
+    "lib/R/library/randomForest/help/AnIndex",
+    "lib/R/library/randomForest/help/aliases.rds",
+    "lib/R/library/randomForest/help/paths.rds",
+    "lib/R/library/randomForest/help/randomForest.rdb",
+    "lib/R/library/randomForest/help/randomForest.rdx",
+    "lib/R/library/randomForest/html/00Index.html",
+    "lib/R/library/randomForest/html/R.css",
+    "lib/R/library/randomForest/libs/randomForest.so"
+  ],
+  "fn": "r-randomforest-4.6_14-r41h859d828_1004.tar.bz2",
+  "license": "GPL-2.0-or-later",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-randomforest-4.6_14-r41h859d828_1004",
+    "type": 1
+  },
+  "md5": "299b6d3074e165b1dc030c85831429fd",
+  "name": "r-randomforest",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-randomforest-4.6_14-r41h859d828_1004.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/randomForest/CITATION",
+        "path_type": "hardlink",
+        "sha256": "da26223c1a77cb42a9c21839d21c2faadf6491048b459dc56f88e554f8cc65fd",
+        "sha256_in_prefix": "da26223c1a77cb42a9c21839d21c2faadf6491048b459dc56f88e554f8cc65fd",
+        "size_in_bytes": 709
+      },
+      {
+        "_path": "lib/R/library/randomForest/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "795fd2b2190f0873c2a8db8c7769b6242ae228d78f9b4f7d1c23d0824b812451",
+        "sha256_in_prefix": "795fd2b2190f0873c2a8db8c7769b6242ae228d78f9b4f7d1c23d0824b812451",
+        "size_in_bytes": 759
+      },
+      {
+        "_path": "lib/R/library/randomForest/INDEX",
+        "path_type": "hardlink",
+        "sha256": "8455c46e82c6d0af53e471d70e81510564ffba9d97d0dac1ed900c704252a593",
+        "sha256_in_prefix": "8455c46e82c6d0af53e471d70e81510564ffba9d97d0dac1ed900c704252a593",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "969bd1633ba49a0a45067043bb0d7ed908aabc538982772830ad95bc13de97cf",
+        "sha256_in_prefix": "969bd1633ba49a0a45067043bb0d7ed908aabc538982772830ad95bc13de97cf",
+        "size_in_bytes": 1133
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "2767fdcb399ae8674a07053c8ac309ee98a60ec28f8b36bdea1469cefe970679",
+        "sha256_in_prefix": "2767fdcb399ae8674a07053c8ac309ee98a60ec28f8b36bdea1469cefe970679",
+        "size_in_bytes": 107
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "d24ef380c0d4ab25bae8a4e0324439aaa58ca0e802c6d78ecbeb520a3c542d61",
+        "sha256_in_prefix": "d24ef380c0d4ab25bae8a4e0324439aaa58ca0e802c6d78ecbeb520a3c542d61",
+        "size_in_bytes": 1231
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "1df8f6c9d98405bea1c253009dfbabcbd3acece5a75233f8c647e4d39681120c",
+        "sha256_in_prefix": "1df8f6c9d98405bea1c253009dfbabcbd3acece5a75233f8c647e4d39681120c",
+        "size_in_bytes": 513
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "747380c536ce1508b20341a1bc409323ac63f03f739f30f3649a0ab66b5e20bf",
+        "sha256_in_prefix": "747380c536ce1508b20341a1bc409323ac63f03f739f30f3649a0ab66b5e20bf",
+        "size_in_bytes": 683
+      },
+      {
+        "_path": "lib/R/library/randomForest/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "1904baa5be64afe8a927e5b5ffa64249200360fd12c86fd66364e1656e6265a8",
+        "sha256_in_prefix": "1904baa5be64afe8a927e5b5ffa64249200360fd12c86fd66364e1656e6265a8",
+        "size_in_bytes": 886
+      },
+      {
+        "_path": "lib/R/library/randomForest/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "fa0e17e2195c8785238a22d8dd318f73ab07e2639e28c686b94204c1bce23e50",
+        "sha256_in_prefix": "fa0e17e2195c8785238a22d8dd318f73ab07e2639e28c686b94204c1bce23e50",
+        "size_in_bytes": 1198
+      },
+      {
+        "_path": "lib/R/library/randomForest/NEWS",
+        "path_type": "hardlink",
+        "sha256": "a4345cc3f1c54d8fcbea6966f97189269c4948c676805251fc6b62da798afcc4",
+        "sha256_in_prefix": "a4345cc3f1c54d8fcbea6966f97189269c4948c676805251fc6b62da798afcc4",
+        "size_in_bytes": 19764
+      },
+      {
+        "_path": "lib/R/library/randomForest/R/randomForest",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/randomForest/R/randomForest.rdb",
+        "path_type": "hardlink",
+        "sha256": "1743901d747ef3748bda5fc8fd9defb2329c31591e53e75fc8ea92359cf483c2",
+        "sha256_in_prefix": "1743901d747ef3748bda5fc8fd9defb2329c31591e53e75fc8ea92359cf483c2",
+        "size_in_bytes": 95488
+      },
+      {
+        "_path": "lib/R/library/randomForest/R/randomForest.rdx",
+        "path_type": "hardlink",
+        "sha256": "2e02a5bbebdb3f1624c5f4454873776e342533f11ea96dec2de10d50545495ff",
+        "sha256_in_prefix": "2e02a5bbebdb3f1624c5f4454873776e342533f11ea96dec2de10d50545495ff",
+        "size_in_bytes": 793
+      },
+      {
+        "_path": "lib/R/library/randomForest/data/imports85.rda",
+        "path_type": "hardlink",
+        "sha256": "039c836709d64521c98109ab9576b537cfe4cabcf5de23185232a62e63f594a8",
+        "sha256_in_prefix": "039c836709d64521c98109ab9576b537cfe4cabcf5de23185232a62e63f594a8",
+        "size_in_bytes": 6133
+      },
+      {
+        "_path": "lib/R/library/randomForest/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "f52e47d4f1bf3019fb2fc9728f0607573661b794a9aa8fab95b1c1fc45dcc987",
+        "sha256_in_prefix": "f52e47d4f1bf3019fb2fc9728f0607573661b794a9aa8fab95b1c1fc45dcc987",
+        "size_in_bytes": 933
+      },
+      {
+        "_path": "lib/R/library/randomForest/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "4a00e1f283bf69389f73912a9162c5273e2b4dfa8a097201e0d8b2bc5ec7029d",
+        "sha256_in_prefix": "4a00e1f283bf69389f73912a9162c5273e2b4dfa8a097201e0d8b2bc5ec7029d",
+        "size_in_bytes": 385
+      },
+      {
+        "_path": "lib/R/library/randomForest/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "643fa8c1c9ae49b47219f761f30c6d8eedc6891cf1825f8e30e73daa2d8f718a",
+        "sha256_in_prefix": "643fa8c1c9ae49b47219f761f30c6d8eedc6891cf1825f8e30e73daa2d8f718a",
+        "size_in_bytes": 351
+      },
+      {
+        "_path": "lib/R/library/randomForest/help/randomForest.rdb",
+        "path_type": "hardlink",
+        "sha256": "27916fe7abff971e92ec6e021b5204a876441433ba11b5e14e279a8cd49bd9bb",
+        "sha256_in_prefix": "27916fe7abff971e92ec6e021b5204a876441433ba11b5e14e279a8cd49bd9bb",
+        "size_in_bytes": 68577
+      },
+      {
+        "_path": "lib/R/library/randomForest/help/randomForest.rdx",
+        "path_type": "hardlink",
+        "sha256": "b46b02b3dc058917c47f33750b3c23a586ad8fd662417f379839fb3eee8837ef",
+        "sha256_in_prefix": "b46b02b3dc058917c47f33750b3c23a586ad8fd662417f379839fb3eee8837ef",
+        "size_in_bytes": 621
+      },
+      {
+        "_path": "lib/R/library/randomForest/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "e0513b759ac38f955e6e8d9284110acfd2cc677b5a5a78d0c08f0b34d37f68e1",
+        "sha256_in_prefix": "e0513b759ac38f955e6e8d9284110acfd2cc677b5a5a78d0c08f0b34d37f68e1",
+        "size_in_bytes": 5934
+      },
+      {
+        "_path": "lib/R/library/randomForest/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/randomForest/libs/randomForest.so",
+        "path_type": "hardlink",
+        "sha256": "2655d94dfcc8a02b147167a03b7d18e5322e59ccbbc90ab1824ca5ac5a8d4034",
+        "sha256_in_prefix": "2655d94dfcc8a02b147167a03b7d18e5322e59ccbbc90ab1824ca5ac5a8d4034",
+        "size_in_bytes": 67440
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "1a40c35318e3d9c327032cb216f72282bb96c7a47bc40d0d471c25c010a2c5d5",
+  "size": 242217,
+  "subdir": "linux-64",
+  "timestamp": 1621640652160,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-randomforest-4.6_14-r41h859d828_1004.tar.bz2",
+  "version": "4.6_14"
+}

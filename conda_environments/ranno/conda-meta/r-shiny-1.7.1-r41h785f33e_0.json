@@ -1,0 +1,2122 @@
+{
+  "build": "r41h785f33e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-bslib >=0.3.0",
+    "r-cachem",
+    "r-commonmark >=1.7",
+    "r-crayon",
+    "r-ellipsis",
+    "r-fastmap >=1.1.0",
+    "r-fontawesome >=0.2.1",
+    "r-glue >=1.3.2",
+    "r-htmltools >=0.5.2",
+    "r-httpuv >=1.5.2",
+    "r-jsonlite >=0.9.16",
+    "r-later >=1.0.0",
+    "r-lifecycle >=0.2.0",
+    "r-mime >=0.3",
+    "r-promises >=1.1.0",
+    "r-r6 >=2.0",
+    "r-rlang >=0.4.10",
+    "r-sourcetools",
+    "r-withr",
+    "r-xtable"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-shiny-1.7.1-r41h785f33e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/shiny/DESCRIPTION",
+    "lib/R/library/shiny/INDEX",
+    "lib/R/library/shiny/LICENSE",
+    "lib/R/library/shiny/Meta/Rd.rds",
+    "lib/R/library/shiny/Meta/features.rds",
+    "lib/R/library/shiny/Meta/hsearch.rds",
+    "lib/R/library/shiny/Meta/links.rds",
+    "lib/R/library/shiny/Meta/nsInfo.rds",
+    "lib/R/library/shiny/Meta/package.rds",
+    "lib/R/library/shiny/NAMESPACE",
+    "lib/R/library/shiny/NEWS.md",
+    "lib/R/library/shiny/R/shiny",
+    "lib/R/library/shiny/R/shiny.rdb",
+    "lib/R/library/shiny/R/shiny.rdx",
+    "lib/R/library/shiny/app_template/R/example-module.R",
+    "lib/R/library/shiny/app_template/R/example.R",
+    "lib/R/library/shiny/app_template/app.R",
+    "lib/R/library/shiny/app_template/tests/shinytest.R",
+    "lib/R/library/shiny/app_template/tests/shinytest/mytest.R",
+    "lib/R/library/shiny/app_template/tests/testthat.R",
+    "lib/R/library/shiny/app_template/tests/testthat/test-examplemodule.R",
+    "lib/R/library/shiny/app_template/tests/testthat/test-server.R",
+    "lib/R/library/shiny/app_template/tests/testthat/test-sort.R",
+    "lib/R/library/shiny/examples/01_hello/DESCRIPTION",
+    "lib/R/library/shiny/examples/01_hello/Readme.md",
+    "lib/R/library/shiny/examples/01_hello/app.R",
+    "lib/R/library/shiny/examples/02_text/DESCRIPTION",
+    "lib/R/library/shiny/examples/02_text/Readme.md",
+    "lib/R/library/shiny/examples/02_text/app.R",
+    "lib/R/library/shiny/examples/03_reactivity/DESCRIPTION",
+    "lib/R/library/shiny/examples/03_reactivity/Readme.md",
+    "lib/R/library/shiny/examples/03_reactivity/app.R",
+    "lib/R/library/shiny/examples/04_mpg/DESCRIPTION",
+    "lib/R/library/shiny/examples/04_mpg/Readme.md",
+    "lib/R/library/shiny/examples/04_mpg/app.R",
+    "lib/R/library/shiny/examples/05_sliders/DESCRIPTION",
+    "lib/R/library/shiny/examples/05_sliders/Readme.md",
+    "lib/R/library/shiny/examples/05_sliders/app.R",
+    "lib/R/library/shiny/examples/06_tabsets/DESCRIPTION",
+    "lib/R/library/shiny/examples/06_tabsets/Readme.md",
+    "lib/R/library/shiny/examples/06_tabsets/app.R",
+    "lib/R/library/shiny/examples/07_widgets/DESCRIPTION",
+    "lib/R/library/shiny/examples/07_widgets/Readme.md",
+    "lib/R/library/shiny/examples/07_widgets/app.R",
+    "lib/R/library/shiny/examples/08_html/DESCRIPTION",
+    "lib/R/library/shiny/examples/08_html/Readme.md",
+    "lib/R/library/shiny/examples/08_html/app.R",
+    "lib/R/library/shiny/examples/08_html/www/index.html",
+    "lib/R/library/shiny/examples/09_upload/DESCRIPTION",
+    "lib/R/library/shiny/examples/09_upload/Readme.md",
+    "lib/R/library/shiny/examples/09_upload/app.R",
+    "lib/R/library/shiny/examples/10_download/DESCRIPTION",
+    "lib/R/library/shiny/examples/10_download/Readme.md",
+    "lib/R/library/shiny/examples/10_download/app.R",
+    "lib/R/library/shiny/examples/11_timer/DESCRIPTION",
+    "lib/R/library/shiny/examples/11_timer/Readme.md",
+    "lib/R/library/shiny/examples/11_timer/app.R",
+    "lib/R/library/shiny/help/AnIndex",
+    "lib/R/library/shiny/help/aliases.rds",
+    "lib/R/library/shiny/help/figures/lifecycle-archived.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-defunct.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-deprecated.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-experimental.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-maturing.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-questioning.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-soft-deprecated.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-stable.svg",
+    "lib/R/library/shiny/help/figures/lifecycle-superseded.svg",
+    "lib/R/library/shiny/help/figures/logo.png",
+    "lib/R/library/shiny/help/paths.rds",
+    "lib/R/library/shiny/help/shiny.rdb",
+    "lib/R/library/shiny/help/shiny.rdx",
+    "lib/R/library/shiny/html/00Index.html",
+    "lib/R/library/shiny/html/R.css",
+    "lib/R/library/shiny/template/default.html",
+    "lib/R/library/shiny/template/error.html",
+    "lib/R/library/shiny/www-dir/index.html",
+    "lib/R/library/shiny/www/shared/bootstrap/accessibility/css/bootstrap-accessibility.min.css",
+    "lib/R/library/shiny/www/shared/bootstrap/accessibility/js/bootstrap-accessibility.min.js",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.css",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.css.map",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.min.css",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.min.css.map",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.css",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.css.map",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.min.css",
+    "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.min.css.map",
+    "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.eot",
+    "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.svg",
+    "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.ttf",
+    "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.woff",
+    "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.woff2",
+    "lib/R/library/shiny/www/shared/bootstrap/js/bootstrap.js",
+    "lib/R/library/shiny/www/shared/bootstrap/js/bootstrap.min.js",
+    "lib/R/library/shiny/www/shared/bootstrap/js/npm.js",
+    "lib/R/library/shiny/www/shared/datatables/css/dataTables.bootstrap.css",
+    "lib/R/library/shiny/www/shared/datatables/css/dataTables.extra.css",
+    "lib/R/library/shiny/www/shared/datatables/images/sort_asc.png",
+    "lib/R/library/shiny/www/shared/datatables/images/sort_asc_disabled.png",
+    "lib/R/library/shiny/www/shared/datatables/images/sort_both.png",
+    "lib/R/library/shiny/www/shared/datatables/images/sort_desc.png",
+    "lib/R/library/shiny/www/shared/datatables/images/sort_desc_disabled.png",
+    "lib/R/library/shiny/www/shared/datatables/js/dataTables.bootstrap.js",
+    "lib/R/library/shiny/www/shared/datatables/js/jquery.dataTables.min.js",
+    "lib/R/library/shiny/www/shared/datatables/upgrade1.10.txt",
+    "lib/R/library/shiny/www/shared/datepicker/css/bootstrap-datepicker3.css",
+    "lib/R/library/shiny/www/shared/datepicker/css/bootstrap-datepicker3.min.css",
+    "lib/R/library/shiny/www/shared/datepicker/js/bootstrap-datepicker.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/bootstrap-datepicker.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker-en-CA.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ar-tn.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ar.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.az.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bg.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bm.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bn.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.br.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bs.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ca.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.cs.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.cy.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.da.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.de.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.el.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-AU.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-CA.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-GB.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-IE.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-NZ.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-ZA.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.eo.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.es.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.et.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.eu.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fa.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fi.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fo.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fr-CH.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fr.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.gl.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.he.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hi.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hr.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hu.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hy.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.id.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.is.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.it-CH.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.it.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ja.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ka.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.kh.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.kk.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.km.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ko.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.kr.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.lt.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.lv.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.me.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.mk.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.mn.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ms.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.nl-BE.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.nl.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.no.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.oc.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.pl.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.pt-BR.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.pt.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ro.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.rs-latin.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.rs.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ru.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.si.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sk.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sl.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sq.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sr-latin.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sr.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sv.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sw.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ta.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.tg.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.th.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.tk.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.tr.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.uk.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.uz-cyrl.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.uz-latn.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.vi.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.zh-CN.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.zh-TW.min.js",
+    "lib/R/library/shiny/www/shared/datepicker/scss/build3.scss",
+    "lib/R/library/shiny/www/shared/datepicker/scss/datepicker3.scss",
+    "lib/R/library/shiny/www/shared/highlight/LICENSE",
+    "lib/R/library/shiny/www/shared/highlight/classref.txt",
+    "lib/R/library/shiny/www/shared/highlight/highlight.pack.js",
+    "lib/R/library/shiny/www/shared/highlight/rstudio.css",
+    "lib/R/library/shiny/www/shared/ionrangeslider/css/ion.rangeSlider.css",
+    "lib/R/library/shiny/www/shared/ionrangeslider/js/ion.rangeSlider.js",
+    "lib/R/library/shiny/www/shared/ionrangeslider/js/ion.rangeSlider.min.js",
+    "lib/R/library/shiny/www/shared/ionrangeslider/scss/_base.scss",
+    "lib/R/library/shiny/www/shared/ionrangeslider/scss/_mixins.scss",
+    "lib/R/library/shiny/www/shared/ionrangeslider/scss/shiny.scss",
+    "lib/R/library/shiny/www/shared/jquery-AUTHORS.txt",
+    "lib/R/library/shiny/www/shared/jquery.js",
+    "lib/R/library/shiny/www/shared/jquery.min.js",
+    "lib/R/library/shiny/www/shared/jquery.min.map",
+    "lib/R/library/shiny/www/shared/jqueryui/AUTHORS.txt",
+    "lib/R/library/shiny/www/shared/jqueryui/LICENSE.txt",
+    "lib/R/library/shiny/www/shared/jqueryui/README",
+    "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_444444_256x240.png",
+    "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_555555_256x240.png",
+    "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_777620_256x240.png",
+    "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_777777_256x240.png",
+    "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_cc0000_256x240.png",
+    "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_ffffff_256x240.png",
+    "lib/R/library/shiny/www/shared/jqueryui/index.html",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.css",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.js",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.min.css",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.min.js",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.structure.css",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.structure.min.css",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.theme.css",
+    "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.theme.min.css",
+    "lib/R/library/shiny/www/shared/legacy/jquery-AUTHORS.txt",
+    "lib/R/library/shiny/www/shared/legacy/jquery.js",
+    "lib/R/library/shiny/www/shared/legacy/jquery.min.js",
+    "lib/R/library/shiny/www/shared/legacy/jquery.min.map",
+    "lib/R/library/shiny/www/shared/selectize/accessibility/js/selectize-plugin-a11y.js",
+    "lib/R/library/shiny/www/shared/selectize/accessibility/js/selectize-plugin-a11y.min.js",
+    "lib/R/library/shiny/www/shared/selectize/css/selectize.bootstrap3.css",
+    "lib/R/library/shiny/www/shared/selectize/js/selectize.min.js",
+    "lib/R/library/shiny/www/shared/selectize/scss/plugins/drag_drop.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/plugins/dropdown_header.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/plugins/optgroup_columns.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/plugins/remove_button.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/selectize.bootstrap3.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/selectize.bootstrap4.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/selectize.bootstrap5.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/selectize.default.scss",
+    "lib/R/library/shiny/www/shared/selectize/scss/selectize.scss",
+    "lib/R/library/shiny/www/shared/shiny-autoreload.js",
+    "lib/R/library/shiny/www/shared/shiny-showcase.css",
+    "lib/R/library/shiny/www/shared/shiny-showcase.js",
+    "lib/R/library/shiny/www/shared/shiny-testmode.js",
+    "lib/R/library/shiny/www/shared/shiny.js",
+    "lib/R/library/shiny/www/shared/shiny.js.map",
+    "lib/R/library/shiny/www/shared/shiny.min.css",
+    "lib/R/library/shiny/www/shared/shiny.min.js",
+    "lib/R/library/shiny/www/shared/shiny.min.js.map",
+    "lib/R/library/shiny/www/shared/shiny_scss/bootstrap.scss",
+    "lib/R/library/shiny/www/shared/shiny_scss/shiny.scss",
+    "lib/R/library/shiny/www/shared/showdown/compressed/showdown.js",
+    "lib/R/library/shiny/www/shared/showdown/license.txt",
+    "lib/R/library/shiny/www/shared/showdown/src/showdown.js",
+    "lib/R/library/shiny/www/shared/strftime/strftime-min.js"
+  ],
+  "fn": "r-shiny-1.7.1-r41h785f33e_0.tar.bz2",
+  "license": "GPL-3.0-only",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-shiny-1.7.1-r41h785f33e_0",
+    "type": 1
+  },
+  "md5": "c5ef6fd259c1a34b7078652be8efe74f",
+  "name": "r-shiny",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-shiny-1.7.1-r41h785f33e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/shiny/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "6164d9dfb55f6c7a79a1fa57486a5c6021b9e16b0e8631d101ce38029cb04fed",
+        "sha256_in_prefix": "6164d9dfb55f6c7a79a1fa57486a5c6021b9e16b0e8631d101ce38029cb04fed",
+        "size_in_bytes": 8131
+      },
+      {
+        "_path": "lib/R/library/shiny/INDEX",
+        "path_type": "hardlink",
+        "sha256": "9f0e84921a4596cf8a48445e8458993c66834dc2e35f000c4b967adc2d8980c0",
+        "sha256_in_prefix": "9f0e84921a4596cf8a48445e8458993c66834dc2e35f000c4b967adc2d8980c0",
+        "size_in_bytes": 9070
+      },
+      {
+        "_path": "lib/R/library/shiny/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "65cccb6d3f1c2f1c3e24febe6a9b5413d263c30a4758fae9518dd0d8342f6865",
+        "sha256_in_prefix": "65cccb6d3f1c2f1c3e24febe6a9b5413d263c30a4758fae9518dd0d8342f6865",
+        "size_in_bytes": 54139
+      },
+      {
+        "_path": "lib/R/library/shiny/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "d4a0855f459d24b30c730ee1f701d79e3e235be2c30b60ba0653614011afdf0e",
+        "sha256_in_prefix": "d4a0855f459d24b30c730ee1f701d79e3e235be2c30b60ba0653614011afdf0e",
+        "size_in_bytes": 6210
+      },
+      {
+        "_path": "lib/R/library/shiny/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "sha256_in_prefix": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "size_in_bytes": 123
+      },
+      {
+        "_path": "lib/R/library/shiny/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "31fab9ab2efda1baa870d3ef627c37d31d0618538abdad231cd2a1a5b4f39769",
+        "sha256_in_prefix": "31fab9ab2efda1baa870d3ef627c37d31d0618538abdad231cd2a1a5b4f39769",
+        "size_in_bytes": 5629
+      },
+      {
+        "_path": "lib/R/library/shiny/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "99e9d1394b554e2bac2089252a258fed65859e312af426efdd4ea1762df0d1fa",
+        "sha256_in_prefix": "99e9d1394b554e2bac2089252a258fed65859e312af426efdd4ea1762df0d1fa",
+        "size_in_bytes": 3246
+      },
+      {
+        "_path": "lib/R/library/shiny/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "a86580fec4fc98287efd5b294d640297ea718e37030b10a51fb0014ecb67ed67",
+        "sha256_in_prefix": "a86580fec4fc98287efd5b294d640297ea718e37030b10a51fb0014ecb67ed67",
+        "size_in_bytes": 2968
+      },
+      {
+        "_path": "lib/R/library/shiny/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "94f4b1ad2565e328a8758cddc9856e910a4c48a8d56d24f9faf949efdc5b3000",
+        "sha256_in_prefix": "94f4b1ad2565e328a8758cddc9856e910a4c48a8d56d24f9faf949efdc5b3000",
+        "size_in_bytes": 3409
+      },
+      {
+        "_path": "lib/R/library/shiny/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "0e57b4e603a480d35dfb5edd64458d607938890a54b2f4c2cde4ba987c030e2f",
+        "sha256_in_prefix": "0e57b4e603a480d35dfb5edd64458d607938890a54b2f4c2cde4ba987c030e2f",
+        "size_in_bytes": 10082
+      },
+      {
+        "_path": "lib/R/library/shiny/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "6e633072448ea57026d825c236d768b45f1024d5d710deeea4b2ab7902415ba9",
+        "sha256_in_prefix": "6e633072448ea57026d825c236d768b45f1024d5d710deeea4b2ab7902415ba9",
+        "size_in_bytes": 115212
+      },
+      {
+        "_path": "lib/R/library/shiny/R/shiny",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/shiny/R/shiny.rdb",
+        "path_type": "hardlink",
+        "sha256": "427380e42d13e322156aead67ffa6a9557a05499f2385f911023a089c32271fe",
+        "sha256_in_prefix": "427380e42d13e322156aead67ffa6a9557a05499f2385f911023a089c32271fe",
+        "size_in_bytes": 1646933
+      },
+      {
+        "_path": "lib/R/library/shiny/R/shiny.rdx",
+        "path_type": "hardlink",
+        "sha256": "cfca8ca6283aefbd5eb523420ce243f684f851f29daa7773c16aec42da956707",
+        "sha256_in_prefix": "cfca8ca6283aefbd5eb523420ce243f684f851f29daa7773c16aec42da956707",
+        "size_in_bytes": 9682
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/R/example-module.R",
+        "path_type": "hardlink",
+        "sha256": "5f51a1d9fc8429abbe2be210049b2a4397cf5741e2ae7fbf2876f7bfb7713639",
+        "sha256_in_prefix": "5f51a1d9fc8429abbe2be210049b2a4397cf5741e2ae7fbf2876f7bfb7713639",
+        "size_in_bytes": 623
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/R/example.R",
+        "path_type": "hardlink",
+        "sha256": "43e5f15d889702f07f3b114715f8236b7a125ab3024bd70897455d0cf5b695a6",
+        "sha256_in_prefix": "43e5f15d889702f07f3b114715f8236b7a125ab3024bd70897455d0cf5b695a6",
+        "size_in_bytes": 151
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/app.R",
+        "path_type": "hardlink",
+        "sha256": "b97f8bf6e730f78da56321b9bea72aef91810db7fd5067e717610106797ecaba",
+        "sha256_in_prefix": "b97f8bf6e730f78da56321b9bea72aef91810db7fd5067e717610106797ecaba",
+        "size_in_bytes": 1189
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/tests/shinytest.R",
+        "path_type": "hardlink",
+        "sha256": "5e00831428d0d2ff38478b41032dd686c756786d1fd8e77f711e0d89f95e3b9c",
+        "sha256_in_prefix": "5e00831428d0d2ff38478b41032dd686c756786d1fd8e77f711e0d89f95e3b9c",
+        "size_in_bytes": 66
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/tests/shinytest/mytest.R",
+        "path_type": "hardlink",
+        "sha256": "1c4b8337c1cad407f8f4339387a7c6c9dbd88e59b760834c4e769f1e4f213bf5",
+        "sha256_in_prefix": "1c4b8337c1cad407f8f4339387a7c6c9dbd88e59b760834c4e769f1e4f213bf5",
+        "size_in_bytes": 222
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/tests/testthat.R",
+        "path_type": "hardlink",
+        "sha256": "cf03ab1bac27ee6abef53f56b8fbdbf535fc911922427b23c8c9c9e685ce8f63",
+        "sha256_in_prefix": "cf03ab1bac27ee6abef53f56b8fbdbf535fc911922427b23c8c9c9e685ce8f63",
+        "size_in_bytes": 263
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/tests/testthat/test-examplemodule.R",
+        "path_type": "hardlink",
+        "sha256": "5477646af22bbf087b82885626b9206e1f2a855211cfdededd2972e06f1f5c6b",
+        "sha256_in_prefix": "5477646af22bbf087b82885626b9206e1f2a855211cfdededd2972e06f1f5c6b",
+        "size_in_bytes": 405
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/tests/testthat/test-server.R",
+        "path_type": "hardlink",
+        "sha256": "141707f30bc9383f756260bedc99e5aa42d2170ff0ded61a04a1cdf56c20dc71",
+        "sha256_in_prefix": "141707f30bc9383f756260bedc99e5aa42d2170ff0ded61a04a1cdf56c20dc71",
+        "size_in_bytes": 378
+      },
+      {
+        "_path": "lib/R/library/shiny/app_template/tests/testthat/test-sort.R",
+        "path_type": "hardlink",
+        "sha256": "e79719e92bad4a7bd31f498d95a07eb738d24456d33c95577de888eb651d1821",
+        "sha256_in_prefix": "e79719e92bad4a7bd31f498d95a07eb738d24456d33c95577de888eb651d1821",
+        "size_in_bytes": 220
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/01_hello/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "173c8f8267d925255f3ebfdf7f883c526ce550243dbbd0166ad718571c202b3a",
+        "sha256_in_prefix": "173c8f8267d925255f3ebfdf7f883c526ce550243dbbd0166ad718571c202b3a",
+        "size_in_bytes": 146
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/01_hello/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "ff777b7d0276a46fcf2ef00c5c968e27f32cd8499c4aefbe72fa466f9add0aaa",
+        "sha256_in_prefix": "ff777b7d0276a46fcf2ef00c5c968e27f32cd8499c4aefbe72fa466f9add0aaa",
+        "size_in_bytes": 285
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/01_hello/app.R",
+        "path_type": "hardlink",
+        "sha256": "a2b4d5a65aa8e1d5fb3ea48181b5d87480300c921277275465d0300723c6f0f2",
+        "sha256_in_prefix": "a2b4d5a65aa8e1d5fb3ea48181b5d87480300c921277275465d0300723c6f0f2",
+        "size_in_bytes": 1430
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/02_text/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "99278e4e0d56b42895d6349d8bee0aca04ab1fc1d9edb4f8ff12cea0db1a46aa",
+        "sha256_in_prefix": "99278e4e0d56b42895d6349d8bee0aca04ab1fc1d9edb4f8ff12cea0db1a46aa",
+        "size_in_bytes": 145
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/02_text/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "85ecbc4cc9e62800c6586a382059169cb47862fee66fb5a004b1242fba27e843",
+        "sha256_in_prefix": "85ecbc4cc9e62800c6586a382059169cb47862fee66fb5a004b1242fba27e843",
+        "size_in_bytes": 237
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/02_text/app.R",
+        "path_type": "hardlink",
+        "sha256": "bb8957e15a6d651e9713d38a9529d04a351d522608d55f17e2cc13a4e821e49e",
+        "sha256_in_prefix": "bb8957e15a6d651e9713d38a9529d04a351d522608d55f17e2cc13a4e821e49e",
+        "size_in_bytes": 1512
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/03_reactivity/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "518976fc310af880fecb8d52252960ff764878906af59467afb9e80f66b29b32",
+        "sha256_in_prefix": "518976fc310af880fecb8d52252960ff764878906af59467afb9e80f66b29b32",
+        "size_in_bytes": 144
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/03_reactivity/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "9d65c7b5b8243072e4b040a32c2e6f46434db1eb68497c54ff0372f50164c170",
+        "sha256_in_prefix": "9d65c7b5b8243072e4b040a32c2e6f46434db1eb68497c54ff0372f50164c170",
+        "size_in_bytes": 768
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/03_reactivity/app.R",
+        "path_type": "hardlink",
+        "sha256": "6e30c89e83865e3a05918080763eb03641b010fb6f2d88e8eb31e195611a656e",
+        "sha256_in_prefix": "6e30c89e83865e3a05918080763eb03641b010fb6f2d88e8eb31e195611a656e",
+        "size_in_bytes": 3025
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/04_mpg/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "1bf572457bcdb821bb0d6b4f7a6b66a405145950501cb5511f9f9f7139dce249",
+        "sha256_in_prefix": "1bf572457bcdb821bb0d6b4f7a6b66a405145950501cb5511f9f9f7139dce249",
+        "size_in_bytes": 150
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/04_mpg/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "049d60078b88e4e54d41e1599d7e5803f7d872662895ea6ebf11b87a45662df4",
+        "sha256_in_prefix": "049d60078b88e4e54d41e1599d7e5803f7d872662895ea6ebf11b87a45662df4",
+        "size_in_bytes": 536
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/04_mpg/app.R",
+        "path_type": "hardlink",
+        "sha256": "fbf25a99c0b796b214f80f8fc2b4b23d4556e235940adb610db8846b5baaf063",
+        "sha256_in_prefix": "fbf25a99c0b796b214f80f8fc2b4b23d4556e235940adb610db8846b5baaf063",
+        "size_in_bytes": 1969
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/05_sliders/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "32588d75011576985add64f30b2978ee4447e55999818f8d5977e89916d663e7",
+        "sha256_in_prefix": "32588d75011576985add64f30b2978ee4447e55999818f8d5977e89916d663e7",
+        "size_in_bytes": 141
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/05_sliders/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "89e106b09f09d655f1b31c8f872138aa434b62665de6e7c29749547213df120c",
+        "sha256_in_prefix": "89e106b09f09d655f1b31c8f872138aa434b62665de6e7c29749547213df120c",
+        "size_in_bytes": 193
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/05_sliders/app.R",
+        "path_type": "hardlink",
+        "sha256": "02fdd0b4f49142711ba24af253a5ab4001bc89773abf93a23c1efb88add13c80",
+        "sha256_in_prefix": "02fdd0b4f49142711ba24af253a5ab4001bc89773abf93a23c1efb88add13c80",
+        "size_in_bytes": 2313
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/06_tabsets/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "5d422592e39313830c26dc53acb48703ecd7945baf2c916dec7ccf39c711d34a",
+        "sha256_in_prefix": "5d422592e39313830c26dc53acb48703ecd7945baf2c916dec7ccf39c711d34a",
+        "size_in_bytes": 141
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/06_tabsets/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "c2b947a44c8046ed1bb57976f34fb207cf497e2fae1c38a9cffbb79720fe6739",
+        "sha256_in_prefix": "c2b947a44c8046ed1bb57976f34fb207cf497e2fae1c38a9cffbb79720fe6739",
+        "size_in_bytes": 609
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/06_tabsets/app.R",
+        "path_type": "hardlink",
+        "sha256": "b52288884a3b2a76be8d74eb54e21c55e84eee3ebf8e1414569cfa59c6e9222a",
+        "sha256_in_prefix": "b52288884a3b2a76be8d74eb54e21c55e84eee3ebf8e1414569cfa59c6e9222a",
+        "size_in_bytes": 2429
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/07_widgets/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "0e33444ddd285cf27054953b85b15559b2b8dcee6e502fbf7a9638be44f8ce9c",
+        "sha256_in_prefix": "0e33444ddd285cf27054953b85b15559b2b8dcee6e502fbf7a9638be44f8ce9c",
+        "size_in_bytes": 141
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/07_widgets/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "57044c7d924c238efeb665edd13951b536f0bee9fa82da75ac7cd2da3c5993ab",
+        "sha256_in_prefix": "57044c7d924c238efeb665edd13951b536f0bee9fa82da75ac7cd2da3c5993ab",
+        "size_in_bytes": 290
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/07_widgets/app.R",
+        "path_type": "hardlink",
+        "sha256": "e7e442e2ad6bbb87420f7524d0a9ac7f837b7016cdab9bf29e42707448b3a298",
+        "sha256_in_prefix": "e7e442e2ad6bbb87420f7524d0a9ac7f837b7016cdab9bf29e42707448b3a298",
+        "size_in_bytes": 2362
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/08_html/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "150ac5f75fc531bfaedeb90d380a5d000006d091d904cf83fc1128750eafa771",
+        "sha256_in_prefix": "150ac5f75fc531bfaedeb90d380a5d000006d091d904cf83fc1128750eafa771",
+        "size_in_bytes": 148
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/08_html/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "200d2171cb2ab55690277de6eeb035e62826bace359d6f415128215384e8a76e",
+        "sha256_in_prefix": "200d2171cb2ab55690277de6eeb035e62826bace359d6f415128215384e8a76e",
+        "size_in_bytes": 256
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/08_html/app.R",
+        "path_type": "hardlink",
+        "sha256": "2b102dddbad04c29ebbf516002f62b7eb8b42e37b839a1f7f490f75815e13e5a",
+        "sha256_in_prefix": "2b102dddbad04c29ebbf516002f62b7eb8b42e37b839a1f7f490f75815e13e5a",
+        "size_in_bytes": 1313
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/08_html/www/index.html",
+        "path_type": "hardlink",
+        "sha256": "022543e111d8101a3d611393b1f428a0be0a3c7f1d966fda82c5d26abe2583f9",
+        "sha256_in_prefix": "022543e111d8101a3d611393b1f428a0be0a3c7f1d966fda82c5d26abe2583f9",
+        "size_in_bytes": 955
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/09_upload/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "9b577d9100873c60fd1d09b2175efd16a9c8469300fa693ea94ce11a812bbd3b",
+        "sha256_in_prefix": "9b577d9100873c60fd1d09b2175efd16a9c8469300fa693ea94ce11a812bbd3b",
+        "size_in_bytes": 145
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/09_upload/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "cd6d844508a7873f041d70ffab8b8c7bbf0233a4b03ca63a642b2fa1e1fd480e",
+        "sha256_in_prefix": "cd6d844508a7873f041d70ffab8b8c7bbf0233a4b03ca63a642b2fa1e1fd480e",
+        "size_in_bytes": 177
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/09_upload/app.R",
+        "path_type": "hardlink",
+        "sha256": "b9d564912e6ce344148f6e6ae473339f175b56423b7eda82106b72143e9c1801",
+        "sha256_in_prefix": "b9d564912e6ce344148f6e6ae473339f175b56423b7eda82106b72143e9c1801",
+        "size_in_bytes": 2178
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/10_download/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "1317c69b41d039ba60beeba8c1cf1145fbeab7af2a3705f0cfdf5e2205d445e8",
+        "sha256_in_prefix": "1317c69b41d039ba60beeba8c1cf1145fbeab7af2a3705f0cfdf5e2205d445e8",
+        "size_in_bytes": 147
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/10_download/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "ef568aa697f21ad9d85ba96065fa162643309a13cf872793bb9b5eb2ddd367fa",
+        "sha256_in_prefix": "ef568aa697f21ad9d85ba96065fa162643309a13cf872793bb9b5eb2ddd367fa",
+        "size_in_bytes": 148
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/10_download/app.R",
+        "path_type": "hardlink",
+        "sha256": "47cec028c01782b74f7566ffc1cd06974debd0c4f4523a80cb4d710280b463a0",
+        "sha256_in_prefix": "47cec028c01782b74f7566ffc1cd06974debd0c4f4523a80cb4d710280b463a0",
+        "size_in_bytes": 1281
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/11_timer/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "f5eb5a06dde998d370b04ce4c2647b3cee65b70c93e6737d9f95554e0a84cfe0",
+        "sha256_in_prefix": "f5eb5a06dde998d370b04ce4c2647b3cee65b70c93e6737d9f95554e0a84cfe0",
+        "size_in_bytes": 139
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/11_timer/Readme.md",
+        "path_type": "hardlink",
+        "sha256": "1e0ac8941134e9778e0a4302f3858d3be6d31dcc3bbe0149a3e564801edc0098",
+        "sha256_in_prefix": "1e0ac8941134e9778e0a4302f3858d3be6d31dcc3bbe0149a3e564801edc0098",
+        "size_in_bytes": 244
+      },
+      {
+        "_path": "lib/R/library/shiny/examples/11_timer/app.R",
+        "path_type": "hardlink",
+        "sha256": "7d4c1f67507a19ffed5aba0c26bed5adfda89a903915ee5d51fd69d19a699b09",
+        "sha256_in_prefix": "7d4c1f67507a19ffed5aba0c26bed5adfda89a903915ee5d51fd69d19a699b09",
+        "size_in_bytes": 401
+      },
+      {
+        "_path": "lib/R/library/shiny/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "204c6153433c1ed0c2ba89f6e6e72149b025b257d1d6866716712d4e38bb5c7b",
+        "sha256_in_prefix": "204c6153433c1ed0c2ba89f6e6e72149b025b257d1d6866716712d4e38bb5c7b",
+        "size_in_bytes": 7602
+      },
+      {
+        "_path": "lib/R/library/shiny/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "ac8a95c85bef7ee3a60204fa07920795d5f633493891a64436845b83c31fd840",
+        "sha256_in_prefix": "ac8a95c85bef7ee3a60204fa07920795d5f633493891a64436845b83c31fd840",
+        "size_in_bytes": 2512
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-archived.svg",
+        "path_type": "hardlink",
+        "sha256": "e51548be52932d0b0468f5b11adcbebac08663898a7c043871864b0064710e86",
+        "sha256_in_prefix": "e51548be52932d0b0468f5b11adcbebac08663898a7c043871864b0064710e86",
+        "size_in_bytes": 967
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-defunct.svg",
+        "path_type": "hardlink",
+        "sha256": "977a9d51157cf76f89e0d5562b8b57b06560682c4cc9e44333e9c394629fb520",
+        "sha256_in_prefix": "977a9d51157cf76f89e0d5562b8b57b06560682c4cc9e44333e9c394629fb520",
+        "size_in_bytes": 964
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-deprecated.svg",
+        "path_type": "hardlink",
+        "sha256": "7fefe18cc3b7059272fa85ff40c4a95739bb271276d819fe782ac38db295a07c",
+        "sha256_in_prefix": "7fefe18cc3b7059272fa85ff40c4a95739bb271276d819fe782ac38db295a07c",
+        "size_in_bytes": 970
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-experimental.svg",
+        "path_type": "hardlink",
+        "sha256": "ed1f8972de7fdeb5dedc1087ea043dc4953dca5d58f54286b4c0ab297eefbe90",
+        "sha256_in_prefix": "ed1f8972de7fdeb5dedc1087ea043dc4953dca5d58f54286b4c0ab297eefbe90",
+        "size_in_bytes": 974
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-maturing.svg",
+        "path_type": "hardlink",
+        "sha256": "9f33b55a1806ad5a3d565a0855a91b47ae26b7cf1ff0f025758bbd15b4c3984a",
+        "sha256_in_prefix": "9f33b55a1806ad5a3d565a0855a91b47ae26b7cf1ff0f025758bbd15b4c3984a",
+        "size_in_bytes": 966
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-questioning.svg",
+        "path_type": "hardlink",
+        "sha256": "2feb00c21e12843cd1cd2e821c941628331dddbb26e34e58c40bb11dcffea89a",
+        "sha256_in_prefix": "2feb00c21e12843cd1cd2e821c941628331dddbb26e34e58c40bb11dcffea89a",
+        "size_in_bytes": 972
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-soft-deprecated.svg",
+        "path_type": "hardlink",
+        "sha256": "3a1280ea3869c1ffd2aa92d984e197eb9ac823746d018f000c5d53117ad257b1",
+        "sha256_in_prefix": "3a1280ea3869c1ffd2aa92d984e197eb9ac823746d018f000c5d53117ad257b1",
+        "size_in_bytes": 982
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-stable.svg",
+        "path_type": "hardlink",
+        "sha256": "4817300514459f5ac876b1a379c7bad15d6049e1a954b71455ab78d76b83ffa0",
+        "sha256_in_prefix": "4817300514459f5ac876b1a379c7bad15d6049e1a954b71455ab78d76b83ffa0",
+        "size_in_bytes": 956
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/lifecycle-superseded.svg",
+        "path_type": "hardlink",
+        "sha256": "c425824d3301dc7d4dc0100d408c4b469f488a8488be748a1fbe61abae5bab9e",
+        "sha256_in_prefix": "c425824d3301dc7d4dc0100d408c4b469f488a8488be748a1fbe61abae5bab9e",
+        "size_in_bytes": 971
+      },
+      {
+        "_path": "lib/R/library/shiny/help/figures/logo.png",
+        "path_type": "hardlink",
+        "sha256": "cc80c3c96a107ff6cfe1251ea9ed37403f40828c2a2efb7dae015cd40b2d3a8b",
+        "sha256_in_prefix": "cc80c3c96a107ff6cfe1251ea9ed37403f40828c2a2efb7dae015cd40b2d3a8b",
+        "size_in_bytes": 183015
+      },
+      {
+        "_path": "lib/R/library/shiny/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "2205d3cf7eb1a55b1773d0a58b7694bc72efc438fcdc2cf02e0792d86bb6d172",
+        "sha256_in_prefix": "2205d3cf7eb1a55b1773d0a58b7694bc72efc438fcdc2cf02e0792d86bb6d172",
+        "size_in_bytes": 1627
+      },
+      {
+        "_path": "lib/R/library/shiny/help/shiny.rdb",
+        "path_type": "hardlink",
+        "sha256": "88f715583b2fa7a9503a9e7992b2066fac58462710c8c3c0d00fc41d83433ebe",
+        "sha256_in_prefix": "88f715583b2fa7a9503a9e7992b2066fac58462710c8c3c0d00fc41d83433ebe",
+        "size_in_bytes": 625288
+      },
+      {
+        "_path": "lib/R/library/shiny/help/shiny.rdx",
+        "path_type": "hardlink",
+        "sha256": "7495b909601206ff1562d4b606b096800b809e71e644e44ef57bc510cb8d3c74",
+        "sha256_in_prefix": "7495b909601206ff1562d4b606b096800b809e71e644e44ef57bc510cb8d3c74",
+        "size_in_bytes": 3812
+      },
+      {
+        "_path": "lib/R/library/shiny/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "b2b32196d4a3bca265736a45919131b1f29f2719531c24d593bc1820c1e9f459",
+        "sha256_in_prefix": "b2b32196d4a3bca265736a45919131b1f29f2719531c24d593bc1820c1e9f459",
+        "size_in_bytes": 30477
+      },
+      {
+        "_path": "lib/R/library/shiny/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/shiny/template/default.html",
+        "path_type": "hardlink",
+        "sha256": "a94a7ce1db4d0e6a5f766f4dbe11f2773760adbaefb63a15eda3e43cbdea269a",
+        "sha256_in_prefix": "a94a7ce1db4d0e6a5f766f4dbe11f2773760adbaefb63a15eda3e43cbdea269a",
+        "size_in_bytes": 139
+      },
+      {
+        "_path": "lib/R/library/shiny/template/error.html",
+        "path_type": "hardlink",
+        "sha256": "4008142da9a098beaafbec2be35d3c7420f3d7781d4b776ab54214b6646108fc",
+        "sha256_in_prefix": "4008142da9a098beaafbec2be35d3c7420f3d7781d4b776ab54214b6646108fc",
+        "size_in_bytes": 151
+      },
+      {
+        "_path": "lib/R/library/shiny/www-dir/index.html",
+        "path_type": "hardlink",
+        "sha256": "1f55e3c69507b797ec1fd67972dca6cbbaa5d135183c037d44c610d1214fe2e6",
+        "sha256_in_prefix": "1f55e3c69507b797ec1fd67972dca6cbbaa5d135183c037d44c610d1214fe2e6",
+        "size_in_bytes": 276
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/accessibility/css/bootstrap-accessibility.min.css",
+        "path_type": "hardlink",
+        "sha256": "cb60ec1a51be84dcc9c9fbe6af25b67bbfa4fde4d86d8dadfc277834b381da2e",
+        "sha256_in_prefix": "cb60ec1a51be84dcc9c9fbe6af25b67bbfa4fde4d86d8dadfc277834b381da2e",
+        "size_in_bytes": 1531
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/accessibility/js/bootstrap-accessibility.min.js",
+        "path_type": "hardlink",
+        "sha256": "d14ecf2da63cd685a26b1fc4438c8d8432c8b9d7bbff0537e356d45a230b5b6d",
+        "sha256_in_prefix": "d14ecf2da63cd685a26b1fc4438c8d8432c8b9d7bbff0537e356d45a230b5b6d",
+        "size_in_bytes": 12787
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.css",
+        "path_type": "hardlink",
+        "sha256": "a0858cc08fdc8e11c1cf6b0fdefc8e1927350e61aa034f5e253a49759426b4df",
+        "sha256_in_prefix": "a0858cc08fdc8e11c1cf6b0fdefc8e1927350e61aa034f5e253a49759426b4df",
+        "size_in_bytes": 25682
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.css.map",
+        "path_type": "hardlink",
+        "sha256": "f2faa64d2fb77e336f19bbf344b5133dd9c62cba2818f779ff1397c0afa09fae",
+        "sha256_in_prefix": "f2faa64d2fb77e336f19bbf344b5133dd9c62cba2818f779ff1397c0afa09fae",
+        "size_in_bytes": 48005
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.min.css",
+        "path_type": "hardlink",
+        "sha256": "f2e1cc227d6bbb4192e4a3becdfed971c7fc530d76200e43add11c98cb962c53",
+        "sha256_in_prefix": "f2e1cc227d6bbb4192e4a3becdfed971c7fc530d76200e43add11c98cb962c53",
+        "size_in_bytes": 23411
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap-theme.min.css.map",
+        "path_type": "hardlink",
+        "sha256": "5ebabc49db378681cf6412aa00bd3b7a111a09f2815231f4b56e296fac486130",
+        "sha256_in_prefix": "5ebabc49db378681cf6412aa00bd3b7a111a09f2815231f4b56e296fac486130",
+        "size_in_bytes": 75600
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.css",
+        "path_type": "hardlink",
+        "sha256": "d170052c16caec3810f2dee6456539045d8e326f6d8ed7c7f78e59ed34de348a",
+        "sha256_in_prefix": "d170052c16caec3810f2dee6456539045d8e326f6d8ed7c7f78e59ed34de348a",
+        "size_in_bytes": 145933
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.css.map",
+        "path_type": "hardlink",
+        "sha256": "4a220750b3f226cd58bb2e6eef7634c06e122da1783f8a43fb251f6377e1d304",
+        "sha256_in_prefix": "4a220750b3f226cd58bb2e6eef7634c06e122da1783f8a43fb251f6377e1d304",
+        "size_in_bytes": 390887
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.min.css",
+        "path_type": "hardlink",
+        "sha256": "6d92dfc1700fd38cd130ad818e23bc8aef697f815b2ea5face2b5dfad22f2e11",
+        "sha256_in_prefix": "6d92dfc1700fd38cd130ad818e23bc8aef697f815b2ea5face2b5dfad22f2e11",
+        "size_in_bytes": 121457
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/css/bootstrap.min.css.map",
+        "path_type": "hardlink",
+        "sha256": "78b58c9ebfd42ec2c61bc4fdf46a5df998e6cd907c773076a0a6e8f5686bafc3",
+        "sha256_in_prefix": "78b58c9ebfd42ec2c61bc4fdf46a5df998e6cd907c773076a0a6e8f5686bafc3",
+        "size_in_bytes": 540434
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.eot",
+        "path_type": "hardlink",
+        "sha256": "13634da87d9e23f8c3ed9108ce1724d183a39ad072e73e1b3d8cbf646d2d0407",
+        "sha256_in_prefix": "13634da87d9e23f8c3ed9108ce1724d183a39ad072e73e1b3d8cbf646d2d0407",
+        "size_in_bytes": 20127
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.svg",
+        "path_type": "hardlink",
+        "sha256": "42f60659d265c1a3c30f9fa42abcbb56bd4a53af4d83d316d6dd7a36903c43e5",
+        "sha256_in_prefix": "42f60659d265c1a3c30f9fa42abcbb56bd4a53af4d83d316d6dd7a36903c43e5",
+        "size_in_bytes": 108738
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.ttf",
+        "path_type": "hardlink",
+        "sha256": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456",
+        "sha256_in_prefix": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456",
+        "size_in_bytes": 45404
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.woff",
+        "path_type": "hardlink",
+        "sha256": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742",
+        "sha256_in_prefix": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742",
+        "size_in_bytes": 23424
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/fonts/glyphicons-halflings-regular.woff2",
+        "path_type": "hardlink",
+        "sha256": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c",
+        "sha256_in_prefix": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c",
+        "size_in_bytes": 18028
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/js/bootstrap.js",
+        "path_type": "hardlink",
+        "sha256": "dbd2a35e72edc7d6bde483481a912f1c38aa57fab2747d9b071d317339ee03a2",
+        "sha256_in_prefix": "dbd2a35e72edc7d6bde483481a912f1c38aa57fab2747d9b071d317339ee03a2",
+        "size_in_bytes": 75484
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/js/bootstrap.min.js",
+        "path_type": "hardlink",
+        "sha256": "9ee2fcff6709e4d0d24b09ca0fc56aade12b4961ed9c43fd13b03248bfb57afe",
+        "sha256_in_prefix": "9ee2fcff6709e4d0d24b09ca0fc56aade12b4961ed9c43fd13b03248bfb57afe",
+        "size_in_bytes": 39680
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/bootstrap/js/npm.js",
+        "path_type": "hardlink",
+        "sha256": "c7aa82a1aa7d45224a38d926d2adaff7fe4aef5bcdafa2a47bdac057f4422c2d",
+        "sha256_in_prefix": "c7aa82a1aa7d45224a38d926d2adaff7fe4aef5bcdafa2a47bdac057f4422c2d",
+        "size_in_bytes": 484
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/css/dataTables.bootstrap.css",
+        "path_type": "hardlink",
+        "sha256": "9612e0ec622a0c2c99c5337cd8e43fbd8ec67d186decfd37814d6d53ee79f3b8",
+        "sha256_in_prefix": "9612e0ec622a0c2c99c5337cd8e43fbd8ec67d186decfd37814d6d53ee79f3b8",
+        "size_in_bytes": 7678
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/css/dataTables.extra.css",
+        "path_type": "hardlink",
+        "sha256": "31a2cd6bb27a27796fb3564250fa1aae1e154d807fd2aedea2365c261e9a1e61",
+        "sha256_in_prefix": "31a2cd6bb27a27796fb3564250fa1aae1e154d807fd2aedea2365c261e9a1e61",
+        "size_in_bytes": 1216
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/images/sort_asc.png",
+        "path_type": "hardlink",
+        "sha256": "ee6010bb0a8d17e58307136a0fbf0b196d949ab6c50eb66d1ff8f0a7d2a4d48b",
+        "sha256_in_prefix": "ee6010bb0a8d17e58307136a0fbf0b196d949ab6c50eb66d1ff8f0a7d2a4d48b",
+        "size_in_bytes": 1118
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/images/sort_asc_disabled.png",
+        "path_type": "hardlink",
+        "sha256": "539d9e0fc1f3b7196e726c4985397ad804082193d21e68cdf258764d34f85ff6",
+        "sha256_in_prefix": "539d9e0fc1f3b7196e726c4985397ad804082193d21e68cdf258764d34f85ff6",
+        "size_in_bytes": 1050
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/images/sort_both.png",
+        "path_type": "hardlink",
+        "sha256": "624f0a471a2535c4754e1f6974b0e64ee70d6907738346e2a11d0bff20258b8c",
+        "sha256_in_prefix": "624f0a471a2535c4754e1f6974b0e64ee70d6907738346e2a11d0bff20258b8c",
+        "size_in_bytes": 1136
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/images/sort_desc.png",
+        "path_type": "hardlink",
+        "sha256": "26da8e7eaf746a08dec2928977be21aa67212484540a12042b86aa2d904b80e8",
+        "sha256_in_prefix": "26da8e7eaf746a08dec2928977be21aa67212484540a12042b86aa2d904b80e8",
+        "size_in_bytes": 1127
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/images/sort_desc_disabled.png",
+        "path_type": "hardlink",
+        "sha256": "3450cc1e5a1585690226a713a726753b3fa2d177e41338a36e0a3188e3f02663",
+        "sha256_in_prefix": "3450cc1e5a1585690226a713a726753b3fa2d177e41338a36e0a3188e3f02663",
+        "size_in_bytes": 1045
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/js/dataTables.bootstrap.js",
+        "path_type": "hardlink",
+        "sha256": "22ee68b3785e3fc3d12b11be901964338674ed9429b1374fe46eb03aa4559784",
+        "sha256_in_prefix": "22ee68b3785e3fc3d12b11be901964338674ed9429b1374fe46eb03aa4559784",
+        "size_in_bytes": 4319
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/js/jquery.dataTables.min.js",
+        "path_type": "hardlink",
+        "sha256": "35f3f303d5ce291a944de9403839daab82bc806766962c91dec925b74dfd4e16",
+        "sha256_in_prefix": "35f3f303d5ce291a944de9403839daab82bc806766962c91dec925b74dfd4e16",
+        "size_in_bytes": 78980
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datatables/upgrade1.10.txt",
+        "path_type": "hardlink",
+        "sha256": "0c5051e11f91048c1c648630caa9b60a14c8c3b88459736c16fcd72e1fac9648",
+        "sha256_in_prefix": "0c5051e11f91048c1c648630caa9b60a14c8c3b88459736c16fcd72e1fac9648",
+        "size_in_bytes": 2686
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/css/bootstrap-datepicker3.css",
+        "path_type": "hardlink",
+        "sha256": "ee060ddc062a5156f276fc7a1f56807b9d4d01976a03085ffeb17615f7346ad7",
+        "sha256_in_prefix": "ee060ddc062a5156f276fc7a1f56807b9d4d01976a03085ffeb17615f7346ad7",
+        "size_in_bytes": 22729
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/css/bootstrap-datepicker3.min.css",
+        "path_type": "hardlink",
+        "sha256": "85e4193f500642647681f64788a1322e8a8348e2aae5e9e361e893b06c1663d6",
+        "sha256_in_prefix": "85e4193f500642647681f64788a1322e8a8348e2aae5e9e361e893b06c1663d6",
+        "size_in_bytes": 21013
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/bootstrap-datepicker.js",
+        "path_type": "hardlink",
+        "sha256": "09957709913ba3a4a852098e5e915d5d4b86843108f822552342f29a17ae6736",
+        "sha256_in_prefix": "09957709913ba3a4a852098e5e915d5d4b86843108f822552342f29a17ae6736",
+        "size_in_bytes": 57916
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/bootstrap-datepicker.min.js",
+        "path_type": "hardlink",
+        "sha256": "14a3c0a698aad390c02966564f28edadf383731e8d5d5eca0f308d15d970bc16",
+        "sha256_in_prefix": "14a3c0a698aad390c02966564f28edadf383731e8d5d5eca0f308d15d970bc16",
+        "size_in_bytes": 106468
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker-en-CA.min.js",
+        "path_type": "hardlink",
+        "sha256": "88d7af014a3989a5e599c880990ca16a2b98b630bec0d57ef667b843832155a0",
+        "sha256_in_prefix": "88d7af014a3989a5e599c880990ca16a2b98b630bec0d57ef667b843832155a0",
+        "size_in_bytes": 636
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ar-tn.min.js",
+        "path_type": "hardlink",
+        "sha256": "e4edbe6626f99e36377a0e31cd682ad30daf8ad1e5670d88b36b6aa6b1e58175",
+        "sha256_in_prefix": "e4edbe6626f99e36377a0e31cd682ad30daf8ad1e5670d88b36b6aa6b1e58175",
+        "size_in_bytes": 704
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ar.min.js",
+        "path_type": "hardlink",
+        "sha256": "bc3f566026d7e8a1e44c82f05db41c3b37a48369bd9b4f0ca1072d6e2b846585",
+        "sha256_in_prefix": "bc3f566026d7e8a1e44c82f05db41c3b37a48369bd9b4f0ca1072d6e2b846585",
+        "size_in_bytes": 714
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.az.min.js",
+        "path_type": "hardlink",
+        "sha256": "193b1352afbf99024a869d2227af3a2b93befd942721073a0cffa97c197686e5",
+        "sha256_in_prefix": "193b1352afbf99024a869d2227af3a2b93befd942721073a0cffa97c197686e5",
+        "size_in_bytes": 531
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bg.min.js",
+        "path_type": "hardlink",
+        "sha256": "2cf635470d48da4c65cd84c0ed5eb8f5b9ce3435379d25b98331d1896db3f7d4",
+        "sha256_in_prefix": "2cf635470d48da4c65cd84c0ed5eb8f5b9ce3435379d25b98331d1896db3f7d4",
+        "size_in_bytes": 615
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bm.min.js",
+        "path_type": "hardlink",
+        "sha256": "bdefce7a4f2f4ad75e07a292eb71876e2ef46939d8347e30198e786ac5701659",
+        "sha256_in_prefix": "bdefce7a4f2f4ad75e07a292eb71876e2ef46939d8347e30198e786ac5701659",
+        "size_in_bytes": 562
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bn.min.js",
+        "path_type": "hardlink",
+        "sha256": "2d6539c95381b6744603d34fc9b534cdb01cbcb29b175a1f0900ee7ad84cfdd2",
+        "sha256_in_prefix": "2d6539c95381b6744603d34fc9b534cdb01cbcb29b175a1f0900ee7ad84cfdd2",
+        "size_in_bytes": 1210
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.br.min.js",
+        "path_type": "hardlink",
+        "sha256": "d6b9779d1bdfe623555f9d7a3d0b1cb85e6b1ce8234b44a6f873efa38b056a08",
+        "sha256_in_prefix": "d6b9779d1bdfe623555f9d7a3d0b1cb85e6b1ce8234b44a6f873efa38b056a08",
+        "size_in_bytes": 510
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.bs.min.js",
+        "path_type": "hardlink",
+        "sha256": "1aa3000d5ff8f197e2331e749fe565968253a76d5d12b7db0e1ddc1b1d9b4917",
+        "sha256_in_prefix": "1aa3000d5ff8f197e2331e749fe565968253a76d5d12b7db0e1ddc1b1d9b4917",
+        "size_in_bytes": 475
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ca.min.js",
+        "path_type": "hardlink",
+        "sha256": "4cf8d805d5ab6fb301019b382b84058de84eb806135281e77d584b3d745d9725",
+        "sha256_in_prefix": "4cf8d805d5ab6fb301019b382b84058de84eb806135281e77d584b3d745d9725",
+        "size_in_bytes": 513
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.cs.min.js",
+        "path_type": "hardlink",
+        "sha256": "a5b5bbba5b7c41c0e58a68fe250a65aec0a27aa0af43ff151abed9753b9ebfc7",
+        "sha256_in_prefix": "a5b5bbba5b7c41c0e58a68fe250a65aec0a27aa0af43ff151abed9753b9ebfc7",
+        "size_in_bytes": 536
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.cy.min.js",
+        "path_type": "hardlink",
+        "sha256": "81b6015bbc4c5b161ed24d13e4b620590e493722dff420630acc1679e9576c7c",
+        "sha256_in_prefix": "81b6015bbc4c5b161ed24d13e4b620590e493722dff420630acc1679e9576c7c",
+        "size_in_bytes": 433
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.da.min.js",
+        "path_type": "hardlink",
+        "sha256": "a95d43e040c1388e32c0cfc6cd900f1e71c147235730253ba8073475e2e91c3a",
+        "sha256_in_prefix": "a95d43e040c1388e32c0cfc6cd900f1e71c147235730253ba8073475e2e91c3a",
+        "size_in_bytes": 514
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.de.min.js",
+        "path_type": "hardlink",
+        "sha256": "31183415d0c3aaf42443754850c642677f4ce8ee34929a0862a086536ad1cb11",
+        "sha256_in_prefix": "31183415d0c3aaf42443754850c642677f4ce8ee34929a0862a086536ad1cb11",
+        "size_in_bytes": 517
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.el.min.js",
+        "path_type": "hardlink",
+        "sha256": "0d8106513eac1e3b12ce4429a00a1cc512dceb01fd3c4723b3d00983e2a1ce0c",
+        "sha256_in_prefix": "0d8106513eac1e3b12ce4429a00a1cc512dceb01fd3c4723b3d00983e2a1ce0c",
+        "size_in_bytes": 764
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-AU.min.js",
+        "path_type": "hardlink",
+        "sha256": "4523224b228c2c04ecabe21eff0267d1079eb1b336f753cc57359cbd28aba4a9",
+        "sha256_in_prefix": "4523224b228c2c04ecabe21eff0267d1079eb1b336f753cc57359cbd28aba4a9",
+        "size_in_bytes": 517
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-CA.min.js",
+        "path_type": "hardlink",
+        "sha256": "4ec9db635f69c4fbf861bc62d3b73876c79b04bece4931eae07b972e4a59d2db",
+        "sha256_in_prefix": "4ec9db635f69c4fbf861bc62d3b73876c79b04bece4931eae07b972e4a59d2db",
+        "size_in_bytes": 518
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-GB.min.js",
+        "path_type": "hardlink",
+        "sha256": "cd654bbfdae375201455686da8951d195d4ee4e357a5730426c3a4a7b076819e",
+        "sha256_in_prefix": "cd654bbfdae375201455686da8951d195d4ee4e357a5730426c3a4a7b076819e",
+        "size_in_bytes": 518
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-IE.min.js",
+        "path_type": "hardlink",
+        "sha256": "c6fbb6270fa9a060006e36a8ad2ae453af4b774f89f7f949b4789f80aa67e2d6",
+        "sha256_in_prefix": "c6fbb6270fa9a060006e36a8ad2ae453af4b774f89f7f949b4789f80aa67e2d6",
+        "size_in_bytes": 518
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-NZ.min.js",
+        "path_type": "hardlink",
+        "sha256": "57d3f3f496f32a0250b88cc47bc9917ac12c6ffb59342196b8b9669723915fd7",
+        "sha256_in_prefix": "57d3f3f496f32a0250b88cc47bc9917ac12c6ffb59342196b8b9669723915fd7",
+        "size_in_bytes": 517
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.en-ZA.min.js",
+        "path_type": "hardlink",
+        "sha256": "a6045120a3ba1e2d2fbab5c87de17eb3bba440c4a4b97314d47269ea0f9fa9a3",
+        "sha256_in_prefix": "a6045120a3ba1e2d2fbab5c87de17eb3bba440c4a4b97314d47269ea0f9fa9a3",
+        "size_in_bytes": 517
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.eo.min.js",
+        "path_type": "hardlink",
+        "sha256": "e17f6cf02c53be65fefd50fe081eca19f723dd4e2d602d876ce513f4f8282e0d",
+        "sha256_in_prefix": "e17f6cf02c53be65fefd50fe081eca19f723dd4e2d602d876ce513f4f8282e0d",
+        "size_in_bytes": 515
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.es.min.js",
+        "path_type": "hardlink",
+        "sha256": "2b91beeea574b63b872f42e58425344ea40a47eed0c13f0c7c451ed948299916",
+        "sha256_in_prefix": "2b91beeea574b63b872f42e58425344ea40a47eed0c13f0c7c451ed948299916",
+        "size_in_bytes": 513
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.et.min.js",
+        "path_type": "hardlink",
+        "sha256": "0e4f7bea4a4d352bd65bb2502d946b571494657b060967c58fe994215c661693",
+        "sha256_in_prefix": "0e4f7bea4a4d352bd65bb2502d946b571494657b060967c58fe994215c661693",
+        "size_in_bytes": 537
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.eu.min.js",
+        "path_type": "hardlink",
+        "sha256": "e1ec8a5aa4e4783cced5b349bdc5b6866995868f67d9d9dffd277e53fdb19d3a",
+        "sha256_in_prefix": "e1ec8a5aa4e4783cced5b349bdc5b6866995868f67d9d9dffd277e53fdb19d3a",
+        "size_in_bytes": 528
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fa.min.js",
+        "path_type": "hardlink",
+        "sha256": "24e40109ba51e8c8c1209defd1194f413c7982e4a916f397a1604000426a17c2",
+        "sha256_in_prefix": "24e40109ba51e8c8c1209defd1194f413c7982e4a916f397a1604000426a17c2",
+        "size_in_bytes": 670
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fi.min.js",
+        "path_type": "hardlink",
+        "sha256": "1d2bbbbf5ea34d7c44422f6057be6299753503f2ed974f87212c3b1f3d284ddc",
+        "sha256_in_prefix": "1d2bbbbf5ea34d7c44422f6057be6299753503f2ed974f87212c3b1f3d284ddc",
+        "size_in_bytes": 528
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fo.min.js",
+        "path_type": "hardlink",
+        "sha256": "386f302d9f6f8ee668b901fb7b0eaa13b62f7bd452bdbbfa9669084183df1112",
+        "sha256_in_prefix": "386f302d9f6f8ee668b901fb7b0eaa13b62f7bd452bdbbfa9669084183df1112",
+        "size_in_bytes": 488
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fr-CH.min.js",
+        "path_type": "hardlink",
+        "sha256": "085eab6e0c48bbcbd2e638f667d421d506c6e51934f3f6ade3a753a836305ddf",
+        "sha256_in_prefix": "085eab6e0c48bbcbd2e638f667d421d506c6e51934f3f6ade3a753a836305ddf",
+        "size_in_bytes": 512
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.fr.min.js",
+        "path_type": "hardlink",
+        "sha256": "21189b4eeaad0efdae51437fd224eb867aefbf280d733c514406cf8026ecf8b1",
+        "sha256_in_prefix": "21189b4eeaad0efdae51437fd224eb867aefbf280d733c514406cf8026ecf8b1",
+        "size_in_bytes": 536
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.gl.min.js",
+        "path_type": "hardlink",
+        "sha256": "6d14b61864e25bde4651d6e9301ef30ad4fe72152e3ec4767bd0dbf11ebbfa6b",
+        "sha256_in_prefix": "6d14b61864e25bde4651d6e9301ef30ad4fe72152e3ec4767bd0dbf11ebbfa6b",
+        "size_in_bytes": 489
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.he.min.js",
+        "path_type": "hardlink",
+        "sha256": "fdecb70cc05725198cd18acb149e56d6230eda239b8edea395dd5843b10fe353",
+        "sha256_in_prefix": "fdecb70cc05725198cd18acb149e56d6230eda239b8edea395dd5843b10fe353",
+        "size_in_bytes": 563
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hi.min.js",
+        "path_type": "hardlink",
+        "sha256": "62db099971f7077f5df5393b5bfc8d95977dd7b7e79124f765fb8af09423beaf",
+        "sha256_in_prefix": "62db099971f7077f5df5393b5bfc8d95977dd7b7e79124f765fb8af09423beaf",
+        "size_in_bytes": 944
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hr.min.js",
+        "path_type": "hardlink",
+        "sha256": "83c37b51f57eb502265bc8e6e9bf90dc8616980a74808f340a1ae3d5f90d9cc7",
+        "sha256_in_prefix": "83c37b51f57eb502265bc8e6e9bf90dc8616980a74808f340a1ae3d5f90d9cc7",
+        "size_in_bytes": 462
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hu.min.js",
+        "path_type": "hardlink",
+        "sha256": "f69ebe694aeb97ac7253ef7f634f59642a44d9206b606cb112e473100db96a2a",
+        "sha256_in_prefix": "f69ebe694aeb97ac7253ef7f634f59642a44d9206b606cb112e473100db96a2a",
+        "size_in_bytes": 541
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.hy.min.js",
+        "path_type": "hardlink",
+        "sha256": "15ee7598e7958c48105e54b2ea49101cf26069f29c3710746d72e904f4a7aa4a",
+        "sha256_in_prefix": "15ee7598e7958c48105e54b2ea49101cf26069f29c3710746d72e904f4a7aa4a",
+        "size_in_bytes": 757
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.id.min.js",
+        "path_type": "hardlink",
+        "sha256": "34d30d5bb774386a223b846aa0a49d2c272bfb413aae0bb586ace96248790483",
+        "sha256_in_prefix": "34d30d5bb774386a223b846aa0a49d2c272bfb413aae0bb586ace96248790483",
+        "size_in_bytes": 453
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.is.min.js",
+        "path_type": "hardlink",
+        "sha256": "153056aa7289787fc7ab4e4925fd1048bfb6d5786f7a75028963c5e67a2749da",
+        "sha256_in_prefix": "153056aa7289787fc7ab4e4925fd1048bfb6d5786f7a75028963c5e67a2749da",
+        "size_in_bytes": 496
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.it-CH.min.js",
+        "path_type": "hardlink",
+        "sha256": "6fea19a180da3b2b85eb07065d2505c0500caf72b4743c17bab06ce54c482a72",
+        "sha256_in_prefix": "6fea19a180da3b2b85eb07065d2505c0500caf72b4743c17bab06ce54c482a72",
+        "size_in_bytes": 506
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.it.min.js",
+        "path_type": "hardlink",
+        "sha256": "435598b7cf4f40eab2feb770b7cb59974a28c0b8934d1525019caa5410d21b66",
+        "sha256_in_prefix": "435598b7cf4f40eab2feb770b7cb59974a28c0b8934d1525019caa5410d21b66",
+        "size_in_bytes": 525
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ja.min.js",
+        "path_type": "hardlink",
+        "sha256": "217d7cd9adb7862404eb9fa460e343d59217d95a65d1c1dbf7a83d9c9aaaa96d",
+        "sha256_in_prefix": "217d7cd9adb7862404eb9fa460e343d59217d95a65d1c1dbf7a83d9c9aaaa96d",
+        "size_in_bytes": 502
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ka.min.js",
+        "path_type": "hardlink",
+        "sha256": "e2ecbafc29bfa80dc02ccc6957871db284990f06d7977e69b5f808d25b7974b1",
+        "sha256_in_prefix": "e2ecbafc29bfa80dc02ccc6957871db284990f06d7977e69b5f808d25b7974b1",
+        "size_in_bytes": 970
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.kh.min.js",
+        "path_type": "hardlink",
+        "sha256": "4985f5e915c143f6526b53e34e2ba50947826ef6a4f6d9a8999d0a50fe48a5c7",
+        "sha256_in_prefix": "4985f5e915c143f6526b53e34e2ba50947826ef6a4f6d9a8999d0a50fe48a5c7",
+        "size_in_bytes": 1076
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.kk.min.js",
+        "path_type": "hardlink",
+        "sha256": "ad3c0e1dd4bfba0dd668edc61d8c85dc1c3bd309c250f924948a6ceea7ba327b",
+        "sha256_in_prefix": "ad3c0e1dd4bfba0dd668edc61d8c85dc1c3bd309c250f924948a6ceea7ba327b",
+        "size_in_bytes": 649
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.km.min.js",
+        "path_type": "hardlink",
+        "sha256": "9b04d5b9ed6afde9cedcc75d58922c8aab1ca26d2836836f9cd18bf6fc81ea8c",
+        "sha256_in_prefix": "9b04d5b9ed6afde9cedcc75d58922c8aab1ca26d2836836f9cd18bf6fc81ea8c",
+        "size_in_bytes": 945
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ko.min.js",
+        "path_type": "hardlink",
+        "sha256": "b73dde6e97f5518db024e7d8004628fe2204956966f8934fedc386b65a120163",
+        "sha256_in_prefix": "b73dde6e97f5518db024e7d8004628fe2204956966f8934fedc386b65a120163",
+        "size_in_bytes": 532
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.kr.min.js",
+        "path_type": "hardlink",
+        "sha256": "1d4c26a2f0a170855c721d47d78a074d26894e84528dcefa31ce28d2895df546",
+        "sha256_in_prefix": "1d4c26a2f0a170855c721d47d78a074d26894e84528dcefa31ce28d2895df546",
+        "size_in_bytes": 575
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.lt.min.js",
+        "path_type": "hardlink",
+        "sha256": "7de02b56a859738d5058c7389ca0c9998bda7f4144a388f91bad18598974355c",
+        "sha256_in_prefix": "7de02b56a859738d5058c7389ca0c9998bda7f4144a388f91bad18598974355c",
+        "size_in_bytes": 565
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.lv.min.js",
+        "path_type": "hardlink",
+        "sha256": "a469cea05dee22cffce1d37d2be678e64836da480fb8093eb21d13ecd87fb957",
+        "sha256_in_prefix": "a469cea05dee22cffce1d37d2be678e64836da480fb8093eb21d13ecd87fb957",
+        "size_in_bytes": 526
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.me.min.js",
+        "path_type": "hardlink",
+        "sha256": "aa27423db076b15f23768e1f88526b4429d39d1ce0747edb0822a60500a0525e",
+        "sha256_in_prefix": "aa27423db076b15f23768e1f88526b4429d39d1ce0747edb0822a60500a0525e",
+        "size_in_bytes": 493
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.mk.min.js",
+        "path_type": "hardlink",
+        "sha256": "5b08b5ae87d53c276e129e946a5cce291597769335ac7cb019c68270ca2bf537",
+        "sha256_in_prefix": "5b08b5ae87d53c276e129e946a5cce291597769335ac7cb019c68270ca2bf537",
+        "size_in_bytes": 657
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.mn.min.js",
+        "path_type": "hardlink",
+        "sha256": "3a37b8a249d4df5133d3f63d4fbc7c1bd93ad589e0a787057893098ca9d2c02b",
+        "sha256_in_prefix": "3a37b8a249d4df5133d3f63d4fbc7c1bd93ad589e0a787057893098ca9d2c02b",
+        "size_in_bytes": 638
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ms.min.js",
+        "path_type": "hardlink",
+        "sha256": "0596b9079335fbb03499dd33f6a3d351f26b9d8eafc920e70b7aa0cce218b760",
+        "sha256_in_prefix": "0596b9079335fbb03499dd33f6a3d351f26b9d8eafc920e70b7aa0cce218b760",
+        "size_in_bytes": 448
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.nl-BE.min.js",
+        "path_type": "hardlink",
+        "sha256": "b2e8dd08e837b29f4deb7bf4efc0cc9de492fe5a68abcb9fce96b33660e8ad0e",
+        "sha256_in_prefix": "b2e8dd08e837b29f4deb7bf4efc0cc9de492fe5a68abcb9fce96b33660e8ad0e",
+        "size_in_bytes": 522
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.nl.min.js",
+        "path_type": "hardlink",
+        "sha256": "5deaf3439b1aa870cfc0e4a3ebbbc6d9e1f306aa8cbc5966fe79c21fc2366461",
+        "sha256_in_prefix": "5deaf3439b1aa870cfc0e4a3ebbbc6d9e1f306aa8cbc5966fe79c21fc2366461",
+        "size_in_bytes": 513
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.no.min.js",
+        "path_type": "hardlink",
+        "sha256": "2c00879378ecdd4b6a290f8b82019176226a0e51a9c0f2074dc26b5972f35088",
+        "sha256_in_prefix": "2c00879378ecdd4b6a290f8b82019176226a0e51a9c0f2074dc26b5972f35088",
+        "size_in_bytes": 515
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.oc.min.js",
+        "path_type": "hardlink",
+        "sha256": "62f1a9429e7ab32bb9319efbdc1e6c58309b371d68f31c32b6d3f141e896d84f",
+        "sha256_in_prefix": "62f1a9429e7ab32bb9319efbdc1e6c58309b371d68f31c32b6d3f141e896d84f",
+        "size_in_bytes": 515
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.pl.min.js",
+        "path_type": "hardlink",
+        "sha256": "e1b2080ed6abc0e4214a137a484d19e7cee87df4e6e7ead3569dcd8f5e41cd11",
+        "sha256_in_prefix": "e1b2080ed6abc0e4214a137a484d19e7cee87df4e6e7ead3569dcd8f5e41cd11",
+        "size_in_bytes": 552
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.pt-BR.min.js",
+        "path_type": "hardlink",
+        "sha256": "40de8a0d4fbd0c827ff4cd329d041fc3f3bdd1e7f4517b9c1a02a7d0b6d4b6ae",
+        "sha256_in_prefix": "40de8a0d4fbd0c827ff4cd329d041fc3f3bdd1e7f4517b9c1a02a7d0b6d4b6ae",
+        "size_in_bytes": 504
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.pt.min.js",
+        "path_type": "hardlink",
+        "sha256": "3225a3ee2b733778fdab4859b169664fbbfbf0b4000ceb90aefecc60577b9172",
+        "sha256_in_prefix": "3225a3ee2b733778fdab4859b169664fbbfbf0b4000ceb90aefecc60577b9172",
+        "size_in_bytes": 498
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ro.min.js",
+        "path_type": "hardlink",
+        "sha256": "6b7c25208293e20a195e7a5cbef9e0c7a150efaa6806900ae0cc66ef8a7a7139",
+        "sha256_in_prefix": "6b7c25208293e20a195e7a5cbef9e0c7a150efaa6806900ae0cc66ef8a7a7139",
+        "size_in_bytes": 505
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.rs-latin.min.js",
+        "path_type": "hardlink",
+        "sha256": "695d64f1da727c6a9088e25b57afac7e4406e8e284195e8b7598cb81d48f39c2",
+        "sha256_in_prefix": "695d64f1da727c6a9088e25b57afac7e4406e8e284195e8b7598cb81d48f39c2",
+        "size_in_bytes": 662
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.rs.min.js",
+        "path_type": "hardlink",
+        "sha256": "c20d6c18a2e8f44f6227ef15a8569e5faf0e545f70a7b8e0471076ab105c070e",
+        "sha256_in_prefix": "c20d6c18a2e8f44f6227ef15a8569e5faf0e545f70a7b8e0471076ab105c070e",
+        "size_in_bytes": 817
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ru.min.js",
+        "path_type": "hardlink",
+        "sha256": "8860d4c27d883d2ce59cb9557827b7338648c50c635280d87443baa01670fc6a",
+        "sha256_in_prefix": "8860d4c27d883d2ce59cb9557827b7338648c50c635280d87443baa01670fc6a",
+        "size_in_bytes": 731
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.si.min.js",
+        "path_type": "hardlink",
+        "sha256": "568b891645c03f74c27aad4345ba2face1edb857b3023ddde6ec8790d1476a84",
+        "sha256_in_prefix": "568b891645c03f74c27aad4345ba2face1edb857b3023ddde6ec8790d1476a84",
+        "size_in_bytes": 988
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sk.min.js",
+        "path_type": "hardlink",
+        "sha256": "0b3f5d0ad33633dc20603a5f2d8f9e7320138bf51cc455160fed0db4f9bf778a",
+        "sha256_in_prefix": "0b3f5d0ad33633dc20603a5f2d8f9e7320138bf51cc455160fed0db4f9bf778a",
+        "size_in_bytes": 497
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sl.min.js",
+        "path_type": "hardlink",
+        "sha256": "d8bbd006d1ab998eec50a3e2807ea824b6998e100db693766a2d68d53ea52952",
+        "sha256_in_prefix": "d8bbd006d1ab998eec50a3e2807ea824b6998e100db693766a2d68d53ea52952",
+        "size_in_bytes": 455
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sq.min.js",
+        "path_type": "hardlink",
+        "sha256": "99f61b2e7aa7dd0e70df0bca91400078fae6deeb43e9cccdb4d8035561bc95f4",
+        "sha256_in_prefix": "99f61b2e7aa7dd0e70df0bca91400078fae6deeb43e9cccdb4d8035561bc95f4",
+        "size_in_bytes": 518
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sr-latin.min.js",
+        "path_type": "hardlink",
+        "sha256": "3fd022b5db28110d71e94badfc5e691ad3c0b37794f60f064e794aa6c08212e1",
+        "sha256_in_prefix": "3fd022b5db28110d71e94badfc5e691ad3c0b37794f60f064e794aa6c08212e1",
+        "size_in_bytes": 478
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sr.min.js",
+        "path_type": "hardlink",
+        "sha256": "9b5a80293774449f573f8336855ae640b6e762014dca5648a939abc8a294d2ba",
+        "sha256_in_prefix": "9b5a80293774449f573f8336855ae640b6e762014dca5648a939abc8a294d2ba",
+        "size_in_bytes": 651
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sv.min.js",
+        "path_type": "hardlink",
+        "sha256": "3f6d05040fc29037d111f5e3e3d7c3039cc33b491376687d325b3e2fdc62a47c",
+        "sha256_in_prefix": "3f6d05040fc29037d111f5e3e3d7c3039cc33b491376687d325b3e2fdc62a47c",
+        "size_in_bytes": 492
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.sw.min.js",
+        "path_type": "hardlink",
+        "sha256": "5cafe7e9c1d215b8c9378272a3fc0e067d08461d54099a0432b8cc7167b5fb08",
+        "sha256_in_prefix": "5cafe7e9c1d215b8c9378272a3fc0e067d08461d54099a0432b8cc7167b5fb08",
+        "size_in_bytes": 431
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.ta.min.js",
+        "path_type": "hardlink",
+        "sha256": "798f2eab1b7421a626d25dff8eb04507ab417b01815b5702100847bdfaa50878",
+        "sha256_in_prefix": "798f2eab1b7421a626d25dff8eb04507ab417b01815b5702100847bdfaa50878",
+        "size_in_bytes": 934
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.tg.min.js",
+        "path_type": "hardlink",
+        "sha256": "d3d71839338b2ee3087b2102a807cbda9a7f4328f1018779acdf30c23ad2a6e8",
+        "sha256_in_prefix": "d3d71839338b2ee3087b2102a807cbda9a7f4328f1018779acdf30c23ad2a6e8",
+        "size_in_bytes": 700
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.th.min.js",
+        "path_type": "hardlink",
+        "sha256": "c29b557f0da70d7174fc2d8af7ddeb93ef39b27e2fd69afa7f57e790c1b831f9",
+        "sha256_in_prefix": "c29b557f0da70d7174fc2d8af7ddeb93ef39b27e2fd69afa7f57e790c1b831f9",
+        "size_in_bytes": 833
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.tk.min.js",
+        "path_type": "hardlink",
+        "sha256": "c09c12730bce594fdff472392bef650c02d3f4c133e8f511c24f2fc900030abb",
+        "sha256_in_prefix": "c09c12730bce594fdff472392bef650c02d3f4c133e8f511c24f2fc900030abb",
+        "size_in_bytes": 530
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.tr.min.js",
+        "path_type": "hardlink",
+        "sha256": "04217d7ef6e198dfc8f5ccfe5d47ad9ab0080f15d0dbb0a63869ebe183b30664",
+        "sha256_in_prefix": "04217d7ef6e198dfc8f5ccfe5d47ad9ab0080f15d0dbb0a63869ebe183b30664",
+        "size_in_bytes": 495
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.uk.min.js",
+        "path_type": "hardlink",
+        "sha256": "809fac07e9ae43238a853371fd7bed6975e412bf3c157492df1320b5547757e1",
+        "sha256_in_prefix": "809fac07e9ae43238a853371fd7bed6975e412bf3c157492df1320b5547757e1",
+        "size_in_bytes": 722
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.uz-cyrl.min.js",
+        "path_type": "hardlink",
+        "sha256": "d4725859589e980eac3d34e3ebb281a42ebb1149c7566bf911c10c7b35db0161",
+        "sha256_in_prefix": "d4725859589e980eac3d34e3ebb281a42ebb1149c7566bf911c10c7b35db0161",
+        "size_in_bytes": 703
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.uz-latn.min.js",
+        "path_type": "hardlink",
+        "sha256": "2886c3259ede7f3a678131d74265bcfca97aa40c84567494b7b67ccdb0475283",
+        "sha256_in_prefix": "2886c3259ede7f3a678131d74265bcfca97aa40c84567494b7b67ccdb0475283",
+        "size_in_bytes": 516
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.vi.min.js",
+        "path_type": "hardlink",
+        "sha256": "4e732f79fe80c53f5f83a98dad3b190a03c3914e20e44c81fadbbaea82c02385",
+        "sha256_in_prefix": "4e732f79fe80c53f5f83a98dad3b190a03c3914e20e44c81fadbbaea82c02385",
+        "size_in_bytes": 551
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.zh-CN.min.js",
+        "path_type": "hardlink",
+        "sha256": "b4c30f02638b91ebf14a458a03d143082df12dada8e0bb02a33248b5469a6df0",
+        "sha256_in_prefix": "b4c30f02638b91ebf14a458a03d143082df12dada8e0bb02a33248b5469a6df0",
+        "size_in_bytes": 613
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/js/locales/bootstrap-datepicker.zh-TW.min.js",
+        "path_type": "hardlink",
+        "sha256": "1a613e1dd614aa635939cce659813558768de519640655eb30d7815892b1dc39",
+        "sha256_in_prefix": "1a613e1dd614aa635939cce659813558768de519640655eb30d7815892b1dc39",
+        "size_in_bytes": 566
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/scss/build3.scss",
+        "path_type": "hardlink",
+        "sha256": "d454511c92d14c8fe17d03351da7391a812882ed051afa22586489378ad30ea8",
+        "sha256_in_prefix": "d454511c92d14c8fe17d03351da7391a812882ed051afa22586489378ad30ea8",
+        "size_in_bytes": 2309
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/datepicker/scss/datepicker3.scss",
+        "path_type": "hardlink",
+        "sha256": "ae6bb4d975bba838c84598fee7d9915b47495e9f312cd301e40ba5669016d624",
+        "sha256_in_prefix": "ae6bb4d975bba838c84598fee7d9915b47495e9f312cd301e40ba5669016d624",
+        "size_in_bytes": 5775
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/highlight/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "bdb8f9bba7125549cb01d68d90050ac9604f5aa43f6fd63e070f6d7d095f8d74",
+        "sha256_in_prefix": "bdb8f9bba7125549cb01d68d90050ac9604f5aa43f6fd63e070f6d7d095f8d74",
+        "size_in_bytes": 1498
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/highlight/classref.txt",
+        "path_type": "hardlink",
+        "sha256": "9c578feb1c824d393058dea484b88b4d205550bba279696e7c990601dffdc237",
+        "sha256_in_prefix": "9c578feb1c824d393058dea484b88b4d205550bba279696e7c990601dffdc237",
+        "size_in_bytes": 22392
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/highlight/highlight.pack.js",
+        "path_type": "hardlink",
+        "sha256": "6208e89791de1d8beabdb81db9a2f2560a4e20861286134e382797f7c2dc767e",
+        "sha256_in_prefix": "6208e89791de1d8beabdb81db9a2f2560a4e20861286134e382797f7c2dc767e",
+        "size_in_bytes": 11276
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/highlight/rstudio.css",
+        "path_type": "hardlink",
+        "sha256": "2bd001a48ec08dbac380397e36576182c708a872c5e10aa4c3de305f3f5f782f",
+        "sha256_in_prefix": "2bd001a48ec08dbac380397e36576182c708a872c5e10aa4c3de305f3f5f782f",
+        "size_in_bytes": 996
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/ionrangeslider/css/ion.rangeSlider.css",
+        "path_type": "hardlink",
+        "sha256": "b48b938f3988f8aa413519aa78bb41cb1751a0a06994f5883955668895e127cf",
+        "sha256_in_prefix": "b48b938f3988f8aa413519aa78bb41cb1751a0a06994f5883955668895e127cf",
+        "size_in_bytes": 4540
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/ionrangeslider/js/ion.rangeSlider.js",
+        "path_type": "hardlink",
+        "sha256": "ce80fe7bb08c4029373a148129e3c02df82a176bb00792844364752fdfd987d0",
+        "sha256_in_prefix": "ce80fe7bb08c4029373a148129e3c02df82a176bb00792844364752fdfd987d0",
+        "size_in_bytes": 84956
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/ionrangeslider/js/ion.rangeSlider.min.js",
+        "path_type": "hardlink",
+        "sha256": "c61e413df106002766c29e017b424a1f809ea402efb9f170d01ae00473200f2c",
+        "sha256_in_prefix": "c61e413df106002766c29e017b424a1f809ea402efb9f170d01ae00473200f2c",
+        "size_in_bytes": 41615
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/ionrangeslider/scss/_base.scss",
+        "path_type": "hardlink",
+        "sha256": "cd47e2ab48a7de7c22b79be749940e10fb34bf9b26ce4fa261edce647861c91f",
+        "sha256_in_prefix": "cd47e2ab48a7de7c22b79be749940e10fb34bf9b26ce4fa261edce647861c91f",
+        "size_in_bytes": 2826
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/ionrangeslider/scss/_mixins.scss",
+        "path_type": "hardlink",
+        "sha256": "ddde1042be8a3b9ace04407f923bf1097dbaeb19491a2531952b0397303d60f3",
+        "sha256_in_prefix": "ddde1042be8a3b9ace04407f923bf1097dbaeb19491a2531952b0397303d60f3",
+        "size_in_bytes": 289
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/ionrangeslider/scss/shiny.scss",
+        "path_type": "hardlink",
+        "sha256": "edd1011aeb22acbfb5fa7b0c34baa606a905108b5b60e99d231c1c8f60d64094",
+        "sha256_in_prefix": "edd1011aeb22acbfb5fa7b0c34baa606a905108b5b60e99d231c1c8f60d64094",
+        "size_in_bytes": 4397
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jquery-AUTHORS.txt",
+        "path_type": "hardlink",
+        "sha256": "2e30eead6100c8d506d8606bf67d11713807a179bdca57a9e49974df5eaadbf4",
+        "sha256_in_prefix": "2e30eead6100c8d506d8606bf67d11713807a179bdca57a9e49974df5eaadbf4",
+        "size_in_bytes": 13369
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jquery.js",
+        "path_type": "hardlink",
+        "sha256": "1fe2bb5390a75e5d61e72c107cab528fc3c29a837d69aab7d200e1dbb5dcd239",
+        "sha256_in_prefix": "1fe2bb5390a75e5d61e72c107cab528fc3c29a837d69aab7d200e1dbb5dcd239",
+        "size_in_bytes": 288580
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jquery.min.js",
+        "path_type": "hardlink",
+        "sha256": "ff1523fb7389539c84c65aba19260648793bb4f5e29329d2ee8804bc37a3fe6e",
+        "sha256_in_prefix": "ff1523fb7389539c84c65aba19260648793bb4f5e29329d2ee8804bc37a3fe6e",
+        "size_in_bytes": 89501
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jquery.min.map",
+        "path_type": "hardlink",
+        "sha256": "399548fb0e7b146c12f5ba18099a47d594a970fee96212eee0ab4852f3e56782",
+        "sha256_in_prefix": "399548fb0e7b146c12f5ba18099a47d594a970fee96212eee0ab4852f3e56782",
+        "size_in_bytes": 137972
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/AUTHORS.txt",
+        "path_type": "hardlink",
+        "sha256": "5b62e1d666c6a373b0734a175fd535f9315549961a0bbd8abd246bad1a775082",
+        "sha256_in_prefix": "5b62e1d666c6a373b0734a175fd535f9315549961a0bbd8abd246bad1a775082",
+        "size_in_bytes": 12660
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/LICENSE.txt",
+        "path_type": "hardlink",
+        "sha256": "de33fb695880d0b07615d4b86f78cd43796906959ade5fdfef70968827a0db78",
+        "sha256_in_prefix": "de33fb695880d0b07615d4b86f78cd43796906959ade5fdfef70968827a0db78",
+        "size_in_bytes": 1817
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/README",
+        "path_type": "hardlink",
+        "sha256": "563353a30a32bbaf9f5bee577137fbe65ff8e594a7cec5dc8183cba3f5669a84",
+        "sha256_in_prefix": "563353a30a32bbaf9f5bee577137fbe65ff8e594a7cec5dc8183cba3f5669a84",
+        "size_in_bytes": 245
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_444444_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "eaf7c7ee2747275dda6c53e731a10db1a7b15f4fbb46e1b69d6bb2056bc9fd81",
+        "sha256_in_prefix": "eaf7c7ee2747275dda6c53e731a10db1a7b15f4fbb46e1b69d6bb2056bc9fd81",
+        "size_in_bytes": 7006
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_555555_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "5d04051dfd9d2d740355404f98a683d1ec0feb2fca7d76e533c1a6e5ce92dd2e",
+        "sha256_in_prefix": "5d04051dfd9d2d740355404f98a683d1ec0feb2fca7d76e533c1a6e5ce92dd2e",
+        "size_in_bytes": 7074
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_777620_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "9dbe4a0d03feed6f65eb2560a0a8b4ba4264545ee8fd31c1763a3b219d0328d6",
+        "sha256_in_prefix": "9dbe4a0d03feed6f65eb2560a0a8b4ba4264545ee8fd31c1763a3b219d0328d6",
+        "size_in_bytes": 4676
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_777777_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "e75b27211e16fcf94715168001bb7055ca376d46f928110ba3d0825232452e5a",
+        "sha256_in_prefix": "e75b27211e16fcf94715168001bb7055ca376d46f928110ba3d0825232452e5a",
+        "size_in_bytes": 7013
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_cc0000_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "02891575d4358e9edde3e42d94057f8e9f82a9d64376f71ee86cef149d30537e",
+        "sha256_in_prefix": "02891575d4358e9edde3e42d94057f8e9f82a9d64376f71ee86cef149d30537e",
+        "size_in_bytes": 4632
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/images/ui-icons_ffffff_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "b6b06deef2b924cc3835d63f4883d47882734a33e71b212d917a68cede3b8e9d",
+        "sha256_in_prefix": "b6b06deef2b924cc3835d63f4883d47882734a33e71b212d917a68cede3b8e9d",
+        "size_in_bytes": 6313
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/index.html",
+        "path_type": "hardlink",
+        "sha256": "e60eff30b665921f7615758e474ab4d8ccbc927b2c5eadb40d7cfe06489888fe",
+        "sha256_in_prefix": "e60eff30b665921f7615758e474ab4d8ccbc927b2c5eadb40d7cfe06489888fe",
+        "size_in_bytes": 32588
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.css",
+        "path_type": "hardlink",
+        "sha256": "a7ac54f58ba507b13621ceb6fcf5fe879f5ac9bdcf049d16153110c6ad048c7c",
+        "sha256_in_prefix": "a7ac54f58ba507b13621ceb6fcf5fe879f5ac9bdcf049d16153110c6ad048c7c",
+        "size_in_bytes": 37326
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.js",
+        "path_type": "hardlink",
+        "sha256": "4f455eb2ddf2094ee969f470f6bfac7adb4c057e8990a374e9da819e943c777d",
+        "sha256_in_prefix": "4f455eb2ddf2094ee969f470f6bfac7adb4c057e8990a374e9da819e943c777d",
+        "size_in_bytes": 520714
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.min.css",
+        "path_type": "hardlink",
+        "sha256": "ac1c8f94750b39b12327a5d0c56fdf946dabfb6d91e5d2a202879ff9a5d67e29",
+        "sha256_in_prefix": "ac1c8f94750b39b12327a5d0c56fdf946dabfb6d91e5d2a202879ff9a5d67e29",
+        "size_in_bytes": 32076
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.min.js",
+        "path_type": "hardlink",
+        "sha256": "28ce75d953678c4942df47a11707a15e3c756021cf89090e3e6aa7ad6b6971c3",
+        "sha256_in_prefix": "28ce75d953678c4942df47a11707a15e3c756021cf89090e3e6aa7ad6b6971c3",
+        "size_in_bytes": 253669
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.structure.css",
+        "path_type": "hardlink",
+        "sha256": "135baa57e778d769db488fa8a8330842c4d2b6d3fe152ec1c7073b99075060ea",
+        "sha256_in_prefix": "135baa57e778d769db488fa8a8330842c4d2b6d3fe152ec1c7073b99075060ea",
+        "size_in_bytes": 18705
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.structure.min.css",
+        "path_type": "hardlink",
+        "sha256": "af16a2b37eda9ca527a4be50cd262d7be26722c9a41a62c6f9984a4a4664c153",
+        "sha256_in_prefix": "af16a2b37eda9ca527a4be50cd262d7be26722c9a41a62c6f9984a4a4664c153",
+        "size_in_bytes": 15548
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.theme.css",
+        "path_type": "hardlink",
+        "sha256": "984303df44d383ebc81065261c781c8123a09b41417cb8a9c90f7b26bd134c7f",
+        "sha256_in_prefix": "984303df44d383ebc81065261c781c8123a09b41417cb8a9c90f7b26bd134c7f",
+        "size_in_bytes": 18671
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/jqueryui/jquery-ui.theme.min.css",
+        "path_type": "hardlink",
+        "sha256": "023ca8c9a46d9c6553cb0287fc8b31c6ee4f5c8d2ce02704d01ccf017f373e97",
+        "sha256_in_prefix": "023ca8c9a46d9c6553cb0287fc8b31c6ee4f5c8d2ce02704d01ccf017f373e97",
+        "size_in_bytes": 13849
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/legacy/jquery-AUTHORS.txt",
+        "path_type": "hardlink",
+        "sha256": "cea3ad0798d9ddf32aa2fc81c2e985c97ae51de39b9169f03a1563488cdc5a05",
+        "sha256_in_prefix": "cea3ad0798d9ddf32aa2fc81c2e985c97ae51de39b9169f03a1563488cdc5a05",
+        "size_in_bytes": 9939
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/legacy/jquery.js",
+        "path_type": "hardlink",
+        "sha256": "430f36f9b5f21aae8cc9dca6a81c4d3d84da5175eaedcf2fdc2c226302cb3575",
+        "sha256_in_prefix": "430f36f9b5f21aae8cc9dca6a81c4d3d84da5175eaedcf2fdc2c226302cb3575",
+        "size_in_bytes": 293430
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/legacy/jquery.min.js",
+        "path_type": "hardlink",
+        "sha256": "668b046d12db350ccba6728890476b3efee53b2f42dbb84743e5e9f1ae0cc404",
+        "sha256_in_prefix": "668b046d12db350ccba6728890476b3efee53b2f42dbb84743e5e9f1ae0cc404",
+        "size_in_bytes": 97163
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/legacy/jquery.min.map",
+        "path_type": "hardlink",
+        "sha256": "502f2b36e97ee4d9c39007cb2b4683bf89b8b119a715dcd2b211ccbe574aeff0",
+        "sha256_in_prefix": "502f2b36e97ee4d9c39007cb2b4683bf89b8b119a715dcd2b211ccbe574aeff0",
+        "size_in_bytes": 143947
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/accessibility/js/selectize-plugin-a11y.js",
+        "path_type": "hardlink",
+        "sha256": "235e4e839a5ae906e882ccfe67f14e2252f42d5fa1d40c7b1a9ee0424f30db7f",
+        "sha256_in_prefix": "235e4e839a5ae906e882ccfe67f14e2252f42d5fa1d40c7b1a9ee0424f30db7f",
+        "size_in_bytes": 6181
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/accessibility/js/selectize-plugin-a11y.min.js",
+        "path_type": "hardlink",
+        "sha256": "f1f6aa36b506c899b8b8a15ebfa96f6830b36db787191e83d6d69a22393ebfc9",
+        "sha256_in_prefix": "f1f6aa36b506c899b8b8a15ebfa96f6830b36db787191e83d6d69a22393ebfc9",
+        "size_in_bytes": 2512
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/css/selectize.bootstrap3.css",
+        "path_type": "hardlink",
+        "sha256": "bddf9493d0779e432833f59c6cf33b2668d7883e5a46f8148519ca409569fe13",
+        "sha256_in_prefix": "bddf9493d0779e432833f59c6cf33b2668d7883e5a46f8148519ca409569fe13",
+        "size_in_bytes": 10766
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/js/selectize.min.js",
+        "path_type": "hardlink",
+        "sha256": "1f206264524032fc4e859a1639ce4b58859a37581c162f0b8d2ef905917869f8",
+        "sha256_in_prefix": "1f206264524032fc4e859a1639ce4b58859a37581c162f0b8d2ef905917869f8",
+        "size_in_bytes": 45139
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/plugins/drag_drop.scss",
+        "path_type": "hardlink",
+        "sha256": "2e54d01ddaf9e90c6f05c775745caca33581c0c8b82e76e3eabf737d71318ab8",
+        "sha256_in_prefix": "2e54d01ddaf9e90c6f05c775745caca33581c0c8b82e76e3eabf737d71318ab8",
+        "size_in_bytes": 460
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/plugins/dropdown_header.scss",
+        "path_type": "hardlink",
+        "sha256": "e31dcf81dbdaf2e1688f5e3cb487e7d6866414929dd4962d41ad2e59d11ad1d9",
+        "sha256_in_prefix": "e31dcf81dbdaf2e1688f5e3cb487e7d6866414929dd4962d41ad2e59d11ad1d9",
+        "size_in_bytes": 677
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/plugins/optgroup_columns.scss",
+        "path_type": "hardlink",
+        "sha256": "f6613b1e93d06d73f2d499ed52ece266eb869e90d8eebbfae21a2c965a8cdc3c",
+        "sha256_in_prefix": "f6613b1e93d06d73f2d499ed52ece266eb869e90d8eebbfae21a2c965a8cdc3c",
+        "size_in_bytes": 317
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/plugins/remove_button.scss",
+        "path_type": "hardlink",
+        "sha256": "8080cf25a466ee388e160b44be600dee35653aced70dba6f12e3ec5e00a42c80",
+        "sha256_in_prefix": "8080cf25a466ee388e160b44be600dee35653aced70dba6f12e3ec5e00a42c80",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/selectize.bootstrap3.scss",
+        "path_type": "hardlink",
+        "sha256": "fd6ec22252b8f34554582efdb1540a2d32117073811f748a85c13d535bc9c15e",
+        "sha256_in_prefix": "fd6ec22252b8f34554582efdb1540a2d32117073811f748a85c13d535bc9c15e",
+        "size_in_bytes": 5917
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/selectize.bootstrap4.scss",
+        "path_type": "hardlink",
+        "sha256": "e4136515aa53756bdd0a4376062864c6e35d99e36fe4e2766470db103c93d4c8",
+        "sha256_in_prefix": "e4136515aa53756bdd0a4376062864c6e35d99e36fe4e2766470db103c93d4c8",
+        "size_in_bytes": 5822
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/selectize.bootstrap5.scss",
+        "path_type": "hardlink",
+        "sha256": "f153d8554af843832df4b43aaa5a65cd66f735fae23399dd8a89b8181365b36f",
+        "sha256_in_prefix": "f153d8554af843832df4b43aaa5a65cd66f735fae23399dd8a89b8181365b36f",
+        "size_in_bytes": 121
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/selectize.default.scss",
+        "path_type": "hardlink",
+        "sha256": "77b1d8b5f4da47ac316714b6ae5ba4d39d4bf0c8c57c36f4aa6f0ea5b2a0f86b",
+        "sha256_in_prefix": "77b1d8b5f4da47ac316714b6ae5ba4d39d4bf0c8c57c36f4aa6f0ea5b2a0f86b",
+        "size_in_bytes": 2342
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/selectize/scss/selectize.scss",
+        "path_type": "hardlink",
+        "sha256": "ced8866d6dca37c6d29f9f78c51c6f63bc61074b128e43c9fa442dba97723f4e",
+        "sha256_in_prefix": "ced8866d6dca37c6d29f9f78c51c6f63bc61074b128e43c9fa442dba97723f4e",
+        "size_in_bytes": 9852
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny-autoreload.js",
+        "path_type": "hardlink",
+        "sha256": "ba1dd764769b45f33d391e40e362b891f1666ec362dbcbb5fe974ce25d19bd34",
+        "sha256_in_prefix": "ba1dd764769b45f33d391e40e362b891f1666ec362dbcbb5fe974ce25d19bd34",
+        "size_in_bytes": 1538
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny-showcase.css",
+        "path_type": "hardlink",
+        "sha256": "c481ef7a7f1f7148a6a6acb03d5918258969058295d0c8d60a0d99e76cc7f05a",
+        "sha256_in_prefix": "c481ef7a7f1f7148a6a6acb03d5918258969058295d0c8d60a0d99e76cc7f05a",
+        "size_in_bytes": 1060
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny-showcase.js",
+        "path_type": "hardlink",
+        "sha256": "369e7176bf43c86c569e088a7725818a16e1ef4363fe746a810d9aed169d104b",
+        "sha256_in_prefix": "369e7176bf43c86c569e088a7725818a16e1ef4363fe746a810d9aed169d104b",
+        "size_in_bytes": 116813
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny-testmode.js",
+        "path_type": "hardlink",
+        "sha256": "7e10bb35c94f04332e073ffee5d0f8e5c2fe01f31d32729294a63408d3c7919b",
+        "sha256_in_prefix": "7e10bb35c94f04332e073ffee5d0f8e5c2fe01f31d32729294a63408d3c7919b",
+        "size_in_bytes": 2148
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny.js",
+        "path_type": "hardlink",
+        "sha256": "19452dd2245b42d13fe346703f4cc0e9c97de7468041dbf1abecbb8ef523a583",
+        "sha256_in_prefix": "19452dd2245b42d13fe346703f4cc0e9c97de7468041dbf1abecbb8ef523a583",
+        "size_in_bytes": 486586
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny.js.map",
+        "path_type": "hardlink",
+        "sha256": "d9ba4d8eac808ae8db610a1d87da9dd71bb2ab014918c21b4be2bfe3ba35d483",
+        "sha256_in_prefix": "d9ba4d8eac808ae8db610a1d87da9dd71bb2ab014918c21b4be2bfe3ba35d483",
+        "size_in_bytes": 809647
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny.min.css",
+        "path_type": "hardlink",
+        "sha256": "21ae766ee835ee635d864a62060b2d91852a00da5d1f2ff4a116f4c3f9795609",
+        "sha256_in_prefix": "21ae766ee835ee635d864a62060b2d91852a00da5d1f2ff4a116f4c3f9795609",
+        "size_in_bytes": 6002
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny.min.js",
+        "path_type": "hardlink",
+        "sha256": "913c0703a8efb1b799523e958ebd8eaadd4271156047d5b146f5375984c6441a",
+        "sha256_in_prefix": "913c0703a8efb1b799523e958ebd8eaadd4271156047d5b146f5375984c6441a",
+        "size_in_bytes": 198750
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny.min.js.map",
+        "path_type": "hardlink",
+        "sha256": "de7357cc38d5c85476be41bacd8af85b45e1e657e34428cef8933a72d73c8dfe",
+        "sha256_in_prefix": "de7357cc38d5c85476be41bacd8af85b45e1e657e34428cef8933a72d73c8dfe",
+        "size_in_bytes": 767414
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny_scss/bootstrap.scss",
+        "path_type": "hardlink",
+        "sha256": "8b8c056ca78fdc369f90037a0c7a2419bd81f41d1bc2b75b08fc2b006eb120cf",
+        "sha256_in_prefix": "8b8c056ca78fdc369f90037a0c7a2419bd81f41d1bc2b75b08fc2b006eb120cf",
+        "size_in_bytes": 2782
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/shiny_scss/shiny.scss",
+        "path_type": "hardlink",
+        "sha256": "11e42ed8da59c5cd88900bd5ad5cd0db4030c131d22fe4212f5d2e530a8d6fee",
+        "sha256_in_prefix": "11e42ed8da59c5cd88900bd5ad5cd0db4030c131d22fe4212f5d2e530a8d6fee",
+        "size_in_bytes": 10357
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/showdown/compressed/showdown.js",
+        "path_type": "hardlink",
+        "sha256": "cec6e5962d54972447ac7b037ee644edc17f8f6d77b323ec3607492c55f0ca73",
+        "sha256_in_prefix": "cec6e5962d54972447ac7b037ee644edc17f8f6d77b323ec3607492c55f0ca73",
+        "size_in_bytes": 9393
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/showdown/license.txt",
+        "path_type": "hardlink",
+        "sha256": "55a503fd53fa1c530b946e0a94548c884195955d4a8e5d8a394af2670cc6dd6f",
+        "sha256_in_prefix": "55a503fd53fa1c530b946e0a94548c884195955d4a8e5d8a394af2670cc6dd6f",
+        "size_in_bytes": 1646
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/showdown/src/showdown.js",
+        "path_type": "hardlink",
+        "sha256": "f9922d397c4caa5f741280ab45c19ca67873aa37efd5cd98210558fe869f8804",
+        "sha256_in_prefix": "f9922d397c4caa5f741280ab45c19ca67873aa37efd5cd98210558fe869f8804",
+        "size_in_bytes": 37933
+      },
+      {
+        "_path": "lib/R/library/shiny/www/shared/strftime/strftime-min.js",
+        "path_type": "hardlink",
+        "sha256": "921174e7050fd77ba7df2409eef7fa0a561e53bc46898470538ef54106c1b9f1",
+        "sha256_in_prefix": "921174e7050fd77ba7df2409eef7fa0a561e53bc46898470538ef54106c1b9f1",
+        "size_in_bytes": 5720
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "614dc069934bf078e506206afb302c03b878dde6f16cd9880d0c465b0b5f09df",
+  "size": 3872210,
+  "subdir": "noarch",
+  "timestamp": 1633161949027,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-shiny-1.7.1-r41h785f33e_0.tar.bz2",
+  "version": "1.7.1"
+}

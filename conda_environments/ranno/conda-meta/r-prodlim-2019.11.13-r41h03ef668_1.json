@@ -1,0 +1,202 @@
+{
+  "build": "r41h03ef668_1",
+  "build_number": 1,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libstdcxx-ng >=9.3.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-kernsmooth",
+    "r-lava",
+    "r-rcpp >=0.11.5",
+    "r-survival"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-prodlim-2019.11.13-r41h03ef668_1",
+  "features": "",
+  "files": [
+    "lib/R/library/prodlim/DESCRIPTION",
+    "lib/R/library/prodlim/INDEX",
+    "lib/R/library/prodlim/Meta/Rd.rds",
+    "lib/R/library/prodlim/Meta/features.rds",
+    "lib/R/library/prodlim/Meta/hsearch.rds",
+    "lib/R/library/prodlim/Meta/links.rds",
+    "lib/R/library/prodlim/Meta/nsInfo.rds",
+    "lib/R/library/prodlim/Meta/package.rds",
+    "lib/R/library/prodlim/NAMESPACE",
+    "lib/R/library/prodlim/R/prodlim",
+    "lib/R/library/prodlim/R/prodlim.rdb",
+    "lib/R/library/prodlim/R/prodlim.rdx",
+    "lib/R/library/prodlim/help/AnIndex",
+    "lib/R/library/prodlim/help/aliases.rds",
+    "lib/R/library/prodlim/help/paths.rds",
+    "lib/R/library/prodlim/help/prodlim.rdb",
+    "lib/R/library/prodlim/help/prodlim.rdx",
+    "lib/R/library/prodlim/html/00Index.html",
+    "lib/R/library/prodlim/html/R.css",
+    "lib/R/library/prodlim/libs/prodlim.so"
+  ],
+  "fn": "r-prodlim-2019.11.13-r41h03ef668_1.tar.bz2",
+  "license": "GPL-2.0-or-later",
+  "license_family": "GPL2",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-prodlim-2019.11.13-r41h03ef668_1",
+    "type": 1
+  },
+  "md5": "57bfb4da47fa4a9bc93824fb395467b9",
+  "name": "r-prodlim",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-prodlim-2019.11.13-r41h03ef668_1.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/prodlim/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "38d16f9172a866b9c8dbada49d6a3b61634049968aaa6801547264663509eb84",
+        "sha256_in_prefix": "38d16f9172a866b9c8dbada49d6a3b61634049968aaa6801547264663509eb84",
+        "size_in_bytes": 709
+      },
+      {
+        "_path": "lib/R/library/prodlim/INDEX",
+        "path_type": "hardlink",
+        "sha256": "aa8646b4304c6bc7ff1108dbd115077b13643888e11d38ca907ee3215bce5982",
+        "sha256_in_prefix": "aa8646b4304c6bc7ff1108dbd115077b13643888e11d38ca907ee3215bce5982",
+        "size_in_bytes": 3072
+      },
+      {
+        "_path": "lib/R/library/prodlim/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "bc7e645a5b10a020ce91fdda7e7cfa7da3b273157eaae059625cfe78311a1e8e",
+        "sha256_in_prefix": "bc7e645a5b10a020ce91fdda7e7cfa7da3b273157eaae059625cfe78311a1e8e",
+        "size_in_bytes": 1862
+      },
+      {
+        "_path": "lib/R/library/prodlim/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/prodlim/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "cc7e566649f985cb0725abb5581ba29120a58b60d334e0498a4441a295a8b9d3",
+        "sha256_in_prefix": "cc7e566649f985cb0725abb5581ba29120a58b60d334e0498a4441a295a8b9d3",
+        "size_in_bytes": 1844
+      },
+      {
+        "_path": "lib/R/library/prodlim/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "70ed7c27cd591f6f5cbc98aafb64d1522c30d044fa3ea42565ee44d0f8f69154",
+        "sha256_in_prefix": "70ed7c27cd591f6f5cbc98aafb64d1522c30d044fa3ea42565ee44d0f8f69154",
+        "size_in_bytes": 758
+      },
+      {
+        "_path": "lib/R/library/prodlim/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "ff7c1a9e3221ad8194408e20e1b7b450e6cbac4c5e1cc4daf83ec7251508e8f6",
+        "sha256_in_prefix": "ff7c1a9e3221ad8194408e20e1b7b450e6cbac4c5e1cc4daf83ec7251508e8f6",
+        "size_in_bytes": 990
+      },
+      {
+        "_path": "lib/R/library/prodlim/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "a2bed3c30d375949e78eb9135db37579647ec43d81160175351ad8164241a68b",
+        "sha256_in_prefix": "a2bed3c30d375949e78eb9135db37579647ec43d81160175351ad8164241a68b",
+        "size_in_bytes": 914
+      },
+      {
+        "_path": "lib/R/library/prodlim/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "a8d120599ef008ff617cb6d8bee30cf5ad3bf873fb232128e900d1a1f2bd6abd",
+        "sha256_in_prefix": "a8d120599ef008ff617cb6d8bee30cf5ad3bf873fb232128e900d1a1f2bd6abd",
+        "size_in_bytes": 2269
+      },
+      {
+        "_path": "lib/R/library/prodlim/R/prodlim",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/prodlim/R/prodlim.rdb",
+        "path_type": "hardlink",
+        "sha256": "4da4b043b906794cf0c3613b2d559b0efdf25e6a524a8da631f09d556188e014",
+        "sha256_in_prefix": "4da4b043b906794cf0c3613b2d559b0efdf25e6a524a8da631f09d556188e014",
+        "size_in_bytes": 250105
+      },
+      {
+        "_path": "lib/R/library/prodlim/R/prodlim.rdx",
+        "path_type": "hardlink",
+        "sha256": "ea87120173dff7b22cf8e5d6465121fea9cba359a9907914a8c9717db9bdfcea",
+        "sha256_in_prefix": "ea87120173dff7b22cf8e5d6465121fea9cba359a9907914a8c9717db9bdfcea",
+        "size_in_bytes": 1448
+      },
+      {
+        "_path": "lib/R/library/prodlim/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "2a56106eae5c4340ed72e3c150b6bb829fa7e7531dd6cc4eb651e10306f04269",
+        "sha256_in_prefix": "2a56106eae5c4340ed72e3c150b6bb829fa7e7531dd6cc4eb651e10306f04269",
+        "size_in_bytes": 1282
+      },
+      {
+        "_path": "lib/R/library/prodlim/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "a6db12637704c1d80bdd1812a091c3561897475904847bf9a3d4a90e022bfabb",
+        "sha256_in_prefix": "a6db12637704c1d80bdd1812a091c3561897475904847bf9a3d4a90e022bfabb",
+        "size_in_bytes": 537
+      },
+      {
+        "_path": "lib/R/library/prodlim/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "a023d0da86f43970ec10833869f993ef7909ed812d0bffbb0967a135743024a2",
+        "sha256_in_prefix": "a023d0da86f43970ec10833869f993ef7909ed812d0bffbb0967a135743024a2",
+        "size_in_bytes": 549
+      },
+      {
+        "_path": "lib/R/library/prodlim/help/prodlim.rdb",
+        "path_type": "hardlink",
+        "sha256": "7620ea62e3873c9907ce7a184abd2a371928aea5a327baeae6e1e72956341a83",
+        "sha256_in_prefix": "7620ea62e3873c9907ce7a184abd2a371928aea5a327baeae6e1e72956341a83",
+        "size_in_bytes": 116297
+      },
+      {
+        "_path": "lib/R/library/prodlim/help/prodlim.rdx",
+        "path_type": "hardlink",
+        "sha256": "b167f9571e3edeeb8e773fda9733f3115bbe5360c2d013db83ad40862ecb659b",
+        "sha256_in_prefix": "b167f9571e3edeeb8e773fda9733f3115bbe5360c2d013db83ad40862ecb659b",
+        "size_in_bytes": 1079
+      },
+      {
+        "_path": "lib/R/library/prodlim/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "c11bb6d1eed2c99d016b0df7c0c46a16932857a33126d18a882b42d55479f2cc",
+        "sha256_in_prefix": "c11bb6d1eed2c99d016b0df7c0c46a16932857a33126d18a882b42d55479f2cc",
+        "size_in_bytes": 7848
+      },
+      {
+        "_path": "lib/R/library/prodlim/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/prodlim/libs/prodlim.so",
+        "path_type": "hardlink",
+        "sha256": "1a1013f6ae8f1d776dc4f8cadd4059a30858536c256321890cd58a879ac89dc2",
+        "sha256_in_prefix": "1a1013f6ae8f1d776dc4f8cadd4059a30858536c256321890cd58a879ac89dc2",
+        "size_in_bytes": 47008
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "de2e8c428724d55d084a30bc1ed47a6018469264465a8b7243c1f24934275487",
+  "size": 422496,
+  "subdir": "linux-64",
+  "timestamp": 1621941777959,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-prodlim-2019.11.13-r41h03ef668_1.tar.bz2",
+  "version": "2019.11.13"
+}

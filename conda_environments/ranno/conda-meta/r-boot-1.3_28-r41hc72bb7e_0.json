@@ -1,0 +1,294 @@
+{
+  "build": "r41hc72bb7e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-boot-1.3_28-r41hc72bb7e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/boot/CITATION",
+    "lib/R/library/boot/DESCRIPTION",
+    "lib/R/library/boot/INDEX",
+    "lib/R/library/boot/Meta/Rd.rds",
+    "lib/R/library/boot/Meta/data.rds",
+    "lib/R/library/boot/Meta/features.rds",
+    "lib/R/library/boot/Meta/hsearch.rds",
+    "lib/R/library/boot/Meta/links.rds",
+    "lib/R/library/boot/Meta/nsInfo.rds",
+    "lib/R/library/boot/Meta/package.rds",
+    "lib/R/library/boot/NAMESPACE",
+    "lib/R/library/boot/R/boot",
+    "lib/R/library/boot/R/boot.rdb",
+    "lib/R/library/boot/R/boot.rdx",
+    "lib/R/library/boot/bd.q",
+    "lib/R/library/boot/data/Rdata.rdb",
+    "lib/R/library/boot/data/Rdata.rds",
+    "lib/R/library/boot/data/Rdata.rdx",
+    "lib/R/library/boot/help/AnIndex",
+    "lib/R/library/boot/help/aliases.rds",
+    "lib/R/library/boot/help/boot.rdb",
+    "lib/R/library/boot/help/boot.rdx",
+    "lib/R/library/boot/help/paths.rds",
+    "lib/R/library/boot/html/00Index.html",
+    "lib/R/library/boot/html/R.css",
+    "lib/R/library/boot/po/de/LC_MESSAGES/R-boot.mo",
+    "lib/R/library/boot/po/en@quot/LC_MESSAGES/R-boot.mo",
+    "lib/R/library/boot/po/fr/LC_MESSAGES/R-boot.mo",
+    "lib/R/library/boot/po/it/LC_MESSAGES/R-boot.mo",
+    "lib/R/library/boot/po/ko/LC_MESSAGES/R-boot.mo",
+    "lib/R/library/boot/po/pl/LC_MESSAGES/R-boot.mo",
+    "lib/R/library/boot/po/ru/LC_MESSAGES/R-boot.mo"
+  ],
+  "fn": "r-boot-1.3_28-r41hc72bb7e_0.tar.bz2",
+  "license": "Unlimited",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-boot-1.3_28-r41hc72bb7e_0",
+    "type": 1
+  },
+  "md5": "cf2efbebc0358a21a08423b0708adca5",
+  "name": "r-boot",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-boot-1.3_28-r41hc72bb7e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/boot/CITATION",
+        "path_type": "hardlink",
+        "sha256": "1968bf240a8fcf35a2b3b0214f8d10c672be343a6596d1d7d8a5cfb49158103a",
+        "sha256_in_prefix": "1968bf240a8fcf35a2b3b0214f8d10c672be343a6596d1d7d8a5cfb49158103a",
+        "size_in_bytes": 1231
+      },
+      {
+        "_path": "lib/R/library/boot/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "b47eb8a5e6a335acb89ba482c21de6660a1ae05a15bd6af406385e864ecd905e",
+        "sha256_in_prefix": "b47eb8a5e6a335acb89ba482c21de6660a1ae05a15bd6af406385e864ecd905e",
+        "size_in_bytes": 1124
+      },
+      {
+        "_path": "lib/R/library/boot/INDEX",
+        "path_type": "hardlink",
+        "sha256": "347fa70f10dffc74478483fc75946ff95369c7e6e5259b9837d793e2e76845da",
+        "sha256_in_prefix": "347fa70f10dffc74478483fc75946ff95369c7e6e5259b9837d793e2e76845da",
+        "size_in_bytes": 2911
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "9154b12c011fb63c5f57a92cf2e9332721f52a14a5130335fae7066bc41ec888",
+        "sha256_in_prefix": "9154b12c011fb63c5f57a92cf2e9332721f52a14a5130335fae7066bc41ec888",
+        "size_in_bytes": 3416
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "a33f0404c5056e69c18305ef50b3b132aaaef7a5447b9a3ddef7398f8988f8ad",
+        "sha256_in_prefix": "a33f0404c5056e69c18305ef50b3b132aaaef7a5447b9a3ddef7398f8988f8ad",
+        "size_in_bytes": 1331
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "2b23a86e8fe677545f904f8dceb2ae5e0aea6fb788143b6572233c8fabe9343f",
+        "sha256_in_prefix": "2b23a86e8fe677545f904f8dceb2ae5e0aea6fb788143b6572233c8fabe9343f",
+        "size_in_bytes": 3196
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "d9d192fc716bfa1a4e63a64a79e6f7fc741b93288dde6763ff53e40983b5436b",
+        "sha256_in_prefix": "d9d192fc716bfa1a4e63a64a79e6f7fc741b93288dde6763ff53e40983b5436b",
+        "size_in_bytes": 1218
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "e12ff59ef4e8962a98dcc148a36b16b69cface2e31f15c8cf96386394b6a7a84",
+        "sha256_in_prefix": "e12ff59ef4e8962a98dcc148a36b16b69cface2e31f15c8cf96386394b6a7a84",
+        "size_in_bytes": 544
+      },
+      {
+        "_path": "lib/R/library/boot/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "64e795b825d050a23cb62d5c9d36e0d1957aa65c4c77f1efeb94e72ab9fefe27",
+        "sha256_in_prefix": "64e795b825d050a23cb62d5c9d36e0d1957aa65c4c77f1efeb94e72ab9fefe27",
+        "size_in_bytes": 1037
+      },
+      {
+        "_path": "lib/R/library/boot/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "046c7e8b1560d1e1d1fac5f44e7c6f48b83755d148aa47a563fb15d36d3cc061",
+        "sha256_in_prefix": "046c7e8b1560d1e1d1fac5f44e7c6f48b83755d148aa47a563fb15d36d3cc061",
+        "size_in_bytes": 814
+      },
+      {
+        "_path": "lib/R/library/boot/R/boot",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/boot/R/boot.rdb",
+        "path_type": "hardlink",
+        "sha256": "26d9a1bd573343cfe3cb7e15738b22181b5fd7798f238d98296eaf77996c03ca",
+        "sha256_in_prefix": "26d9a1bd573343cfe3cb7e15738b22181b5fd7798f238d98296eaf77996c03ca",
+        "size_in_bytes": 201591
+      },
+      {
+        "_path": "lib/R/library/boot/R/boot.rdx",
+        "path_type": "hardlink",
+        "sha256": "21cba9d551afe147511c2f190be29ef560b078fbbed2d8623aa71cd36291dd53",
+        "sha256_in_prefix": "21cba9d551afe147511c2f190be29ef560b078fbbed2d8623aa71cd36291dd53",
+        "size_in_bytes": 1323
+      },
+      {
+        "_path": "lib/R/library/boot/bd.q",
+        "path_type": "hardlink",
+        "sha256": "f8052db934f638b45ab0c6b2def1f1441a25baa9493fcf7d20505a44bb56088a",
+        "sha256_in_prefix": "f8052db934f638b45ab0c6b2def1f1441a25baa9493fcf7d20505a44bb56088a",
+        "size_in_bytes": 15048
+      },
+      {
+        "_path": "lib/R/library/boot/data/Rdata.rdb",
+        "path_type": "hardlink",
+        "sha256": "4bef858aa1384d0bfbb723c832481f1b689df18a78653b95cbe045e263e207d5",
+        "sha256_in_prefix": "4bef858aa1384d0bfbb723c832481f1b689df18a78653b95cbe045e263e207d5",
+        "size_in_bytes": 87563
+      },
+      {
+        "_path": "lib/R/library/boot/data/Rdata.rds",
+        "path_type": "hardlink",
+        "sha256": "ff3287161ad57c331360a6b4a3000492b240694365ac767635631967e0e99ef0",
+        "sha256_in_prefix": "ff3287161ad57c331360a6b4a3000492b240694365ac767635631967e0e99ef0",
+        "size_in_bytes": 482
+      },
+      {
+        "_path": "lib/R/library/boot/data/Rdata.rdx",
+        "path_type": "hardlink",
+        "sha256": "8dcef279fa28bd9d79eb2f930f81382a85594debd8e89e768c8ffaf522bd38e3",
+        "sha256_in_prefix": "8dcef279fa28bd9d79eb2f930f81382a85594debd8e89e768c8ffaf522bd38e3",
+        "size_in_bytes": 772
+      },
+      {
+        "_path": "lib/R/library/boot/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "a5ab0595f131ff1033e7bc56fe558729f419a3ac30fdd17b4acd4748c10cee32",
+        "sha256_in_prefix": "a5ab0595f131ff1033e7bc56fe558729f419a3ac30fdd17b4acd4748c10cee32",
+        "size_in_bytes": 1788
+      },
+      {
+        "_path": "lib/R/library/boot/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "7d39915bdbd228434833b48b5f4470945143bbebeaa83fd57f02346753db2a2d",
+        "sha256_in_prefix": "7d39915bdbd228434833b48b5f4470945143bbebeaa83fd57f02346753db2a2d",
+        "size_in_bytes": 792
+      },
+      {
+        "_path": "lib/R/library/boot/help/boot.rdb",
+        "path_type": "hardlink",
+        "sha256": "731856713a79d40a76f89cbd5c78e09dc037f28c79d71f388cf5029881fcd2e5",
+        "sha256_in_prefix": "731856713a79d40a76f89cbd5c78e09dc037f28c79d71f388cf5029881fcd2e5",
+        "size_in_bytes": 321525
+      },
+      {
+        "_path": "lib/R/library/boot/help/boot.rdx",
+        "path_type": "hardlink",
+        "sha256": "5ff113637468be0939530bacb675505ab4c9a096ba5a67ade5c5c813d88c6afb",
+        "sha256_in_prefix": "5ff113637468be0939530bacb675505ab4c9a096ba5a67ade5c5c813d88c6afb",
+        "size_in_bytes": 1981
+      },
+      {
+        "_path": "lib/R/library/boot/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "37cf3083b0c95ba73f904ba106d025cf09e20366439aa229916d105a93359735",
+        "sha256_in_prefix": "37cf3083b0c95ba73f904ba106d025cf09e20366439aa229916d105a93359735",
+        "size_in_bytes": 830
+      },
+      {
+        "_path": "lib/R/library/boot/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "520ca441a10c77aca1e3bd337b5b971f492dd3f5d833a8cc535d997ee0e3d67b",
+        "sha256_in_prefix": "520ca441a10c77aca1e3bd337b5b971f492dd3f5d833a8cc535d997ee0e3d67b",
+        "size_in_bytes": 12534
+      },
+      {
+        "_path": "lib/R/library/boot/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/boot/po/de/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "ab70c8f37a6cf48759254d10839a6c86b54990ec1dfd4c9307c1f3ed488f2b94",
+        "sha256_in_prefix": "ab70c8f37a6cf48759254d10839a6c86b54990ec1dfd4c9307c1f3ed488f2b94",
+        "size_in_bytes": 8596
+      },
+      {
+        "_path": "lib/R/library/boot/po/en@quot/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "1b01fea97835fa5e12c98ede6725c57f3194e337bd5e44387b3aaca279527673",
+        "sha256_in_prefix": "1b01fea97835fa5e12c98ede6725c57f3194e337bd5e44387b3aaca279527673",
+        "size_in_bytes": 8228
+      },
+      {
+        "_path": "lib/R/library/boot/po/fr/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "12e1d6a54b977ec41ea00443fe063ea05593a012ea03cb1a693888d69a781b9d",
+        "sha256_in_prefix": "12e1d6a54b977ec41ea00443fe063ea05593a012ea03cb1a693888d69a781b9d",
+        "size_in_bytes": 8798
+      },
+      {
+        "_path": "lib/R/library/boot/po/it/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "44b68df8c1dda697e63c5f4363bb7b8065071d07ed789e0f749b08ae187555da",
+        "sha256_in_prefix": "44b68df8c1dda697e63c5f4363bb7b8065071d07ed789e0f749b08ae187555da",
+        "size_in_bytes": 8310
+      },
+      {
+        "_path": "lib/R/library/boot/po/ko/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "487c45b52eef8b23e5901c8f40f73a93c569bafd6b046a968a1d180bcd0475df",
+        "sha256_in_prefix": "487c45b52eef8b23e5901c8f40f73a93c569bafd6b046a968a1d180bcd0475df",
+        "size_in_bytes": 10483
+      },
+      {
+        "_path": "lib/R/library/boot/po/pl/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "561a381fc68b89897f022de7773f1f0bd947b018eb0b9eb30b2c2225e408d953",
+        "sha256_in_prefix": "561a381fc68b89897f022de7773f1f0bd947b018eb0b9eb30b2c2225e408d953",
+        "size_in_bytes": 8880
+      },
+      {
+        "_path": "lib/R/library/boot/po/ru/LC_MESSAGES/R-boot.mo",
+        "path_type": "hardlink",
+        "sha256": "603e8fc159b5fa141cc3bef4c8be8241f86ac9b9780a8eedef9cd0f7e1d19ca9",
+        "sha256_in_prefix": "603e8fc159b5fa141cc3bef4c8be8241f86ac9b9780a8eedef9cd0f7e1d19ca9",
+        "size_in_bytes": 8285
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "bc9df2debd4c94e55f56b052d1ee9645a41e085f0ecd042d3272ffd20668c5a5",
+  "size": 647794,
+  "subdir": "noarch",
+  "timestamp": 1621840297982,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-boot-1.3_28-r41hc72bb7e_0.tar.bz2",
+  "version": "1.3_28"
+}

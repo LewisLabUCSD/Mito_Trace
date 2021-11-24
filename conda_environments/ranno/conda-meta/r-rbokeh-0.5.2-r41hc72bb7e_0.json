@@ -1,0 +1,745 @@
+{
+  "build": "r41hc72bb7e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-digest",
+    "r-ggplot2",
+    "r-gistr",
+    "r-hexbin",
+    "r-htmlwidgets >=0.5",
+    "r-jsonlite",
+    "r-lazyeval",
+    "r-magrittr",
+    "r-maps",
+    "r-pryr",
+    "r-scales"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-rbokeh-0.5.2-r41hc72bb7e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/rbokeh/DESCRIPTION",
+    "lib/R/library/rbokeh/INDEX",
+    "lib/R/library/rbokeh/LICENSE",
+    "lib/R/library/rbokeh/Meta/Rd.rds",
+    "lib/R/library/rbokeh/Meta/data.rds",
+    "lib/R/library/rbokeh/Meta/features.rds",
+    "lib/R/library/rbokeh/Meta/hsearch.rds",
+    "lib/R/library/rbokeh/Meta/links.rds",
+    "lib/R/library/rbokeh/Meta/nsInfo.rds",
+    "lib/R/library/rbokeh/Meta/package.rds",
+    "lib/R/library/rbokeh/Meta/vignette.rds",
+    "lib/R/library/rbokeh/NAMESPACE",
+    "lib/R/library/rbokeh/NEWS.md",
+    "lib/R/library/rbokeh/R/rbokeh",
+    "lib/R/library/rbokeh/R/rbokeh.rdb",
+    "lib/R/library/rbokeh/R/rbokeh.rdx",
+    "lib/R/library/rbokeh/data/Rdata.rdb",
+    "lib/R/library/rbokeh/data/Rdata.rds",
+    "lib/R/library/rbokeh/data/Rdata.rdx",
+    "lib/R/library/rbokeh/doc/index.html",
+    "lib/R/library/rbokeh/doc/rbokeh-pkg.Rmd",
+    "lib/R/library/rbokeh/doc/rbokeh-pkg.html",
+    "lib/R/library/rbokeh/help/AnIndex",
+    "lib/R/library/rbokeh/help/aliases.rds",
+    "lib/R/library/rbokeh/help/figures/logo.png",
+    "lib/R/library/rbokeh/help/paths.rds",
+    "lib/R/library/rbokeh/help/rbokeh.rdb",
+    "lib/R/library/rbokeh/help/rbokeh.rdx",
+    "lib/R/library/rbokeh/html/00Index.html",
+    "lib/R/library/rbokeh/html/R.css",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh-widgets.min.css",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh-widgets.min.js",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh.min.css",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh.min.js",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/icons-classic/label.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/icons-classic/resultset_next.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/icons-classic/resultset_previous.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/actions.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ajax-loader-small.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_redo.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_right_peppermint.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_right_spearmint.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_undo.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_blue.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_star.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_toggle_minus.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_toggle_plus.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/calendar.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/collapse.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/comment_yellow.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/down.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/drag-handle.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/editor-helper-bg.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/expand.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/header-bg.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/header-columns-bg.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/header-columns-over-bg.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/help.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/info.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/listview.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/pencil.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/row-over-bg.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-asc.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-asc.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-desc.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-desc.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/stripes.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/tag_red.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/tick.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_flat_0_aaaaaa_40x100.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_flat_75_ffffff_40x100.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_55_fbf9ee_1x400.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_65_ffffff_1x400.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_75_dadada_1x400.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_75_e6e6e6_1x400.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_95_fef1ec_1x400.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_highlight-soft_75_cccccc_1x100.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_222222_256x240.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_2e83ff_256x240.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_454545_256x240.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_888888_256x240.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_cd0a0a_256x240.png",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/user_identity.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/user_identity_plus.gif",
+    "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/loader.css",
+    "lib/R/library/rbokeh/htmlwidgets/rbokeh.js",
+    "lib/R/library/rbokeh/htmlwidgets/rbokeh.yaml"
+  ],
+  "fn": "r-rbokeh-0.5.2-r41hc72bb7e_0.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-rbokeh-0.5.2-r41hc72bb7e_0",
+    "type": 1
+  },
+  "md5": "faa9346ac5119f98bd2f3af8c96c2af4",
+  "name": "r-rbokeh",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-rbokeh-0.5.2-r41hc72bb7e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/rbokeh/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "ddfaba22bb92c57b23db9a0164282395a33f1a039973bd01a9552104668f8a26",
+        "sha256_in_prefix": "ddfaba22bb92c57b23db9a0164282395a33f1a039973bd01a9552104668f8a26",
+        "size_in_bytes": 1767
+      },
+      {
+        "_path": "lib/R/library/rbokeh/INDEX",
+        "path_type": "hardlink",
+        "sha256": "af0e0a5a2be4edf553fa09bea034e1c9ea9e0b3ba96251372f80b73d0a08d05f",
+        "sha256_in_prefix": "af0e0a5a2be4edf553fa09bea034e1c9ea9e0b3ba96251372f80b73d0a08d05f",
+        "size_in_bytes": 5326
+      },
+      {
+        "_path": "lib/R/library/rbokeh/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "a8248efa07ed3f8c29a57cf2f86efbe78459f21eb79fe735d2ac61631d2d885b",
+        "sha256_in_prefix": "a8248efa07ed3f8c29a57cf2f86efbe78459f21eb79fe735d2ac61631d2d885b",
+        "size_in_bytes": 70
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "03745fd6048c6a650cf33dfec240a59f7e7de3b173c6c5e85cbdceae115da939",
+        "sha256_in_prefix": "03745fd6048c6a650cf33dfec240a59f7e7de3b173c6c5e85cbdceae115da939",
+        "size_in_bytes": 2686
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "609ab81d67b926b0254e27e6ac6077495b30a1835ce4fa4914ac5eb3ca8e2050",
+        "sha256_in_prefix": "609ab81d67b926b0254e27e6ac6077495b30a1835ce4fa4914ac5eb3ca8e2050",
+        "size_in_bytes": 191
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "ffc27574d6a94b0d4657be9f788b21648c5d0ec51ff429f45fa2d5671d749f93",
+        "sha256_in_prefix": "ffc27574d6a94b0d4657be9f788b21648c5d0ec51ff429f45fa2d5671d749f93",
+        "size_in_bytes": 2372
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "f872293c8449aadfa82ad478fda1fb8017516cfdf78d9d7a215aea009708242f",
+        "sha256_in_prefix": "f872293c8449aadfa82ad478fda1fb8017516cfdf78d9d7a215aea009708242f",
+        "size_in_bytes": 1217
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "f809012e2a439bda078fb8d131fd9a1610270cb73b035d1e5434e067fbda335b",
+        "sha256_in_prefix": "f809012e2a439bda078fb8d131fd9a1610270cb73b035d1e5434e067fbda335b",
+        "size_in_bytes": 1079
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "16319c4c5f99c9345ee16a14e4f25f63fc63f2c6f5afe1bcf3f6e70c94a31a28",
+        "sha256_in_prefix": "16319c4c5f99c9345ee16a14e4f25f63fc63f2c6f5afe1bcf3f6e70c94a31a28",
+        "size_in_bytes": 1420
+      },
+      {
+        "_path": "lib/R/library/rbokeh/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "689674a143c442e5ede7b081f319b015989f1a18402c167073f20f3407a09f5e",
+        "sha256_in_prefix": "689674a143c442e5ede7b081f319b015989f1a18402c167073f20f3407a09f5e",
+        "size_in_bytes": 194
+      },
+      {
+        "_path": "lib/R/library/rbokeh/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "31bf558dcd7696aca4075b56bc0ad4463ec7097f04cd1d2d8a00cd560f62365a",
+        "sha256_in_prefix": "31bf558dcd7696aca4075b56bc0ad4463ec7097f04cd1d2d8a00cd560f62365a",
+        "size_in_bytes": 2526
+      },
+      {
+        "_path": "lib/R/library/rbokeh/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "c84606b12d6813cd24893eaa870a555ea35cea9d116bdab8f39047d45972da88",
+        "sha256_in_prefix": "c84606b12d6813cd24893eaa870a555ea35cea9d116bdab8f39047d45972da88",
+        "size_in_bytes": 10782
+      },
+      {
+        "_path": "lib/R/library/rbokeh/R/rbokeh",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/rbokeh/R/rbokeh.rdb",
+        "path_type": "hardlink",
+        "sha256": "e17589c5db8355029657c9915eb70014386d588ecc0fb7cdd9e6b946faf3ed02",
+        "sha256_in_prefix": "e17589c5db8355029657c9915eb70014386d588ecc0fb7cdd9e6b946faf3ed02",
+        "size_in_bytes": 350206
+      },
+      {
+        "_path": "lib/R/library/rbokeh/R/rbokeh.rdx",
+        "path_type": "hardlink",
+        "sha256": "9eefd368ddc19dc9d0da34249d88532122339d8bad12fefbed7264f06523cf26",
+        "sha256_in_prefix": "9eefd368ddc19dc9d0da34249d88532122339d8bad12fefbed7264f06523cf26",
+        "size_in_bytes": 3522
+      },
+      {
+        "_path": "lib/R/library/rbokeh/data/Rdata.rdb",
+        "path_type": "hardlink",
+        "sha256": "d2355417b024256208e6be5276cf7cb137613112b4476a83b4b6fabd879079b3",
+        "sha256_in_prefix": "d2355417b024256208e6be5276cf7cb137613112b4476a83b4b6fabd879079b3",
+        "size_in_bytes": 181679
+      },
+      {
+        "_path": "lib/R/library/rbokeh/data/Rdata.rds",
+        "path_type": "hardlink",
+        "sha256": "4913cf53e8349b24b4e10b7339dab64d9fb68bd0098a603aac8f30e19967b16c",
+        "sha256_in_prefix": "4913cf53e8349b24b4e10b7339dab64d9fb68bd0098a603aac8f30e19967b16c",
+        "size_in_bytes": 114
+      },
+      {
+        "_path": "lib/R/library/rbokeh/data/Rdata.rdx",
+        "path_type": "hardlink",
+        "sha256": "a0f6bce8ca8077b1fe582d51d183c60a855c9a017c2d2dd5c12656c1a99c6dd6",
+        "sha256_in_prefix": "a0f6bce8ca8077b1fe582d51d183c60a855c9a017c2d2dd5c12656c1a99c6dd6",
+        "size_in_bytes": 181
+      },
+      {
+        "_path": "lib/R/library/rbokeh/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "ca7985f5eb94d55bc42423b8d55959c0ce43029a3b440371851b3198b5dcc2b1",
+        "sha256_in_prefix": "ca7985f5eb94d55bc42423b8d55959c0ce43029a3b440371851b3198b5dcc2b1",
+        "size_in_bytes": 1267
+      },
+      {
+        "_path": "lib/R/library/rbokeh/doc/rbokeh-pkg.Rmd",
+        "path_type": "hardlink",
+        "sha256": "e21c65eae0e0193bcc403ea87a6ebba074ddfc6d4003320c34e926540ca4619f",
+        "sha256_in_prefix": "e21c65eae0e0193bcc403ea87a6ebba074ddfc6d4003320c34e926540ca4619f",
+        "size_in_bytes": 244
+      },
+      {
+        "_path": "lib/R/library/rbokeh/doc/rbokeh-pkg.html",
+        "path_type": "hardlink",
+        "sha256": "c3832e80c0c32522d4606cb4928b402daff5276e3329037d4ec5def17dcab92f",
+        "sha256_in_prefix": "c3832e80c0c32522d4606cb4928b402daff5276e3329037d4ec5def17dcab92f",
+        "size_in_bytes": 4257
+      },
+      {
+        "_path": "lib/R/library/rbokeh/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "44cbdc0adb987adfae2e339c663e855e4bf5b1155c8b71017ae65005accfe666",
+        "sha256_in_prefix": "44cbdc0adb987adfae2e339c663e855e4bf5b1155c8b71017ae65005accfe666",
+        "size_in_bytes": 2019
+      },
+      {
+        "_path": "lib/R/library/rbokeh/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "5331c238bfd4667e9774a9f630dc71a36cd4795d7ef86f37ebe8a3dade319260",
+        "sha256_in_prefix": "5331c238bfd4667e9774a9f630dc71a36cd4795d7ef86f37ebe8a3dade319260",
+        "size_in_bytes": 791
+      },
+      {
+        "_path": "lib/R/library/rbokeh/help/figures/logo.png",
+        "path_type": "hardlink",
+        "sha256": "60dad2540cbc7ff029c44ab24fde7e1e133060a0a48e08eb29172d2c5ca2e2ad",
+        "sha256_in_prefix": "60dad2540cbc7ff029c44ab24fde7e1e133060a0a48e08eb29172d2c5ca2e2ad",
+        "size_in_bytes": 96771
+      },
+      {
+        "_path": "lib/R/library/rbokeh/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "9dd77942d8f5e5822dd92871aded7df1602947e1a4a1659dbcfedd346304a3f7",
+        "sha256_in_prefix": "9dd77942d8f5e5822dd92871aded7df1602947e1a4a1659dbcfedd346304a3f7",
+        "size_in_bytes": 854
+      },
+      {
+        "_path": "lib/R/library/rbokeh/help/rbokeh.rdb",
+        "path_type": "hardlink",
+        "sha256": "9e568d91896b60f7fe483da88da1e7356ebf3800deedce492111989fcc3aa600",
+        "sha256_in_prefix": "9e568d91896b60f7fe483da88da1e7356ebf3800deedce492111989fcc3aa600",
+        "size_in_bytes": 289215
+      },
+      {
+        "_path": "lib/R/library/rbokeh/help/rbokeh.rdx",
+        "path_type": "hardlink",
+        "sha256": "3936741ebe38e061aad87d938ffa79ae0b251cae76e334793fc2ab88cdc271ce",
+        "sha256_in_prefix": "3936741ebe38e061aad87d938ffa79ae0b251cae76e334793fc2ab88cdc271ce",
+        "size_in_bytes": 1908
+      },
+      {
+        "_path": "lib/R/library/rbokeh/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "96fbaec297e74579e8e39132a4c1332677a535bda1a197309fde24822f5a33a9",
+        "sha256_in_prefix": "96fbaec297e74579e8e39132a4c1332677a535bda1a197309fde24822f5a33a9",
+        "size_in_bytes": 12274
+      },
+      {
+        "_path": "lib/R/library/rbokeh/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh-widgets.min.css",
+        "path_type": "hardlink",
+        "sha256": "dfd4c6d799cbcea3d655dd2a28bfd26727618015b7b751a1af3c921722ef487b",
+        "sha256_in_prefix": "dfd4c6d799cbcea3d655dd2a28bfd26727618015b7b751a1af3c921722ef487b",
+        "size_in_bytes": 149150
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh-widgets.min.js",
+        "path_type": "hardlink",
+        "sha256": "00fdcfa2bfd9288db21ad4bbbfe5230c43f58b8b009047813376f9d3908ed8a1",
+        "sha256_in_prefix": "00fdcfa2bfd9288db21ad4bbbfe5230c43f58b8b009047813376f9d3908ed8a1",
+        "size_in_bytes": 377171
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh.min.css",
+        "path_type": "hardlink",
+        "sha256": "e6dca10b13d5abab2ff421da6525232b4c6a26f8809cc12bdf36febbfb0a79a3",
+        "sha256_in_prefix": "e6dca10b13d5abab2ff421da6525232b4c6a26f8809cc12bdf36febbfb0a79a3",
+        "size_in_bytes": 53499
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/bokeh.min.js",
+        "path_type": "hardlink",
+        "sha256": "a909421247511a56b6126faac819707f5f4cb80b1faac0dba2ed6d37f7831a3b",
+        "sha256_in_prefix": "a909421247511a56b6126faac819707f5f4cb80b1faac0dba2ed6d37f7831a3b",
+        "size_in_bytes": 655955
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/icons-classic/label.png",
+        "path_type": "hardlink",
+        "sha256": "c6c9fe1135981fc87bffaa4fe14714e41bbb9fcf5d6e764174e50fbd4e050af3",
+        "sha256_in_prefix": "c6c9fe1135981fc87bffaa4fe14714e41bbb9fcf5d6e764174e50fbd4e050af3",
+        "size_in_bytes": 9343
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/icons-classic/resultset_next.png",
+        "path_type": "hardlink",
+        "sha256": "4a4ec6937dbef81d5b8552612af177b33cd9fb00040139eae559ed93de76822a",
+        "sha256_in_prefix": "4a4ec6937dbef81d5b8552612af177b33cd9fb00040139eae559ed93de76822a",
+        "size_in_bytes": 3022
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/icons-classic/resultset_previous.png",
+        "path_type": "hardlink",
+        "sha256": "284fcf93518f0f0cec603a1bdebd99edb3f01b4372aef3302382aa9839be204d",
+        "sha256_in_prefix": "284fcf93518f0f0cec603a1bdebd99edb3f01b4372aef3302382aa9839be204d",
+        "size_in_bytes": 3023
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/actions.gif",
+        "path_type": "hardlink",
+        "sha256": "0fc35cb781f1cf3ae7fce2178820acce4e2312d6c3bd084a900120f87ce0ba44",
+        "sha256_in_prefix": "0fc35cb781f1cf3ae7fce2178820acce4e2312d6c3bd084a900120f87ce0ba44",
+        "size_in_bytes": 170
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ajax-loader-small.gif",
+        "path_type": "hardlink",
+        "sha256": "f6ecff617ec2ba7f559e6f535cad9b70a3f91120737535dab4d4548a6c83576c",
+        "sha256_in_prefix": "f6ecff617ec2ba7f559e6f535cad9b70a3f91120737535dab4d4548a6c83576c",
+        "size_in_bytes": 1849
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_redo.png",
+        "path_type": "hardlink",
+        "sha256": "62d7a578ca221af16667a255b7778f9357d6c657fd241e3370ca8846c644e601",
+        "sha256_in_prefix": "62d7a578ca221af16667a255b7778f9357d6c657fd241e3370ca8846c644e601",
+        "size_in_bytes": 572
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_right_peppermint.png",
+        "path_type": "hardlink",
+        "sha256": "2b933deaac2ee0bd4bd68f563af7950b915bd8007d08e43eaa40bb66d93bf1fc",
+        "sha256_in_prefix": "2b933deaac2ee0bd4bd68f563af7950b915bd8007d08e43eaa40bb66d93bf1fc",
+        "size_in_bytes": 128
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_right_spearmint.png",
+        "path_type": "hardlink",
+        "sha256": "4d831a5c8aa163030c374f20def555252511ddd81f69439da62880217e430423",
+        "sha256_in_prefix": "4d831a5c8aa163030c374f20def555252511ddd81f69439da62880217e430423",
+        "size_in_bytes": 128
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/arrow_undo.png",
+        "path_type": "hardlink",
+        "sha256": "194c4a68bb55792ce3aa273e6d5afc05591aa16d1e384ed9d993e89e717198bd",
+        "sha256_in_prefix": "194c4a68bb55792ce3aa273e6d5afc05591aa16d1e384ed9d993e89e717198bd",
+        "size_in_bytes": 578
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_blue.png",
+        "path_type": "hardlink",
+        "sha256": "98c03750e1b37ac8e080f0610e1a8cb4aaa63c9f0d8f7b0425756d9fcfa8122f",
+        "sha256_in_prefix": "98c03750e1b37ac8e080f0610e1a8cb4aaa63c9f0d8f7b0425756d9fcfa8122f",
+        "size_in_bytes": 241
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_star.png",
+        "path_type": "hardlink",
+        "sha256": "f8daf83a8fd0b4ec92bdeb0bf6752b3f381c36e59fd3d793ad118e0fc8341054",
+        "sha256_in_prefix": "f8daf83a8fd0b4ec92bdeb0bf6752b3f381c36e59fd3d793ad118e0fc8341054",
+        "size_in_bytes": 279
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_toggle_minus.png",
+        "path_type": "hardlink",
+        "sha256": "5621551f6e9afce6727d5c56b63201eacc93483fa20868ae90d60803b872be74",
+        "sha256_in_prefix": "5621551f6e9afce6727d5c56b63201eacc93483fa20868ae90d60803b872be74",
+        "size_in_bytes": 154
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/bullet_toggle_plus.png",
+        "path_type": "hardlink",
+        "sha256": "bfbe40d92a826d497ae4fc113742d143021ede52e179396cab082cc20ae87d02",
+        "sha256_in_prefix": "bfbe40d92a826d497ae4fc113742d143021ede52e179396cab082cc20ae87d02",
+        "size_in_bytes": 156
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/calendar.gif",
+        "path_type": "hardlink",
+        "sha256": "abe67c8649ca80833dd107c0fd886bee96053ffcfe49fa8016559c983f414a0f",
+        "sha256_in_prefix": "abe67c8649ca80833dd107c0fd886bee96053ffcfe49fa8016559c983f414a0f",
+        "size_in_bytes": 1035
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/collapse.gif",
+        "path_type": "hardlink",
+        "sha256": "3323f9811f1e48bb9ff607018afbad7de4286c2f1c45b47ed911cac2645c1fea",
+        "sha256_in_prefix": "3323f9811f1e48bb9ff607018afbad7de4286c2f1c45b47ed911cac2645c1fea",
+        "size_in_bytes": 846
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/comment_yellow.gif",
+        "path_type": "hardlink",
+        "sha256": "f8e3fa1c28678c564afdf457d1d81f915b1bb8486298c0aae2fd3cd2b3bfa0ab",
+        "sha256_in_prefix": "f8e3fa1c28678c564afdf457d1d81f915b1bb8486298c0aae2fd3cd2b3bfa0ab",
+        "size_in_bytes": 257
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/down.gif",
+        "path_type": "hardlink",
+        "sha256": "abc58583f804e968687a24882b8fdcb65a90cef475fe107b61613aa79381162f",
+        "sha256_in_prefix": "abc58583f804e968687a24882b8fdcb65a90cef475fe107b61613aa79381162f",
+        "size_in_bytes": 59
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/drag-handle.png",
+        "path_type": "hardlink",
+        "sha256": "520589e44a27de780b731b42a414ac66cb56944a77adca230d9fbda8938fca15",
+        "sha256_in_prefix": "520589e44a27de780b731b42a414ac66cb56944a77adca230d9fbda8938fca15",
+        "size_in_bytes": 1130
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/editor-helper-bg.gif",
+        "path_type": "hardlink",
+        "sha256": "c1c2be8a5fa5c80dfb0025d4fa83f22b77572ceefaf712f62e118a66395be2bd",
+        "sha256_in_prefix": "c1c2be8a5fa5c80dfb0025d4fa83f22b77572ceefaf712f62e118a66395be2bd",
+        "size_in_bytes": 1164
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/expand.gif",
+        "path_type": "hardlink",
+        "sha256": "634d05f83eaccc102de88855efe253d4433cf60d3663f7677ed6b994cab83582",
+        "sha256_in_prefix": "634d05f83eaccc102de88855efe253d4433cf60d3663f7677ed6b994cab83582",
+        "size_in_bytes": 851
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/header-bg.gif",
+        "path_type": "hardlink",
+        "sha256": "e1410ddb055e0ba33a1ff00e6f3710c98b9b6577bb503f1015c7c268678237e0",
+        "sha256_in_prefix": "e1410ddb055e0ba33a1ff00e6f3710c98b9b6577bb503f1015c7c268678237e0",
+        "size_in_bytes": 872
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/header-columns-bg.gif",
+        "path_type": "hardlink",
+        "sha256": "5f0f36454a984a990d18429592cd7ed0278bb7acaa3176f8502d1bbe9de0ee3d",
+        "sha256_in_prefix": "5f0f36454a984a990d18429592cd7ed0278bb7acaa3176f8502d1bbe9de0ee3d",
+        "size_in_bytes": 836
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/header-columns-over-bg.gif",
+        "path_type": "hardlink",
+        "sha256": "f4c09f173fe968212e9f0eaf5657a516a998b878f4b98006512a5571021ddc7a",
+        "sha256_in_prefix": "f4c09f173fe968212e9f0eaf5657a516a998b878f4b98006512a5571021ddc7a",
+        "size_in_bytes": 823
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/help.png",
+        "path_type": "hardlink",
+        "sha256": "bbc6d7a9747e875bed763590b69f96a3523397cc3ab2aaca5fd68b7b6c8f17da",
+        "sha256_in_prefix": "bbc6d7a9747e875bed763590b69f96a3523397cc3ab2aaca5fd68b7b6c8f17da",
+        "size_in_bytes": 345
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/info.gif",
+        "path_type": "hardlink",
+        "sha256": "61b1d677a879ceb4d4b48567e31d15333fc944d025f67d17008e4770566d5057",
+        "sha256_in_prefix": "61b1d677a879ceb4d4b48567e31d15333fc944d025f67d17008e4770566d5057",
+        "size_in_bytes": 80
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/listview.gif",
+        "path_type": "hardlink",
+        "sha256": "160a967b0dab6f138c6a43bc5e7bf8b1a3330b2abce95cb439a38a7f55ce499e",
+        "sha256_in_prefix": "160a967b0dab6f138c6a43bc5e7bf8b1a3330b2abce95cb439a38a7f55ce499e",
+        "size_in_bytes": 2380
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/pencil.gif",
+        "path_type": "hardlink",
+        "sha256": "0ac454e3148e52cfa80dc7b8a72cbb9972a1e69d3edb5e1043a38cf13e31c8d0",
+        "sha256_in_prefix": "0ac454e3148e52cfa80dc7b8a72cbb9972a1e69d3edb5e1043a38cf13e31c8d0",
+        "size_in_bytes": 914
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/row-over-bg.gif",
+        "path_type": "hardlink",
+        "sha256": "4692d2fcce0f821fd709fb5d0b3333e0744a6c71d3673798181cbb057bc18b62",
+        "sha256_in_prefix": "4692d2fcce0f821fd709fb5d0b3333e0744a6c71d3673798181cbb057bc18b62",
+        "size_in_bytes": 823
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-asc.gif",
+        "path_type": "hardlink",
+        "sha256": "a320ae93e846a3918e40919ba7e78efb9da208a3d3708f355da3979bdd09d3b3",
+        "sha256_in_prefix": "a320ae93e846a3918e40919ba7e78efb9da208a3d3708f355da3979bdd09d3b3",
+        "size_in_bytes": 830
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-asc.png",
+        "path_type": "hardlink",
+        "sha256": "0b526f876aa72d1ed1ebe76d8aac3913e6f1a32711716030bee72f07a1aef7fb",
+        "sha256_in_prefix": "0b526f876aa72d1ed1ebe76d8aac3913e6f1a32711716030bee72f07a1aef7fb",
+        "size_in_bytes": 105
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-desc.gif",
+        "path_type": "hardlink",
+        "sha256": "dd4b6c9f688cf8d29e01bf94a5d10c6d5d285f73dc2c0e124ba205127533e165",
+        "sha256_in_prefix": "dd4b6c9f688cf8d29e01bf94a5d10c6d5d285f73dc2c0e124ba205127533e165",
+        "size_in_bytes": 833
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/sort-desc.png",
+        "path_type": "hardlink",
+        "sha256": "fde302cf0f85e323b8285aeeb4d698aa2f741363bea080f0e0dcba5e24d7072d",
+        "sha256_in_prefix": "fde302cf0f85e323b8285aeeb4d698aa2f741363bea080f0e0dcba5e24d7072d",
+        "size_in_bytes": 107
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/stripes.png",
+        "path_type": "hardlink",
+        "sha256": "40ddc3e4b4cd2e6c437ca67e390830f327b56df81fa3797ad3741186c4ed82fc",
+        "sha256_in_prefix": "40ddc3e4b4cd2e6c437ca67e390830f327b56df81fa3797ad3741186c4ed82fc",
+        "size_in_bytes": 1125
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/tag_red.png",
+        "path_type": "hardlink",
+        "sha256": "e0de5ac072edf4ce891fd894b5fb359a509a381035648b48780c89bf0a84aa8a",
+        "sha256_in_prefix": "e0de5ac072edf4ce891fd894b5fb359a509a381035648b48780c89bf0a84aa8a",
+        "size_in_bytes": 537
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/tick.png",
+        "path_type": "hardlink",
+        "sha256": "990f1f5a2b0316f4356d0f1efae56ea7cdf381eb620632f1c1ea14aad8f14249",
+        "sha256_in_prefix": "990f1f5a2b0316f4356d0f1efae56ea7cdf381eb620632f1c1ea14aad8f14249",
+        "size_in_bytes": 484
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_flat_0_aaaaaa_40x100.png",
+        "path_type": "hardlink",
+        "sha256": "9a8492a580bf85d3e98ae8861fbd45567e5a1f83eeafcf9574da0399d5f602ab",
+        "sha256_in_prefix": "9a8492a580bf85d3e98ae8861fbd45567e5a1f83eeafcf9574da0399d5f602ab",
+        "size_in_bytes": 180
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_flat_75_ffffff_40x100.png",
+        "path_type": "hardlink",
+        "sha256": "39ab7ccd9f4e82579da78a9241265df288d8eb65dbbd7cf48aed2d0129887df5",
+        "sha256_in_prefix": "39ab7ccd9f4e82579da78a9241265df288d8eb65dbbd7cf48aed2d0129887df5",
+        "size_in_bytes": 178
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_55_fbf9ee_1x400.png",
+        "path_type": "hardlink",
+        "sha256": "691597e8a40a891ea94d3589976ecfc33e6145c49422443b00ac2b5a0022964c",
+        "sha256_in_prefix": "691597e8a40a891ea94d3589976ecfc33e6145c49422443b00ac2b5a0022964c",
+        "size_in_bytes": 120
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_65_ffffff_1x400.png",
+        "path_type": "hardlink",
+        "sha256": "f0e6cd91b837d5c5644d026e5ffeccd907953317cd5c0f689901733afda260b2",
+        "sha256_in_prefix": "f0e6cd91b837d5c5644d026e5ffeccd907953317cd5c0f689901733afda260b2",
+        "size_in_bytes": 105
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_75_dadada_1x400.png",
+        "path_type": "hardlink",
+        "sha256": "c108f5cbf2dd9ec07a26530695ddd95e1664597ce6c056ae44c162cc2e28cec4",
+        "sha256_in_prefix": "c108f5cbf2dd9ec07a26530695ddd95e1664597ce6c056ae44c162cc2e28cec4",
+        "size_in_bytes": 111
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_75_e6e6e6_1x400.png",
+        "path_type": "hardlink",
+        "sha256": "ddf5dd4e0ef2b185e8bb0af7b6e90ebe74a84384cb4700658e76e754c8bfe550",
+        "sha256_in_prefix": "ddf5dd4e0ef2b185e8bb0af7b6e90ebe74a84384cb4700658e76e754c8bfe550",
+        "size_in_bytes": 110
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_glass_95_fef1ec_1x400.png",
+        "path_type": "hardlink",
+        "sha256": "f6f1c1bedf1a0f37cfef81d12f5f012869d1ee7c984775a569827a1784d34f5c",
+        "sha256_in_prefix": "f6f1c1bedf1a0f37cfef81d12f5f012869d1ee7c984775a569827a1784d34f5c",
+        "size_in_bytes": 119
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-bg_highlight-soft_75_cccccc_1x100.png",
+        "path_type": "hardlink",
+        "sha256": "54270656df079c4da5182629a080fc633b6f84b87985eb016d25a560e2c38d4a",
+        "sha256_in_prefix": "54270656df079c4da5182629a080fc633b6f84b87985eb016d25a560e2c38d4a",
+        "size_in_bytes": 101
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_222222_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "57adb0d65f4e91dacfee975d9574422bee7486c8a182d60133728c672f2cdbbc",
+        "sha256_in_prefix": "57adb0d65f4e91dacfee975d9574422bee7486c8a182d60133728c672f2cdbbc",
+        "size_in_bytes": 4369
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_2e83ff_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "20f8c6667afc48aa433ee9eb6d8a0584bdbd6b4a4a9091ff1e6b3adb31e63bd9",
+        "sha256_in_prefix": "20f8c6667afc48aa433ee9eb6d8a0584bdbd6b4a4a9091ff1e6b3adb31e63bd9",
+        "size_in_bytes": 4369
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_454545_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "07460e843c3e59aaadbb34231e699e856a2980753c7a47b66447da5d9f93fb7f",
+        "sha256_in_prefix": "07460e843c3e59aaadbb34231e699e856a2980753c7a47b66447da5d9f93fb7f",
+        "size_in_bytes": 4369
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_888888_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "ea2e29625de3463465e93b002b065f5833e05b97f7a052b1c141e754d62e1a8b",
+        "sha256_in_prefix": "ea2e29625de3463465e93b002b065f5833e05b97f7a052b1c141e754d62e1a8b",
+        "size_in_bytes": 4369
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/ui-icons_cd0a0a_256x240.png",
+        "path_type": "hardlink",
+        "sha256": "1e32c6dbf5d3fd342f27a78aa881550d6412aa207f48468724a6a15402b6041b",
+        "sha256_in_prefix": "1e32c6dbf5d3fd342f27a78aa881550d6412aa207f48468724a6a15402b6041b",
+        "size_in_bytes": 4369
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/user_identity.gif",
+        "path_type": "hardlink",
+        "sha256": "44f0ce2e757bce0fe13363f60a58be3dc1532ea95edc005705b6f0196c62c606",
+        "sha256_in_prefix": "44f0ce2e757bce0fe13363f60a58be3dc1532ea95edc005705b6f0196c62c606",
+        "size_in_bytes": 905
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/images/user_identity_plus.gif",
+        "path_type": "hardlink",
+        "sha256": "ea034ec7ae3011e41c1a673239abba1f3bb6925d80cac7d2f894bdd66deea103",
+        "sha256_in_prefix": "ea034ec7ae3011e41c1a673239abba1f3bb6925d80cac7d2f894bdd66deea103",
+        "size_in_bytes": 546
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/lib/bokehjs/loader.css",
+        "path_type": "hardlink",
+        "sha256": "e9d66d72146099cb28dc9569072499371e7f9d173b6b1097698c8bd11c8cb40f",
+        "sha256_in_prefix": "e9d66d72146099cb28dc9569072499371e7f9d173b6b1097698c8bd11c8cb40f",
+        "size_in_bytes": 1037
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/rbokeh.js",
+        "path_type": "hardlink",
+        "sha256": "15ef56e4ac2ebe59312b919185e090f9d4fcf5d3f01728a9c3523aed883a5811",
+        "sha256_in_prefix": "15ef56e4ac2ebe59312b919185e090f9d4fcf5d3f01728a9c3523aed883a5811",
+        "size_in_bytes": 2323
+      },
+      {
+        "_path": "lib/R/library/rbokeh/htmlwidgets/rbokeh.yaml",
+        "path_type": "hardlink",
+        "sha256": "e7c7f0d8b1ec246cddd3686154983ce52f9eb5cb5ccf0d6282dbab22deae1b3b",
+        "sha256_in_prefix": "e7c7f0d8b1ec246cddd3686154983ce52f9eb5cb5ccf0d6282dbab22deae1b3b",
+        "size_in_bytes": 218
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "8e4add0d324262baa42d96484a028248360fd75b79c0423fc6f93ffe446ef9a5",
+  "size": 1281784,
+  "subdir": "noarch",
+  "timestamp": 1628048233331,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-rbokeh-0.5.2-r41hc72bb7e_0.tar.bz2",
+  "version": "0.5.2"
+}

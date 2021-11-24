@@ -1,0 +1,217 @@
+{
+  "build": "r41h03ef668_1",
+  "build_number": 1,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libstdcxx-ng >=9.3.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-crayon",
+    "r-rcpp",
+    "r-rlang >=0.3.0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-lobstr-1.1.1-r41h03ef668_1",
+  "features": "",
+  "files": [
+    "lib/R/library/lobstr/DESCRIPTION",
+    "lib/R/library/lobstr/INDEX",
+    "lib/R/library/lobstr/Meta/Rd.rds",
+    "lib/R/library/lobstr/Meta/features.rds",
+    "lib/R/library/lobstr/Meta/hsearch.rds",
+    "lib/R/library/lobstr/Meta/links.rds",
+    "lib/R/library/lobstr/Meta/nsInfo.rds",
+    "lib/R/library/lobstr/Meta/package.rds",
+    "lib/R/library/lobstr/NAMESPACE",
+    "lib/R/library/lobstr/NEWS.md",
+    "lib/R/library/lobstr/R/lobstr",
+    "lib/R/library/lobstr/R/lobstr.rdb",
+    "lib/R/library/lobstr/R/lobstr.rdx",
+    "lib/R/library/lobstr/help/AnIndex",
+    "lib/R/library/lobstr/help/aliases.rds",
+    "lib/R/library/lobstr/help/figures/logo.png",
+    "lib/R/library/lobstr/help/lobstr.rdb",
+    "lib/R/library/lobstr/help/lobstr.rdx",
+    "lib/R/library/lobstr/help/paths.rds",
+    "lib/R/library/lobstr/html/00Index.html",
+    "lib/R/library/lobstr/html/R.css",
+    "lib/R/library/lobstr/libs/lobstr.so"
+  ],
+  "fn": "r-lobstr-1.1.1-r41h03ef668_1.tar.bz2",
+  "license": "GPL-3.0-only",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-lobstr-1.1.1-r41h03ef668_1",
+    "type": 1
+  },
+  "md5": "f0c23dbf452795584b0c7740bae287c6",
+  "name": "r-lobstr",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-lobstr-1.1.1-r41h03ef668_1.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/lobstr/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "8db9e6a46bab9746b8229dc476f4be9a928207214c5b4cd07358dbc19e40ebd1",
+        "sha256_in_prefix": "8db9e6a46bab9746b8229dc476f4be9a928207214c5b4cd07358dbc19e40ebd1",
+        "size_in_bytes": 1057
+      },
+      {
+        "_path": "lib/R/library/lobstr/INDEX",
+        "path_type": "hardlink",
+        "sha256": "1a4f473fa05b4da4af0a65087121edd1b03504c1ab582bc49e49230688a3e964",
+        "sha256_in_prefix": "1a4f473fa05b4da4af0a65087121edd1b03504c1ab582bc49e49230688a3e964",
+        "size_in_bytes": 411
+      },
+      {
+        "_path": "lib/R/library/lobstr/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "7aac4cecb84d342f296eaf9ca99b7aa615940ee4b44461a2b1199ca6782eac11",
+        "sha256_in_prefix": "7aac4cecb84d342f296eaf9ca99b7aa615940ee4b44461a2b1199ca6782eac11",
+        "size_in_bytes": 464
+      },
+      {
+        "_path": "lib/R/library/lobstr/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/lobstr/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "12d57afd65066ce0113340b9a21403191161f585c610aa3ae4b30cf43d543c5f",
+        "sha256_in_prefix": "12d57afd65066ce0113340b9a21403191161f585c610aa3ae4b30cf43d543c5f",
+        "size_in_bytes": 487
+      },
+      {
+        "_path": "lib/R/library/lobstr/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "f819bb9d24c5b4d0a7da0f1dcd50b470354a3d55c64d3b52e6a842f97f529f1a",
+        "sha256_in_prefix": "f819bb9d24c5b4d0a7da0f1dcd50b470354a3d55c64d3b52e6a842f97f529f1a",
+        "size_in_bytes": 183
+      },
+      {
+        "_path": "lib/R/library/lobstr/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "aa6640673e78cc95a37fc6e67063ecf1a1cbda44eab8c5f1eb47c612d93a47c1",
+        "sha256_in_prefix": "aa6640673e78cc95a37fc6e67063ecf1a1cbda44eab8c5f1eb47c612d93a47c1",
+        "size_in_bytes": 411
+      },
+      {
+        "_path": "lib/R/library/lobstr/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "91be02baca60887ba9887b409189805dbbbb82dcc0f7cf6fadd77b55b4eb60b5",
+        "sha256_in_prefix": "91be02baca60887ba9887b409189805dbbbb82dcc0f7cf6fadd77b55b4eb60b5",
+        "size_in_bytes": 1101
+      },
+      {
+        "_path": "lib/R/library/lobstr/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "0d652d163a28acb231511f166f8f03311d1f4aeb066ebbb2e5c46a8f16090ed5",
+        "sha256_in_prefix": "0d652d163a28acb231511f166f8f03311d1f4aeb066ebbb2e5c46a8f16090ed5",
+        "size_in_bytes": 437
+      },
+      {
+        "_path": "lib/R/library/lobstr/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "fe4fbbf731cd1de545b5b1190f96a7169e94942a52e05b046bc33ece4f86defe",
+        "sha256_in_prefix": "fe4fbbf731cd1de545b5b1190f96a7169e94942a52e05b046bc33ece4f86defe",
+        "size_in_bytes": 657
+      },
+      {
+        "_path": "lib/R/library/lobstr/R/lobstr",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/lobstr/R/lobstr.rdb",
+        "path_type": "hardlink",
+        "sha256": "4eb948929a2f2019611b2136df4de69446e3b97212bee969e23d943d20f55635",
+        "sha256_in_prefix": "4eb948929a2f2019611b2136df4de69446e3b97212bee969e23d943d20f55635",
+        "size_in_bytes": 32740
+      },
+      {
+        "_path": "lib/R/library/lobstr/R/lobstr.rdx",
+        "path_type": "hardlink",
+        "sha256": "054eb383fb4a6b9f09b721cf340676b8fa207d2142e14dc281181a8dfae9d1bb",
+        "sha256_in_prefix": "054eb383fb4a6b9f09b721cf340676b8fa207d2142e14dc281181a8dfae9d1bb",
+        "size_in_bytes": 945
+      },
+      {
+        "_path": "lib/R/library/lobstr/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "6cb0127e9201ae4e7d78eebc6c768f64f4d2d5b0a1301feffa56d358d0843ba2",
+        "sha256_in_prefix": "6cb0127e9201ae4e7d78eebc6c768f64f4d2d5b0a1301feffa56d358d0843ba2",
+        "size_in_bytes": 124
+      },
+      {
+        "_path": "lib/R/library/lobstr/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "398f2a952c5b307f0849c4c6a2f9193972e43589e54f0522609323039b1b8b6b",
+        "sha256_in_prefix": "398f2a952c5b307f0849c4c6a2f9193972e43589e54f0522609323039b1b8b6b",
+        "size_in_bytes": 129
+      },
+      {
+        "_path": "lib/R/library/lobstr/help/figures/logo.png",
+        "path_type": "hardlink",
+        "sha256": "af17f46adaed6df7841a8aebe921b28e870c49f92c7f743e334e5d498f464da9",
+        "sha256_in_prefix": "af17f46adaed6df7841a8aebe921b28e870c49f92c7f743e334e5d498f464da9",
+        "size_in_bytes": 28479
+      },
+      {
+        "_path": "lib/R/library/lobstr/help/lobstr.rdb",
+        "path_type": "hardlink",
+        "sha256": "cf6556cd758abc0036a82c53380fe5f63a19fa2bfb6a454e5ef2d9efae160c9a",
+        "sha256_in_prefix": "cf6556cd758abc0036a82c53380fe5f63a19fa2bfb6a454e5ef2d9efae160c9a",
+        "size_in_bytes": 14835
+      },
+      {
+        "_path": "lib/R/library/lobstr/help/lobstr.rdx",
+        "path_type": "hardlink",
+        "sha256": "9c26edd7f95d50a2856db260d3d301a6098a698549d33d8306c39f1fccde3cf0",
+        "sha256_in_prefix": "9c26edd7f95d50a2856db260d3d301a6098a698549d33d8306c39f1fccde3cf0",
+        "size_in_bytes": 289
+      },
+      {
+        "_path": "lib/R/library/lobstr/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "3acbee47b4d4044fd5bc93889a606fd1dc7dab4b27e4f5e2704eeaf37f816c21",
+        "sha256_in_prefix": "3acbee47b4d4044fd5bc93889a606fd1dc7dab4b27e4f5e2704eeaf37f816c21",
+        "size_in_bytes": 197
+      },
+      {
+        "_path": "lib/R/library/lobstr/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "75395d0bb828f24dc03e63ae8b9af5d03c92f1c48f52cf9fe063212971a1eed2",
+        "sha256_in_prefix": "75395d0bb828f24dc03e63ae8b9af5d03c92f1c48f52cf9fe063212971a1eed2",
+        "size_in_bytes": 1972
+      },
+      {
+        "_path": "lib/R/library/lobstr/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/lobstr/libs/lobstr.so",
+        "path_type": "hardlink",
+        "sha256": "3b92d59846cde0c02e89ba559d905a7c9326919215bec96a964aecc20ef72266",
+        "sha256_in_prefix": "3b92d59846cde0c02e89ba559d905a7c9326919215bec96a964aecc20ef72266",
+        "size_in_bytes": 138752
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "eab5822282349694433ddf991f27b6d5aed6e5f5abefc779bba42261c7532902",
+  "size": 156847,
+  "subdir": "linux-64",
+  "timestamp": 1621942511534,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-lobstr-1.1.1-r41h03ef668_1.tar.bz2",
+  "version": "1.1.1"
+}

@@ -1,0 +1,204 @@
+{
+  "build": "r41ha770c72_1",
+  "build_number": 1,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-httpcode-0.3.0-r41ha770c72_1",
+  "features": "",
+  "files": [
+    "lib/R/library/httpcode/DESCRIPTION",
+    "lib/R/library/httpcode/INDEX",
+    "lib/R/library/httpcode/LICENSE",
+    "lib/R/library/httpcode/Meta/Rd.rds",
+    "lib/R/library/httpcode/Meta/features.rds",
+    "lib/R/library/httpcode/Meta/hsearch.rds",
+    "lib/R/library/httpcode/Meta/links.rds",
+    "lib/R/library/httpcode/Meta/nsInfo.rds",
+    "lib/R/library/httpcode/Meta/package.rds",
+    "lib/R/library/httpcode/NAMESPACE",
+    "lib/R/library/httpcode/NEWS.md",
+    "lib/R/library/httpcode/R/httpcode",
+    "lib/R/library/httpcode/R/httpcode.rdb",
+    "lib/R/library/httpcode/R/httpcode.rdx",
+    "lib/R/library/httpcode/help/AnIndex",
+    "lib/R/library/httpcode/help/aliases.rds",
+    "lib/R/library/httpcode/help/httpcode.rdb",
+    "lib/R/library/httpcode/help/httpcode.rdx",
+    "lib/R/library/httpcode/help/paths.rds",
+    "lib/R/library/httpcode/html/00Index.html",
+    "lib/R/library/httpcode/html/R.css"
+  ],
+  "fn": "r-httpcode-0.3.0-r41ha770c72_1.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-httpcode-0.3.0-r41ha770c72_1",
+    "type": 1
+  },
+  "md5": "8cf3741a90f1315063d0dee71d9ca793",
+  "name": "r-httpcode",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-httpcode-0.3.0-r41ha770c72_1.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/httpcode/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "3f591658ec6bb3f930cf4ef27e5420e6edc2419bcf4364220acaae8907d8ebd3",
+        "sha256_in_prefix": "3f591658ec6bb3f930cf4ef27e5420e6edc2419bcf4364220acaae8907d8ebd3",
+        "size_in_bytes": 938
+      },
+      {
+        "_path": "lib/R/library/httpcode/INDEX",
+        "path_type": "hardlink",
+        "sha256": "e03c0897dcb52acd474d34e5b540bec78a23f3fae4bd63185600f8cb523337d0",
+        "sha256_in_prefix": "e03c0897dcb52acd474d34e5b540bec78a23f3fae4bd63185600f8cb523337d0",
+        "size_in_bytes": 192
+      },
+      {
+        "_path": "lib/R/library/httpcode/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "4fc5f2816881b158240359419a666128e8f28380b79bf74e0195a8396e7c2dde",
+        "sha256_in_prefix": "4fc5f2816881b158240359419a666128e8f28380b79bf74e0195a8396e7c2dde",
+        "size_in_bytes": 47
+      },
+      {
+        "_path": "lib/R/library/httpcode/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "250094482d1797d8e0a3e120e7b3d164fd9add06be0d7aa30fed09b8c9f6f6d5",
+        "sha256_in_prefix": "250094482d1797d8e0a3e120e7b3d164fd9add06be0d7aa30fed09b8c9f6f6d5",
+        "size_in_bytes": 340
+      },
+      {
+        "_path": "lib/R/library/httpcode/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/httpcode/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "12cfb21d07ca80e9bfaea51716073c0eeca45b1f4dfdb474444eb19971d75386",
+        "sha256_in_prefix": "12cfb21d07ca80e9bfaea51716073c0eeca45b1f4dfdb474444eb19971d75386",
+        "size_in_bytes": 377
+      },
+      {
+        "_path": "lib/R/library/httpcode/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "5d6b3688a37e95dc8f64100b1e5c003c2caa2168c3eb7e950f4573d516aec2cd",
+        "sha256_in_prefix": "5d6b3688a37e95dc8f64100b1e5c003c2caa2168c3eb7e950f4573d516aec2cd",
+        "size_in_bytes": 176
+      },
+      {
+        "_path": "lib/R/library/httpcode/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "25f4da96b245b6125008897980d65453d1da54df23a8e1417e9cfccac1c37d09",
+        "sha256_in_prefix": "25f4da96b245b6125008897980d65453d1da54df23a8e1417e9cfccac1c37d09",
+        "size_in_bytes": 245
+      },
+      {
+        "_path": "lib/R/library/httpcode/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "150d77e92479f835268aca4fa63000f9cd9d310826f451ade2859afeba1a6b5b",
+        "sha256_in_prefix": "150d77e92479f835268aca4fa63000f9cd9d310826f451ade2859afeba1a6b5b",
+        "size_in_bytes": 900
+      },
+      {
+        "_path": "lib/R/library/httpcode/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "292aa62318a7e9f8f620e132e808c92ded6af7e615ae172fd7244d641e806b6f",
+        "sha256_in_prefix": "292aa62318a7e9f8f620e132e808c92ded6af7e615ae172fd7244d641e806b6f",
+        "size_in_bytes": 156
+      },
+      {
+        "_path": "lib/R/library/httpcode/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "9126d1f156ecad3e6663160c76028f29f71cbc09b91d0d975e37eace5bb138db",
+        "sha256_in_prefix": "9126d1f156ecad3e6663160c76028f29f71cbc09b91d0d975e37eace5bb138db",
+        "size_in_bytes": 594
+      },
+      {
+        "_path": "lib/R/library/httpcode/R/httpcode",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/httpcode/R/httpcode.rdb",
+        "path_type": "hardlink",
+        "sha256": "ad7fa1c3fa11999defcf04d319e89c4d07a9a651f6443c20aafed42d94d8dc29",
+        "sha256_in_prefix": "ad7fa1c3fa11999defcf04d319e89c4d07a9a651f6443c20aafed42d94d8dc29",
+        "size_in_bytes": 20788
+      },
+      {
+        "_path": "lib/R/library/httpcode/R/httpcode.rdx",
+        "path_type": "hardlink",
+        "sha256": "668c9734aec8b35fb10414126f2a81468f17e755a9770b19e49d728da8280b0f",
+        "sha256_in_prefix": "668c9734aec8b35fb10414126f2a81468f17e755a9770b19e49d728da8280b0f",
+        "size_in_bytes": 502
+      },
+      {
+        "_path": "lib/R/library/httpcode/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "21d5e1e109ac92f9a0d9fe0bb54eb8d7af4d891e65ad5abd231358f9e8abf0ea",
+        "sha256_in_prefix": "21d5e1e109ac92f9a0d9fe0bb54eb8d7af4d891e65ad5abd231358f9e8abf0ea",
+        "size_in_bytes": 162
+      },
+      {
+        "_path": "lib/R/library/httpcode/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "d49974b54101c351f6a1c02655d3baa1217c04594ffa264adb4eaf7530e4e480",
+        "sha256_in_prefix": "d49974b54101c351f6a1c02655d3baa1217c04594ffa264adb4eaf7530e4e480",
+        "size_in_bytes": 144
+      },
+      {
+        "_path": "lib/R/library/httpcode/help/httpcode.rdb",
+        "path_type": "hardlink",
+        "sha256": "42782f9237fa4bbe806974ae94ff88b97ae560c8c404c744b2e1e8be68bbddc8",
+        "sha256_in_prefix": "42782f9237fa4bbe806974ae94ff88b97ae560c8c404c744b2e1e8be68bbddc8",
+        "size_in_bytes": 4802
+      },
+      {
+        "_path": "lib/R/library/httpcode/help/httpcode.rdx",
+        "path_type": "hardlink",
+        "sha256": "3549c715e19fa22c89856c814a56230b90ee4f663c390003bd863c5a6f9232f6",
+        "sha256_in_prefix": "3549c715e19fa22c89856c814a56230b90ee4f663c390003bd863c5a6f9232f6",
+        "size_in_bytes": 218
+      },
+      {
+        "_path": "lib/R/library/httpcode/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "d992d8a3346335d91e8d8c06e8f1e0d21119d4a88e253fe6703cafd5888a8e34",
+        "sha256_in_prefix": "d992d8a3346335d91e8d8c06e8f1e0d21119d4a88e253fe6703cafd5888a8e34",
+        "size_in_bytes": 186
+      },
+      {
+        "_path": "lib/R/library/httpcode/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "dcbcfad699ee33bf568e502b13991c837f1a1461767d9e4317cce3e724226bd2",
+        "sha256_in_prefix": "dcbcfad699ee33bf568e502b13991c837f1a1461767d9e4317cce3e724226bd2",
+        "size_in_bytes": 1775
+      },
+      {
+        "_path": "lib/R/library/httpcode/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "e65a5787ffa426444aec673e6ab0ac9562fffab4eff7801328d4ba9595623914",
+  "size": 38742,
+  "subdir": "linux-64",
+  "timestamp": 1621801359849,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-httpcode-0.3.0-r41ha770c72_1.tar.bz2",
+  "version": "0.3.0"
+}

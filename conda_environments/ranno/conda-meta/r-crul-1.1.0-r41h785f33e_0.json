@@ -1,0 +1,332 @@
+{
+  "build": "r41h785f33e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-curl >=3.3",
+    "r-httpcode >=0.2.0",
+    "r-jsonlite",
+    "r-mime",
+    "r-r6 >=2.2.0",
+    "r-urltools >=1.6.0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-crul-1.1.0-r41h785f33e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/crul/DESCRIPTION",
+    "lib/R/library/crul/INDEX",
+    "lib/R/library/crul/LICENSE",
+    "lib/R/library/crul/Meta/Rd.rds",
+    "lib/R/library/crul/Meta/features.rds",
+    "lib/R/library/crul/Meta/hsearch.rds",
+    "lib/R/library/crul/Meta/links.rds",
+    "lib/R/library/crul/Meta/nsInfo.rds",
+    "lib/R/library/crul/Meta/package.rds",
+    "lib/R/library/crul/Meta/vignette.rds",
+    "lib/R/library/crul/NAMESPACE",
+    "lib/R/library/crul/NEWS.md",
+    "lib/R/library/crul/R/crul",
+    "lib/R/library/crul/R/crul.rdb",
+    "lib/R/library/crul/R/crul.rdx",
+    "lib/R/library/crul/doc/async.Rmd",
+    "lib/R/library/crul/doc/async.html",
+    "lib/R/library/crul/doc/best-practices-api-packages.Rmd",
+    "lib/R/library/crul/doc/best-practices-api-packages.html",
+    "lib/R/library/crul/doc/choosing-a-client.Rmd",
+    "lib/R/library/crul/doc/choosing-a-client.html",
+    "lib/R/library/crul/doc/crul.Rmd",
+    "lib/R/library/crul/doc/crul.html",
+    "lib/R/library/crul/doc/curl-options.Rmd",
+    "lib/R/library/crul/doc/curl-options.html",
+    "lib/R/library/crul/doc/how-to-use-crul.Rmd",
+    "lib/R/library/crul/doc/how-to-use-crul.html",
+    "lib/R/library/crul/doc/index.html",
+    "lib/R/library/crul/help/AnIndex",
+    "lib/R/library/crul/help/aliases.rds",
+    "lib/R/library/crul/help/crul.rdb",
+    "lib/R/library/crul/help/crul.rdx",
+    "lib/R/library/crul/help/figures/logo.png",
+    "lib/R/library/crul/help/paths.rds",
+    "lib/R/library/crul/html/00Index.html",
+    "lib/R/library/crul/html/R.css"
+  ],
+  "fn": "r-crul-1.1.0-r41h785f33e_0.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-crul-1.1.0-r41h785f33e_0",
+    "type": 1
+  },
+  "md5": "3852d542a0a27931af284707fb3084ec",
+  "name": "r-crul",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-crul-1.1.0-r41h785f33e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/crul/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "58357ad9190f0059fe6e7fe07ae4346adee720204e8bb326b14777c89e415014",
+        "sha256_in_prefix": "58357ad9190f0059fe6e7fe07ae4346adee720204e8bb326b14777c89e415014",
+        "size_in_bytes": 1665
+      },
+      {
+        "_path": "lib/R/library/crul/INDEX",
+        "path_type": "hardlink",
+        "sha256": "36b49c8fe3f65522395d36b4bd002fc1c7bf7f9182cd264fefd9cdfbf1f9ef92",
+        "sha256_in_prefix": "36b49c8fe3f65522395d36b4bd002fc1c7bf7f9182cd264fefd9cdfbf1f9ef92",
+        "size_in_bytes": 1314
+      },
+      {
+        "_path": "lib/R/library/crul/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "2a97c4b0f5395bc1fbdad93160a4c112b6a0ca8ac8b3e732b249e655708eb44e",
+        "sha256_in_prefix": "2a97c4b0f5395bc1fbdad93160a4c112b6a0ca8ac8b3e732b249e655708eb44e",
+        "size_in_bytes": 47
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "57b47c16821b5f687d1f46e261245d112b733361f20d4b0ae0e34149a1daf77b",
+        "sha256_in_prefix": "57b47c16821b5f687d1f46e261245d112b733361f20d4b0ae0e34149a1daf77b",
+        "size_in_bytes": 1064
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "737d0e8ed159df4b9414c2972be09f98977170aac859c1011e4e6d93cdad350b",
+        "sha256_in_prefix": "737d0e8ed159df4b9414c2972be09f98977170aac859c1011e4e6d93cdad350b",
+        "size_in_bytes": 1062
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "497c5b494ef95639615d2e43399aeb1d0a937d6f9c2a1f30f41195b7164ff88f",
+        "sha256_in_prefix": "497c5b494ef95639615d2e43399aeb1d0a937d6f9c2a1f30f41195b7164ff88f",
+        "size_in_bytes": 574
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "c8897a80a53ad2125e1ea8cec350a82027b8a62a9eff7fd00345f883a4207265",
+        "sha256_in_prefix": "c8897a80a53ad2125e1ea8cec350a82027b8a62a9eff7fd00345f883a4207265",
+        "size_in_bytes": 569
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "0ec26695d4eaabe3c4c3ac281779454c7a1eb593dd2f7f2727969a76990b129b",
+        "sha256_in_prefix": "0ec26695d4eaabe3c4c3ac281779454c7a1eb593dd2f7f2727969a76990b129b",
+        "size_in_bytes": 1427
+      },
+      {
+        "_path": "lib/R/library/crul/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "6ce26d5f66f2bfc17ff9f6f3a55a47172dff8cbfc297cd27d106aa86e0e5794f",
+        "sha256_in_prefix": "6ce26d5f66f2bfc17ff9f6f3a55a47172dff8cbfc297cd27d106aa86e0e5794f",
+        "size_in_bytes": 375
+      },
+      {
+        "_path": "lib/R/library/crul/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "9f8007a90ba03c49f4015a04c05df5578b6d7f2373bcfaade5444c52e4072d97",
+        "sha256_in_prefix": "9f8007a90ba03c49f4015a04c05df5578b6d7f2373bcfaade5444c52e4072d97",
+        "size_in_bytes": 1149
+      },
+      {
+        "_path": "lib/R/library/crul/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "fbffb2acb6f624f4f0af6e7ad9d66bd68f074e1b376aadf88273d2bfe66bf4ee",
+        "sha256_in_prefix": "fbffb2acb6f624f4f0af6e7ad9d66bd68f074e1b376aadf88273d2bfe66bf4ee",
+        "size_in_bytes": 14307
+      },
+      {
+        "_path": "lib/R/library/crul/R/crul",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/crul/R/crul.rdb",
+        "path_type": "hardlink",
+        "sha256": "88d2ce74df1ec37662742c12b432f1c71f92cb80f0bd54dc47bdf8803c11dc0d",
+        "sha256_in_prefix": "88d2ce74df1ec37662742c12b432f1c71f92cb80f0bd54dc47bdf8803c11dc0d",
+        "size_in_bytes": 291774
+      },
+      {
+        "_path": "lib/R/library/crul/R/crul.rdx",
+        "path_type": "hardlink",
+        "sha256": "9703a5f3e14f7ec5d584f21fd98ce507a09d9ac6ff809d6ab10b8d9a444d9354",
+        "sha256_in_prefix": "9703a5f3e14f7ec5d584f21fd98ce507a09d9ac6ff809d6ab10b8d9a444d9354",
+        "size_in_bytes": 1330
+      },
+      {
+        "_path": "lib/R/library/crul/doc/async.Rmd",
+        "path_type": "hardlink",
+        "sha256": "0ac87efa49486d571f2c9eb99e371361d99318b774327605ccdd79d2f45bdf46",
+        "sha256_in_prefix": "0ac87efa49486d571f2c9eb99e371361d99318b774327605ccdd79d2f45bdf46",
+        "size_in_bytes": 8263
+      },
+      {
+        "_path": "lib/R/library/crul/doc/async.html",
+        "path_type": "hardlink",
+        "sha256": "40b6a6d686345047af6940112f8a57ee9b9cf301dba610324471880aa8b47f1e",
+        "sha256_in_prefix": "40b6a6d686345047af6940112f8a57ee9b9cf301dba610324471880aa8b47f1e",
+        "size_in_bytes": 32596
+      },
+      {
+        "_path": "lib/R/library/crul/doc/best-practices-api-packages.Rmd",
+        "path_type": "hardlink",
+        "sha256": "58a51cb0bd967ba8d6d90db37f68831ae11ea168ac30e9d415f35d1957fd7a19",
+        "sha256_in_prefix": "58a51cb0bd967ba8d6d90db37f68831ae11ea168ac30e9d415f35d1957fd7a19",
+        "size_in_bytes": 7940
+      },
+      {
+        "_path": "lib/R/library/crul/doc/best-practices-api-packages.html",
+        "path_type": "hardlink",
+        "sha256": "74c520f3e824ddc62cab8086fd495e7e56883cb6c1f3e39b94174e10adf1dcb5",
+        "sha256_in_prefix": "74c520f3e824ddc62cab8086fd495e7e56883cb6c1f3e39b94174e10adf1dcb5",
+        "size_in_bytes": 24864
+      },
+      {
+        "_path": "lib/R/library/crul/doc/choosing-a-client.Rmd",
+        "path_type": "hardlink",
+        "sha256": "8628b7cb19299320e5fa453886e9756d3e6f4afe044138aa90892c9a18ccba8f",
+        "sha256_in_prefix": "8628b7cb19299320e5fa453886e9756d3e6f4afe044138aa90892c9a18ccba8f",
+        "size_in_bytes": 3945
+      },
+      {
+        "_path": "lib/R/library/crul/doc/choosing-a-client.html",
+        "path_type": "hardlink",
+        "sha256": "decfc27e2f2ea9dac2522fc8c68abbc71d37c96e7a479733df0305dda76b09f2",
+        "sha256_in_prefix": "decfc27e2f2ea9dac2522fc8c68abbc71d37c96e7a479733df0305dda76b09f2",
+        "size_in_bytes": 9723
+      },
+      {
+        "_path": "lib/R/library/crul/doc/crul.Rmd",
+        "path_type": "hardlink",
+        "sha256": "9a608c8dcdb78e43bc76681d7e4994a5f4f3dfa6503c875f66c8b7578d22e951",
+        "sha256_in_prefix": "9a608c8dcdb78e43bc76681d7e4994a5f4f3dfa6503c875f66c8b7578d22e951",
+        "size_in_bytes": 9486
+      },
+      {
+        "_path": "lib/R/library/crul/doc/crul.html",
+        "path_type": "hardlink",
+        "sha256": "fc53f18e761c9e544cb1693fde1fc034cdcf4a733183454edf11ee59d25d2dcf",
+        "sha256_in_prefix": "fc53f18e761c9e544cb1693fde1fc034cdcf4a733183454edf11ee59d25d2dcf",
+        "size_in_bytes": 36197
+      },
+      {
+        "_path": "lib/R/library/crul/doc/curl-options.Rmd",
+        "path_type": "hardlink",
+        "sha256": "8c1e794ae643ca6d3276b51cc8886db26132908d5f7db24c5cf53353afa44bbc",
+        "sha256_in_prefix": "8c1e794ae643ca6d3276b51cc8886db26132908d5f7db24c5cf53353afa44bbc",
+        "size_in_bytes": 10515
+      },
+      {
+        "_path": "lib/R/library/crul/doc/curl-options.html",
+        "path_type": "hardlink",
+        "sha256": "8dad593c03606e6c631ef779e0f788dadd02a4e27a33ca5587c92c1788f80146",
+        "sha256_in_prefix": "8dad593c03606e6c631ef779e0f788dadd02a4e27a33ca5587c92c1788f80146",
+        "size_in_bytes": 32808
+      },
+      {
+        "_path": "lib/R/library/crul/doc/how-to-use-crul.Rmd",
+        "path_type": "hardlink",
+        "sha256": "1f64d6214e027251e76fcf4d333b1cc44d10d2c4c03c0bb8391a1345c1bbbf60",
+        "sha256_in_prefix": "1f64d6214e027251e76fcf4d333b1cc44d10d2c4c03c0bb8391a1345c1bbbf60",
+        "size_in_bytes": 5089
+      },
+      {
+        "_path": "lib/R/library/crul/doc/how-to-use-crul.html",
+        "path_type": "hardlink",
+        "sha256": "51e38abf7248161903fed9d7b5f46ab141bdad7ab524882accfc5d3c4ecc421f",
+        "sha256_in_prefix": "51e38abf7248161903fed9d7b5f46ab141bdad7ab524882accfc5d3c4ecc421f",
+        "size_in_bytes": 25554
+      },
+      {
+        "_path": "lib/R/library/crul/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "dde09c76cb08f1ab3fdd9e2b756925b1161f5fd125ebe956b9f7886b4d1198dd",
+        "sha256_in_prefix": "dde09c76cb08f1ab3fdd9e2b756925b1161f5fd125ebe956b9f7886b4d1198dd",
+        "size_in_bytes": 3407
+      },
+      {
+        "_path": "lib/R/library/crul/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "079ddf339ab6daaab2448e9e44141d9be5c21d725ddacda84dc78b7c8af45017",
+        "sha256_in_prefix": "079ddf339ab6daaab2448e9e44141d9be5c21d725ddacda84dc78b7c8af45017",
+        "size_in_bytes": 860
+      },
+      {
+        "_path": "lib/R/library/crul/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "25e22c2132da72dbb477d1fc54df7169cb9539fcce868f8968d38cc8c37d0531",
+        "sha256_in_prefix": "25e22c2132da72dbb477d1fc54df7169cb9539fcce868f8968d38cc8c37d0531",
+        "size_in_bytes": 405
+      },
+      {
+        "_path": "lib/R/library/crul/help/crul.rdb",
+        "path_type": "hardlink",
+        "sha256": "0c7f3548407452513bb57361565ad24f07ba344fb665cd4f45eac621f44cf86a",
+        "sha256_in_prefix": "0c7f3548407452513bb57361565ad24f07ba344fb665cd4f45eac621f44cf86a",
+        "size_in_bytes": 166705
+      },
+      {
+        "_path": "lib/R/library/crul/help/crul.rdx",
+        "path_type": "hardlink",
+        "sha256": "f56c560bd61ea94ada7d69a7039e67ae24b1dbebd233fbbe004f94455cac97d3",
+        "sha256_in_prefix": "f56c560bd61ea94ada7d69a7039e67ae24b1dbebd233fbbe004f94455cac97d3",
+        "size_in_bytes": 830
+      },
+      {
+        "_path": "lib/R/library/crul/help/figures/logo.png",
+        "path_type": "hardlink",
+        "sha256": "a7830ddd7c3cc2258e7f4f720238ae69ac95109576873900939303e57c95c376",
+        "sha256_in_prefix": "a7830ddd7c3cc2258e7f4f720238ae69ac95109576873900939303e57c95c376",
+        "size_in_bytes": 116114
+      },
+      {
+        "_path": "lib/R/library/crul/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "a1cf1ac0be7fe97ad857fc61c2662bf02f03b9f360bf41300e421c3118afc666",
+        "sha256_in_prefix": "a1cf1ac0be7fe97ad857fc61c2662bf02f03b9f360bf41300e421c3118afc666",
+        "size_in_bytes": 415
+      },
+      {
+        "_path": "lib/R/library/crul/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "6a621260fb3e7ac5bff4ae8534c4a85271df68d68957c77b8282072b3454d4fc",
+        "sha256_in_prefix": "6a621260fb3e7ac5bff4ae8534c4a85271df68d68957c77b8282072b3454d4fc",
+        "size_in_bytes": 5536
+      },
+      {
+        "_path": "lib/R/library/crul/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "a1eb97115af907bbc924bac5e3b0d11bf02621b9c690669773c2113b9f9ae051",
+  "size": 637947,
+  "subdir": "noarch",
+  "timestamp": 1622099654662,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-crul-1.1.0-r41h785f33e_0.tar.bz2",
+  "version": "1.1.0"
+}

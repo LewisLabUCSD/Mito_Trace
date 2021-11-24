@@ -1,0 +1,256 @@
+{
+  "build": "r41h859d828_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libgfortran-ng",
+    "libgfortran5 >=9.3.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-lattice"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-hexbin-1.28.2-r41h859d828_0",
+  "features": "",
+  "files": [
+    "lib/R/library/hexbin/DESCRIPTION",
+    "lib/R/library/hexbin/INDEX",
+    "lib/R/library/hexbin/Meta/Rd.rds",
+    "lib/R/library/hexbin/Meta/data.rds",
+    "lib/R/library/hexbin/Meta/features.rds",
+    "lib/R/library/hexbin/Meta/hsearch.rds",
+    "lib/R/library/hexbin/Meta/links.rds",
+    "lib/R/library/hexbin/Meta/nsInfo.rds",
+    "lib/R/library/hexbin/Meta/package.rds",
+    "lib/R/library/hexbin/Meta/vignette.rds",
+    "lib/R/library/hexbin/NAMESPACE",
+    "lib/R/library/hexbin/R/hexbin",
+    "lib/R/library/hexbin/R/hexbin.rdb",
+    "lib/R/library/hexbin/R/hexbin.rdx",
+    "lib/R/library/hexbin/data/NHANES.rda",
+    "lib/R/library/hexbin/doc/hexagon_binning.R",
+    "lib/R/library/hexbin/doc/hexagon_binning.Rnw",
+    "lib/R/library/hexbin/doc/hexagon_binning.pdf",
+    "lib/R/library/hexbin/doc/index.html",
+    "lib/R/library/hexbin/help/AnIndex",
+    "lib/R/library/hexbin/help/aliases.rds",
+    "lib/R/library/hexbin/help/hexbin.rdb",
+    "lib/R/library/hexbin/help/hexbin.rdx",
+    "lib/R/library/hexbin/help/paths.rds",
+    "lib/R/library/hexbin/html/00Index.html",
+    "lib/R/library/hexbin/html/R.css",
+    "lib/R/library/hexbin/libs/hexbin.so"
+  ],
+  "fn": "r-hexbin-1.28.2-r41h859d828_0.tar.bz2",
+  "license": "GPL-2.0-only",
+  "license_family": "GPL2",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-hexbin-1.28.2-r41h859d828_0",
+    "type": 1
+  },
+  "md5": "9234268c0c331048b5987bcf029aec42",
+  "name": "r-hexbin",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-hexbin-1.28.2-r41h859d828_0.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/hexbin/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "5bf452bfd22532a7f51f4ba6e073baa56b0e5668d60c8cb5de4b86d7dffc89a4",
+        "sha256_in_prefix": "5bf452bfd22532a7f51f4ba6e073baa56b0e5668d60c8cb5de4b86d7dffc89a4",
+        "size_in_bytes": 1075
+      },
+      {
+        "_path": "lib/R/library/hexbin/INDEX",
+        "path_type": "hardlink",
+        "sha256": "0e19eb5bd141188f20645438c78357dbf9765c722afa2f7fefd1b28de0fb17ca",
+        "sha256_in_prefix": "0e19eb5bd141188f20645438c78357dbf9765c722afa2f7fefd1b28de0fb17ca",
+        "size_in_bytes": 2181
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "873ade2d8b2b7c4ccbcd0efc9e3c98c1a6dcf46376b7e9327b082dd8bc0380a3",
+        "sha256_in_prefix": "873ade2d8b2b7c4ccbcd0efc9e3c98c1a6dcf46376b7e9327b082dd8bc0380a3",
+        "size_in_bytes": 1806
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "1a32d9284e8cd3b4592beb738b427cffcc9902034476c06ad7e78ada11bbdbbe",
+        "sha256_in_prefix": "1a32d9284e8cd3b4592beb738b427cffcc9902034476c06ad7e78ada11bbdbbe",
+        "size_in_bytes": 137
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "b7f9e2cc79e135d0d1bdadfc4c8369752fb269b07267be3b6850391b82459136",
+        "sha256_in_prefix": "b7f9e2cc79e135d0d1bdadfc4c8369752fb269b07267be3b6850391b82459136",
+        "size_in_bytes": 1863
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "8f45ce505b9f8dcf3ac814811910e14b6c25b92df667ddb094052cdc0d830d8a",
+        "sha256_in_prefix": "8f45ce505b9f8dcf3ac814811910e14b6c25b92df667ddb094052cdc0d830d8a",
+        "size_in_bytes": 920
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "7cfac9e68dfbd0e7be58b53645cac4f62ff26769177ec798ec04e199c8bd7989",
+        "sha256_in_prefix": "7cfac9e68dfbd0e7be58b53645cac4f62ff26769177ec798ec04e199c8bd7989",
+        "size_in_bytes": 752
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "dd97af3cd68d19589b1c00d54f5806b507bc73cbad6f6b1d33cfcee0413b0f4f",
+        "sha256_in_prefix": "dd97af3cd68d19589b1c00d54f5806b507bc73cbad6f6b1d33cfcee0413b0f4f",
+        "size_in_bytes": 1147
+      },
+      {
+        "_path": "lib/R/library/hexbin/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "91e849eff8ecf6a27655031d9ba1f7073951345b13bb9d82d571ca389a9f64ac",
+        "sha256_in_prefix": "91e849eff8ecf6a27655031d9ba1f7073951345b13bb9d82d571ca389a9f64ac",
+        "size_in_bytes": 267
+      },
+      {
+        "_path": "lib/R/library/hexbin/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "5c45f07d925589213e88bc45a5a2525bd2c5ea0e05ef0705cdaae6e05a457765",
+        "sha256_in_prefix": "5c45f07d925589213e88bc45a5a2525bd2c5ea0e05ef0705cdaae6e05a457765",
+        "size_in_bytes": 2260
+      },
+      {
+        "_path": "lib/R/library/hexbin/R/hexbin",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/hexbin/R/hexbin.rdb",
+        "path_type": "hardlink",
+        "sha256": "e9a0aa4124b1c3e45126a6dfe3ea5ecd15a5580a08e54d99a568f9757af233d4",
+        "sha256_in_prefix": "e9a0aa4124b1c3e45126a6dfe3ea5ecd15a5580a08e54d99a568f9757af233d4",
+        "size_in_bytes": 388386
+      },
+      {
+        "_path": "lib/R/library/hexbin/R/hexbin.rdx",
+        "path_type": "hardlink",
+        "sha256": "217a3f553f8400f5aec7a9172abac9eaf3d60ac23ad280999e6c7ff10f1af99f",
+        "sha256_in_prefix": "217a3f553f8400f5aec7a9172abac9eaf3d60ac23ad280999e6c7ff10f1af99f",
+        "size_in_bytes": 2287
+      },
+      {
+        "_path": "lib/R/library/hexbin/data/NHANES.rda",
+        "path_type": "hardlink",
+        "sha256": "9921aa4015a2f5d37547462b452adfa74086b7479d84bdb29dc3265f2c424d3c",
+        "sha256_in_prefix": "9921aa4015a2f5d37547462b452adfa74086b7479d84bdb29dc3265f2c424d3c",
+        "size_in_bytes": 162590
+      },
+      {
+        "_path": "lib/R/library/hexbin/doc/hexagon_binning.R",
+        "path_type": "hardlink",
+        "sha256": "1418303d17989f36e708127f0998cd8e927ef4ede859a9e822eea91a4e1a668d",
+        "sha256_in_prefix": "1418303d17989f36e708127f0998cd8e927ef4ede859a9e822eea91a4e1a668d",
+        "size_in_bytes": 8966
+      },
+      {
+        "_path": "lib/R/library/hexbin/doc/hexagon_binning.Rnw",
+        "path_type": "hardlink",
+        "sha256": "fbd57fae7d25108e63d5706a00e601275e428e180604780ac401394f8e3f52e6",
+        "sha256_in_prefix": "fbd57fae7d25108e63d5706a00e601275e428e180604780ac401394f8e3f52e6",
+        "size_in_bytes": 21676
+      },
+      {
+        "_path": "lib/R/library/hexbin/doc/hexagon_binning.pdf",
+        "path_type": "hardlink",
+        "sha256": "43e15d8b05b5fac95d2aaeb15f8225783102242d54f3bfe85d54b71d4e9dc6da",
+        "sha256_in_prefix": "43e15d8b05b5fac95d2aaeb15f8225783102242d54f3bfe85d54b71d4e9dc6da",
+        "size_in_bytes": 893094
+      },
+      {
+        "_path": "lib/R/library/hexbin/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "347b3c0732c0001979da6c3f4dc1770f5958774e5df39b9c638ad8cc63c64b8b",
+        "sha256_in_prefix": "347b3c0732c0001979da6c3f4dc1770f5958774e5df39b9c638ad8cc63c64b8b",
+        "size_in_bytes": 1359
+      },
+      {
+        "_path": "lib/R/library/hexbin/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "39339c174524695490e133f4e5934fcce3ed1847791052f64426079f65ded306",
+        "sha256_in_prefix": "39339c174524695490e133f4e5934fcce3ed1847791052f64426079f65ded306",
+        "size_in_bytes": 1792
+      },
+      {
+        "_path": "lib/R/library/hexbin/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "2ec8ee797c2e35c65c1db6f4962000f2588bba5dadf04c9ebff74b4ac965687a",
+        "sha256_in_prefix": "2ec8ee797c2e35c65c1db6f4962000f2588bba5dadf04c9ebff74b4ac965687a",
+        "size_in_bytes": 770
+      },
+      {
+        "_path": "lib/R/library/hexbin/help/hexbin.rdb",
+        "path_type": "hardlink",
+        "sha256": "878047e008dd469377f4ae14ed1e3d05e3434af2e0e19d1e01c84a1a6b6b0546",
+        "sha256_in_prefix": "878047e008dd469377f4ae14ed1e3d05e3434af2e0e19d1e01c84a1a6b6b0546",
+        "size_in_bytes": 132962
+      },
+      {
+        "_path": "lib/R/library/hexbin/help/hexbin.rdx",
+        "path_type": "hardlink",
+        "sha256": "634451618f21b90b70e25f702bcc9d4b0b6558055abb445c2c74b648993ef213",
+        "sha256_in_prefix": "634451618f21b90b70e25f702bcc9d4b0b6558055abb445c2c74b648993ef213",
+        "size_in_bytes": 889
+      },
+      {
+        "_path": "lib/R/library/hexbin/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "3b3f7d89d8e7201534a960e6dc688e9eb92e13b183037bc8c6a173df2dbf0136",
+        "sha256_in_prefix": "3b3f7d89d8e7201534a960e6dc688e9eb92e13b183037bc8c6a173df2dbf0136",
+        "size_in_bytes": 459
+      },
+      {
+        "_path": "lib/R/library/hexbin/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "d60dd30c94d3f9e346707d13b9899ea5b9f1ded153a5fb2762ee3212c747d73d",
+        "sha256_in_prefix": "d60dd30c94d3f9e346707d13b9899ea5b9f1ded153a5fb2762ee3212c747d73d",
+        "size_in_bytes": 10142
+      },
+      {
+        "_path": "lib/R/library/hexbin/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/hexbin/libs/hexbin.so",
+        "path_type": "hardlink",
+        "sha256": "6e559bd49aa34b8583f52712d9ed6b89c0c56e2efa45cbd4302f0f1c982ec7fa",
+        "sha256_in_prefix": "6e559bd49aa34b8583f52712d9ed6b89c0c56e2efa45cbd4302f0f1c982ec7fa",
+        "size_in_bytes": 16640
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "8eeeae5ff8e2f56ff56270b099b098ec759ebff6360be0b577a337160cdfcd1d",
+  "size": 1541092,
+  "subdir": "linux-64",
+  "timestamp": 1621633290871,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-hexbin-1.28.2-r41h859d828_0.tar.bz2",
+  "version": "1.28.2"
+}

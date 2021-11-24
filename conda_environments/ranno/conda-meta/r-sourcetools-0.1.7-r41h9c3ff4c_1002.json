@@ -1,0 +1,462 @@
+{
+  "build": "r41h9c3ff4c_1002",
+  "build_number": 1002,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libstdcxx-ng >=9.3.0",
+    "r-base >=4.1,<4.2.0a0"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-sourcetools-0.1.7-r41h9c3ff4c_1002",
+  "features": "",
+  "files": [
+    "lib/R/library/sourcetools/DESCRIPTION",
+    "lib/R/library/sourcetools/INDEX",
+    "lib/R/library/sourcetools/LICENSE",
+    "lib/R/library/sourcetools/Meta/Rd.rds",
+    "lib/R/library/sourcetools/Meta/features.rds",
+    "lib/R/library/sourcetools/Meta/hsearch.rds",
+    "lib/R/library/sourcetools/Meta/links.rds",
+    "lib/R/library/sourcetools/Meta/nsInfo.rds",
+    "lib/R/library/sourcetools/Meta/package.rds",
+    "lib/R/library/sourcetools/NAMESPACE",
+    "lib/R/library/sourcetools/NEWS.md",
+    "lib/R/library/sourcetools/R/sourcetools",
+    "lib/R/library/sourcetools/R/sourcetools.rdb",
+    "lib/R/library/sourcetools/R/sourcetools.rdx",
+    "lib/R/library/sourcetools/help/AnIndex",
+    "lib/R/library/sourcetools/help/aliases.rds",
+    "lib/R/library/sourcetools/help/paths.rds",
+    "lib/R/library/sourcetools/help/sourcetools.rdb",
+    "lib/R/library/sourcetools/help/sourcetools.rdx",
+    "lib/R/library/sourcetools/html/00Index.html",
+    "lib/R/library/sourcetools/html/R.css",
+    "lib/R/library/sourcetools/include/sourcetools.h",
+    "lib/R/library/sourcetools/include/sourcetools/collection/Position.h",
+    "lib/R/library/sourcetools/include/sourcetools/collection/Range.h",
+    "lib/R/library/sourcetools/include/sourcetools/collection/collection.h",
+    "lib/R/library/sourcetools/include/sourcetools/core/core.h",
+    "lib/R/library/sourcetools/include/sourcetools/core/macros.h",
+    "lib/R/library/sourcetools/include/sourcetools/core/util.h",
+    "lib/R/library/sourcetools/include/sourcetools/cursor/TextCursor.h",
+    "lib/R/library/sourcetools/include/sourcetools/cursor/TokenCursor.h",
+    "lib/R/library/sourcetools/include/sourcetools/cursor/cursor.h",
+    "lib/R/library/sourcetools/include/sourcetools/multibyte/multibyte.h",
+    "lib/R/library/sourcetools/include/sourcetools/platform/platform.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/RCallRecurser.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/RConverter.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/RFunctions.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/RHeaders.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/RNonStandardEvaluation.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/RUtils.h",
+    "lib/R/library/sourcetools/include/sourcetools/r/r.h",
+    "lib/R/library/sourcetools/include/sourcetools/read/MemoryMappedReader.h",
+    "lib/R/library/sourcetools/include/sourcetools/read/posix/FileConnection.h",
+    "lib/R/library/sourcetools/include/sourcetools/read/posix/MemoryMappedConnection.h",
+    "lib/R/library/sourcetools/include/sourcetools/read/read.h",
+    "lib/R/library/sourcetools/include/sourcetools/read/windows/FileConnection.h",
+    "lib/R/library/sourcetools/include/sourcetools/read/windows/MemoryMappedConnection.h",
+    "lib/R/library/sourcetools/include/sourcetools/tests/testthat.h",
+    "lib/R/library/sourcetools/include/sourcetools/tokenization/Registration.h",
+    "lib/R/library/sourcetools/include/sourcetools/tokenization/Token.h",
+    "lib/R/library/sourcetools/include/sourcetools/tokenization/Tokenizer.h",
+    "lib/R/library/sourcetools/include/sourcetools/tokenization/tokenization.h",
+    "lib/R/library/sourcetools/include/sourcetools/utf8/utf8.h",
+    "lib/R/library/sourcetools/libs/sourcetools.so"
+  ],
+  "fn": "r-sourcetools-0.1.7-r41h9c3ff4c_1002.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-sourcetools-0.1.7-r41h9c3ff4c_1002",
+    "type": 1
+  },
+  "md5": "47f3bc54781e5e72b641a1a0b8a46d93",
+  "name": "r-sourcetools",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-sourcetools-0.1.7-r41h9c3ff4c_1002.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/sourcetools/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "9565174760ec78f4385bc35c57ade0c4e604fffc3a2d437629782e5b79046d61",
+        "sha256_in_prefix": "9565174760ec78f4385bc35c57ade0c4e604fffc3a2d437629782e5b79046d61",
+        "size_in_bytes": 788
+      },
+      {
+        "_path": "lib/R/library/sourcetools/INDEX",
+        "path_type": "hardlink",
+        "sha256": "2917664e6d5c357b5778288f6568481cdff46f781be96e5b87ef98ecba1b6823",
+        "sha256_in_prefix": "2917664e6d5c357b5778288f6568481cdff46f781be96e5b87ef98ecba1b6823",
+        "size_in_bytes": 92
+      },
+      {
+        "_path": "lib/R/library/sourcetools/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "7c26169282452258c3b274e69c097228882b5a34ea6cafbebd904322ac925b78",
+        "sha256_in_prefix": "7c26169282452258c3b274e69c097228882b5a34ea6cafbebd904322ac925b78",
+        "size_in_bytes": 46
+      },
+      {
+        "_path": "lib/R/library/sourcetools/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "0981777f6a09444b2e43a32a25f31c99a9810e74554777166d1facfa14c8f473",
+        "sha256_in_prefix": "0981777f6a09444b2e43a32a25f31c99a9810e74554777166d1facfa14c8f473",
+        "size_in_bytes": 300
+      },
+      {
+        "_path": "lib/R/library/sourcetools/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/sourcetools/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "7f64b3eb8a60b652ce8da02dfb4fe23b91ddc6b67de01c9643f50176e51437ab",
+        "sha256_in_prefix": "7f64b3eb8a60b652ce8da02dfb4fe23b91ddc6b67de01c9643f50176e51437ab",
+        "size_in_bytes": 341
+      },
+      {
+        "_path": "lib/R/library/sourcetools/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "d6d85bc05ab4fcfb061447a8c58b23ff9cd8c756ff3688a2d33a65048650af94",
+        "sha256_in_prefix": "d6d85bc05ab4fcfb061447a8c58b23ff9cd8c756ff3688a2d33a65048650af94",
+        "size_in_bytes": 175
+      },
+      {
+        "_path": "lib/R/library/sourcetools/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "5c701a1854fd67153ecc286f0595f3f43bf697534ee916d33a9dcda86586648f",
+        "sha256_in_prefix": "5c701a1854fd67153ecc286f0595f3f43bf697534ee916d33a9dcda86586648f",
+        "size_in_bytes": 353
+      },
+      {
+        "_path": "lib/R/library/sourcetools/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "010e4b15bc870dd385e8511cb8b31aec4957232224a26e9d5dd08b48ccace931",
+        "sha256_in_prefix": "010e4b15bc870dd385e8511cb8b31aec4957232224a26e9d5dd08b48ccace931",
+        "size_in_bytes": 863
+      },
+      {
+        "_path": "lib/R/library/sourcetools/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "f2ac50dc828ba805e65ab324e913d841ff64060da131d638d04cbc4c22d59e75",
+        "sha256_in_prefix": "f2ac50dc828ba805e65ab324e913d841ff64060da131d638d04cbc4c22d59e75",
+        "size_in_bytes": 254
+      },
+      {
+        "_path": "lib/R/library/sourcetools/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "34736509b2fcc765bd9cd772339b17283c4e7ae1e2b6a5e7febd1f596837d7eb",
+        "sha256_in_prefix": "34736509b2fcc765bd9cd772339b17283c4e7ae1e2b6a5e7febd1f596837d7eb",
+        "size_in_bytes": 1104
+      },
+      {
+        "_path": "lib/R/library/sourcetools/R/sourcetools",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/sourcetools/R/sourcetools.rdb",
+        "path_type": "hardlink",
+        "sha256": "e9e02b952ef0eb59baaae1dbda319f011192e711fd59ab952a213d98cc851dd0",
+        "sha256_in_prefix": "e9e02b952ef0eb59baaae1dbda319f011192e711fd59ab952a213d98cc851dd0",
+        "size_in_bytes": 4111
+      },
+      {
+        "_path": "lib/R/library/sourcetools/R/sourcetools.rdx",
+        "path_type": "hardlink",
+        "sha256": "5e0af802f917003283673d1bcab5119c9ef82741492a36101091e324f8302ccc",
+        "sha256_in_prefix": "5e0af802f917003283673d1bcab5119c9ef82741492a36101091e324f8302ccc",
+        "size_in_bytes": 367
+      },
+      {
+        "_path": "lib/R/library/sourcetools/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "74182c4385ae9ce55bb2efa267147bfcec8a9b50e495cce862857ff11d6affa8",
+        "sha256_in_prefix": "74182c4385ae9ce55bb2efa267147bfcec8a9b50e495cce862857ff11d6affa8",
+        "size_in_bytes": 154
+      },
+      {
+        "_path": "lib/R/library/sourcetools/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "102846f7f8eb1b1d5fa20cab411d365ece1b3185521eadfb2b4bcf750e30cdb1",
+        "sha256_in_prefix": "102846f7f8eb1b1d5fa20cab411d365ece1b3185521eadfb2b4bcf750e30cdb1",
+        "size_in_bytes": 143
+      },
+      {
+        "_path": "lib/R/library/sourcetools/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "a7f43e07574d433e413e573207630ee69763d1fd57b956b747fbe4ab3015146e",
+        "sha256_in_prefix": "a7f43e07574d433e413e573207630ee69763d1fd57b956b747fbe4ab3015146e",
+        "size_in_bytes": 177
+      },
+      {
+        "_path": "lib/R/library/sourcetools/help/sourcetools.rdb",
+        "path_type": "hardlink",
+        "sha256": "39611beeed1dc21e68bcca8ee63ebe0b0e4a466259db63f10bc99a11f4fd85fa",
+        "sha256_in_prefix": "39611beeed1dc21e68bcca8ee63ebe0b0e4a466259db63f10bc99a11f4fd85fa",
+        "size_in_bytes": 3319
+      },
+      {
+        "_path": "lib/R/library/sourcetools/help/sourcetools.rdx",
+        "path_type": "hardlink",
+        "sha256": "56ad260e7688af02ea2f1b8be5c2ea24ea3a0b5d7d358b70f5c1d739774c8293",
+        "sha256_in_prefix": "56ad260e7688af02ea2f1b8be5c2ea24ea3a0b5d7d358b70f5c1d739774c8293",
+        "size_in_bytes": 192
+      },
+      {
+        "_path": "lib/R/library/sourcetools/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "ec123e3ad6ebf5d804c97189534292c5110228af2b84280166ca35eb6d7154e3",
+        "sha256_in_prefix": "ec123e3ad6ebf5d804c97189534292c5110228af2b84280166ca35eb6d7154e3",
+        "size_in_bytes": 1751
+      },
+      {
+        "_path": "lib/R/library/sourcetools/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools.h",
+        "path_type": "hardlink",
+        "sha256": "dad8ffe9634ebabf6a2d2845fc1bdac6e73002b9d232cacecde930e0316e8864",
+        "sha256_in_prefix": "dad8ffe9634ebabf6a2d2845fc1bdac6e73002b9d232cacecde930e0316e8864",
+        "size_in_bytes": 340
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/collection/Position.h",
+        "path_type": "hardlink",
+        "sha256": "cbff95df459ab50ae161fb607fed1a1aa5f801038bf0f2049491c880708c7362",
+        "sha256_in_prefix": "cbff95df459ab50ae161fb607fed1a1aa5f801038bf0f2049491c880708c7362",
+        "size_in_bytes": 1611
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/collection/Range.h",
+        "path_type": "hardlink",
+        "sha256": "166f1f6835a5c44bfdb1a33a8ecda20195f40ccc57c2fb31d532ddc4ff71e342",
+        "sha256_in_prefix": "166f1f6835a5c44bfdb1a33a8ecda20195f40ccc57c2fb31d532ddc4ff71e342",
+        "size_in_bytes": 709
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/collection/collection.h",
+        "path_type": "hardlink",
+        "sha256": "5e97f0b1bc4708b3442b5f221251a87cdbddebc59210870f5ff692ddbde15f4a",
+        "sha256_in_prefix": "5e97f0b1bc4708b3442b5f221251a87cdbddebc59210870f5ff692ddbde15f4a",
+        "size_in_bytes": 226
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/core/core.h",
+        "path_type": "hardlink",
+        "sha256": "77f99342f406538e81c325efa04536d721cb6e51fac3b949f0a1a904f133f93e",
+        "sha256_in_prefix": "77f99342f406538e81c325efa04536d721cb6e51fac3b949f0a1a904f133f93e",
+        "size_in_bytes": 175
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/core/macros.h",
+        "path_type": "hardlink",
+        "sha256": "2d4e682f870e1349f51b90b81e4d38f99a470ae50ce8ebfe6cc641fba93ef3d7",
+        "sha256_in_prefix": "2d4e682f870e1349f51b90b81e4d38f99a470ae50ce8ebfe6cc641fba93ef3d7",
+        "size_in_bytes": 1744
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/core/util.h",
+        "path_type": "hardlink",
+        "sha256": "cae95e90a267d76b328f9c8e4146bf84ffba7a0ba24f5967bb1db45c63bbcca6",
+        "sha256_in_prefix": "cae95e90a267d76b328f9c8e4146bf84ffba7a0ba24f5967bb1db45c63bbcca6",
+        "size_in_bytes": 2473
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/cursor/TextCursor.h",
+        "path_type": "hardlink",
+        "sha256": "dcd3983ccd3051bc776b1dca57a409b77075a9b582440b0def5efd1737e1b1b7",
+        "sha256_in_prefix": "dcd3983ccd3051bc776b1dca57a409b77075a9b582440b0def5efd1737e1b1b7",
+        "size_in_bytes": 1399
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/cursor/TokenCursor.h",
+        "path_type": "hardlink",
+        "sha256": "d56ad9b47a01b4a947c06db574ac1e047c986b49ee322580fa9397c9d1e99df1",
+        "sha256_in_prefix": "d56ad9b47a01b4a947c06db574ac1e047c986b49ee322580fa9397c9d1e99df1",
+        "size_in_bytes": 6502
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/cursor/cursor.h",
+        "path_type": "hardlink",
+        "sha256": "4c6c106662039671db08817b716a7dc1310fbf8f72bb6238c57eb1978bf5c897",
+        "sha256_in_prefix": "4c6c106662039671db08817b716a7dc1310fbf8f72bb6238c57eb1978bf5c897",
+        "size_in_bytes": 202
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/multibyte/multibyte.h",
+        "path_type": "hardlink",
+        "sha256": "bd09f77c76fa37d2f455167b1abd41c983763a558e478606af7a2b1c6dd711ff",
+        "sha256_in_prefix": "bd09f77c76fa37d2f455167b1abd41c983763a558e478606af7a2b1c6dd711ff",
+        "size_in_bytes": 729
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/platform/platform.h",
+        "path_type": "hardlink",
+        "sha256": "db80c77567bb60c0c428798f81c5d695dbbe960c7a7b333b8f0e2d7ea5a12273",
+        "sha256_in_prefix": "db80c77567bb60c0c428798f81c5d695dbbe960c7a7b333b8f0e2d7ea5a12273",
+        "size_in_bytes": 392
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/RCallRecurser.h",
+        "path_type": "hardlink",
+        "sha256": "912c142780567b63f0e611b13b88bd6ed11148665fd9e99a86031849c56311f7",
+        "sha256_in_prefix": "912c142780567b63f0e611b13b88bd6ed11148665fd9e99a86031849c56311f7",
+        "size_in_bytes": 1370
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/RConverter.h",
+        "path_type": "hardlink",
+        "sha256": "1f099976d1b931c1495e1ee1b4894de3fadf692557ff471d32f7b4b009349924",
+        "sha256_in_prefix": "1f099976d1b931c1495e1ee1b4894de3fadf692557ff471d32f7b4b009349924",
+        "size_in_bytes": 896
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/RFunctions.h",
+        "path_type": "hardlink",
+        "sha256": "3fd073dedeb3d152c77a65cceec490d976af2fde59ca95445aabe12d8d5e609e",
+        "sha256_in_prefix": "3fd073dedeb3d152c77a65cceec490d976af2fde59ca95445aabe12d8d5e609e",
+        "size_in_bytes": 2091
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/RHeaders.h",
+        "path_type": "hardlink",
+        "sha256": "a4157c82f1d5920389a8d92f3b0ddaaf5b139c59afc96757af6c3da6254b7586",
+        "sha256_in_prefix": "a4157c82f1d5920389a8d92f3b0ddaaf5b139c59afc96757af6c3da6254b7586",
+        "size_in_bytes": 167
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/RNonStandardEvaluation.h",
+        "path_type": "hardlink",
+        "sha256": "8d8feeec5d63fc67aa23272c200ab66e1aae94542dafc7fe3b6e6a428773f6fd",
+        "sha256_in_prefix": "8d8feeec5d63fc67aa23272c200ab66e1aae94542dafc7fe3b6e6a428773f6fd",
+        "size_in_bytes": 2863
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/RUtils.h",
+        "path_type": "hardlink",
+        "sha256": "075dbb89f8091a6806b397bfb11e4631b3542e87ad9cec8c4d2f750f0f25c854",
+        "sha256_in_prefix": "075dbb89f8091a6806b397bfb11e4631b3542e87ad9cec8c4d2f750f0f25c854",
+        "size_in_bytes": 1783
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/r/r.h",
+        "path_type": "hardlink",
+        "sha256": "5e04a061b7777cd2155fdbc0ea32dc2126276e81247911583c6c1925aa1203d8",
+        "sha256_in_prefix": "5e04a061b7777cd2155fdbc0ea32dc2126276e81247911583c6c1925aa1203d8",
+        "size_in_bytes": 322
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/read/MemoryMappedReader.h",
+        "path_type": "hardlink",
+        "sha256": "b94f0afa8f0f499e1c33d25a57682bb6d0619cf5ea0ef264e65fb1c028bead99",
+        "sha256_in_prefix": "b94f0afa8f0f499e1c33d25a57682bb6d0619cf5ea0ef264e65fb1c028bead99",
+        "size_in_bytes": 2877
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/read/posix/FileConnection.h",
+        "path_type": "hardlink",
+        "sha256": "0191c12a24d9e38f642deb582e98e649627c8bb2943d64cb0189b7e1929b8625",
+        "sha256_in_prefix": "0191c12a24d9e38f642deb582e98e649627c8bb2943d64cb0189b7e1929b8625",
+        "size_in_bytes": 857
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/read/posix/MemoryMappedConnection.h",
+        "path_type": "hardlink",
+        "sha256": "3f7e78a91381b895b0acd3ce4cb9adf23f7a6e9cdeb18bbefde65f611d00e6a3",
+        "sha256_in_prefix": "3f7e78a91381b895b0acd3ce4cb9adf23f7a6e9cdeb18bbefde65f611d00e6a3",
+        "size_in_bytes": 1085
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/read/read.h",
+        "path_type": "hardlink",
+        "sha256": "4ace881ea5f7aed76b136b9ac5f86d203dd19cf26e49273faf40675743a5dc00",
+        "sha256_in_prefix": "4ace881ea5f7aed76b136b9ac5f86d203dd19cf26e49273faf40675743a5dc00",
+        "size_in_bytes": 593
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/read/windows/FileConnection.h",
+        "path_type": "hardlink",
+        "sha256": "10d1fd0130ad52b76735df384e0d37104ae161fa44c8ba6675ee4fe6c7bf2a5b",
+        "sha256_in_prefix": "10d1fd0130ad52b76735df384e0d37104ae161fa44c8ba6675ee4fe6c7bf2a5b",
+        "size_in_bytes": 870
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/read/windows/MemoryMappedConnection.h",
+        "path_type": "hardlink",
+        "sha256": "db6bf04700adda6b59f87c66b7575cc4436ca0aea3bfd67cf41ccb040d5110ac",
+        "sha256_in_prefix": "db6bf04700adda6b59f87c66b7575cc4436ca0aea3bfd67cf41ccb040d5110ac",
+        "size_in_bytes": 982
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/tests/testthat.h",
+        "path_type": "hardlink",
+        "sha256": "dee3a0165bfcca0c8a7e5515f024b1813746db5052e0663b14e8397a390c8325",
+        "sha256_in_prefix": "dee3a0165bfcca0c8a7e5515f024b1813746db5052e0663b14e8397a390c8325",
+        "size_in_bytes": 372
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/tokenization/Registration.h",
+        "path_type": "hardlink",
+        "sha256": "3573cd0371667f8dd2c9e8892e1de6803984677062ae35d15e0e98496b7cd0d0",
+        "sha256_in_prefix": "3573cd0371667f8dd2c9e8892e1de6803984677062ae35d15e0e98496b7cd0d0",
+        "size_in_bytes": 9353
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/tokenization/Token.h",
+        "path_type": "hardlink",
+        "sha256": "988d84d888dc135f1ef0029b6c5d41d1679c13f190f4abddbdee8620ad9880c2",
+        "sha256_in_prefix": "988d84d888dc135f1ef0029b6c5d41d1679c13f190f4abddbdee8620ad9880c2",
+        "size_in_bytes": 11467
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/tokenization/Tokenizer.h",
+        "path_type": "hardlink",
+        "sha256": "0e418efec5a2107945b67dd67d56a2a9b8c8491d7e1f76c4d4e2c4198511abdc",
+        "sha256_in_prefix": "0e418efec5a2107945b67dd67d56a2a9b8c8491d7e1f76c4d4e2c4198511abdc",
+        "size_in_bytes": 12032
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/tokenization/tokenization.h",
+        "path_type": "hardlink",
+        "sha256": "6259ed25c1f33aeda0bf3c41acc2ebeb5eddeb867215c6a1b86806e2f5b662e4",
+        "sha256_in_prefix": "6259ed25c1f33aeda0bf3c41acc2ebeb5eddeb867215c6a1b86806e2f5b662e4",
+        "size_in_bytes": 294
+      },
+      {
+        "_path": "lib/R/library/sourcetools/include/sourcetools/utf8/utf8.h",
+        "path_type": "hardlink",
+        "sha256": "7bead5123ed6e814cc4981bb6a203b24fd4541d4b82e37fc399fa3abf699cd97",
+        "sha256_in_prefix": "7bead5123ed6e814cc4981bb6a203b24fd4541d4b82e37fc399fa3abf699cd97",
+        "size_in_bytes": 1852
+      },
+      {
+        "_path": "lib/R/library/sourcetools/libs/sourcetools.so",
+        "path_type": "hardlink",
+        "sha256": "f9a961746ff888a1fdd5edbef507b34118fc0dddeaa04a3c789b992381777c9e",
+        "sha256_in_prefix": "f9a961746ff888a1fdd5edbef507b34118fc0dddeaa04a3c789b992381777c9e",
+        "size_in_bytes": 53752
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "23e59d772f3c68ed8b79ff1dca1cc7763b2e60b6aabb6785a5d1aaf98202868e",
+  "size": 54191,
+  "subdir": "linux-64",
+  "timestamp": 1621620738192,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-sourcetools-0.1.7-r41h9c3ff4c_1002.tar.bz2",
+  "version": "0.1.7"
+}

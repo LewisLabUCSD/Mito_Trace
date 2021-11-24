@@ -1,0 +1,352 @@
+{
+  "build": "r41hcfec24a_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-curl",
+    "r-xts >=0.10_0",
+    "r-zoo"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-ttr-0.24.2-r41hcfec24a_0",
+  "features": "",
+  "files": [
+    "lib/R/library/TTR/DESCRIPTION",
+    "lib/R/library/TTR/INDEX",
+    "lib/R/library/TTR/Meta/Rd.rds",
+    "lib/R/library/TTR/Meta/data.rds",
+    "lib/R/library/TTR/Meta/features.rds",
+    "lib/R/library/TTR/Meta/hsearch.rds",
+    "lib/R/library/TTR/Meta/links.rds",
+    "lib/R/library/TTR/Meta/nsInfo.rds",
+    "lib/R/library/TTR/Meta/package.rds",
+    "lib/R/library/TTR/NAMESPACE",
+    "lib/R/library/TTR/R/TTR",
+    "lib/R/library/TTR/R/TTR.rdb",
+    "lib/R/library/TTR/R/TTR.rdx",
+    "lib/R/library/TTR/data/ttrc.rda",
+    "lib/R/library/TTR/help/AnIndex",
+    "lib/R/library/TTR/help/TTR.rdb",
+    "lib/R/library/TTR/help/TTR.rdx",
+    "lib/R/library/TTR/help/aliases.rds",
+    "lib/R/library/TTR/help/paths.rds",
+    "lib/R/library/TTR/html/00Index.html",
+    "lib/R/library/TTR/html/R.css",
+    "lib/R/library/TTR/libs/TTR.so",
+    "lib/R/library/TTR/unitTests/output.MA.rda",
+    "lib/R/library/TTR/unitTests/output.Oscillators.rda",
+    "lib/R/library/TTR/unitTests/output.misc.rda",
+    "lib/R/library/TTR/unitTests/output.overlays.rda",
+    "lib/R/library/TTR/unitTests/output.runFun.rda",
+    "lib/R/library/TTR/unitTests/output.trend.rda",
+    "lib/R/library/TTR/unitTests/output.volatility.rda",
+    "lib/R/library/TTR/unitTests/output.volume.rda",
+    "lib/R/library/TTR/unitTests/runit.TTR.DVI.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.Misc.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.MovingAverages.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.Oscillators.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.Overlays.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.Trend.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.Volatility.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.Volume.R",
+    "lib/R/library/TTR/unitTests/runit.TTR.runFun.R"
+  ],
+  "fn": "r-ttr-0.24.2-r41hcfec24a_0.tar.bz2",
+  "license": "GPL-2.0-or-later",
+  "license_family": "GPL2",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-ttr-0.24.2-r41hcfec24a_0",
+    "type": 1
+  },
+  "md5": "ab38186fd94871dd03f651628bca9ddc",
+  "name": "r-ttr",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-ttr-0.24.2-r41hcfec24a_0.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/TTR/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "03d30b780cebec91c8238968761b3b547ac2436d57c6daa5e06dff2eeb29c04f",
+        "sha256_in_prefix": "03d30b780cebec91c8238968761b3b547ac2436d57c6daa5e06dff2eeb29c04f",
+        "size_in_bytes": 757
+      },
+      {
+        "_path": "lib/R/library/TTR/INDEX",
+        "path_type": "hardlink",
+        "sha256": "71b824001b1adbb8b09eb74aaaed88ef4f5e3c4d7ee7ebdf5adf5faf48a2cac8",
+        "sha256_in_prefix": "71b824001b1adbb8b09eb74aaaed88ef4f5e3c4d7ee7ebdf5adf5faf48a2cac8",
+        "size_in_bytes": 2304
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "3e0f0bd2ba002c092a3f8baee7936270ebfaf0a5d3b988a9fd64c31f28fdee72",
+        "sha256_in_prefix": "3e0f0bd2ba002c092a3f8baee7936270ebfaf0a5d3b988a9fd64c31f28fdee72",
+        "size_in_bytes": 1790
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "80bc144c9fbbce2c03c4051b1ec180c9f68e4ba25bd6035c8cd1ee1c5d9da67e",
+        "sha256_in_prefix": "80bc144c9fbbce2c03c4051b1ec180c9f68e4ba25bd6035c8cd1ee1c5d9da67e",
+        "size_in_bytes": 119
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "1b8dea17826e230e1a1f5c16db23753b8259142fc4eaffee62aefc7d50bf2fa2",
+        "sha256_in_prefix": "1b8dea17826e230e1a1f5c16db23753b8259142fc4eaffee62aefc7d50bf2fa2",
+        "size_in_bytes": 1799
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "44d2627c3eee570740dc757ca68d426fe1292fee80e7c22dc0dc2b6e784f9c17",
+        "sha256_in_prefix": "44d2627c3eee570740dc757ca68d426fe1292fee80e7c22dc0dc2b6e784f9c17",
+        "size_in_bytes": 950
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "3ecc84f10de5e19a94f38eded93746b8ecad16a8a6f7821d9c56c34b77809609",
+        "sha256_in_prefix": "3ecc84f10de5e19a94f38eded93746b8ecad16a8a6f7821d9c56c34b77809609",
+        "size_in_bytes": 675
+      },
+      {
+        "_path": "lib/R/library/TTR/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "056ff199a6f03476c3c6c891f2aedb538db9458c4661e2ee71e14614c6ce274c",
+        "sha256_in_prefix": "056ff199a6f03476c3c6c891f2aedb538db9458c4661e2ee71e14614c6ce274c",
+        "size_in_bytes": 893
+      },
+      {
+        "_path": "lib/R/library/TTR/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "1ebba4a0655d8cb2c975774cf5f4ddff7fafb98e7c81b2089b4a1895981d2567",
+        "sha256_in_prefix": "1ebba4a0655d8cb2c975774cf5f4ddff7fafb98e7c81b2089b4a1895981d2567",
+        "size_in_bytes": 1272
+      },
+      {
+        "_path": "lib/R/library/TTR/R/TTR",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/TTR/R/TTR.rdb",
+        "path_type": "hardlink",
+        "sha256": "cc3e16bb7d2255c85279548153b98cc3a1b4c6d57cbf3effab601b75adbbbdb9",
+        "sha256_in_prefix": "cc3e16bb7d2255c85279548153b98cc3a1b4c6d57cbf3effab601b75adbbbdb9",
+        "size_in_bytes": 115835
+      },
+      {
+        "_path": "lib/R/library/TTR/R/TTR.rdx",
+        "path_type": "hardlink",
+        "sha256": "b66898259590c3e640504d9d6c94541d7870f7833388ce4f44b87589789aa380",
+        "sha256_in_prefix": "b66898259590c3e640504d9d6c94541d7870f7833388ce4f44b87589789aa380",
+        "size_in_bytes": 1122
+      },
+      {
+        "_path": "lib/R/library/TTR/data/ttrc.rda",
+        "path_type": "hardlink",
+        "sha256": "2595b6e5a01ab50552a25b487e1bd03fb77f691ed2099f27db72d73d97b17312",
+        "sha256_in_prefix": "2595b6e5a01ab50552a25b487e1bd03fb77f691ed2099f27db72d73d97b17312",
+        "size_in_bytes": 83866
+      },
+      {
+        "_path": "lib/R/library/TTR/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "342fc9a1a24069ec8e4e5d52e9466802a5cf0ce39b91df12dde2741dd3b3915c",
+        "sha256_in_prefix": "342fc9a1a24069ec8e4e5d52e9466802a5cf0ce39b91df12dde2741dd3b3915c",
+        "size_in_bytes": 1584
+      },
+      {
+        "_path": "lib/R/library/TTR/help/TTR.rdb",
+        "path_type": "hardlink",
+        "sha256": "f7e53da3e54cacc0cca13a322aeb9dd9350e899f0239b20a16f5d2ab569d765e",
+        "sha256_in_prefix": "f7e53da3e54cacc0cca13a322aeb9dd9350e899f0239b20a16f5d2ab569d765e",
+        "size_in_bytes": 136785
+      },
+      {
+        "_path": "lib/R/library/TTR/help/TTR.rdx",
+        "path_type": "hardlink",
+        "sha256": "eeb1bc56fde4d50c83ec2c3694ccf92208e726eb9a0f80c8e66ea9d6204d028f",
+        "sha256_in_prefix": "eeb1bc56fde4d50c83ec2c3694ccf92208e726eb9a0f80c8e66ea9d6204d028f",
+        "size_in_bytes": 1062
+      },
+      {
+        "_path": "lib/R/library/TTR/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "526b0cd7ed21abbf1cdf1ffa4b5e317705419143b16e35b5592747d7e52b1fc2",
+        "sha256_in_prefix": "526b0cd7ed21abbf1cdf1ffa4b5e317705419143b16e35b5592747d7e52b1fc2",
+        "size_in_bytes": 807
+      },
+      {
+        "_path": "lib/R/library/TTR/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "975fa3f3a89a2fe5cb449e6e2a472fbb7fac1eaa153b95183dc3b4be2f3415ec",
+        "sha256_in_prefix": "975fa3f3a89a2fe5cb449e6e2a472fbb7fac1eaa153b95183dc3b4be2f3415ec",
+        "size_in_bytes": 471
+      },
+      {
+        "_path": "lib/R/library/TTR/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "09f99193593be627b444a2a347bbf619e19c523e034d97e2b32ca71681d98dfc",
+        "sha256_in_prefix": "09f99193593be627b444a2a347bbf619e19c523e034d97e2b32ca71681d98dfc",
+        "size_in_bytes": 11775
+      },
+      {
+        "_path": "lib/R/library/TTR/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/TTR/libs/TTR.so",
+        "path_type": "hardlink",
+        "sha256": "4fc79f2b1d9d700957069906a4e3f2320197d5dbbde39cbc00cc41bd95c62d8a",
+        "sha256_in_prefix": "4fc79f2b1d9d700957069906a4e3f2320197d5dbbde39cbc00cc41bd95c62d8a",
+        "size_in_bytes": 38752
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.MA.rda",
+        "path_type": "hardlink",
+        "sha256": "bf8c505c670a37a38d80a5c24809bbf957dac62daefe0ac0775d3946af3521f7",
+        "sha256_in_prefix": "bf8c505c670a37a38d80a5c24809bbf957dac62daefe0ac0775d3946af3521f7",
+        "size_in_bytes": 19329
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.Oscillators.rda",
+        "path_type": "hardlink",
+        "sha256": "9f2af3b6bd829b1eacc93bf91fca5dfbeb465e51d6a98dcdb8253ffab20fda55",
+        "sha256_in_prefix": "9f2af3b6bd829b1eacc93bf91fca5dfbeb465e51d6a98dcdb8253ffab20fda55",
+        "size_in_bytes": 35148
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.misc.rda",
+        "path_type": "hardlink",
+        "sha256": "39e1f4bfd0e42e65b8abaa7c1fc10acf887f65a39c3631442096e00d95f4808f",
+        "sha256_in_prefix": "39e1f4bfd0e42e65b8abaa7c1fc10acf887f65a39c3631442096e00d95f4808f",
+        "size_in_bytes": 12753
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.overlays.rda",
+        "path_type": "hardlink",
+        "sha256": "5dbbd18ec2cda588d7870ab54aa29096ea0e564b3e8fe558df469dfa3c2cf2b2",
+        "sha256_in_prefix": "5dbbd18ec2cda588d7870ab54aa29096ea0e564b3e8fe558df469dfa3c2cf2b2",
+        "size_in_bytes": 14443
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.runFun.rda",
+        "path_type": "hardlink",
+        "sha256": "9538c46a59fb5d902ffe9334df078ef7c0b5d8d8dee4f6955669bbc09631f155",
+        "sha256_in_prefix": "9538c46a59fb5d902ffe9334df078ef7c0b5d8d8dee4f6955669bbc09631f155",
+        "size_in_bytes": 14479
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.trend.rda",
+        "path_type": "hardlink",
+        "sha256": "aa0c3b689f7b980f8850f0f9e6e550b9c3183496687e20d75ebde39b430dbb47",
+        "sha256_in_prefix": "aa0c3b689f7b980f8850f0f9e6e550b9c3183496687e20d75ebde39b430dbb47",
+        "size_in_bytes": 27228
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.volatility.rda",
+        "path_type": "hardlink",
+        "sha256": "3c421ddb99ed85182494051a9527685c618eec7c59526b18ec0f72fc27222162",
+        "sha256_in_prefix": "3c421ddb99ed85182494051a9527685c618eec7c59526b18ec0f72fc27222162",
+        "size_in_bytes": 12364
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/output.volume.rda",
+        "path_type": "hardlink",
+        "sha256": "b23db3fae9919b3c1ee07272dad16f2a2e196151e3885eb9b5d91dd1774700fc",
+        "sha256_in_prefix": "b23db3fae9919b3c1ee07272dad16f2a2e196151e3885eb9b5d91dd1774700fc",
+        "size_in_bytes": 8813
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.DVI.R",
+        "path_type": "hardlink",
+        "sha256": "c29f6d387622758566529c02f286f203f79e9117ed186c393b6a700cb37c7b0f",
+        "sha256_in_prefix": "c29f6d387622758566529c02f286f203f79e9117ed186c393b6a700cb37c7b0f",
+        "size_in_bytes": 326
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.Misc.R",
+        "path_type": "hardlink",
+        "sha256": "7576a097c0fa89498b64497ff43040aa65c5188eea5f8e09a8e943a245b27b55",
+        "sha256_in_prefix": "7576a097c0fa89498b64497ff43040aa65c5188eea5f8e09a8e943a245b27b55",
+        "size_in_bytes": 2991
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.MovingAverages.R",
+        "path_type": "hardlink",
+        "sha256": "b63bfe7528d0aab23035f0d5a097fa0f3a24da166b7a0998aa8010d014c39397",
+        "sha256_in_prefix": "b63bfe7528d0aab23035f0d5a097fa0f3a24da166b7a0998aa8010d014c39397",
+        "size_in_bytes": 5812
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.Oscillators.R",
+        "path_type": "hardlink",
+        "sha256": "b011c5a418bc4c93758334e065eb670134e2f130bbbbc58bcd3614e67d7f268b",
+        "sha256_in_prefix": "b011c5a418bc4c93758334e065eb670134e2f130bbbbc58bcd3614e67d7f268b",
+        "size_in_bytes": 6635
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.Overlays.R",
+        "path_type": "hardlink",
+        "sha256": "b6b9cdf9f0cf9ea4b51c0ba10e4cffeaadbb9a384cc8a4818ae17a2499c791cf",
+        "sha256_in_prefix": "b6b9cdf9f0cf9ea4b51c0ba10e4cffeaadbb9a384cc8a4818ae17a2499c791cf",
+        "size_in_bytes": 1965
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.Trend.R",
+        "path_type": "hardlink",
+        "sha256": "0e55a74821e29cbbea8ed62302e1ec3db595646c35047595cffb8765d307b2d5",
+        "sha256_in_prefix": "0e55a74821e29cbbea8ed62302e1ec3db595646c35047595cffb8765d307b2d5",
+        "size_in_bytes": 4060
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.Volatility.R",
+        "path_type": "hardlink",
+        "sha256": "fe88f52693db72a7c0abb7430769fe2bc364c3b3f96c19dc5d676e01353ea90e",
+        "sha256_in_prefix": "fe88f52693db72a7c0abb7430769fe2bc364c3b3f96c19dc5d676e01353ea90e",
+        "size_in_bytes": 2454
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.Volume.R",
+        "path_type": "hardlink",
+        "sha256": "0ff863947154ab34d9b5fee5c4aa88e320e2950031f25df305ff6bf77c9dbdaa",
+        "sha256_in_prefix": "0ff863947154ab34d9b5fee5c4aa88e320e2950031f25df305ff6bf77c9dbdaa",
+        "size_in_bytes": 3340
+      },
+      {
+        "_path": "lib/R/library/TTR/unitTests/runit.TTR.runFun.R",
+        "path_type": "hardlink",
+        "sha256": "34524de4d49629659758ffba0f98a13bd3b3262f2309886dc54bf273d158a82f",
+        "sha256_in_prefix": "34524de4d49629659758ffba0f98a13bd3b3262f2309886dc54bf273d158a82f",
+        "size_in_bytes": 12091
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "f236b0247b9bcc3d797e3989ad48647cf05a0d257adaead207fbcdcfc7f5ecab",
+  "size": 537104,
+  "subdir": "linux-64",
+  "timestamp": 1621651187278,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-ttr-0.24.2-r41hcfec24a_0.tar.bz2",
+  "version": "0.24.2"
+}

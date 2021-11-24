@@ -1,0 +1,51 @@
+{
+  "build": "r41hd8ed1ab_1004",
+  "build_number": 1004,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-boot",
+    "r-class",
+    "r-cluster",
+    "r-codetools",
+    "r-foreign",
+    "r-kernsmooth",
+    "r-lattice",
+    "r-mass",
+    "r-matrix",
+    "r-mgcv",
+    "r-nlme",
+    "r-nnet",
+    "r-rpart",
+    "r-spatial",
+    "r-survival"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-recommended-4.1-r41hd8ed1ab_1004",
+  "features": "",
+  "files": [],
+  "fn": "r-recommended-4.1-r41hd8ed1ab_1004.tar.bz2",
+  "license": "GPL-3.0-or-later",
+  "license_family": "GPL",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-recommended-4.1-r41hd8ed1ab_1004",
+    "type": 1
+  },
+  "md5": "69617ca47f80c09e652baaf119d56d4e",
+  "name": "r-recommended",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-recommended-4.1-r41hd8ed1ab_1004.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "a412c1035f906805d5d0a468e7b812c42760b4c4e95398d7df2724c3b57a79ed",
+  "size": 15080,
+  "subdir": "noarch",
+  "timestamp": 1621864715359,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-recommended-4.1-r41hd8ed1ab_1004.tar.bz2",
+  "version": "4.1"
+}

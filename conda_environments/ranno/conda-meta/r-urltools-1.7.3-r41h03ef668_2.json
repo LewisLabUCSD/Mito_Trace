@@ -1,0 +1,288 @@
+{
+  "build": "r41h03ef668_2",
+  "build_number": 2,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.3.0",
+    "libstdcxx-ng >=9.3.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-rcpp",
+    "r-triebeard"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-urltools-1.7.3-r41h03ef668_2",
+  "features": "",
+  "files": [
+    "lib/R/library/urltools/DESCRIPTION",
+    "lib/R/library/urltools/INDEX",
+    "lib/R/library/urltools/LICENSE",
+    "lib/R/library/urltools/Meta/Rd.rds",
+    "lib/R/library/urltools/Meta/data.rds",
+    "lib/R/library/urltools/Meta/features.rds",
+    "lib/R/library/urltools/Meta/hsearch.rds",
+    "lib/R/library/urltools/Meta/links.rds",
+    "lib/R/library/urltools/Meta/nsInfo.rds",
+    "lib/R/library/urltools/Meta/package.rds",
+    "lib/R/library/urltools/Meta/vignette.rds",
+    "lib/R/library/urltools/NAMESPACE",
+    "lib/R/library/urltools/NEWS",
+    "lib/R/library/urltools/R/urltools",
+    "lib/R/library/urltools/R/urltools.rdb",
+    "lib/R/library/urltools/R/urltools.rdx",
+    "lib/R/library/urltools/data/Rdata.rdb",
+    "lib/R/library/urltools/data/Rdata.rds",
+    "lib/R/library/urltools/data/Rdata.rdx",
+    "lib/R/library/urltools/doc/index.html",
+    "lib/R/library/urltools/doc/urltools.R",
+    "lib/R/library/urltools/doc/urltools.Rmd",
+    "lib/R/library/urltools/doc/urltools.html",
+    "lib/R/library/urltools/help/AnIndex",
+    "lib/R/library/urltools/help/aliases.rds",
+    "lib/R/library/urltools/help/paths.rds",
+    "lib/R/library/urltools/help/urltools.rdb",
+    "lib/R/library/urltools/help/urltools.rdx",
+    "lib/R/library/urltools/html/00Index.html",
+    "lib/R/library/urltools/html/R.css",
+    "lib/R/library/urltools/libs/urltools.so"
+  ],
+  "fn": "r-urltools-1.7.3-r41h03ef668_2.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-urltools-1.7.3-r41h03ef668_2",
+    "type": 1
+  },
+  "md5": "f2f293cdfd028df8ac833df67433f826",
+  "name": "r-urltools",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-urltools-1.7.3-r41h03ef668_2.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/urltools/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "df0527ec4635f3c2223d37ed33275d191a9a0dc781be55e0c18400096586ca7d",
+        "sha256_in_prefix": "df0527ec4635f3c2223d37ed33275d191a9a0dc781be55e0c18400096586ca7d",
+        "size_in_bytes": 1322
+      },
+      {
+        "_path": "lib/R/library/urltools/INDEX",
+        "path_type": "hardlink",
+        "sha256": "19df2e360df62ba6b7e5590418565e536e52d27e5ac44e559d50f4e9c4de74f7",
+        "sha256_in_prefix": "19df2e360df62ba6b7e5590418565e536e52d27e5ac44e559d50f4e9c4de74f7",
+        "size_in_bytes": 1228
+      },
+      {
+        "_path": "lib/R/library/urltools/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "e267705695524411e6251293f1176990cc61c1a03dc2a0649bfea66b532a0517",
+        "sha256_in_prefix": "e267705695524411e6251293f1176990cc61c1a03dc2a0649bfea66b532a0517",
+        "size_in_bytes": 41
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "882bd97d7e71f68abd93a84b4fe906c49cc76e09f86f591cf66de60104ec486c",
+        "sha256_in_prefix": "882bd97d7e71f68abd93a84b4fe906c49cc76e09f86f591cf66de60104ec486c",
+        "size_in_bytes": 943
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "c4ec63880529674cda8f5c8c8ee8739744f4f8ca60137b6abc2bc205b4d1a8aa",
+        "sha256_in_prefix": "c4ec63880529674cda8f5c8c8ee8739744f4f8ca60137b6abc2bc205b4d1a8aa",
+        "size_in_bytes": 142
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "1633da3dd933e478d56878ebb386303631eda4b412c4e550197d8c34dddea743",
+        "sha256_in_prefix": "1633da3dd933e478d56878ebb386303631eda4b412c4e550197d8c34dddea743",
+        "size_in_bytes": 1008
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "4551bbf0380178c893226bd687149eafb2f0127901bbe571dfccbfb65e2c4bbd",
+        "sha256_in_prefix": "4551bbf0380178c893226bd687149eafb2f0127901bbe571dfccbfb65e2c4bbd",
+        "size_in_bytes": 451
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "25ca6c1855196acf627bc23150271fee4f91417281be9c358cdc4ec9abb75e75",
+        "sha256_in_prefix": "25ca6c1855196acf627bc23150271fee4f91417281be9c358cdc4ec9abb75e75",
+        "size_in_bytes": 512
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "4146248374ccb854655acb7b3fa8c964800b2e816c731a7f65a499148436aae0",
+        "sha256_in_prefix": "4146248374ccb854655acb7b3fa8c964800b2e816c731a7f65a499148436aae0",
+        "size_in_bytes": 1219
+      },
+      {
+        "_path": "lib/R/library/urltools/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "712314840376efcf869ed526355f592a438ed3dbd427c0e7b9f7d707f914bdba",
+        "sha256_in_prefix": "712314840376efcf869ed526355f592a438ed3dbd427c0e7b9f7d707f914bdba",
+        "size_in_bytes": 194
+      },
+      {
+        "_path": "lib/R/library/urltools/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "95bacf5dd7b24733fb4d38de6dc2c71fccb045c21592f830b57ab99ac23be7e0",
+        "sha256_in_prefix": "95bacf5dd7b24733fb4d38de6dc2c71fccb045c21592f830b57ab99ac23be7e0",
+        "size_in_bytes": 732
+      },
+      {
+        "_path": "lib/R/library/urltools/NEWS",
+        "path_type": "hardlink",
+        "sha256": "41f394d189ed7e8a07a889633344cad2da5ff8fdd068268bd611dfb8b885b124",
+        "sha256_in_prefix": "41f394d189ed7e8a07a889633344cad2da5ff8fdd068268bd611dfb8b885b124",
+        "size_in_bytes": 9207
+      },
+      {
+        "_path": "lib/R/library/urltools/R/urltools",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/urltools/R/urltools.rdb",
+        "path_type": "hardlink",
+        "sha256": "88015adfa5c389f2dc87174cbc0c6afc0f726135f15c2209a07ca8eabc3c9fde",
+        "sha256_in_prefix": "88015adfa5c389f2dc87174cbc0c6afc0f726135f15c2209a07ca8eabc3c9fde",
+        "size_in_bytes": 37632
+      },
+      {
+        "_path": "lib/R/library/urltools/R/urltools.rdx",
+        "path_type": "hardlink",
+        "sha256": "f97a30265ef9bd3d237fab447920418bab6051ce40615e7af696467e2c767c96",
+        "sha256_in_prefix": "f97a30265ef9bd3d237fab447920418bab6051ce40615e7af696467e2c767c96",
+        "size_in_bytes": 1004
+      },
+      {
+        "_path": "lib/R/library/urltools/data/Rdata.rdb",
+        "path_type": "hardlink",
+        "sha256": "8a31c919dd483634b826a477782149e8925d8a2e968769341960b3b99b84b3c2",
+        "sha256_in_prefix": "8a31c919dd483634b826a477782149e8925d8a2e968769341960b3b99b84b3c2",
+        "size_in_bytes": 81608
+      },
+      {
+        "_path": "lib/R/library/urltools/data/Rdata.rds",
+        "path_type": "hardlink",
+        "sha256": "b088e8d1735d9a567c529f1921d5ec4782cdb47ed3d2dfbe35594f1038b6658a",
+        "sha256_in_prefix": "b088e8d1735d9a567c529f1921d5ec4782cdb47ed3d2dfbe35594f1038b6658a",
+        "size_in_bytes": 100
+      },
+      {
+        "_path": "lib/R/library/urltools/data/Rdata.rdx",
+        "path_type": "hardlink",
+        "sha256": "8c371e455619bc1a0561fc56dc10acd636443f7d202170a12bf0c089429dadd3",
+        "sha256_in_prefix": "8c371e455619bc1a0561fc56dc10acd636443f7d202170a12bf0c089429dadd3",
+        "size_in_bytes": 167
+      },
+      {
+        "_path": "lib/R/library/urltools/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "b6bcf4619170dbefc03f545982e03201c5f5a88e5149653636971488c5a8f0bf",
+        "sha256_in_prefix": "b6bcf4619170dbefc03f545982e03201c5f5a88e5149653636971488c5a8f0bf",
+        "size_in_bytes": 1332
+      },
+      {
+        "_path": "lib/R/library/urltools/doc/urltools.R",
+        "path_type": "hardlink",
+        "sha256": "9c0d575239cc75a4933430d6950c8a7ef2833382565cb9f808e0c531e6773303",
+        "sha256_in_prefix": "9c0d575239cc75a4933430d6950c8a7ef2833382565cb9f808e0c531e6773303",
+        "size_in_bytes": 3490
+      },
+      {
+        "_path": "lib/R/library/urltools/doc/urltools.Rmd",
+        "path_type": "hardlink",
+        "sha256": "65418243cff6e6e10dab16ab688792cc0a5ab747082c0e87f91e08f6049e59da",
+        "sha256_in_prefix": "65418243cff6e6e10dab16ab688792cc0a5ab747082c0e87f91e08f6049e59da",
+        "size_in_bytes": 7886
+      },
+      {
+        "_path": "lib/R/library/urltools/doc/urltools.html",
+        "path_type": "hardlink",
+        "sha256": "8352042c75ed28c68c63758d33910884890a8114f0e34e1bafda26e6cb212082",
+        "sha256_in_prefix": "8352042c75ed28c68c63758d33910884890a8114f0e34e1bafda26e6cb212082",
+        "size_in_bytes": 22427
+      },
+      {
+        "_path": "lib/R/library/urltools/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "d2bf47e6f5301d2c1c78301d22349bb25a110fe99305b28a09fdde137113aa8e",
+        "sha256_in_prefix": "d2bf47e6f5301d2c1c78301d22349bb25a110fe99305b28a09fdde137113aa8e",
+        "size_in_bytes": 684
+      },
+      {
+        "_path": "lib/R/library/urltools/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "cdb339f1c20dc848fea096768697999cfdcd485e6add02f972b337cf1ec9512b",
+        "sha256_in_prefix": "cdb339f1c20dc848fea096768697999cfdcd485e6add02f972b337cf1ec9512b",
+        "size_in_bytes": 342
+      },
+      {
+        "_path": "lib/R/library/urltools/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "d8bf9d103f715649351e9a46ff4a1afd36cb114ca067bdb72366292fe4e625f6",
+        "sha256_in_prefix": "d8bf9d103f715649351e9a46ff4a1afd36cb114ca067bdb72366292fe4e625f6",
+        "size_in_bytes": 330
+      },
+      {
+        "_path": "lib/R/library/urltools/help/urltools.rdb",
+        "path_type": "hardlink",
+        "sha256": "4c1e4f72f33c37a63f2800b6cc182fc0c3387ee329f95cacb95cc08e4cc3e64d",
+        "sha256_in_prefix": "4c1e4f72f33c37a63f2800b6cc182fc0c3387ee329f95cacb95cc08e4cc3e64d",
+        "size_in_bytes": 41547
+      },
+      {
+        "_path": "lib/R/library/urltools/help/urltools.rdx",
+        "path_type": "hardlink",
+        "sha256": "27b344fda7fe764681bde9f7fa0b8cb2f27fe03e2064d1c127a20c915b232753",
+        "sha256_in_prefix": "27b344fda7fe764681bde9f7fa0b8cb2f27fe03e2064d1c127a20c915b232753",
+        "size_in_bytes": 617
+      },
+      {
+        "_path": "lib/R/library/urltools/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "df59f8a97248e113af880c1eea171f15ebbe62f5d60f490e5fe0d3d039801a75",
+        "sha256_in_prefix": "df59f8a97248e113af880c1eea171f15ebbe62f5d60f490e5fe0d3d039801a75",
+        "size_in_bytes": 5107
+      },
+      {
+        "_path": "lib/R/library/urltools/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/urltools/libs/urltools.so",
+        "path_type": "hardlink",
+        "sha256": "c1fe8d342efc34afcdeda7185c716ed50de8ee5ea20cde8a9f23315d1c50ffe5",
+        "sha256_in_prefix": "c1fe8d342efc34afcdeda7185c716ed50de8ee5ea20cde8a9f23315d1c50ffe5",
+        "size_in_bytes": 303488
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "41ae16e8235ff14a034503d8003812a5ef77884dbc61dc4b3b0aca06e977b663",
+  "size": 311716,
+  "subdir": "linux-64",
+  "timestamp": 1622088976026,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-urltools-1.7.3-r41h03ef668_2.tar.bz2",
+  "version": "1.7.3"
+}

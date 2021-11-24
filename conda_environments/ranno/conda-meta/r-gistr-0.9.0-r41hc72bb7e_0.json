@@ -1,0 +1,414 @@
+{
+  "build": "r41hc72bb7e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-assertthat",
+    "r-base >=4.1,<4.2.0a0",
+    "r-crul",
+    "r-dplyr",
+    "r-httr",
+    "r-jsonlite",
+    "r-knitr",
+    "r-magrittr",
+    "r-rmarkdown"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-gistr-0.9.0-r41hc72bb7e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/gistr/DESCRIPTION",
+    "lib/R/library/gistr/INDEX",
+    "lib/R/library/gistr/LICENSE",
+    "lib/R/library/gistr/Meta/Rd.rds",
+    "lib/R/library/gistr/Meta/features.rds",
+    "lib/R/library/gistr/Meta/hsearch.rds",
+    "lib/R/library/gistr/Meta/links.rds",
+    "lib/R/library/gistr/Meta/nsInfo.rds",
+    "lib/R/library/gistr/Meta/package.rds",
+    "lib/R/library/gistr/Meta/vignette.rds",
+    "lib/R/library/gistr/NAMESPACE",
+    "lib/R/library/gistr/NEWS.md",
+    "lib/R/library/gistr/R/gistr",
+    "lib/R/library/gistr/R/gistr.rdb",
+    "lib/R/library/gistr/R/gistr.rdx",
+    "lib/R/library/gistr/doc/gistr.Rmd",
+    "lib/R/library/gistr/doc/gistr.html",
+    "lib/R/library/gistr/doc/index.html",
+    "lib/R/library/gistr/examples/alm.md",
+    "lib/R/library/gistr/examples/artifacts_eg1.Rmd",
+    "lib/R/library/gistr/examples/ecoengine_eg.geojson",
+    "lib/R/library/gistr/examples/example1.R",
+    "lib/R/library/gistr/examples/example1.md",
+    "lib/R/library/gistr/examples/example2.R",
+    "lib/R/library/gistr/examples/file.png",
+    "lib/R/library/gistr/examples/ggplot_imgur.Rmd",
+    "lib/R/library/gistr/examples/plots.Rmd",
+    "lib/R/library/gistr/examples/plots.md",
+    "lib/R/library/gistr/examples/plots_imgur.Rmd",
+    "lib/R/library/gistr/examples/plots_imgur.Rnw",
+    "lib/R/library/gistr/examples/plots_imgur.md",
+    "lib/R/library/gistr/examples/rmarkdown_eg.Rmd",
+    "lib/R/library/gistr/examples/rnw_example.Rnw",
+    "lib/R/library/gistr/examples/stuff.Rmd",
+    "lib/R/library/gistr/examples/stuff.md",
+    "lib/R/library/gistr/examples/zoo.json",
+    "lib/R/library/gistr/help/AnIndex",
+    "lib/R/library/gistr/help/aliases.rds",
+    "lib/R/library/gistr/help/gistr.rdb",
+    "lib/R/library/gistr/help/gistr.rdx",
+    "lib/R/library/gistr/help/paths.rds",
+    "lib/R/library/gistr/html/00Index.html",
+    "lib/R/library/gistr/html/R.css",
+    "lib/R/library/gistr/ignore/clean_gists.R",
+    "lib/R/library/gistr/ignore/gist_create_git.R",
+    "lib/R/library/gistr/img/gistr_ss.png"
+  ],
+  "fn": "r-gistr-0.9.0-r41hc72bb7e_0.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-gistr-0.9.0-r41hc72bb7e_0",
+    "type": 1
+  },
+  "md5": "55bb96710571dc810b3fb23608a7ecad",
+  "name": "r-gistr",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-gistr-0.9.0-r41hc72bb7e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/gistr/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "6a2c18cfb736615521d6c3cee71a10976f70419a80072dd82251b126297508be",
+        "sha256_in_prefix": "6a2c18cfb736615521d6c3cee71a10976f70419a80072dd82251b126297508be",
+        "size_in_bytes": 1949
+      },
+      {
+        "_path": "lib/R/library/gistr/INDEX",
+        "path_type": "hardlink",
+        "sha256": "5532fdc0e0b77885c43c405a15a04a5d9643ab76ff04ddef3e6ee55aa127bd84",
+        "sha256_in_prefix": "5532fdc0e0b77885c43c405a15a04a5d9643ab76ff04ddef3e6ee55aa127bd84",
+        "size_in_bytes": 1144
+      },
+      {
+        "_path": "lib/R/library/gistr/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "4fc5f2816881b158240359419a666128e8f28380b79bf74e0195a8396e7c2dde",
+        "sha256_in_prefix": "4fc5f2816881b158240359419a666128e8f28380b79bf74e0195a8396e7c2dde",
+        "size_in_bytes": 47
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "2f062ea9ebdd4cbdaf1e3187bd76595bc5be01aabf1b6d8c0d98d7d669095c93",
+        "sha256_in_prefix": "2f062ea9ebdd4cbdaf1e3187bd76595bc5be01aabf1b6d8c0d98d7d669095c93",
+        "size_in_bytes": 926
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "sha256_in_prefix": "b84ca42483e79a917d4c89f07a99625c472773b7d3ba686c276da9b5514abeac",
+        "size_in_bytes": 122
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "56b804821407d0c97493549d609cafff04792500f13c9983d1f9ddfa504d5d27",
+        "sha256_in_prefix": "56b804821407d0c97493549d609cafff04792500f13c9983d1f9ddfa504d5d27",
+        "size_in_bytes": 969
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "0ffaea054a4f40621782af174066bfe8c5549520b23d66a019af49f6ba361826",
+        "sha256_in_prefix": "0ffaea054a4f40621782af174066bfe8c5549520b23d66a019af49f6ba361826",
+        "size_in_bytes": 421
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "1a2f84677247dc009433e32a748175388ee0d514092943bd630b6237ce56b534",
+        "sha256_in_prefix": "1a2f84677247dc009433e32a748175388ee0d514092943bd630b6237ce56b534",
+        "size_in_bytes": 653
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "7a8feb971afa2f22973420cddb0804ebf1c6c0dad1408a197462fc64f8bbe533",
+        "sha256_in_prefix": "7a8feb971afa2f22973420cddb0804ebf1c6c0dad1408a197462fc64f8bbe533",
+        "size_in_bytes": 1438
+      },
+      {
+        "_path": "lib/R/library/gistr/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "8ad051abf29e0ac42aacdf961aeeb0b8f42f286707377fd735fb821ac1b692e4",
+        "sha256_in_prefix": "8ad051abf29e0ac42aacdf961aeeb0b8f42f286707377fd735fb821ac1b692e4",
+        "size_in_bytes": 200
+      },
+      {
+        "_path": "lib/R/library/gistr/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "5422558a5b68d55b4f9a5cc5cadbeff18713f13b499079d19e9ae9126221e5d0",
+        "sha256_in_prefix": "5422558a5b68d55b4f9a5cc5cadbeff18713f13b499079d19e9ae9126221e5d0",
+        "size_in_bytes": 1438
+      },
+      {
+        "_path": "lib/R/library/gistr/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "ce350f208e86a528406ddc63bb491ee51edb029c568eb816c6a4559baed0f69f",
+        "sha256_in_prefix": "ce350f208e86a528406ddc63bb491ee51edb029c568eb816c6a4559baed0f69f",
+        "size_in_bytes": 5718
+      },
+      {
+        "_path": "lib/R/library/gistr/R/gistr",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/gistr/R/gistr.rdb",
+        "path_type": "hardlink",
+        "sha256": "8177c85a924f3b06223c3858e60be7a4a476e3707856e82cb6486afe8143d789",
+        "sha256_in_prefix": "8177c85a924f3b06223c3858e60be7a4a476e3707856e82cb6486afe8143d789",
+        "size_in_bytes": 66991
+      },
+      {
+        "_path": "lib/R/library/gistr/R/gistr.rdx",
+        "path_type": "hardlink",
+        "sha256": "2057f1b174bf3dd939b7b2338b2999af167cb5ee1fbf3b0319966623ecc21858",
+        "sha256_in_prefix": "2057f1b174bf3dd939b7b2338b2999af167cb5ee1fbf3b0319966623ecc21858",
+        "size_in_bytes": 1602
+      },
+      {
+        "_path": "lib/R/library/gistr/doc/gistr.Rmd",
+        "path_type": "hardlink",
+        "sha256": "79ddef3c356db8a4ef496ef69ec56b9ce5d4a0c3404670838430728e18bc2bc6",
+        "sha256_in_prefix": "79ddef3c356db8a4ef496ef69ec56b9ce5d4a0c3404670838430728e18bc2bc6",
+        "size_in_bytes": 13941
+      },
+      {
+        "_path": "lib/R/library/gistr/doc/gistr.html",
+        "path_type": "hardlink",
+        "sha256": "42d6582c3958148bcd8a045f87f151924cfe277f07a276216942fc3cccf75eb9",
+        "sha256_in_prefix": "42d6582c3958148bcd8a045f87f151924cfe277f07a276216942fc3cccf75eb9",
+        "size_in_bytes": 52083
+      },
+      {
+        "_path": "lib/R/library/gistr/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "1cd6bfe696667ed1e0564b6ca2e18629fbd0fa553662f8150a58beb9684811bb",
+        "sha256_in_prefix": "1cd6bfe696667ed1e0564b6ca2e18629fbd0fa553662f8150a58beb9684811bb",
+        "size_in_bytes": 1254
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/alm.md",
+        "path_type": "hardlink",
+        "sha256": "e227a220a20a47685ce714bd24e05328fe5d096d2c42061b64d8242b1218c5ff",
+        "sha256_in_prefix": "e227a220a20a47685ce714bd24e05328fe5d096d2c42061b64d8242b1218c5ff",
+        "size_in_bytes": 5385
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/artifacts_eg1.Rmd",
+        "path_type": "hardlink",
+        "sha256": "ea0dac3646ed7c7061c21cd65b3db2d1b8206f9b593b2ac62db5915d3613d7fc",
+        "sha256_in_prefix": "ea0dac3646ed7c7061c21cd65b3db2d1b8206f9b593b2ac62db5915d3613d7fc",
+        "size_in_bytes": 74
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/ecoengine_eg.geojson",
+        "path_type": "hardlink",
+        "sha256": "077039f11f8bacd49dfe0e85884f290f29676f0d9da16b302ba24abfb201c1f2",
+        "sha256_in_prefix": "077039f11f8bacd49dfe0e85884f290f29676f0d9da16b302ba24abfb201c1f2",
+        "size_in_bytes": 300880
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/example1.R",
+        "path_type": "hardlink",
+        "sha256": "bc8fa3a13715569ee9acc236275d070f98507bdb6f0b439ce0b0192db0ec5a0c",
+        "sha256_in_prefix": "bc8fa3a13715569ee9acc236275d070f98507bdb6f0b439ce0b0192db0ec5a0c",
+        "size_in_bytes": 134
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/example1.md",
+        "path_type": "hardlink",
+        "sha256": "ac2dacbfa884a6b27c2a7c053c8fb7294eaa2d33afad13f930ad26c3b371681e",
+        "sha256_in_prefix": "ac2dacbfa884a6b27c2a7c053c8fb7294eaa2d33afad13f930ad26c3b371681e",
+        "size_in_bytes": 224
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/example2.R",
+        "path_type": "hardlink",
+        "sha256": "7f4e9ab240b1d5fa777c0dbd2df0fa653dbefa1ea9e8f2679efee8b18a6e6fb4",
+        "sha256_in_prefix": "7f4e9ab240b1d5fa777c0dbd2df0fa653dbefa1ea9e8f2679efee8b18a6e6fb4",
+        "size_in_bytes": 119
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/file.png",
+        "path_type": "hardlink",
+        "sha256": "ba1bcc6c85a0d753f1f0041e9380e5a39ec7b8a5135617509ddd348a1e925e6a",
+        "sha256_in_prefix": "ba1bcc6c85a0d753f1f0041e9380e5a39ec7b8a5135617509ddd348a1e925e6a",
+        "size_in_bytes": 18141
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/ggplot_imgur.Rmd",
+        "path_type": "hardlink",
+        "sha256": "a6badd8bf74e0ed1145e5acc409ca296aa8a38460c1be58641282a54819e0cbd",
+        "sha256_in_prefix": "a6badd8bf74e0ed1145e5acc409ca296aa8a38460c1be58641282a54819e0cbd",
+        "size_in_bytes": 403
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/plots.Rmd",
+        "path_type": "hardlink",
+        "sha256": "b9de8910e3d800b1b9eef5fe62001299dc0cb7ea8d3260373b033b1ca26c689c",
+        "sha256_in_prefix": "b9de8910e3d800b1b9eef5fe62001299dc0cb7ea8d3260373b033b1ca26c689c",
+        "size_in_bytes": 246
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/plots.md",
+        "path_type": "hardlink",
+        "sha256": "01ca6887503db8f1a4319351b256598f602d53c84397b14a0cfcc6558eb2c184",
+        "sha256_in_prefix": "01ca6887503db8f1a4319351b256598f602d53c84397b14a0cfcc6558eb2c184",
+        "size_in_bytes": 351
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/plots_imgur.Rmd",
+        "path_type": "hardlink",
+        "sha256": "13c4a0f68b9307ce69134aabb6cd7d9f9243be06a24932c491afe1898cedbd4d",
+        "sha256_in_prefix": "13c4a0f68b9307ce69134aabb6cd7d9f9243be06a24932c491afe1898cedbd4d",
+        "size_in_bytes": 289
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/plots_imgur.Rnw",
+        "path_type": "hardlink",
+        "sha256": "fa8f19c57e2dc8706cff925542de27620e7dad628011decf6285349148105aa8",
+        "sha256_in_prefix": "fa8f19c57e2dc8706cff925542de27620e7dad628011decf6285349148105aa8",
+        "size_in_bytes": 2767
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/plots_imgur.md",
+        "path_type": "hardlink",
+        "sha256": "85470474c7e46efffb7cf994c57176754a7216f4a4b2f33c363059e5b2430681",
+        "sha256_in_prefix": "85470474c7e46efffb7cf994c57176754a7216f4a4b2f33c363059e5b2430681",
+        "size_in_bytes": 351
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/rmarkdown_eg.Rmd",
+        "path_type": "hardlink",
+        "sha256": "3aced8c9376a04119b9d69228c9765824a94c0735963e1a60ea89865f4cdf6af",
+        "sha256_in_prefix": "3aced8c9376a04119b9d69228c9765824a94c0735963e1a60ea89865f4cdf6af",
+        "size_in_bytes": 440
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/rnw_example.Rnw",
+        "path_type": "hardlink",
+        "sha256": "8a372bffc0c4a7d64730fd69706f5f72054106c7171ef9245d3ca313654a0cf2",
+        "sha256_in_prefix": "8a372bffc0c4a7d64730fd69706f5f72054106c7171ef9245d3ca313654a0cf2",
+        "size_in_bytes": 8873
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/stuff.Rmd",
+        "path_type": "hardlink",
+        "sha256": "2a63e5b6bfbe044c4162d41073a0d5b04f5e7ae3a855755c413f17d6dfc614a1",
+        "sha256_in_prefix": "2a63e5b6bfbe044c4162d41073a0d5b04f5e7ae3a855755c413f17d6dfc614a1",
+        "size_in_bytes": 120
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/stuff.md",
+        "path_type": "hardlink",
+        "sha256": "d2376a619bf7108cf9d72994de469f4ea7fce4dcf2b83da618767763c56ef4f9",
+        "sha256_in_prefix": "d2376a619bf7108cf9d72994de469f4ea7fce4dcf2b83da618767763c56ef4f9",
+        "size_in_bytes": 1081
+      },
+      {
+        "_path": "lib/R/library/gistr/examples/zoo.json",
+        "path_type": "hardlink",
+        "sha256": "043e51b2df86abefa27b97451d6d5be5ae5d358bfbd285c45cf47317a583833b",
+        "sha256_in_prefix": "043e51b2df86abefa27b97451d6d5be5ae5d358bfbd285c45cf47317a583833b",
+        "size_in_bytes": 4883
+      },
+      {
+        "_path": "lib/R/library/gistr/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "bc8e619ec6d914cfffd420978ef4476aae5bd5f2bc15b0fa3025a899ca01c8eb",
+        "sha256_in_prefix": "bc8e619ec6d914cfffd420978ef4476aae5bd5f2bc15b0fa3025a899ca01c8eb",
+        "size_in_bytes": 542
+      },
+      {
+        "_path": "lib/R/library/gistr/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "34d1cb7f0ec138188a770c82e2c4da27759b5c50e801de5b8ee97c0b8e8f7ab0",
+        "sha256_in_prefix": "34d1cb7f0ec138188a770c82e2c4da27759b5c50e801de5b8ee97c0b8e8f7ab0",
+        "size_in_bytes": 309
+      },
+      {
+        "_path": "lib/R/library/gistr/help/gistr.rdb",
+        "path_type": "hardlink",
+        "sha256": "f45e7c74788ea46941c8eb7e6a3dd377eec44680c34f7cd574c85479d4ef9f59",
+        "sha256_in_prefix": "f45e7c74788ea46941c8eb7e6a3dd377eec44680c34f7cd574c85479d4ef9f59",
+        "size_in_bytes": 49313
+      },
+      {
+        "_path": "lib/R/library/gistr/help/gistr.rdx",
+        "path_type": "hardlink",
+        "sha256": "0ad45bfb63dca12c5058cd26a40f6f8dc70066dac841252620c6af06022e62b5",
+        "sha256_in_prefix": "0ad45bfb63dca12c5058cd26a40f6f8dc70066dac841252620c6af06022e62b5",
+        "size_in_bytes": 627
+      },
+      {
+        "_path": "lib/R/library/gistr/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "6f3f681ab894acad4186e6ea36c7300694a570226bceab64ba6981d24f08acff",
+        "sha256_in_prefix": "6f3f681ab894acad4186e6ea36c7300694a570226bceab64ba6981d24f08acff",
+        "size_in_bytes": 324
+      },
+      {
+        "_path": "lib/R/library/gistr/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "e93be1293bc648044803a72ded45ce8d7286fa936043fd85419f0fa0c60f5d5c",
+        "sha256_in_prefix": "e93be1293bc648044803a72ded45ce8d7286fa936043fd85419f0fa0c60f5d5c",
+        "size_in_bytes": 4370
+      },
+      {
+        "_path": "lib/R/library/gistr/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/gistr/ignore/clean_gists.R",
+        "path_type": "hardlink",
+        "sha256": "8c91998d56bca36338490d71200c93cc1d762a87348781c9edfe12133c9342ce",
+        "sha256_in_prefix": "8c91998d56bca36338490d71200c93cc1d762a87348781c9edfe12133c9342ce",
+        "size_in_bytes": 2386
+      },
+      {
+        "_path": "lib/R/library/gistr/ignore/gist_create_git.R",
+        "path_type": "hardlink",
+        "sha256": "274756abf2c29010e55ed1ce4ce542fe7c74f4cc470e935ac138062b04099a0c",
+        "sha256_in_prefix": "274756abf2c29010e55ed1ce4ce542fe7c74f4cc470e935ac138062b04099a0c",
+        "size_in_bytes": 6815
+      },
+      {
+        "_path": "lib/R/library/gistr/img/gistr_ss.png",
+        "path_type": "hardlink",
+        "sha256": "572a7170ecdf9707311b2356d800a87c488a83caf676dd2158e824d15e7e9a65",
+        "sha256_in_prefix": "572a7170ecdf9707311b2356d800a87c488a83caf676dd2158e824d15e7e9a65",
+        "size_in_bytes": 586581
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "63121d2e8e4ea4b6a520d0c6e37d1888dd47c6e864932b318a9f822bb7c1c0c1",
+  "size": 789000,
+  "subdir": "noarch",
+  "timestamp": 1622158479945,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-gistr-0.9.0-r41hc72bb7e_0.tar.bz2",
+  "version": "0.9.0"
+}

@@ -1,0 +1,304 @@
+{
+  "build": "r41h03ef668_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.4.0",
+    "libstdcxx-ng >=9.4.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-plyr",
+    "r-rcpp >=0.11.1"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-proc-1.18.0-r41h03ef668_0",
+  "features": "",
+  "files": [
+    "lib/R/library/pROC/CITATION",
+    "lib/R/library/pROC/DESCRIPTION",
+    "lib/R/library/pROC/INDEX",
+    "lib/R/library/pROC/Meta/Rd.rds",
+    "lib/R/library/pROC/Meta/data.rds",
+    "lib/R/library/pROC/Meta/features.rds",
+    "lib/R/library/pROC/Meta/hsearch.rds",
+    "lib/R/library/pROC/Meta/links.rds",
+    "lib/R/library/pROC/Meta/nsInfo.rds",
+    "lib/R/library/pROC/Meta/package.rds",
+    "lib/R/library/pROC/NAMESPACE",
+    "lib/R/library/pROC/NEWS",
+    "lib/R/library/pROC/R/pROC",
+    "lib/R/library/pROC/R/pROC.rdb",
+    "lib/R/library/pROC/R/pROC.rdx",
+    "lib/R/library/pROC/data/Rdata.rdb",
+    "lib/R/library/pROC/data/Rdata.rds",
+    "lib/R/library/pROC/data/Rdata.rdx",
+    "lib/R/library/pROC/extra/algorithms.speed.test.R",
+    "lib/R/library/pROC/extra/bench/fig-unnamed-chunk-13-1.png",
+    "lib/R/library/pROC/extra/bench/fig-unnamed-chunk-5-1.png",
+    "lib/R/library/pROC/extra/bench/fig-unnamed-chunk-9-1.png",
+    "lib/R/library/pROC/extra/benchmark.Rmd",
+    "lib/R/library/pROC/extra/benchmark.md",
+    "lib/R/library/pROC/extra/sos_clashes.R",
+    "lib/R/library/pROC/help/AnIndex",
+    "lib/R/library/pROC/help/aliases.rds",
+    "lib/R/library/pROC/help/pROC.rdb",
+    "lib/R/library/pROC/help/pROC.rdx",
+    "lib/R/library/pROC/help/paths.rds",
+    "lib/R/library/pROC/html/00Index.html",
+    "lib/R/library/pROC/html/R.css",
+    "lib/R/library/pROC/libs/pROC.so"
+  ],
+  "fn": "r-proc-1.18.0-r41h03ef668_0.tar.bz2",
+  "license": "GPL-3.0",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-proc-1.18.0-r41h03ef668_0",
+    "type": 1
+  },
+  "md5": "49c279d4c78868c108e735a7d4aae60f",
+  "name": "r-proc",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-proc-1.18.0-r41h03ef668_0.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/pROC/CITATION",
+        "path_type": "hardlink",
+        "sha256": "f4ae9a8c5ece96020ec2c377f5740318d718b6e57a9f135020448391c47656b1",
+        "sha256_in_prefix": "f4ae9a8c5ece96020ec2c377f5740318d718b6e57a9f135020448391c47656b1",
+        "size_in_bytes": 1062
+      },
+      {
+        "_path": "lib/R/library/pROC/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "fe52a60ae1a5bff0efc104a4e7fcecabe9cd7c180129ebaf301fa3e284fac2dd",
+        "sha256_in_prefix": "fe52a60ae1a5bff0efc104a4e7fcecabe9cd7c180129ebaf301fa3e284fac2dd",
+        "size_in_bytes": 2240
+      },
+      {
+        "_path": "lib/R/library/pROC/INDEX",
+        "path_type": "hardlink",
+        "sha256": "977c8b866100081502abcec7bd8583c6fbb1424b167e452bfe3a974adf5b25f0",
+        "sha256_in_prefix": "977c8b866100081502abcec7bd8583c6fbb1424b167e452bfe3a974adf5b25f0",
+        "size_in_bytes": 1597
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "f4c06e4f8dbe804f18cfbae5d59ff6efc0f7c4eddfd19a2893dcd79619cbeb2f",
+        "sha256_in_prefix": "f4c06e4f8dbe804f18cfbae5d59ff6efc0f7c4eddfd19a2893dcd79619cbeb2f",
+        "size_in_bytes": 1649
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/data.rds",
+        "path_type": "hardlink",
+        "sha256": "91e6b5588e01eeed7c8de2b0c9da2b4df3da9f3567fe98da17f11679c216166d",
+        "sha256_in_prefix": "91e6b5588e01eeed7c8de2b0c9da2b4df3da9f3567fe98da17f11679c216166d",
+        "size_in_bytes": 111
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "sha256_in_prefix": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "size_in_bytes": 123
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "fe8478069e5a7980954d8d3e2cabef3f006d8bbdb39f413eeecaf77c4d1958b6",
+        "sha256_in_prefix": "fe8478069e5a7980954d8d3e2cabef3f006d8bbdb39f413eeecaf77c4d1958b6",
+        "size_in_bytes": 1747
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "a8da855a0ef1dec084efdb663c96a718bcc7cda79c7b8dfe1d9c9e52f19a9e6f",
+        "sha256_in_prefix": "a8da855a0ef1dec084efdb663c96a718bcc7cda79c7b8dfe1d9c9e52f19a9e6f",
+        "size_in_bytes": 980
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "febd92a8544705562995914a33759d2efbfd54f98a5f54d8c578db8add0e023a",
+        "sha256_in_prefix": "febd92a8544705562995914a33759d2efbfd54f98a5f54d8c578db8add0e023a",
+        "size_in_bytes": 754
+      },
+      {
+        "_path": "lib/R/library/pROC/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "4a5cfe8353b54eecc8e4764b97daf35fdf9f8acfe5a12a80cad7c25714d6e1e8",
+        "sha256_in_prefix": "4a5cfe8353b54eecc8e4764b97daf35fdf9f8acfe5a12a80cad7c25714d6e1e8",
+        "size_in_bytes": 1535
+      },
+      {
+        "_path": "lib/R/library/pROC/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "8d0c32cd3a42ad3acda3e0446da76fe93e7ea92048d3df8605a7a42b6eddaecc",
+        "sha256_in_prefix": "8d0c32cd3a42ad3acda3e0446da76fe93e7ea92048d3df8605a7a42b6eddaecc",
+        "size_in_bytes": 4065
+      },
+      {
+        "_path": "lib/R/library/pROC/NEWS",
+        "path_type": "hardlink",
+        "sha256": "4ce528ce700a51437cfba9f141f650fc27fc6a2140112fdc733366b7b630ed0e",
+        "sha256_in_prefix": "4ce528ce700a51437cfba9f141f650fc27fc6a2140112fdc733366b7b630ed0e",
+        "size_in_bytes": 13104
+      },
+      {
+        "_path": "lib/R/library/pROC/R/pROC",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/pROC/R/pROC.rdb",
+        "path_type": "hardlink",
+        "sha256": "e97d49ad2699c9d2f2e40db44a9a1c07f58350eabe80a4c3761c3685c50e5958",
+        "sha256_in_prefix": "e97d49ad2699c9d2f2e40db44a9a1c07f58350eabe80a4c3761c3685c50e5958",
+        "size_in_bytes": 350185
+      },
+      {
+        "_path": "lib/R/library/pROC/R/pROC.rdx",
+        "path_type": "hardlink",
+        "sha256": "33c8c89a8a9282fdf76b2e4b900897a99f60ed80d4ad7339288c5b614aa5f909",
+        "sha256_in_prefix": "33c8c89a8a9282fdf76b2e4b900897a99f60ed80d4ad7339288c5b614aa5f909",
+        "size_in_bytes": 3426
+      },
+      {
+        "_path": "lib/R/library/pROC/data/Rdata.rdb",
+        "path_type": "hardlink",
+        "sha256": "8ee83a1ccf7039b39addf3047b615cf984895496345442d43a7f9ec4fb633500",
+        "sha256_in_prefix": "8ee83a1ccf7039b39addf3047b615cf984895496345442d43a7f9ec4fb633500",
+        "size_in_bytes": 1633
+      },
+      {
+        "_path": "lib/R/library/pROC/data/Rdata.rds",
+        "path_type": "hardlink",
+        "sha256": "ec09d28058a5d502390da100f0c477c29e18d656cb27c09e4dccb1a1ca0ba55f",
+        "sha256_in_prefix": "ec09d28058a5d502390da100f0c477c29e18d656cb27c09e4dccb1a1ca0ba55f",
+        "size_in_bytes": 77
+      },
+      {
+        "_path": "lib/R/library/pROC/data/Rdata.rdx",
+        "path_type": "hardlink",
+        "sha256": "128976815714d2e52ac840869abb64f3368f1af973a353694f70020bd8ded04a",
+        "sha256_in_prefix": "128976815714d2e52ac840869abb64f3368f1af973a353694f70020bd8ded04a",
+        "size_in_bytes": 145
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/algorithms.speed.test.R",
+        "path_type": "hardlink",
+        "sha256": "f686ec6a5221cd2ecd06d87e18500673e3c783cf3bb5569a13c6937769427ad7",
+        "sha256_in_prefix": "f686ec6a5221cd2ecd06d87e18500673e3c783cf3bb5569a13c6937769427ad7",
+        "size_in_bytes": 4891
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/bench/fig-unnamed-chunk-13-1.png",
+        "path_type": "hardlink",
+        "sha256": "1e6379d7f5a30b6d26dd96d0581834b9145564d34a14075a9bc48651bb7380df",
+        "sha256_in_prefix": "1e6379d7f5a30b6d26dd96d0581834b9145564d34a14075a9bc48651bb7380df",
+        "size_in_bytes": 43695
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/bench/fig-unnamed-chunk-5-1.png",
+        "path_type": "hardlink",
+        "sha256": "7e556b5bc0ccd5f54bf8704a86cdc3e293e93090296d6390e1946364f33910f1",
+        "sha256_in_prefix": "7e556b5bc0ccd5f54bf8704a86cdc3e293e93090296d6390e1946364f33910f1",
+        "size_in_bytes": 36249
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/bench/fig-unnamed-chunk-9-1.png",
+        "path_type": "hardlink",
+        "sha256": "b6c83bbcc019722ac1654f76cc09705fdad336c050d6db415081438ca8202293",
+        "sha256_in_prefix": "b6c83bbcc019722ac1654f76cc09705fdad336c050d6db415081438ca8202293",
+        "size_in_bytes": 45589
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/benchmark.Rmd",
+        "path_type": "hardlink",
+        "sha256": "a7d5a148d90b088c39935e93a07e851b4c8e14bee21cc7f25b1e11425b7e75b0",
+        "sha256_in_prefix": "a7d5a148d90b088c39935e93a07e851b4c8e14bee21cc7f25b1e11425b7e75b0",
+        "size_in_bytes": 14104
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/benchmark.md",
+        "path_type": "hardlink",
+        "sha256": "750d780099de5eb14a06b13830510b007c9b86a3131c0c0b246180d9b1168627",
+        "sha256_in_prefix": "750d780099de5eb14a06b13830510b007c9b86a3131c0c0b246180d9b1168627",
+        "size_in_bytes": 3724
+      },
+      {
+        "_path": "lib/R/library/pROC/extra/sos_clashes.R",
+        "path_type": "hardlink",
+        "sha256": "46ab83b11b28d9d01c873d34c64993c29be0096fe9004686718f2d79eb2dc1e2",
+        "sha256_in_prefix": "46ab83b11b28d9d01c873d34c64993c29be0096fe9004686718f2d79eb2dc1e2",
+        "size_in_bytes": 4323
+      },
+      {
+        "_path": "lib/R/library/pROC/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "b0ff46faecc61e01ae13f028b2dbdeb19ec9251242ca2b11984e86b695f6fb3c",
+        "sha256_in_prefix": "b0ff46faecc61e01ae13f028b2dbdeb19ec9251242ca2b11984e86b695f6fb3c",
+        "size_in_bytes": 3125
+      },
+      {
+        "_path": "lib/R/library/pROC/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "d5e8b3f93b24559850d642f70b92227b80860d07f023f70d0128b75134b288d6",
+        "sha256_in_prefix": "d5e8b3f93b24559850d642f70b92227b80860d07f023f70d0128b75134b288d6",
+        "size_in_bytes": 877
+      },
+      {
+        "_path": "lib/R/library/pROC/help/pROC.rdb",
+        "path_type": "hardlink",
+        "sha256": "70a1a68fc7cd2b609715ba27536baf6526514d76b14bac37c0aa97acb30a6871",
+        "sha256_in_prefix": "70a1a68fc7cd2b609715ba27536baf6526514d76b14bac37c0aa97acb30a6871",
+        "size_in_bytes": 285174
+      },
+      {
+        "_path": "lib/R/library/pROC/help/pROC.rdx",
+        "path_type": "hardlink",
+        "sha256": "3df87b6b7d90d79e9f820a48ae4ba6570889611a630bb2cb9f449e59632bda27",
+        "sha256_in_prefix": "3df87b6b7d90d79e9f820a48ae4ba6570889611a630bb2cb9f449e59632bda27",
+        "size_in_bytes": 736
+      },
+      {
+        "_path": "lib/R/library/pROC/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "2f6137844ffa78e3ceabda911d614788c1ca2af76f85e1e4eced4562bdb25a98",
+        "sha256_in_prefix": "2f6137844ffa78e3ceabda911d614788c1ca2af76f85e1e4eced4562bdb25a98",
+        "size_in_bytes": 364
+      },
+      {
+        "_path": "lib/R/library/pROC/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "f7cc6af6dd8b63529aef605e536a23582a55e3980bfd8cef068274ff4bc0b22d",
+        "sha256_in_prefix": "f7cc6af6dd8b63529aef605e536a23582a55e3980bfd8cef068274ff4bc0b22d",
+        "size_in_bytes": 19214
+      },
+      {
+        "_path": "lib/R/library/pROC/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/pROC/libs/pROC.so",
+        "path_type": "hardlink",
+        "sha256": "9804c9cbe3c2124c1fbfca0d3188ca3fbfe1f8809cf4158359c59a68000c06d5",
+        "sha256_in_prefix": "9804c9cbe3c2124c1fbfca0d3188ca3fbfe1f8809cf4158359c59a68000c06d5",
+        "size_in_bytes": 135904
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "fe781139e9b05a358206cfd9f5174c1d67b83e4b5a7edf83c8c0c06bc9407702",
+  "size": 874897,
+  "subdir": "linux-64",
+  "timestamp": 1630668050255,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-proc-1.18.0-r41h03ef668_0.tar.bz2",
+  "version": "1.18.0"
+}

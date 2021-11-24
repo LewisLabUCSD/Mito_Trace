@@ -1,0 +1,263 @@
+{
+  "build": "r41hc72bb7e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-digest"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-progressr-0.9.0-r41hc72bb7e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/progressr/DESCRIPTION",
+    "lib/R/library/progressr/INDEX",
+    "lib/R/library/progressr/Meta/Rd.rds",
+    "lib/R/library/progressr/Meta/demo.rds",
+    "lib/R/library/progressr/Meta/features.rds",
+    "lib/R/library/progressr/Meta/hsearch.rds",
+    "lib/R/library/progressr/Meta/links.rds",
+    "lib/R/library/progressr/Meta/nsInfo.rds",
+    "lib/R/library/progressr/Meta/package.rds",
+    "lib/R/library/progressr/Meta/vignette.rds",
+    "lib/R/library/progressr/NAMESPACE",
+    "lib/R/library/progressr/NEWS",
+    "lib/R/library/progressr/R/progressr",
+    "lib/R/library/progressr/R/progressr.rdb",
+    "lib/R/library/progressr/R/progressr.rdx",
+    "lib/R/library/progressr/WORDLIST",
+    "lib/R/library/progressr/demo/mandelbrot.R",
+    "lib/R/library/progressr/doc/index.html",
+    "lib/R/library/progressr/doc/progressr-intro.html",
+    "lib/R/library/progressr/doc/progressr-intro.md",
+    "lib/R/library/progressr/help/AnIndex",
+    "lib/R/library/progressr/help/aliases.rds",
+    "lib/R/library/progressr/help/figures/lifecycle-maturing-blue.svg",
+    "lib/R/library/progressr/help/paths.rds",
+    "lib/R/library/progressr/help/progressr.rdb",
+    "lib/R/library/progressr/help/progressr.rdx",
+    "lib/R/library/progressr/html/00Index.html",
+    "lib/R/library/progressr/html/R.css"
+  ],
+  "fn": "r-progressr-0.9.0-r41hc72bb7e_0.tar.bz2",
+  "license": "GPL-3.0-or-later",
+  "license_family": "GPL3",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-progressr-0.9.0-r41hc72bb7e_0",
+    "type": 1
+  },
+  "md5": "7683e1faf18eee991bdb5813b2e9d463",
+  "name": "r-progressr",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-progressr-0.9.0-r41hc72bb7e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/progressr/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "1b385834c12e51b04344d9b00fbc3d04ba8ef278d08b82cff1c78cfe32345f5a",
+        "sha256_in_prefix": "1b385834c12e51b04344d9b00fbc3d04ba8ef278d08b82cff1c78cfe32345f5a",
+        "size_in_bytes": 2130
+      },
+      {
+        "_path": "lib/R/library/progressr/INDEX",
+        "path_type": "hardlink",
+        "sha256": "849814d98268b5173db09bf82f1890602f9bb1f074c8f2c7487001ffb8b42762",
+        "sha256_in_prefix": "849814d98268b5173db09bf82f1890602f9bb1f074c8f2c7487001ffb8b42762",
+        "size_in_bytes": 2126
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "4eac2178a50096bf97849f12595c5c13e545b9b18b41507207b7e7795c8c46ef",
+        "sha256_in_prefix": "4eac2178a50096bf97849f12595c5c13e545b9b18b41507207b7e7795c8c46ef",
+        "size_in_bytes": 1533
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/demo.rds",
+        "path_type": "hardlink",
+        "sha256": "e1185d6e0940ab52dde3aab64947af9a04ce69c40a608a36b40a0863eb033d9d",
+        "sha256_in_prefix": "e1185d6e0940ab52dde3aab64947af9a04ce69c40a608a36b40a0863eb033d9d",
+        "size_in_bytes": 145
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "sha256_in_prefix": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "size_in_bytes": 123
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "dd62b6027fb2fda73b66b95963d30707de8bf98d8f55570668a86145b7c488fd",
+        "sha256_in_prefix": "dd62b6027fb2fda73b66b95963d30707de8bf98d8f55570668a86145b7c488fd",
+        "size_in_bytes": 1430
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "e59d39145869cbf6b3ca1458d309e7ef7eea9ae22b0ac997dbb2e40e2767c3bc",
+        "sha256_in_prefix": "e59d39145869cbf6b3ca1458d309e7ef7eea9ae22b0ac997dbb2e40e2767c3bc",
+        "size_in_bytes": 662
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "18e92cdfa2d61f451746ce78329e494cc2982398fbbc7e0d186fa8941da8f34d",
+        "sha256_in_prefix": "18e92cdfa2d61f451746ce78329e494cc2982398fbbc7e0d186fa8941da8f34d",
+        "size_in_bytes": 515
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "42d3622b94fc5470b1cd70b8fee37b640a739f12fdd0e83b1bb0dff7f00b5a21",
+        "sha256_in_prefix": "42d3622b94fc5470b1cd70b8fee37b640a739f12fdd0e83b1bb0dff7f00b5a21",
+        "size_in_bytes": 1625
+      },
+      {
+        "_path": "lib/R/library/progressr/Meta/vignette.rds",
+        "path_type": "hardlink",
+        "sha256": "6555beb7e5ab4880d94f0944ed7b082a4c3749c0c2d35acb153fba3b89af6afa",
+        "sha256_in_prefix": "6555beb7e5ab4880d94f0944ed7b082a4c3749c0c2d35acb153fba3b89af6afa",
+        "size_in_bytes": 249
+      },
+      {
+        "_path": "lib/R/library/progressr/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "7c1fb40452d3ee6e068bbf3cdf0f63961381d660028512edafec232db0e672d6",
+        "sha256_in_prefix": "7c1fb40452d3ee6e068bbf3cdf0f63961381d660028512edafec232db0e672d6",
+        "size_in_bytes": 1045
+      },
+      {
+        "_path": "lib/R/library/progressr/NEWS",
+        "path_type": "hardlink",
+        "sha256": "acf207e9b2413cee81fa2364d2c846a1e349bf11adc91af8e664eff09f0ab38e",
+        "sha256_in_prefix": "acf207e9b2413cee81fa2364d2c846a1e349bf11adc91af8e664eff09f0ab38e",
+        "size_in_bytes": 18931
+      },
+      {
+        "_path": "lib/R/library/progressr/R/progressr",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/progressr/R/progressr.rdb",
+        "path_type": "hardlink",
+        "sha256": "8197995c6827e5a379e0bbfa4b5c78627fc7e8a25d3daba2d6c96d7cbbee0345",
+        "sha256_in_prefix": "8197995c6827e5a379e0bbfa4b5c78627fc7e8a25d3daba2d6c96d7cbbee0345",
+        "size_in_bytes": 134627
+      },
+      {
+        "_path": "lib/R/library/progressr/R/progressr.rdx",
+        "path_type": "hardlink",
+        "sha256": "aab9f882a6d96f6e1bb779a3f4ca0b5c5826c0377cb31138fd3dd8db6162e2a9",
+        "sha256_in_prefix": "aab9f882a6d96f6e1bb779a3f4ca0b5c5826c0377cb31138fd3dd8db6162e2a9",
+        "size_in_bytes": 1413
+      },
+      {
+        "_path": "lib/R/library/progressr/WORDLIST",
+        "path_type": "hardlink",
+        "sha256": "090543455ede99863e07a302d7c4e32ceee86cb28f5ad230cb1088026fdb84d1",
+        "sha256_in_prefix": "090543455ede99863e07a302d7c4e32ceee86cb28f5ad230cb1088026fdb84d1",
+        "size_in_bytes": 740
+      },
+      {
+        "_path": "lib/R/library/progressr/demo/mandelbrot.R",
+        "path_type": "hardlink",
+        "sha256": "dbf586c626a01fe26098b5407d0958faa111fdbf88c2277a0d532ae1f24830e9",
+        "sha256_in_prefix": "dbf586c626a01fe26098b5407d0958faa111fdbf88c2277a0d532ae1f24830e9",
+        "size_in_bytes": 2655
+      },
+      {
+        "_path": "lib/R/library/progressr/doc/index.html",
+        "path_type": "hardlink",
+        "sha256": "3c86d6f11ba9b1cd0f025c2b3126705cbdabe4f742141ff967891419e46c7789",
+        "sha256_in_prefix": "3c86d6f11ba9b1cd0f025c2b3126705cbdabe4f742141ff967891419e46c7789",
+        "size_in_bytes": 1442
+      },
+      {
+        "_path": "lib/R/library/progressr/doc/progressr-intro.html",
+        "path_type": "hardlink",
+        "sha256": "bafc8aa0376490aa6a1c67aa2e3051fcac24087f8fd381f98004aabf3b3c5d8a",
+        "sha256_in_prefix": "bafc8aa0376490aa6a1c67aa2e3051fcac24087f8fd381f98004aabf3b3c5d8a",
+        "size_in_bytes": 55319
+      },
+      {
+        "_path": "lib/R/library/progressr/doc/progressr-intro.md",
+        "path_type": "hardlink",
+        "sha256": "ba62c20231ff30cee00369f2f4e2c04ec395ab034404ced1f640b3cc078f409c",
+        "sha256_in_prefix": "ba62c20231ff30cee00369f2f4e2c04ec395ab034404ced1f640b3cc078f409c",
+        "size_in_bytes": 24672
+      },
+      {
+        "_path": "lib/R/library/progressr/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "fdc70a8a2f0f6967e3b07bc0029b0a2b07bd071fda5fb6db3d02ab6bd03d7d30",
+        "sha256_in_prefix": "fdc70a8a2f0f6967e3b07bc0029b0a2b07bd071fda5fb6db3d02ab6bd03d7d30",
+        "size_in_bytes": 1762
+      },
+      {
+        "_path": "lib/R/library/progressr/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "a4bc0bae14f597390b0cdc411fbbe7f31d6061ff9d2446c73109874c55591851",
+        "sha256_in_prefix": "a4bc0bae14f597390b0cdc411fbbe7f31d6061ff9d2446c73109874c55591851",
+        "size_in_bytes": 478
+      },
+      {
+        "_path": "lib/R/library/progressr/help/figures/lifecycle-maturing-blue.svg",
+        "path_type": "hardlink",
+        "sha256": "9f33b55a1806ad5a3d565a0855a91b47ae26b7cf1ff0f025758bbd15b4c3984a",
+        "sha256_in_prefix": "9f33b55a1806ad5a3d565a0855a91b47ae26b7cf1ff0f025758bbd15b4c3984a",
+        "size_in_bytes": 966
+      },
+      {
+        "_path": "lib/R/library/progressr/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "b34374c990e33a12208c465bdff073820db2985a16d8dcbff57e49ca2f45e8ec",
+        "sha256_in_prefix": "b34374c990e33a12208c465bdff073820db2985a16d8dcbff57e49ca2f45e8ec",
+        "size_in_bytes": 408
+      },
+      {
+        "_path": "lib/R/library/progressr/help/progressr.rdb",
+        "path_type": "hardlink",
+        "sha256": "504daf1a253b00652e957bec0121c0675f7cc1df4640095e1b037cefae4497c8",
+        "sha256_in_prefix": "504daf1a253b00652e957bec0121c0675f7cc1df4640095e1b037cefae4497c8",
+        "size_in_bytes": 76609
+      },
+      {
+        "_path": "lib/R/library/progressr/help/progressr.rdx",
+        "path_type": "hardlink",
+        "sha256": "8de507f270bf9b6ab8a96735aeb45ca7e0ee6b5fd86258b87ae9f99d355aa2d1",
+        "sha256_in_prefix": "8de507f270bf9b6ab8a96735aeb45ca7e0ee6b5fd86258b87ae9f99d355aa2d1",
+        "size_in_bytes": 811
+      },
+      {
+        "_path": "lib/R/library/progressr/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "628a1a2c7446c6aadb3bee16d956efc16dbfcac161c5211a1ff310972dd5a142",
+        "sha256_in_prefix": "628a1a2c7446c6aadb3bee16d956efc16dbfcac161c5211a1ff310972dd5a142",
+        "size_in_bytes": 4664
+      },
+      {
+        "_path": "lib/R/library/progressr/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "52a728655a0393096a44606e479ee03cce1e7444b106b6d999f8232e7a681887",
+  "size": 278286,
+  "subdir": "noarch",
+  "timestamp": 1632500934539,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-progressr-0.9.0-r41hc72bb7e_0.tar.bz2",
+  "version": "0.9.0"
+}

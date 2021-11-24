@@ -1,0 +1,202 @@
+{
+  "build": "r41h03ef668_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "constrains": [],
+  "depends": [
+    "libgcc-ng >=9.4.0",
+    "libstdcxx-ng >=9.4.0",
+    "r-base >=4.1,<4.2.0a0",
+    "r-codetools",
+    "r-lobstr",
+    "r-rcpp >=0.11.0",
+    "r-stringr"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-pryr-0.1.5-r41h03ef668_0",
+  "features": "",
+  "files": [
+    "lib/R/library/pryr/DESCRIPTION",
+    "lib/R/library/pryr/INDEX",
+    "lib/R/library/pryr/Meta/Rd.rds",
+    "lib/R/library/pryr/Meta/features.rds",
+    "lib/R/library/pryr/Meta/hsearch.rds",
+    "lib/R/library/pryr/Meta/links.rds",
+    "lib/R/library/pryr/Meta/nsInfo.rds",
+    "lib/R/library/pryr/Meta/package.rds",
+    "lib/R/library/pryr/NAMESPACE",
+    "lib/R/library/pryr/R/pryr",
+    "lib/R/library/pryr/R/pryr.rdb",
+    "lib/R/library/pryr/R/pryr.rdx",
+    "lib/R/library/pryr/help/AnIndex",
+    "lib/R/library/pryr/help/aliases.rds",
+    "lib/R/library/pryr/help/paths.rds",
+    "lib/R/library/pryr/help/pryr.rdb",
+    "lib/R/library/pryr/help/pryr.rdx",
+    "lib/R/library/pryr/html/00Index.html",
+    "lib/R/library/pryr/html/R.css",
+    "lib/R/library/pryr/libs/pryr.so"
+  ],
+  "fn": "r-pryr-0.1.5-r41h03ef668_0.tar.bz2",
+  "license": "GPL-2.0-only",
+  "license_family": "GPL2",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-pryr-0.1.5-r41h03ef668_0",
+    "type": 1
+  },
+  "md5": "8f52f1521a10ff5834179feed9108a6b",
+  "name": "r-pryr",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-pryr-0.1.5-r41h03ef668_0.tar.bz2",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/pryr/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "49637c23c925c714a3a39e75b455398f85b016c5dba3d98f0eff1ddce7645e2d",
+        "sha256_in_prefix": "49637c23c925c714a3a39e75b455398f85b016c5dba3d98f0eff1ddce7645e2d",
+        "size_in_bytes": 942
+      },
+      {
+        "_path": "lib/R/library/pryr/INDEX",
+        "path_type": "hardlink",
+        "sha256": "9ea58d5787cc6e07af7b9e03a15893a1a6f5261b1029bcd7da9b5dee443bc29e",
+        "sha256_in_prefix": "9ea58d5787cc6e07af7b9e03a15893a1a6f5261b1029bcd7da9b5dee443bc29e",
+        "size_in_bytes": 2584
+      },
+      {
+        "_path": "lib/R/library/pryr/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "6dc7898073b3e9182959c507f2fcdf8875daf2b8ebfb7b7da280bf37cc80dce5",
+        "sha256_in_prefix": "6dc7898073b3e9182959c507f2fcdf8875daf2b8ebfb7b7da280bf37cc80dce5",
+        "size_in_bytes": 1871
+      },
+      {
+        "_path": "lib/R/library/pryr/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "sha256_in_prefix": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "size_in_bytes": 123
+      },
+      {
+        "_path": "lib/R/library/pryr/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "5d28d521bc1c9827c8a178ea693cadc879ba29878168830f476ba98659a500f4",
+        "sha256_in_prefix": "5d28d521bc1c9827c8a178ea693cadc879ba29878168830f476ba98659a500f4",
+        "size_in_bytes": 1725
+      },
+      {
+        "_path": "lib/R/library/pryr/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "039140b1061b81aaebb1d85fbe40c3a03bed4d940cb2688d0f6e94f38541d430",
+        "sha256_in_prefix": "039140b1061b81aaebb1d85fbe40c3a03bed4d940cb2688d0f6e94f38541d430",
+        "size_in_bytes": 772
+      },
+      {
+        "_path": "lib/R/library/pryr/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "987421442e3dce335fe01b21c2fb3e454d70d86f026bb9d32a6cfc3fadb7c1d3",
+        "sha256_in_prefix": "987421442e3dce335fe01b21c2fb3e454d70d86f026bb9d32a6cfc3fadb7c1d3",
+        "size_in_bytes": 737
+      },
+      {
+        "_path": "lib/R/library/pryr/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "2945a776d217fa21a599d87c422aab85c725c1d245ecb6ffed6ecf85348d7e42",
+        "sha256_in_prefix": "2945a776d217fa21a599d87c422aab85c725c1d245ecb6ffed6ecf85348d7e42",
+        "size_in_bytes": 1022
+      },
+      {
+        "_path": "lib/R/library/pryr/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "e3307ea8cbead16e379b244f32d87d136c7e4aeef1c45d6be16a04ba7a6f9a0f",
+        "sha256_in_prefix": "e3307ea8cbead16e379b244f32d87d136c7e4aeef1c45d6be16a04ba7a6f9a0f",
+        "size_in_bytes": 1448
+      },
+      {
+        "_path": "lib/R/library/pryr/R/pryr",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/pryr/R/pryr.rdb",
+        "path_type": "hardlink",
+        "sha256": "d59df29708f0b9c3280d82528db6ae9ede0af34c4fdc28a3509c070c366e8d57",
+        "sha256_in_prefix": "d59df29708f0b9c3280d82528db6ae9ede0af34c4fdc28a3509c070c366e8d57",
+        "size_in_bytes": 60133
+      },
+      {
+        "_path": "lib/R/library/pryr/R/pryr.rdx",
+        "path_type": "hardlink",
+        "sha256": "16489c56838f654d079e90657d88ac803b8002c8bbb44403811b74b2f55d85f3",
+        "sha256_in_prefix": "16489c56838f654d079e90657d88ac803b8002c8bbb44403811b74b2f55d85f3",
+        "size_in_bytes": 1515
+      },
+      {
+        "_path": "lib/R/library/pryr/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "43031716aeed4473b55d4668fb13d34cb4e9435d786aecc2a20415389109a227",
+        "sha256_in_prefix": "43031716aeed4473b55d4668fb13d34cb4e9435d786aecc2a20415389109a227",
+        "size_in_bytes": 1155
+      },
+      {
+        "_path": "lib/R/library/pryr/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "16c1a10b9ba57bc9667a4bba8fafb4714543d4ebc4f0621815f4518cff8b0251",
+        "sha256_in_prefix": "16c1a10b9ba57bc9667a4bba8fafb4714543d4ebc4f0621815f4518cff8b0251",
+        "size_in_bytes": 550
+      },
+      {
+        "_path": "lib/R/library/pryr/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "dc1e23890a4e88d7049626fc0f5098a3bf8822e4422a3298a80a6f1bd3420750",
+        "sha256_in_prefix": "dc1e23890a4e88d7049626fc0f5098a3bf8822e4422a3298a80a6f1bd3420750",
+        "size_in_bytes": 545
+      },
+      {
+        "_path": "lib/R/library/pryr/help/pryr.rdb",
+        "path_type": "hardlink",
+        "sha256": "7850c4f044c5262484739c1eba72f8ffb1a3ea9dd07a8608aa964eb82603b9a0",
+        "sha256_in_prefix": "7850c4f044c5262484739c1eba72f8ffb1a3ea9dd07a8608aa964eb82603b9a0",
+        "size_in_bytes": 68395
+      },
+      {
+        "_path": "lib/R/library/pryr/help/pryr.rdx",
+        "path_type": "hardlink",
+        "sha256": "f521b236ba2a0b1a80fae35952fc7d42ef2052de6bfbba62948d23d9a20889c4",
+        "sha256_in_prefix": "f521b236ba2a0b1a80fae35952fc7d42ef2052de6bfbba62948d23d9a20889c4",
+        "size_in_bytes": 1108
+      },
+      {
+        "_path": "lib/R/library/pryr/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "5ae9e5247b4ee5e76f7693ec7776909df1d84842286b541e88245fdd8d2f725d",
+        "sha256_in_prefix": "5ae9e5247b4ee5e76f7693ec7776909df1d84842286b541e88245fdd8d2f725d",
+        "size_in_bytes": 7707
+      },
+      {
+        "_path": "lib/R/library/pryr/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      },
+      {
+        "_path": "lib/R/library/pryr/libs/pryr.so",
+        "path_type": "hardlink",
+        "sha256": "76d53aafa66055f3847fb551467da5d440bc374d72953e5c672b3d055e7fcbb7",
+        "sha256_in_prefix": "76d53aafa66055f3847fb551467da5d440bc374d72953e5c672b3d055e7fcbb7",
+        "size_in_bytes": 214432
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "c3315867e9a5f5cdad0bbb049a53bbbc1faa380500c69bbe2dfe5beceff7ef0b",
+  "size": 242065,
+  "subdir": "linux-64",
+  "timestamp": 1632894470518,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/r-pryr-0.1.5-r41h03ef668_0.tar.bz2",
+  "version": "0.1.5"
+}

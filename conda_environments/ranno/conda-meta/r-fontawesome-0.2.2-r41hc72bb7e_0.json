@@ -1,0 +1,320 @@
+{
+  "build": "r41hc72bb7e_0",
+  "build_number": 0,
+  "channel": "https://conda.anaconda.org/conda-forge/noarch",
+  "constrains": [],
+  "depends": [
+    "r-base >=4.1,<4.2.0a0",
+    "r-htmltools >=0.5.1.1",
+    "r-rlang >=0.4.10"
+  ],
+  "extracted_package_dir": "/home/isshamie/miniconda3/pkgs/r-fontawesome-0.2.2-r41hc72bb7e_0",
+  "features": "",
+  "files": [
+    "lib/R/library/fontawesome/DESCRIPTION",
+    "lib/R/library/fontawesome/INDEX",
+    "lib/R/library/fontawesome/LICENSE",
+    "lib/R/library/fontawesome/Meta/Rd.rds",
+    "lib/R/library/fontawesome/Meta/features.rds",
+    "lib/R/library/fontawesome/Meta/hsearch.rds",
+    "lib/R/library/fontawesome/Meta/links.rds",
+    "lib/R/library/fontawesome/Meta/nsInfo.rds",
+    "lib/R/library/fontawesome/Meta/package.rds",
+    "lib/R/library/fontawesome/NAMESPACE",
+    "lib/R/library/fontawesome/NEWS.md",
+    "lib/R/library/fontawesome/R/fontawesome",
+    "lib/R/library/fontawesome/R/fontawesome.rdb",
+    "lib/R/library/fontawesome/R/fontawesome.rdx",
+    "lib/R/library/fontawesome/apps/138-icon-fontawesome/app.R",
+    "lib/R/library/fontawesome/fontawesome/css/all.css",
+    "lib/R/library/fontawesome/fontawesome/css/all.min.css",
+    "lib/R/library/fontawesome/fontawesome/css/v4-shims.css",
+    "lib/R/library/fontawesome/fontawesome/css/v4-shims.min.css",
+    "lib/R/library/fontawesome/fontawesome/webfonts/fa-brands-400.ttf",
+    "lib/R/library/fontawesome/fontawesome/webfonts/fa-brands-400.woff",
+    "lib/R/library/fontawesome/fontawesome/webfonts/fa-regular-400.ttf",
+    "lib/R/library/fontawesome/fontawesome/webfonts/fa-regular-400.woff",
+    "lib/R/library/fontawesome/fontawesome/webfonts/fa-solid-900.ttf",
+    "lib/R/library/fontawesome/fontawesome/webfonts/fa-solid-900.woff",
+    "lib/R/library/fontawesome/help/AnIndex",
+    "lib/R/library/fontawesome/help/aliases.rds",
+    "lib/R/library/fontawesome/help/figures/fontawesome_rmd.png",
+    "lib/R/library/fontawesome/help/figures/fontawesome_shiny_app.png",
+    "lib/R/library/fontawesome/help/figures/logo.svg",
+    "lib/R/library/fontawesome/help/fontawesome.rdb",
+    "lib/R/library/fontawesome/help/fontawesome.rdx",
+    "lib/R/library/fontawesome/help/paths.rds",
+    "lib/R/library/fontawesome/html/00Index.html",
+    "lib/R/library/fontawesome/html/R.css"
+  ],
+  "fn": "r-fontawesome-0.2.2-r41hc72bb7e_0.tar.bz2",
+  "license": "MIT",
+  "license_family": "MIT",
+  "link": {
+    "source": "/home/isshamie/miniconda3/pkgs/r-fontawesome-0.2.2-r41hc72bb7e_0",
+    "type": 1
+  },
+  "md5": "6b3fac6582dbfcca222a872db1924d45",
+  "name": "r-fontawesome",
+  "noarch": "generic",
+  "package_tarball_full_path": "/home/isshamie/miniconda3/pkgs/r-fontawesome-0.2.2-r41hc72bb7e_0.tar.bz2",
+  "package_type": "noarch_generic",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/R/library/fontawesome/DESCRIPTION",
+        "path_type": "hardlink",
+        "sha256": "4849901065d317aa68aa46e11b7b6354414206b31ce6ba0edb46b7208ef7dfba",
+        "sha256_in_prefix": "4849901065d317aa68aa46e11b7b6354414206b31ce6ba0edb46b7208ef7dfba",
+        "size_in_bytes": 1679
+      },
+      {
+        "_path": "lib/R/library/fontawesome/INDEX",
+        "path_type": "hardlink",
+        "sha256": "d1453e9b09806cf6b7c5a39361f035bd5dd0ff01924b0a7f14615ace86a20a17",
+        "sha256_in_prefix": "d1453e9b09806cf6b7c5a39361f035bd5dd0ff01924b0a7f14615ace86a20a17",
+        "size_in_bytes": 342
+      },
+      {
+        "_path": "lib/R/library/fontawesome/LICENSE",
+        "path_type": "hardlink",
+        "sha256": "a6d36a65c1f84d9100182bb55d0291a36a2b2c4c44a13cc89ae586437818d9e0",
+        "sha256_in_prefix": "a6d36a65c1f84d9100182bb55d0291a36a2b2c4c44a13cc89ae586437818d9e0",
+        "size_in_bytes": 47
+      },
+      {
+        "_path": "lib/R/library/fontawesome/Meta/Rd.rds",
+        "path_type": "hardlink",
+        "sha256": "301915d62f911707c25df57846948aa81b50c06e1e21743c4f3015fc11165666",
+        "sha256_in_prefix": "301915d62f911707c25df57846948aa81b50c06e1e21743c4f3015fc11165666",
+        "size_in_bytes": 443
+      },
+      {
+        "_path": "lib/R/library/fontawesome/Meta/features.rds",
+        "path_type": "hardlink",
+        "sha256": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "sha256_in_prefix": "51d50d1afdf7fa236c2e547a1cac49aa6f6cee803f935a626cac903fa66f4373",
+        "size_in_bytes": 123
+      },
+      {
+        "_path": "lib/R/library/fontawesome/Meta/hsearch.rds",
+        "path_type": "hardlink",
+        "sha256": "ac23dcc3e09853d7c641c24dad1b3971d82e278b5d9dd80e9d4d5be7ae17e27c",
+        "sha256_in_prefix": "ac23dcc3e09853d7c641c24dad1b3971d82e278b5d9dd80e9d4d5be7ae17e27c",
+        "size_in_bytes": 448
+      },
+      {
+        "_path": "lib/R/library/fontawesome/Meta/links.rds",
+        "path_type": "hardlink",
+        "sha256": "ef843f026ea6a4efed904780aa8cac71e970b4ec4e222845b621d030ad9bc387",
+        "sha256_in_prefix": "ef843f026ea6a4efed904780aa8cac71e970b4ec4e222845b621d030ad9bc387",
+        "size_in_bytes": 191
+      },
+      {
+        "_path": "lib/R/library/fontawesome/Meta/nsInfo.rds",
+        "path_type": "hardlink",
+        "sha256": "2c5404390f73e9f6e9e0c054e22e9290659bac7b69b6978ce468ae76d3081e71",
+        "sha256_in_prefix": "2c5404390f73e9f6e9e0c054e22e9290659bac7b69b6978ce468ae76d3081e71",
+        "size_in_bytes": 267
+      },
+      {
+        "_path": "lib/R/library/fontawesome/Meta/package.rds",
+        "path_type": "hardlink",
+        "sha256": "f7856f1760d2107f25fd44a3ca6d53ad351492f1c6a4f5fceedba49b19e0922e",
+        "sha256_in_prefix": "f7856f1760d2107f25fd44a3ca6d53ad351492f1c6a4f5fceedba49b19e0922e",
+        "size_in_bytes": 1315
+      },
+      {
+        "_path": "lib/R/library/fontawesome/NAMESPACE",
+        "path_type": "hardlink",
+        "sha256": "8b020faf7272e72b241f1157a456504afde3dec532c1528f3955e1ceff97e503",
+        "sha256_in_prefix": "8b020faf7272e72b241f1157a456504afde3dec532c1528f3955e1ceff97e503",
+        "size_in_bytes": 178
+      },
+      {
+        "_path": "lib/R/library/fontawesome/NEWS.md",
+        "path_type": "hardlink",
+        "sha256": "7cd028684fe94e6d28ca54aa98eb6ff73a22c0e7ac098ca827f037a0fb4a94b6",
+        "sha256_in_prefix": "7cd028684fe94e6d28ca54aa98eb6ff73a22c0e7ac098ca827f037a0fb4a94b6",
+        "size_in_bytes": 1330
+      },
+      {
+        "_path": "lib/R/library/fontawesome/R/fontawesome",
+        "path_type": "hardlink",
+        "sha256": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "sha256_in_prefix": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+        "size_in_bytes": 1058
+      },
+      {
+        "_path": "lib/R/library/fontawesome/R/fontawesome.rdb",
+        "path_type": "hardlink",
+        "sha256": "e0e392ca67a62040ac129511b25003893292ad97b01213fd3b006abae6ac031e",
+        "sha256_in_prefix": "e0e392ca67a62040ac129511b25003893292ad97b01213fd3b006abae6ac031e",
+        "size_in_bytes": 899058
+      },
+      {
+        "_path": "lib/R/library/fontawesome/R/fontawesome.rdx",
+        "path_type": "hardlink",
+        "sha256": "f568e3f8a993939069f92ff537b3e60a08ec7b08278db86f5aa46069677f4fb2",
+        "sha256_in_prefix": "f568e3f8a993939069f92ff537b3e60a08ec7b08278db86f5aa46069677f4fb2",
+        "size_in_bytes": 537
+      },
+      {
+        "_path": "lib/R/library/fontawesome/apps/138-icon-fontawesome/app.R",
+        "path_type": "hardlink",
+        "sha256": "ce76fb8906ffb1b4b6d25942e20769d50c4a26dd30cc7d1aaa072da792d7f071",
+        "sha256_in_prefix": "ce76fb8906ffb1b4b6d25942e20769d50c4a26dd30cc7d1aaa072da792d7f071",
+        "size_in_bytes": 1097
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/css/all.css",
+        "path_type": "hardlink",
+        "sha256": "af7571748ae5676ebe07d85f05ec388aff3f80f5c3dcbba8935a76e7209cc6fb",
+        "sha256_in_prefix": "af7571748ae5676ebe07d85f05ec388aff3f80f5c3dcbba8935a76e7209cc6fb",
+        "size_in_bytes": 72911
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/css/all.min.css",
+        "path_type": "hardlink",
+        "sha256": "815cdcef695f4438ae9029d0f266f7500932497287e15847d5b870fab681bc7d",
+        "sha256_in_prefix": "815cdcef695f4438ae9029d0f266f7500932497287e15847d5b870fab681bc7d",
+        "size_in_bytes": 58699
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/css/v4-shims.css",
+        "path_type": "hardlink",
+        "sha256": "506883bdac14441996fec728ae88d87ac48288e269505d7a35e77ac1e4cff8f6",
+        "sha256_in_prefix": "506883bdac14441996fec728ae88d87ac48288e269505d7a35e77ac1e4cff8f6",
+        "size_in_bytes": 41312
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/css/v4-shims.min.css",
+        "path_type": "hardlink",
+        "sha256": "c55902832fb84522d02ea1a60a30747403a140d8651fa748f13ba398b0c0df3a",
+        "sha256_in_prefix": "c55902832fb84522d02ea1a60a30747403a140d8651fa748f13ba398b0c0df3a",
+        "size_in_bytes": 26702
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/webfonts/fa-brands-400.ttf",
+        "path_type": "hardlink",
+        "sha256": "06f4d00923ea24697df5df0b92984175991d8bd25776a02d531bb401e393ec42",
+        "sha256_in_prefix": "06f4d00923ea24697df5df0b92984175991d8bd25776a02d531bb401e393ec42",
+        "size_in_bytes": 134040
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/webfonts/fa-brands-400.woff",
+        "path_type": "hardlink",
+        "sha256": "aff76e5c986f295d4bc6f8142a78e2a31888b101c2d025db89f79c75f64fd90b",
+        "sha256_in_prefix": "aff76e5c986f295d4bc6f8142a78e2a31888b101c2d025db89f79c75f64fd90b",
+        "size_in_bytes": 90060
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/webfonts/fa-regular-400.ttf",
+        "path_type": "hardlink",
+        "sha256": "c651b8a67d3193206f622c3c3b0fbca4a2f2727108c4212b52c1e2a2e84c9b31",
+        "sha256_in_prefix": "c651b8a67d3193206f622c3c3b0fbca4a2f2727108c4212b52c1e2a2e84c9b31",
+        "size_in_bytes": 33736
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/webfonts/fa-regular-400.woff",
+        "path_type": "hardlink",
+        "sha256": "14c9db4ff87fde08f67b0a69dd594bab6d87174812a0dbd34c59833bfed8cc0e",
+        "sha256_in_prefix": "14c9db4ff87fde08f67b0a69dd594bab6d87174812a0dbd34c59833bfed8cc0e",
+        "size_in_bytes": 16276
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/webfonts/fa-solid-900.ttf",
+        "path_type": "hardlink",
+        "sha256": "3d06af1f31cd83ace7a265a014b8fb5dee15770ecac8f7a55555190e627e03c2",
+        "sha256_in_prefix": "3d06af1f31cd83ace7a265a014b8fb5dee15770ecac8f7a55555190e627e03c2",
+        "size_in_bytes": 202744
+      },
+      {
+        "_path": "lib/R/library/fontawesome/fontawesome/webfonts/fa-solid-900.woff",
+        "path_type": "hardlink",
+        "sha256": "74edc18b67c487e32f181719fdb347e2e77020744651f446e9acd7bd6821e2e7",
+        "sha256_in_prefix": "74edc18b67c487e32f181719fdb347e2e77020744651f446e9acd7bd6821e2e7",
+        "size_in_bytes": 101652
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/AnIndex",
+        "path_type": "hardlink",
+        "sha256": "15cdc820df8989821ec70c48e6e97b90854a3fe38ec37d1553534ec851b687db",
+        "sha256_in_prefix": "15cdc820df8989821ec70c48e6e97b90854a3fe38ec37d1553534ec851b687db",
+        "size_in_bytes": 128
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/aliases.rds",
+        "path_type": "hardlink",
+        "sha256": "5bd6c6129dda8fc8ec621d8d93e6f7c9a389a1b3b38209c6269b79d87f570cfb",
+        "sha256_in_prefix": "5bd6c6129dda8fc8ec621d8d93e6f7c9a389a1b3b38209c6269b79d87f570cfb",
+        "size_in_bytes": 142
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/figures/fontawesome_rmd.png",
+        "path_type": "hardlink",
+        "sha256": "a1e855949f27449984ec5bc662627db605e81b6a0a41806b35ceeeaffd1b4354",
+        "sha256_in_prefix": "a1e855949f27449984ec5bc662627db605e81b6a0a41806b35ceeeaffd1b4354",
+        "size_in_bytes": 34715
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/figures/fontawesome_shiny_app.png",
+        "path_type": "hardlink",
+        "sha256": "6776e1a126152261d69a0ecf846dde06b1462da92b3e20cb4f998851cbe16db2",
+        "sha256_in_prefix": "6776e1a126152261d69a0ecf846dde06b1462da92b3e20cb4f998851cbe16db2",
+        "size_in_bytes": 79771
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/figures/logo.svg",
+        "path_type": "hardlink",
+        "sha256": "b70c9c4861cb0d86d0dce8fec21bc9f9cd9dbf8a8ea279f5a72ed2c114551a78",
+        "sha256_in_prefix": "b70c9c4861cb0d86d0dce8fec21bc9f9cd9dbf8a8ea279f5a72ed2c114551a78",
+        "size_in_bytes": 99825
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/fontawesome.rdb",
+        "path_type": "hardlink",
+        "sha256": "aba84f193560b8d2aa42edc89f58405b28fed36ae58db1eade9af966783a0b4b",
+        "sha256_in_prefix": "aba84f193560b8d2aa42edc89f58405b28fed36ae58db1eade9af966783a0b4b",
+        "size_in_bytes": 17314
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/fontawesome.rdx",
+        "path_type": "hardlink",
+        "sha256": "7120181d2c886626c8d2d89ff0c41c2fc5793685714ef49b33d2cb25fbd80428",
+        "sha256_in_prefix": "7120181d2c886626c8d2d89ff0c41c2fc5793685714ef49b33d2cb25fbd80428",
+        "size_in_bytes": 298
+      },
+      {
+        "_path": "lib/R/library/fontawesome/help/paths.rds",
+        "path_type": "hardlink",
+        "sha256": "7ceebc55025cd3dc62fd9082464d1ed10e27d0e26c469a7ad6d6d730fcfb1f2f",
+        "sha256_in_prefix": "7ceebc55025cd3dc62fd9082464d1ed10e27d0e26c469a7ad6d6d730fcfb1f2f",
+        "size_in_bytes": 215
+      },
+      {
+        "_path": "lib/R/library/fontawesome/html/00Index.html",
+        "path_type": "hardlink",
+        "sha256": "fd66e6b761c9204979a74338287bf8cb6ffcef4ad78a5444779ba52f45a182f6",
+        "sha256_in_prefix": "fd66e6b761c9204979a74338287bf8cb6ffcef4ad78a5444779ba52f45a182f6",
+        "size_in_bytes": 1700
+      },
+      {
+        "_path": "lib/R/library/fontawesome/html/R.css",
+        "path_type": "hardlink",
+        "sha256": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "sha256_in_prefix": "0f4849ab1757247808d54da2c371e992364371c942ad7d629dae8d62327ed068",
+        "size_in_bytes": 1335
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "a8038e6299cf32fafb982067ae77561cbfebfd0aa11926249c60a20783dde7ab",
+  "size": 1543485,
+  "subdir": "noarch",
+  "timestamp": 1632506615840,
+  "track_features": "",
+  "url": "https://conda.anaconda.org/conda-forge/noarch/r-fontawesome-0.2.2-r41hc72bb7e_0.tar.bz2",
+  "version": "0.2.2"
+}
