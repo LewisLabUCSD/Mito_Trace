@@ -148,7 +148,7 @@ rule all:
             output=res, cellrbc=cellrbc, num_read=num_reads_filter,
             mincells=ft['mincells'], minreads=ft['minreads'], topN=ft["topN"], hetthresh=ft['hetthresh'], minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],  #d=np.arange(config["N_DONORS"]),
-            variants=params_clones["variants"],
+            variants=[x for x in params_clones["variants"] if x != "simple"],
             kparam=params_clones["knn"]["params"]["resolution"],
             logThresh=params["annotation_clones"]["params"]["logfc_threshold"], minPct = params["annotation_clones"]["params"]["min_pct"],
             cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"]),
@@ -870,7 +870,6 @@ use rule summary_TF_largeClones from annCloMod as annClo_summary_TF_largeClones 
 # # ## Use annotation_clones to run DE on clones
 use rule summary_TF_largeClones from annCloMod as knn_annClo_summary_TF_largeClones with:
     input:
-        #rules.annClo
         se_f = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/concat/annotation_clones/DE_large/se.clonesfilt.rds",
         de = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/concat/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
     output:
