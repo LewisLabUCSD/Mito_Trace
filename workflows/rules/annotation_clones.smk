@@ -118,8 +118,9 @@ rule summary_TF_largeClones:
         indir = lambda wildcards, input: dirname(input.de),
         se_indir = lambda wildcards, input: dirname(input.se_f),
         n_donors = config["N_DONORS"],
+        cdf_thresh = lambda wildcards: wildcards.cdf_thresh,
         rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_clones.TF.summaryPlot.ipynb")
-    shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} {params.rscript} {output.note}"
+    shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output.note}"
 
 # rule runDE:
 #     input:

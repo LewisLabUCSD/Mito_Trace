@@ -71,6 +71,7 @@ clones:
   variants:
     - "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
     - "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
+    - "init"
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:
     - "vireo"
@@ -87,12 +88,37 @@ clones:
     params:
       resolution: [10,3]
 
+
+#clones:
+#  variants:
+#    simple: # Old one, where the depth is not filled in and uses the union of the vireo vcfs
+#      - vireo
+#    mgatkdonor:
+#      - vireo
+#      - knn # reruns mgatk on the donors, takes the intersection of the filtered data
+#    init:
+#    #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
+#  method:
+#    - "vireo"
+#    - "knn" #["vireo", "phylogeny", "knn"]
+#  vireo:
+#    params:
+#      nclonelist: [20] #, 40, 100]
+#  phylogeny:
+#    params:
+#      method: "missingV"
+#      afthresh: 0
+#      dpthresh: 2
+#  knn:
+#    params:
+#      resolution: [10,3]
+
 annotations:
   datadir: "data/external/granja_cd34/"
   ID: "GSE129785_scATAC-Hematopoiesis-CD34"
   name: "granja_cd34"
   #file: "granja_published_C1.rds"
-
+  version: "v02"
   method:
     - "lareau"
     - "anchors"

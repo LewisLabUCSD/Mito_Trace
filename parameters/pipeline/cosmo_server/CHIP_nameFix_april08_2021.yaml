@@ -1,5 +1,5 @@
 ## Global parameters
-outdir: "/home/isshamie/data/Projects/Mito_Trace/output2"
+outdir: "/home/isshamie/data/Projects/Mito_Trace/output"
 config: "parameters/pipeline/pipeline.yaml"
 
 #results: "output/pipeline/CHIP_april08_2021/MTblacklist"
