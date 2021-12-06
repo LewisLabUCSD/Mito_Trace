@@ -3,9 +3,10 @@ from src.config import ROOT_DIR
 from os.path import join
 from src.utils.parse_config import read_config_file
 import snakemake
+from src.utils.run_snakemake import run
 
 
-cfg_f= join(ROOT_DIR, "parameters/pipeline/wrappers", "wrap_pipeline.yaml")
+cfg_f = join(ROOT_DIR, "parameters/pipeline/wrappers", "wrap_pipeline.yaml")
 #wrap_run_snakemake(cfg_f)
 
 config = read_config_file(cfg_f)  # join(ROOT_DIR,"parameters/pipeline/wrap_annotation.yaml"))
@@ -16,8 +17,11 @@ for i in config["indir"]:
     print(curr_config)
     print(config['pipename'])
 
-    out = snakemake.snakemake(config["snakefile"], configfiles=[curr_config],
-                              dryrun=False,
-                              forcetargets=['knn_enrichment',
-                                            'vireo_enrichment'],
-                              cores=8, verbose=True)
+    # out = snakemake.snakemake(config["snakefile"], configfiles=[curr_config],
+    #                           dryrun=False,
+    #                           forcetargets=['knn_enrichment',
+    #                                         'vireo_enrichment'],
+    #                           cores=8, verbose=True)
+    run(config["snakefile"], curr_config, config["pipename"], outdir=None,
+        to_git=False, targets=None, dryrun=False,
+            forcetargets=["vireo_enrichment", "knn_enrichment"], to_gitpush=False, cores=16)

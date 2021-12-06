@@ -240,7 +240,7 @@ def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
                      columns=('Variant', 'Cell', 'integer'), inc_af=False,
                      as_dense=False, var_names=False, vcf_prefix="cellSNP.base",
                      cell_names=False, cell_prefix="cellSNP.samples.tsv", cells_meta=None,
-                     verbose=True):
+                     cells_meta_sep='\t', verbose=True):
     if not verbose:
         ic.disable()
     else:
@@ -253,7 +253,7 @@ def wrap_load_mtx_df(indir, oth_f=False, prefix="cellSNP.tag",
         ic(var_meta.head())
     if cell_names:
         if cells_meta is not None:
-            cells = pd.read_csv(join(indir, cells_meta), sep='\t')[
+            cells = pd.read_csv(join(indir, cells_meta), sep=cells_meta_sep)[
                 "ID"].values
         else:
             cells = pd.read_csv(join(indir, cell_prefix),

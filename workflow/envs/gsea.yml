@@ -1,0 +1,29 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - r-base=4
+  - r-devtools
+  - r-cairo
+  - r-systemfonts
+  - r-irkernel
+  - r-stringr
+  - papermill
+  - jupyter
+  - bioconductor-clusterprofiler
+  - r-ggplot2
+  - r-openxlsx
+  - bioconductor-gseabase
+  - r-data.table
+  - r-biomartr
+  - r-writexls
+  - r::r-gdata
+  - bioconductor-org.hs.eg.db
+  #- bioconductor-dose
+#  - r-signac=4
+#  - data.table
+#  - WriteXLS
+#  - DOSE
+#  - biomaRt
+#  - gdata

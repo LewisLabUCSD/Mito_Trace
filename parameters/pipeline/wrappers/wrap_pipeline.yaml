@@ -1,10 +1,10 @@
 snakefile: "workflows/Snakefile"
 pipename: "pipeline"
-params_dir: "/data2/mito_lineage/parameters/pipeline"
+params_dir: "/data/Mito_Trace/parameters/pipeline/cosmo_server"
 indir:
   TcellDupi_may17_2021: "TcellDupi_may17_2021.yaml"
   Lareau_2020: "Lareau_2020.yaml"
   DUPI_april08_2021: "DUPI_april08_2021_mtasnucl.yaml"
-  CHIP_april08_2021: "CHIP_april08_2021.yaml"
-  jan21_2021: "jan21_2021.yaml"
+#  CHIP_nameFix_april08_2021: "CHIP_nameFix_april08_2021.yaml"
+#  jan21_2021: "jan21_2021.yaml"
 

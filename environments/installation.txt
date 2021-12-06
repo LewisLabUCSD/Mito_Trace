@@ -17,6 +17,7 @@ Using miniconda3, python version 3.7.
 mamba install snakemake=6 pysam icecream pandarallel ruamel.yaml notebook seaborn click
 mamba install biopython pysam
 
+# convert command: sudo apt install imagemagick-6.q16
 
 
 mamba install -y -c conda-forge r-base r-devtools r-cairo r-systemfonts r-irkernel

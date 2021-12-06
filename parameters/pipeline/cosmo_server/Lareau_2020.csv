@@ -1,3 +1,3 @@
 sample_name,cellr_ID,fastq_ID,barcode_f,bam_f
-CD34rep1,CD34_rep1,CD34_rep1,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/Lareau_2020/MTblacklist/CD34_rep1/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/Lareau_2020/MTblacklist/CD34_rep1/outs/possorted_bam.bam
-PBMCrep1,PBMC_rep1,PBMC_rep1,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/Lareau_2020/MTblacklist/PBMC_rep1/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isshamie/data/Projects/Mito_Trace/output/mtscATAC/data/Lareau_2020/MTblacklist/PBMC_rep1/outs/possorted_bam.bam
+CD34rep1,CD34_rep1,CD34_rep1,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/Lareau_2020/MTblacklist/CD34_rep1/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/Lareau_2020/MTblacklist/CD34_rep1/outs/possorted_bam.bam
+PBMCrep1,PBMC_rep1,PBMC_rep1,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/Lareau_2020/MTblacklist/PBMC_rep1/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/Lareau_2020/MTblacklist/PBMC_rep1/outs/possorted_bam.bam

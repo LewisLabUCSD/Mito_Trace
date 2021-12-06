@@ -136,13 +136,14 @@ def check_input(config, files_config, curr_p, git_commit=None,
     return True
 
 
-def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetargets, to_gitpush, cores):
+def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, dryrun=False, forcetargets=False,
+        to_gitpush=False, cores=2):
     ic(targets)
     if targets==None or len(targets) == 0:
         targets=None
     ic(targets)
 
-
+    curr_time = datetime.datetime.now().strftime("%B_%d_%Y_%H%M%S")
 
     out = snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun,
@@ -173,7 +174,8 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
     if not dryrun:
         # Make the report
         report_f = join(outdir,
-                      f"report_{basename(smkfile)}_cfg_{basename(configfile)}.html")
+                      f"report_{basename(smkfile)}_cfg_{basename(configfile)}_{curr_time}.html")
+        ic(report_f)
         snakemake.snakemake(smkfile, configfiles=[configfile],
                             targets=targets, report=report_f,
                             force_incomplete=True)
@@ -181,9 +183,9 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
         ################
         # copy over snakemake and configfile to output:
         ################
-        incfg_f = f"{outdir}/{basename(configfile)}.incfg"
-        insmk_f = f"{outdir}/{basename(configfile)}.insmk"
-        params_out_f = join(outdir, "params.outcfg")
+        incfg_f = f"{outdir}/{basename(configfile)}_{curr_time}.incfg"
+        insmk_f = f"{outdir}/{basename(configfile)}_{curr_time}.insmk"
+        params_out_f = join(outdir, f"params.outcfg_{curr_time}")
         os.system(f"cp {configfile} {incfg_f}")
         os.system(f"cp {smkfile} {insmk_f}")
         write_config_file(params_out_f, config)
@@ -191,7 +193,7 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
         snakemake.snakemake(smkfile, configfiles=[configfile],
                             targets=targets,
                             printrulegraph=True)
-        cmd = f"snakemake -s {smkfile} --configfile {configfile} --dag | dot -Tsvg > {outdir}/dag.svg"
+        cmd = f"snakemake -s {smkfile} --configfile {configfile} --dag | dot -Tsvg > {outdir}/dag_{curr_time}.svg"
         print(cmd)
         os.system(cmd)
         # if to_git:
@@ -207,8 +209,9 @@ def run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forcetar
         # 3. Update _stateOfAnalysis.txt file
         an_f = join(outdir, '_stateOfAnalysis.txt')
         # Timestamp and update
-        s = 'Ran and Needs inspection\n' + 'Time:' +  datetime.datetime.now().strftime("%B/%d/%Y %H:%M:%S")
-
+        s = 'Ran and Needs inspection\n' + 'Time:' + curr_time + "\n"
+        with open(an_f, 'a') as f:
+            f.write(s)
     return
 
 
@@ -239,7 +242,6 @@ def main(smkfile, configfile, pipename, outdir, to_git, targets, dryrun, forceta
 
     run(smkfile, configfile, pipename, outdir, to_git, targets, dryrun,
         forcetargets, to_gitpush, cores)
-
 
     return
 

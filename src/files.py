@@ -36,7 +36,6 @@ def create_f(p, rule, sample=None):
 
 
 def wrap_create_f(params_ser, cfg, rule, sample=None):
-
     if rule == "main":
         return join(cfg["outdir"],"pipeline", cfg["prefix"], "data")
     elif rule == "cellrbc":
@@ -88,7 +87,6 @@ def create_single_files(cfg, rule, sample=None):
             all_p['clones'][curr_p] = cfg["clones"][m]["params"][curr_p]
     all_p['annotation_clones'] = cfg["annotation_clones"]["params"]
     #methods_df = pd.DataFrame
-
 
     cols = []
     col_vals = []

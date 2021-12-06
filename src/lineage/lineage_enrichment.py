@@ -64,6 +64,11 @@ def run_enrichment_stats(df, flt_var="Flt3l"):
     # N: Number of flt3 cells
     # x: Number of cells in specific clone with flt3
     M = df.sum().sum()
+
+    if f"# {flt_var} Cells in Cluster" not in df.index:
+        ic("Donor not here! returning nothing..")
+        return None
+
     N = df.loc[f"# {flt_var} Cells in Cluster"].sum()  # df.loc["Flt3"].sum()
     # rv = hypergeom(M, n, N)
     for col in df.columns:
@@ -117,7 +122,7 @@ def calc_enrich(df, samples, names=None, pseudocount=1, verbose=True):
     return enrich_df, clust_counts
 
 
-def norm_clone_sizes(enrich_df,clust_counts, names):
+def norm_clone_sizes(enrich_df, clust_counts, names):
     ### Convert cluster numbers into probablilites.
     clust_counts_norm = (clust_counts).copy().astype(np.double)
     clust_counts_norm = clust_counts_norm.div(
@@ -144,7 +149,7 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
         names = samples
     #all_enrich = {}
     all_enrich_norm ={}
-
+    ic(names)
     ###############################################################
     ## Added 06/08
     ###############################################################
@@ -155,31 +160,12 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
     for d, curr_donor in cells_meta.groupby("donor"):
         # Create counts df
         print('d', d)
-        print(curr_donor.groupby(["condition", "lineage"]).size())
-        # clust_counts = curr_donor.groupby(["condition", "lineage"]).size().reset_index().pivot(index='condition',columns='lineage', values=0).fillna(0)
-        # clust_counts = clust_counts + pseudocount
-        #
-        # if len(clust_counts) == 0:
-        #     print("No lineages detected in donor. Continuing")
-        #     continue
-        # clust_counts = clust_counts.rename({x:y for (x,y) in zip(samples, names)}, axis=0)
-        #
-        # #clust_counts.columns = clust_counts.columns.astype('Int64')
-        # clust_counts.index = [f"# {x} Cells in Cluster" for x in clust_counts.index]
-        # ###############################################################
-        # clust_counts = clust_counts.astype('Int64')
-        # print('clust_counts')
-        # print(clust_counts)
-        #
-        # # Get enrichment
-        # if "Input" in names:
-        #     enrich_df = run_enrichment_stats(clust_counts.drop("# Input Cells in Cluster", axis=0), flt_var=names[1])
-        # else:
-        #     enrich_df = run_enrichment_stats(clust_counts, flt_var=names[1])
-
+        print(curr_donor.groupby(["condition", "lineage"]).size().head())
         enrich_df, clust_counts = calc_enrich(curr_donor,
                                               pseudocount=pseudocount,
-                                              samples=samples)
+                                              samples=names)
+        if enrich_df is None:
+            continue
         enrich_stats = norm_clone_sizes(enrich_df, clust_counts=clust_counts,
                                         names=names)
         enrich_stats.to_csv(join(outdir, f"{name}enrichmentNorm_donor{d}.csv"))
@@ -194,7 +180,11 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
     #print("Does donor have any cells")
     #print("Any null"(all_enrich_df["Donor"].isnull()).any())
     all_enrich_df["Donor"] = all_enrich_df["Donor"].astype(object)
-    all_enrich_df.to_csv(join(outdir, f"{name}enrichmentNorm.csv"))
+    if name != "":
+        all_enrich_df["Comparison"] = name
+    else:
+        all_enrich_df["Comparison"] = "None"
+    all_enrich_df.to_csv(join(outdir, f"{name}enrichmentNorm.csv"), index=False)
 
     # Main figure is Fisher norm results
     plot_volcano(all_enrich_df, hue="Donor", x=f"{names[1]} fold enrichment norm",
@@ -218,13 +208,12 @@ def lineage_enrichment(cells_meta_f, outdir, samples, names=None, name="",
     return
 
 
-
-
 def plot_volcano(enrich_stats, x="Flt3l fold enrichment",
                  y="Fisher -log10p", hue=None, f_save=None, v=0,
                  size=None, to_close=True, to_log=True, ylim=None,
                  xlim=None):
-    enrich_stats = enrich_stats.astype(float)
+    ic(enrich_stats.head())
+    enrich_stats = enrich_stats.astype("float", errors='ignore')
 
     f, ax = plt.subplots(figsize=(10, 10), sharey=True, sharex=True)
 
@@ -378,17 +367,26 @@ def plot_clone_scatter(enrich_stats, outdir, samples, n, k, size='-log10p'):
 #@click.argument("nclones",type=click.INT)
 @click.argument("samples", type=click.STRING)
 @click.option("--plot_ind", default=False)
-@click.option("--tests", default="")
+@click.option("--tests", default="None")
 def main(cells_meta_f, outdir, samples, plot_ind, tests):
-    if tests != "":
+    print("tests", tests, type(tests))
+    if not (tests is None) and tests != "None":
         comps = tests.split(";")
+        ic(comps)
+        comps_out = []
         for c in comps:
-            name, a_name, a, b_name, b = c.split(',')
-            samples = [a, b]
+            name, a, b = c.split(',')
+            print('name, a,b', name, a, b)
+            names = [a, b]
             lineage_enrichment(cells_meta_f, outdir, name=f"{name}_",
-                               samples=samples, plot_ind=plot_ind,
-                               names=[a_name, b_name])
+                               samples=names, plot_ind=plot_ind,
+                               names=[a, b])
+            comps_out.append(join(outdir, f"{name}_volcano_Fisher_foldNorm.png"))
+        cmd = f"convert -append {' '.join(comps_out)} {join(outdir, 'volcano_Fisher_foldNorm.png')}"
+        ic(cmd)
+        os.system(cmd)
     else:
+        ic("Running enrichment")
         samples = samples.split(',')
         lineage_enrichment(cells_meta_f, outdir, samples=samples,
                            plot_ind=plot_ind)
