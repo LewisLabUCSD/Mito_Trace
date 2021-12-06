@@ -7,7 +7,8 @@ software/
 Analysis/
 Icon*
 #output/clones/CHIP_april08_2021/ #specific folder that has large data files and needs to be moved to data.
-reports/
+data/
+#reports/
 output/
 figures/
 Analysis/
