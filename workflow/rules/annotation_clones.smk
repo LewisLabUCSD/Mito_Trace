@@ -97,8 +97,12 @@ rule runDE_TF_largeClones:
     input:
         se_f = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
     output:
-        note= "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb"
-    threads: 7
+        note = "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb",
+        out2 = report(directory(expand("{{outdir}}/annotation_clones/DE_large/minPct_{{minPct}}__logThresh_{{logThresh}}/donor{d}_TF",
+                                        d = range(config["N_DONORS"]))),
+                      patterns=["*png", "*csv"],
+                      category="lineage", subcategory="donor {d}"),
+    threads: 8
     params:
         indir = lambda wildcards, input: dirname(input[0]),
         outdir = lambda wildcards, output: dirname(output[0]),
@@ -113,19 +117,21 @@ rule summary_TF_largeClones:
         de = "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb",
         se_f = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
     output:
-        note="{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
-        #out = multiext("{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/",
-    #                   "output_Summary.ipynb", "dotplot.allDonors.top.pdf", "dotplot.allDonors.clones.top.pdf",
-    #                   "heatmap.allDonors.top.pdf",
-    #                   "heatmap.allDonors.split.top.pdf", "large.clones.cdf.png"
-        #out2 = expand(dir("{{outdir}}/annotation_clones/DE_large/minPct_{{minPct}}__logThresh_{{logThresh}}/cdf_thresh__{{cdf_thresh}}/donor{d}_TF"), d=config["N_DONORS"]), category="donor {d}", name="*png"),
+        out = multiext("{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/",
+                      "output_Summary.ipynb", "dotplot.allDonors.top.pdf", "dotplot.allDonors.clones.top.pdf",
+                      "heatmap.allDonors.top.pdf",
+                      "heatmap.allDonors.split.top.pdf", "large.clones.cdf.png"),
+        # out2 = directory(expand("{{outdir}}/annotation_clones/DE_large/minPct_{{minPct}}__logThresh_{{logThresh}}/donor{d}_TF",
+        #                    d=config["N_DONORS"])),
+        #note="{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
+
     params:
         indir = lambda wildcards, input: dirname(input.de),
         se_indir = lambda wildcards, input: dirname(input.se_f),
         n_donors = config["N_DONORS"],
         cdf_thresh = lambda wildcards: wildcards.cdf_thresh,
         rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_clones.TF.summaryPlot.ipynb")
-    shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output.note}" #{output[0]}
+    shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output[0]}" #{output[0]}
 
 # rule runDE:
 #     input:

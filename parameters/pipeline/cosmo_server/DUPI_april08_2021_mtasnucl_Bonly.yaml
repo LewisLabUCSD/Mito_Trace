@@ -16,7 +16,7 @@ genome: "MTblacklist_mtasnucl"
 #comparisons: 'B,preB,postB' #"A,pre,rxn1,post,rxn3;B,pre,rxn2,post,rxn4"
 #tests: "A,pre,preA,post,postA;B,pre,preB,post,postB"
 
-N_DONORS: 8
+N_DONORS: 4
 
 
 #parameters:
