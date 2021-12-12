@@ -135,7 +135,7 @@ annotation_clones:
     cdf_thresh:
       - 0.3
     min_pct:
-      - 0.01
+      #- 0.01
       - 0
     logfc_threshold:
       - 0.1

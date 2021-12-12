@@ -53,23 +53,39 @@ vPlot <- function(se){
 }
 
 
-check.if.one.clone <- function(large.clones, init.large.clones, n_top_clones){
-    #' If one of the donors has only 1 donor, use the top n instead
+check.if.one.clone <- function(large.clones, init.large.clones, n_top_clones) {
     donor.n.clones <- large.clones %>% group_by(donor) %>% summarise(size=n())
+    #' If one of the donors has only 1 donor, use the top n instead
     print(dim(donor.n.clones)[1])
-    for (i in 1:dim(donor.n.clones)[1]){ #$donor){
+    for (i in 1:dim(donor.n.clones)[1]) {
         curr.d <- donor.n.clones[i, "donor"]
         print(paste('i', i, "donor", curr.d))
+        print(donor.n.clones[i, "size"])
         if (donor.n.clones[i, "size"] < n_top_clones) {
             print(paste('only 1 clone. Using top', n_top_clones, 'clones'))
-            new.large <- init.large.clones %>% filter(donor==as.character(curr.d)) %>%
-                                     slice_min(order_by = cdf.norm, n=n_top_clones)
+            new.large <- init.large.clones %>% filter(donor==as.character(curr.d)) %>% slice_min(order_by = cdf.norm, n=n_top_clones)
             large.clones <- large.clones %>% filter(donor!=as.character(curr.d)) %>% bind_rows(new.large)
         }
 
     }
     return(large.clones)
 }
+
+get.top.clones <- function(d, clones, cdf_thresh, n_top_clones){
+    curr.clones = clones %>% filter(donor==as.character(d))
+    curr.clones = curr.clones %>% slice_min(order_by = cdf.norm, n=n_top_clones)
+    cdf.clones = curr.clones %>% filter(cdf.norm<cdf_thresh)
+    print('cdf thresh clones')
+    print(dim(cdf.clones))
+
+    if (dim(cdf.clones[1])>n_top_clones) {
+        print("cdf too small. Taking top clones")
+        print(n_top_clones)
+        curr.clones = cdf.clones
+    }
+    return(curr.clones)
+    }
+
 
 
 plot.DE.RNA.pair <- function(integrated, de.results, a, b, outdir){

@@ -6,6 +6,7 @@ import numpy as np
 #import click
 #import snakemake
 from src.utils.data_io import af_to_vireo
+from icecream import ic
 
 # print('input', snakemake.input)
 # print('output ', snakemake.output)
@@ -41,7 +42,8 @@ for d, curr_donor in cells_meta.groupby('donor'):
         af_donor_samp = af_donor_samp.loc[(af_donor_samp.sum(axis=1) > 0), (af_donor_samp.sum(axis=0) > 0)]
         vars_conds.append(set(af_donor_samp.columns))
         af_donor_conds.append(af_donor_samp)
-        print('af shape', af_donor_samp.shape)
+        ic(curr_cov_f)
+        ic(af_donor_samp.shape)
         ## Coverage
         curr_samp_cov = pd.read_csv(curr_cov_f,
                                     header=None)  # load sample coverage
@@ -66,11 +68,10 @@ for d, curr_donor in cells_meta.groupby('donor'):
 
     # Get overlap variants and remove cells/vars with 0s
     overlap_vars = vars_conds[0].intersection(*vars_conds)
-
     af_donor_df = pd.concat(af_donor_conds, join='inner', axis=0,
                                                 ignore_index=False)
     af_donor_df = af_donor_df.loc[(af_donor_df.sum(axis=1)>0), (af_donor_df.sum(axis=0)>0)]
-    print('af shape', af_donor_df.shape)
+    print('af after overlap variants', af_donor_df.shape)
     #print('af_donor_df')
     #print(af_donor_df.head())
     dp_donor_df = pd.concat(dp_donor_conds, join='inner', axis=0,

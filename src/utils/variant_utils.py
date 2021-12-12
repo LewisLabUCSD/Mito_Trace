@@ -109,11 +109,6 @@ def variants_qc(af, dp, groups_d, include_lineage=True):
     return all_vars_qc_df, all_vars_qc
 
 
-def filter_variants(vars_qc, thresh=0.9, thresh_col="perc_0.01"):
-    vars_qc = vars_qc.loc[vars_qc[thresh_col]>thresh]
-    return vars_qc
-
-
 def plot_vars(vars_qc, plt_col):
     # 1. Plot variants transitions/transversions for each linege
     sns.countplot(data=vars_qc[vars_qc["meta"] == "Group"], hue="variant type", x="lineage")
@@ -146,6 +141,11 @@ def variants_dense(AF_df, vars_to_plot, samples_d, donors_d,
     if lineage_d is not None:
         variants_box['lineage'] = variants_box['Cell'].map(lineage_d)
     return variants_box
+
+
+def filter_variants(vars_qc, thresh=0.9, thresh_col="perc_0.01"):
+    vars_qc = vars_qc.loc[vars_qc[thresh_col]>thresh]
+    return vars_qc
 
 
 def filt_high(df, thresh):
@@ -188,12 +188,11 @@ def get_high(df, thresh):
     return df.loc[(df.mean(axis=1)>thresh)].index.values
 
 
-
 def extract_variants_per_donor(af, cell_meta, af_thresh=0, cells_thresh=1):
     af = af>af_thresh
     samps = set(cell_meta.values)
     variants_dict = {}
     for s in samps:
         print(af.loc[(af.loc[:,cell_meta[cell_meta==s].index.astype(object)]>af_thresh).any(axis=1)].index)
-        variants_dict[s] =  af.loc[(af.loc[:,cell_meta[cell_meta==s].index.astype(object)]>af_thresh).any(axis=1)].index
+        variants_dict[s] =  af.loc[(af.loc[:, cell_meta[cell_meta==s].index.astype(object)]>af_thresh).any(axis=1)].index
     return variants_dict

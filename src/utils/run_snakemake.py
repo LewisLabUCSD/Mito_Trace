@@ -185,7 +185,7 @@ def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, 
         ################
         incfg_f = f"{outdir}/{basename(configfile)}_{curr_time}.incfg"
         insmk_f = f"{outdir}/{basename(configfile)}_{curr_time}.insmk"
-        params_out_f = join(outdir, f"params.outcfg_{curr_time}")
+        params_out_f = join(outdir, f"params.outcfg _{curr_time}")
         os.system(f"cp {configfile} {incfg_f}")
         os.system(f"cp {smkfile} {insmk_f}")
         write_config_file(params_out_f, config)

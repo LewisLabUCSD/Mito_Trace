@@ -174,7 +174,7 @@ rule createExpSignac:
         outdir =lambda wildcards, output: dirname(output[0]),
         rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateSignac.ipynb"), # The script defaults to the granja data
         sample_names = ",".join(samples.index),
-        samples = ",".join(samples["cellr_ID"])
+        samples = ",".join(samples["cellr_ID"].values)
         #workdir = os.getcwd(),
     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
 
@@ -194,7 +194,7 @@ rule integrateSignac:
         outdir =lambda wildcards, output: dirname(output[0]),
         rscript= join(ROOT_DIR, "R_scripts/annotations/integrateSignac.ipynb"), # The script defaults to the granja data
         sample_names = ",".join(samples.index),
-    shell: "papermill -p cellr_in {params.outdir} -p outdir {params.outdir} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
+    shell: "papermill -p outdir {params.outdir} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
 #######################################################################
 
 def get_comps():
