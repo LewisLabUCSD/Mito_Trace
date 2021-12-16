@@ -47,7 +47,7 @@ def cells_mean(var_series, cells):
     return var_series.loc[cells].mean()
 
 
-def calc_variant_descriptives(af, vars_df, prefix, thresholds, dp): #, read_thresh):
+def calc_variant_descriptives(af, vars_df, prefix, thresholds, dp, read_thresh):
     vars_cells = {}
     for t in thresholds:
         vars_cells[t] = af.apply(cells_thresh, args=(t,))
@@ -69,7 +69,7 @@ def calc_variant_descriptives(af, vars_df, prefix, thresholds, dp): #, read_thre
     return vars_df
 
 
-def vars_as_clones(af, cells_meta, samples, thresholds, read_thresh, groups=["condition"]):
+def vars_as_clones(af, dp, cells_meta, samples, thresholds, read_thresh, groups=["condition"]):
     """ Creates cell clones based on single MT variants
 
     af: cell-by-variant af, where the cell has a unique id, and the variants are in format '{REF}{POS}>{ALT}'
@@ -79,6 +79,7 @@ def vars_as_clones(af, cells_meta, samples, thresholds, read_thresh, groups=["co
     # Steps:
     # 1. create variant df with the proper columns
     # 2. get cell ID for having the variant, > thresh for each. Add in NA if not passing read filter.
+    #    get cell IDs for not having the variant,
     # 3. get #cells in condition > thresh for each.
     # 4. get #cells > thresh for each
     # 5. calculate median, mean for the cells that have the variant.
@@ -87,9 +88,8 @@ def vars_as_clones(af, cells_meta, samples, thresholds, read_thresh, groups=["co
     # 8. Correlate # cells with variant and fold change
     # 9. Calculate nearest shared variant for each by calculating #overlap for each
 
-
     vars_df = vu.type_of_variants(af.columns, style=">", to_preproc=True)
-    vars_df = calc_variant_descriptives(af, vars_df, prefix="", thresholds=thresholds, read_thresh=read_thresh)
+    vars_df = calc_variant_descriptives(af, vars_df, prefix="", thresholds=thresholds, dp=dp, read_thresh=read_thresh)
 
     if cells_meta is not None:
         for c, df in cells_meta.groupby(groups):
@@ -121,7 +121,6 @@ def save_clones(vars_dict):
 
 
 def main(af_f, dp_f, cells_meta_f, samples, name, outdir, clone_thresh=10):
-    af_f = "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/cd34norm/MTblacklist/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/multiplex/clones_init/donor0/af.tsv"
     af = pd.read_csv(af_f, sep="\t")
     dp = pd.read_csv(dp_f, sep="\t")
 
@@ -131,7 +130,6 @@ def main(af_f, dp_f, cells_meta_f, samples, name, outdir, clone_thresh=10):
     read_thresh = [2, 10, 100]
     vars_df = vars_as_clones(af, cells_meta, samples, thresholds, read_thresh, groups=["condition"])
     plots_vars(vars_df, thresholds, name, outdir)
-
     # save ones with cell_filter count
 
     return

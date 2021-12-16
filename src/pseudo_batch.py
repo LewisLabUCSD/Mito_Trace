@@ -404,7 +404,7 @@ def merge_vcf(vcf_files, out_vcf):
 @click.argument("outdir", type=click.Path())
 @click.argument("indirs", type=click.Path(exists=True), nargs=-1)
 @click.option("--is_prop", default=False, type=click.BOOL)
-@click.option("--num_cells", default=1000)
+@click.option("--num_cells", default=100000)
 @click.option("--samples", default="")
 @click.option("--prefix_in", default="")
 @click.option("--prefix_out", default="")

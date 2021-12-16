@@ -121,8 +121,8 @@ rule summary_TF_largeClones:
                       "output_Summary.ipynb", "dotplot.allDonors.top.pdf", "dotplot.allDonors.clones.top.pdf",
                       "heatmap.allDonors.top.pdf",
                       "heatmap.allDonors.split.top.pdf", "large.clones.cdf.png"),
-        # out2 = directory(expand("{{outdir}}/annotation_clones/DE_large/minPct_{{minPct}}__logThresh_{{logThresh}}/donor{d}_TF",
-        #                    d=config["N_DONORS"])),
+        donorDot = expand("{{outdir}}/annotation_clones/DE_large/minPct_{{minPct}}__logThresh_{{logThresh}}/cdf_thresh__{{cdf_thresh}}/donor{d}_TF/dot.top.png",
+                        d=range(config["N_DONORS"])),
         #note="{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
 
     params:
@@ -133,19 +133,22 @@ rule summary_TF_largeClones:
         rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_clones.TF.summaryPlot.ipynb")
     shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output[0]}" #{output[0]}
 
-# rule runDE:
-#     input:
-#         clones = "{outdir}/annotation_clones/SE.rds"
-#     output:
-#         "{outdir}/annotation_clones/DE/donor{n}/DE.ipynb",
-#     params:
-#         outdir = lambda wildcards, output: dirname(output[0]),
-#         rscript= join(ROOT_DIR, "R_scripts/annotations/clones/DE_clones.vCurrent.ipynb"), # The script defaults to the granja data
-#         sample_names = ",".join(samples.index),
-#         comps_f = get_comps()
-#         #samples = ",".join(samples["cellr_ID"])
-#     shell: "papermill -p se {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
-
+rule output_largeclones:
+    input:
+        de = "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb",
+        se_f = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
+    output:
+        note = "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/TFactivity.ipynb",
+        out = multiext("{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/",
+                       "dotplot.allDonors.clones.topPvals.pdf", "dotplot.allDonors.clones.topPvals.noZ.pdf",
+                       "clone.TFactivity.topPvals.txt")
+    params:
+        indir = lambda wildcards, input: dirname(input.de),
+        se_indir = lambda wildcards, input: dirname(input.se_f),
+        n_donors = config["N_DONORS"],
+        cdf_thresh = lambda wildcards: wildcards.cdf_thresh,
+        rscript = join(ROOT_DIR,"R_scripts/annotation_clones/DE_clones.TF.summaryPlot.DonorConcat.Development.ipynb")
+    shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output.note}"
 
 rule runGSEA:
     input:
