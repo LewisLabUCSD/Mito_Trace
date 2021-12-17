@@ -88,6 +88,41 @@ get.top.clones <- function(d, clones, cdf_thresh, n_top_clones){
 
 
 
+stimout <- function(integrated, outdir, sample_names){
+    cluster.ids <- sort(unique(integrated$seurat_clusters))
+    integrated$celltype.stim <- paste(integrated$seurat_clusters, integrated$orig.ident, sep = "_")
+    integrated$celltype <- integrated$seurat_clusters
+    Idents(integrated) <- "celltype.stim"
+
+    for (c in cluster.ids){
+        try({
+            response <- FindMarkers(integrated,
+                                    ident.1 = paste0(c, "_", sample_names[[1]]),
+                                    ident.2 = paste0(c, "_", sample_names[[2]]),
+                                    verbose = FALSE,
+                                    test.use = 'LR', min.pct = minPct,
+                                    latent.vars = 'peak_region_fragments'
+                                   )
+            if (!(dim(response)[1]==0)){
+
+                print(head(response, n = 15))
+                curr_clust <- subset(integrated, seurat_clusters == c)
+                avg_curr_clust <- data.frame(log1p(AverageExpression(curr_clust, verbose = FALSE)$RNA))
+                avg_curr_clust$gene <- rownames(avg_curr_clust)
+
+                p1 <- ggplot(avg_curr_clust, aes_string(paste0("X", c, "_", sample_names[[1]]), paste0("X", c, "_", sample_names[[2]]))) + geom_point() + ggtitle(paste("Cluster", c))
+                p1 <- LabelPoints(plot = p1, points = rownames(head(response, n = 15)), repel = TRUE)
+                plot_grid(p1)
+                write.csv(response, file=file.path(outdir,paste0("cluster_",i,".conditionDE.csv")))
+                ggsave(file.path(outdir,paste0("cluster_",i,".conditionScatter.png")))
+
+            }
+        })
+
+    }
+}
+
+
 plot.DE.RNA.pair <- function(integrated, de.results, a, b, outdir){
     try
     {

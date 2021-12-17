@@ -34,7 +34,7 @@ def type_of_variants(variants, style=">", to_preproc=True):
         nts = set(x[["ref", "alt"]])
         if "N" in nts:
             return "Undefined"
-        if nts == {"A","G"} or nts == {"T", "C"}:
+        if nts == {"A", "G"} or nts == {"T", "C"}:
             return "Transition"
         return "Transversion"
     variants["variant type"] = variants.apply(var_type, axis=1)
