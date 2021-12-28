@@ -1,0 +1,15 @@
+## Global params
+outdir: "/data/Mito_Trace/output" # Global output directory
+config: "parameters/pipeline/pipeline.yaml"
+#params: "parameters/pipeline/params.csv"
+
+## Experiment params
+prefix: "cd34norm/MTblacklist"
+samples_meta: "parameters/pipeline/cosmo_server/CHIP_dec172021/CHIP_b3_dec172021.csv"
+genome: "MTBlacklist"
+fastq_dir: "/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/"
+mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b3/MTblacklist"
+#results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
+N_DONORS: 2
+
+
