@@ -162,6 +162,9 @@ rule runGSEA:
     shell: "papermill -p DE.out.path {params.input} -p export.path {params.output} {params.rscript} {output[0]}"
 
 
+#rule runDE_TF_Donors:
+
+
 # rule runDE_TF:
 #     input:
 #         integrated = "{outdir}/annotation_clones/{prefix}/mergedSamples/allSamples.integrated.rds",

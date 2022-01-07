@@ -127,15 +127,15 @@ rule extractCB_from_bam_02:
     
 rule extractCB_from_bam_03:
     input:
-        head = "{output}/data/{sample}/MT/SAM_HEADER",
+        head_f = "{output}/data/{sample}/MT/SAM_HEADER",
         body = "{output}/data/{sample}/MT/filtered_SAM_body"
     output: 
-        sam = temp("{output}/data/{sample}/MT/filtered.sam"), 
-    shell: "cat {input.head} {input.body} > {output.sam}"
+        sam = temp("{output}/data/{sample}/MT/filtered.sam")
+    shell: "cat {input.head_f} {input.body} > {output.sam}"
 
 rule extractCB_from_bam_04:
     input: 
-        sam = "{output}/data/{sample}/MT/filtered.sam",
+        sam = "{output}/data/{sample}/MT/filtered.sam"
     output:
         bam = temp("{output}/data/{sample}/MT/filtered.bam"),
     shell: "samtools view -b {input.sam} > {output.bam}"
