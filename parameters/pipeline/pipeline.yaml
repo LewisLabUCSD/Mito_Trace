@@ -23,6 +23,12 @@ genome_path:
     ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
     mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
 
+  MTBlacklist_A2: # cellranger new genoem version with MT blacklist
+    # Genome paths
+    genome_dir: "data/external/GRCh38_MT_Blacklist_A2/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/external/GRCh38_MT_Blacklist_A2/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_MT_Blacklist_A2/chrM.fasta"
+
 mtpreproc:
   version: 02
   params:
