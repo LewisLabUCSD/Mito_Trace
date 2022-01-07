@@ -99,62 +99,6 @@ rule createMergedSignac:
     shell: "papermill  -p sample_indir {input} -p exp {params.exp} -p outdir {params.outdir} -p external_prefix {params.external_prefix} -p external_frag_file {params.external_frag_file} {params.rscript} {output[0]}"
 
 
-#conda-env-mito_trace-r
-rule annotation_lareau:
-    input: "{outdir}/data/annotation{sample}/{sample}.merged.rds"
-    output:
-        report("{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.clusters.csv"), # "{outdir}/annotation/{sample}/{sample}.clusters.txt"
-        report("{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.project.sample.cellLabels.abundace.png"),
-        note="{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.clusters.ipynb"
-    params:
-        outdir=lambda wildcards, output: dirname(output[0]),
-        exp = lambda wildcards: wildcards.sample,
-        nTop = 25000,
-        proj = lambda wildcards: wildcards.proj, #config["method"],
-        rscript= join(ROOT_DIR, "R_scripts/annotations/02_predict_lareau.ipynb")
-    shell: "papermill -k ir -p exp {params.exp} -p nTop {params.nTop} -p SE_f {input[0]} -p outdir {params.outdir}  {params.rscript} {output.note}"
-
-
-
-rule annotation_anchors:
-    input: "{outdir}/data/annotation{sample}/{sample}.merged.rds"
-    output:
-        report("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.clusters.csv"), # "{outdir}/annotation/{sample}/{sample}.clusters.txt"
-        report("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.merged.anchors.sample.labels.png"),
-        report("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.merged.anchors.labels.png"),
-        note="{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.clusters.ipynb"
-    params:
-        outdir=lambda wildcards, output: dirname(output[0]),
-        exp = lambda wildcards: wildcards.sample,
-        assay = "RNA",
-        rscript= join(ROOT_DIR, "R_scripts/annotations/02_predict_anchors.ipynb")
-    shell: "papermill -p exp {params.exp} -p SE_f {input[0]} -p outdir {params.outdir} {params.rscript} {output[1]}"
-
-#######################################################################
-#####################
-## V01
-#####################
-# rule createMergedExpSignac:
-#     """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
-#     The peaks are reduced to the overlapping sets, and if a fragments file is provided,
-#     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
-#     """
-#     output:
-#         "{outdir}/data/annotation/mergedSamples/allSamples.integrated.ipynb",
-#         "{outdir}/data/annotation/mergedSamples/allSamples.integrated.rds",
-#         report(expand("{{outdir}}/data/annotation/mergedSamples/{f}",
-#                       f=["integrated.merged.compare.png", "integrated.batch.png", "integrated.lsi.clusters.png"]))
-#         #report("{outdir}/data/annotation{sample}/{sample}.merged.lsi.Batchlabels.png")
-#     params:
-#         indir = config["mtscATAC_OUTDIR"],
-#         outdir =lambda wildcards, output: dirname(output[0]),
-#         rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateMergedSignac.ipynb"), # The script defaults to the granja data
-#         sample_names = ",".join(samples.index),
-#         samples = ",".join(samples["cellr_ID"])
-#         #workdir = os.getcwd(),
-#     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} {params.rscript} {output[0]}"
-
-
 #####################
 ## V02
 #####################
@@ -172,7 +116,7 @@ rule createExpSignac:
     params:
         indir = config["mtscATAC_OUTDIR"],
         outdir =lambda wildcards, output: dirname(output[0]),
-        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateSignac.ipynb"), # The script defaults to the granja data
+        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateSignac.ipynb"),
         sample_names = ",".join(samples.index),
         samples = ",".join(samples["cellr_ID"].values)
         #workdir = os.getcwd(),

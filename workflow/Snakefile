@@ -218,7 +218,6 @@ module multMod:
     snakefile: "./rules/multiplex.smk"
     config: params
 
-
 module lineageMod:
     snakefile: "./rules/lineage.smk"
     config: config
@@ -247,7 +246,6 @@ use rule * from mtpreprocMod
 ## 2. Call variants using MGATK and convert to the Vireo multiplex input
 ########################################################################
 use rule * from mgatkMod
-
 
 
 use rule mgatk_to_vireoIn from mgatkMod with:
