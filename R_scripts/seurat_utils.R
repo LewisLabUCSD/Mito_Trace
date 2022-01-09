@@ -1,5 +1,6 @@
 library(Signac)
 library(Seurat)
+library(dplyr)
 
 filtCells <- function(se, min_peak_region_fragments=10,
                       max_peak_region_fragments=15000,
@@ -88,44 +89,8 @@ get.top.clones <- function(d, clones, cdf_thresh, n_top_clones){
 
 
 
-# stimout <- function(integrated, outdir, sample_names){
-#     cluster.ids <- sort(unique(integrated$seurat_clusters))
-#     integrated$celltype.stim <- paste(integrated$seurat_clusters, integrated$orig.ident, sep = "_")
-#     integrated$celltype <- integrated$seurat_clusters
-#     Idents(integrated) <- "celltype.stim"
-#
-#     for (c in cluster.ids){
-#         try({
-#             response <- FindMarkers(integrated,
-#                                     ident.1 = paste0(c, "_", sample_names[[1]]),
-#                                     ident.2 = paste0(c, "_", sample_names[[2]]),
-#                                     verbose = FALSE,
-#                                     test.use = 'LR', min.pct = minPct,
-#                                     latent.vars = 'peak_region_fragments'
-#                                    )
-#             if (!(dim(response)[1]==0)){
-#
-#                 print(head(response, n = 15))
-#                 curr_clust <- subset(integrated, seurat_clusters == c)
-#                 avg_curr_clust <- data.frame(log1p(AverageExpression(curr_clust, verbose = FALSE)$RNA))
-#                 avg_curr_clust$gene <- rownames(avg_curr_clust)
-#
-#                 p1 <- ggplot(avg_curr_clust, aes_string(paste0("X", c, "_", sample_names[[1]]), paste0("X", c, "_", sample_names[[2]]))) + geom_point() + ggtitle(paste("Cluster", c))
-#                 p1 <- LabelPoints(plot = p1, points = rownames(head(response, n = 15)), repel = TRUE)
-#                 plot_grid(p1)
-#                 write.csv(response, file=file.path(outdir,paste0("cluster_",i,".conditionDE.csv")))
-#                 ggsave(file.path(outdir,paste0("cluster_",i,".conditionScatter.png")))
-#
-#             }
-#         })
-#
-#     }
-# }
-
-
 plot.DE.RNA.pair <- function(integrated, de.results, a, b, outdir){
-    try
-    {
+
     plot1 <- VlnPlot(
       object = integrated,
       features = rownames(de.results)[1],
@@ -147,12 +112,81 @@ plot.DE.RNA.pair <- function(integrated, de.results, a, b, outdir){
     plot1 | plot2 | plot3
 
     ggsave(file.path(outdir,paste0("clones_",a,"__",b, ".DE.GeneActivity.top2.png")))
-
     return(c(plot1, plot2, plot3))
-    }
-    return
 }
 
+
+de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10){
+    if (length(names.sig) > max.size){
+        names.sig <- names.sig[1:max.size]
+    }
+    dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis()
+    feat <- FeaturePlot(se.filt,  features=names.sig)
+    vln <- VlnPlot(se.filt,  features=names.sig, pt.size = 0)
+
+    # split by a vector
+    pdf(file.path(curr.outdir, paste0(curr.name, "heatmap.top.pdf")), width=8,height=8)
+    heat <- ComplexHeatmap::Heatmap(as.matrix(GetAssayData(integrated)[names.sig,]),
+            name = curr.name,
+            show_column_names = FALSE, use_raster=TRUE
+           )
+    ComplexHeatmap::draw(heat)
+    dev.off()
+    ggsave(plot=feat,
+           file=file.path(curr.outdir, paste0(curr.name,".embedFeat.top.png")))
+    ggsave(plot=dot,
+           file=file.path(curr.outdir, paste0(curr.name, ".dot.top.png")))
+    ggsave(plot=vln,
+           file=file.path(curr.outdir, paste0(curr.name, ".violin.top.png")))
+    ## pdfs
+    ggsave(plot=dot,
+           file=file.path(curr.outdir, paste0(curr.name, ".dot.top.pdf")))
+    ggsave(plot=vln,
+           file=file.path(curr.outdir, paste0(curr.name, ".violin.top.pdf")))
+}
+
+
+find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct, p.thresh=0.1){
+    se.filt <- subset(se, idents = c(id1,id2))
+    response <- FindMarkers(se,
+                            ident.1 = id1,
+                            ident.2 = id2,
+                            verbose = T,
+                            only.pos = FALSE,
+                            mean.fxn = rowMeans,
+                            logfc.threshold = 0,
+                            min.pct = min.pct,
+                            #latent.vars=latent.vars,
+                            fc.name = "avg_diff")
+    ncells <- data.frame(table(Idents(se.filt)))
+    write.csv(ncells, file=file.path(curr.outdir, paste0(curr.name,".counts.csv")), quote=F)
+    response <- response %>% dplyr::arrange(p_val)
+    response$p_val_adj_BH <- stats::p.adjust(response$p_val, method = "BH", n = length(response$p_val))
+    print('cleaning de')
+    curr.sig <- response %>% dplyr::filter(p_val_adj_BH<p.thresh)
+    names.sig <- rownames(curr.sig)
+    #names.sig <- clean.de(response, se, n_top_genes, a=id1, b=id2, names.sig = c())
+    #response <- curr.de[[1]]
+    #names.sig <- curr.de[[2]]
+    print('dim response')
+    print(dim(response))
+    if (!(dim(response)[1]==0)){
+        print('response plots')
+        print(head(response, n = 3))
+        print(head(names.sig))
+        de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name)
+        write.csv(response,
+                  file=file.path(curr.outdir, paste(curr.name,id1,id2,"DE.csv",sep="_")), quote=F)
+        #plotDE(se, response, c, clust_outdir)
+
+        gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", "avg_diff", "p_val_adj_BH" )], aes(alpha = 0.4))
+        ggsave(plot=gally, file=file.path(curr.outdir,
+                                          paste(curr.name,id1,
+                                                id2,".DE.pvalHist.png", sep="_")))
+
+    }
+    return(curr.sig)
+}
 
 ## Run TF DE summary on filtered clone set
 filter.clone.size <- function(clone.sizes, cdf.thresh){
