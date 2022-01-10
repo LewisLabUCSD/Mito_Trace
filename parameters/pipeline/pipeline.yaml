@@ -146,3 +146,13 @@ annotation_clones:
     logfc_threshold:
       - 0.1
       - 0
+
+    betweenClust_pval_thresh:
+      - 0.01
+      - 0.1
+
+    betweenCond_pval_thresh:
+      - 0.01
+      - 0.1
+
+

@@ -1,6 +1,6 @@
 library(Signac)
 library(Seurat)
-library(dplyr)
+#library(dplyr)
 
 filtCells <- function(se, min_peak_region_fragments=10,
                       max_peak_region_fragments=15000,
@@ -116,37 +116,50 @@ plot.DE.RNA.pair <- function(integrated, de.results, a, b, outdir){
 }
 
 
-de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10){
+de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10, to.heat=T,to.vln=T,
+                     feature.names=NULL){
     if (length(names.sig) > max.size){
         names.sig <- names.sig[1:max.size]
     }
-    dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis()
+    if (is.null(feature.names)){
+      dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis()
+    }else{
+      dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis() + scale_x_discrete(labels=feature.names[names.sig, "gene.id"])
+    }
     feat <- FeaturePlot(se.filt,  features=names.sig)
+    if (to.vln){
     vln <- VlnPlot(se.filt,  features=names.sig, pt.size = 0)
-
+    }
     # split by a vector
-    pdf(file.path(curr.outdir, paste0(curr.name, "heatmap.top.pdf")), width=8,height=8)
-    heat <- ComplexHeatmap::Heatmap(as.matrix(GetAssayData(integrated)[names.sig,]),
+    if (to.heat){
+    pdf(file.path(curr.outdir, paste0(curr.name, ".heatmap.top.pdf")), width=8,height=8)
+
+    heat <- ComplexHeatmap::Heatmap(as.matrix(GetAssayData(se.filt)[names.sig,]),
             name = curr.name,
             show_column_names = FALSE, use_raster=TRUE
            )
     ComplexHeatmap::draw(heat)
     dev.off()
+    }
     ggsave(plot=feat,
            file=file.path(curr.outdir, paste0(curr.name,".embedFeat.top.png")))
     ggsave(plot=dot,
            file=file.path(curr.outdir, paste0(curr.name, ".dot.top.png")))
+    if (to.vln){
     ggsave(plot=vln,
            file=file.path(curr.outdir, paste0(curr.name, ".violin.top.png")))
+           ggsave(plot=vln,
+                  file=file.path(curr.outdir, paste0(curr.name, ".violin.top.pdf")))
+           }
     ## pdfs
     ggsave(plot=dot,
            file=file.path(curr.outdir, paste0(curr.name, ".dot.top.pdf")))
-    ggsave(plot=vln,
-           file=file.path(curr.outdir, paste0(curr.name, ".violin.top.pdf")))
+
 }
 
 
-find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct, p.thresh=0.1){
+find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct, p.thresh=0.1,
+                                  latent.vars=NULL, test.use="wilcox", assay="RNA" ){
     se.filt <- subset(se, idents = c(id1,id2))
     response <- FindMarkers(se,
                             ident.1 = id1,
@@ -154,17 +167,27 @@ find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct,
                             verbose = T,
                             only.pos = FALSE,
                             mean.fxn = rowMeans,
-                            logfc.threshold = 0,
-                            min.pct = min.pct,
-                            #latent.vars=latent.vars,
+                            logfc.threshold = 0.1,
+                            min.pct = min.pct, test.use=test.use,
+                            latent.vars=latent.vars,
                             fc.name = "avg_diff")
     ncells <- data.frame(table(Idents(se.filt)))
     write.csv(ncells, file=file.path(curr.outdir, paste0(curr.name,".counts.csv")), quote=F)
-    response <- response %>% dplyr::arrange(p_val)
     response$p_val_adj_BH <- stats::p.adjust(response$p_val, method = "BH", n = length(response$p_val))
-    print('cleaning de')
+    response <- response %>% dplyr::arrange(p_val_adj_BH)
+    
     curr.sig <- response %>% dplyr::filter(p_val_adj_BH<p.thresh)
+    print("curr sig")
+    print(head(curr.sig))
+    #names.sig <- names(curr.sig)
     names.sig <- rownames(curr.sig)
+    
+    if (assay == "ATAC"){
+      response.features <- ClosestFeature(se, regions = rownames(response))
+      response.features = response.features %>% dplyr::mutate(gene.id = paste(gene_name,type, sep="_"))
+      response$gene.id = response.features$gene.id
+    }
+    
     #names.sig <- clean.de(response, se, n_top_genes, a=id1, b=id2, names.sig = c())
     #response <- curr.de[[1]]
     #names.sig <- curr.de[[2]]
@@ -172,18 +195,21 @@ find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct,
     print(dim(response))
     if (!(dim(response)[1]==0)){
         print('response plots')
-        print(head(response, n = 3))
+        print(head(response))
         print(head(names.sig))
+        if (assay == "ATAC"){
+          de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name, feature.names=response)
+        }else{
         de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name)
+        }
         write.csv(response,
-                  file=file.path(curr.outdir, paste(curr.name,id1,id2,"DE.csv",sep="_")), quote=F)
-        #plotDE(se, response, c, clust_outdir)
-
-        gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", "avg_diff", "p_val_adj_BH" )], aes(alpha = 0.4))
-        ggsave(plot=gally, file=file.path(curr.outdir,
-                                          paste(curr.name,id1,
-                                                id2,".DE.pvalHist.png", sep="_")))
-
+                  file=file.path(curr.outdir, paste(curr.name,"DE.csv",sep="_")), quote=F)
+        try({
+            print(head(response))
+            gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", "avg_diff", "p_val_adj_BH" )], aes(alpha = 0.4))
+            ggsave(plot=gally, file=file.path(curr.outdir,
+                                              paste(curr.name,".DE.pvalHist.png", sep="_")))
+        })
     }
     return(curr.sig)
 }
