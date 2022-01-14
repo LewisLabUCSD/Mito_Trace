@@ -21,22 +21,41 @@ filtCells <- function(se, min_peak_region_fragments=10,
 }
 
 
-embed.atac <- function(se, outdir, lsi_start_comp=2, reduction='lsi'){
+embed.atac <- function(se, outdir, lsi_start_comp=2, lsi_end_comp=50,reduction='lsi',
+                       neighbor_dim=30,return.depth=T){
 # Binarize and run LSI
+    se <- FindTopFeatures(se, min.cutoff = 20)
     se <- BinarizeCounts(se)
     se <- RunTFIDF(se)
     se <- RunSVD(se)
-    se <- RunUMAP(se, dims = lsi_start_comp:50, reduction = reduction)
-    dimP <- DimPlot(se, group.by = "proj", pt.size = 0.1)
+    se <- RunUMAP(se, dims = lsi_start_comp:lsi_end_comp, reduction = reduction)
+    #dimP <- DimPlot(se, group.by = "proj", pt.size = 0.1)
     pDepthCorr <- DepthCor(se, reduction=reduction)
     #ggsave(file.path(outdir,"integrated.depthCor.png"), plot=pDepthCorr, dpi=300)
     #pDepthCorr
         #integrated <- RunUMAP(object = integrated, reduction = 'integrated_lsi', dims = 2:30)
-    se <- FindNeighbors(object = se, reduction = 'lsi', dims = lsi_start_comp:30)
+    se <- FindNeighbors(object = se, reduction = 'lsi', dims = lsi_start_comp:lsi_end_comp)
     se <- FindClusters(object = se, verbose = FALSE, algorithm = 3)
-    return(c(se, pDepthCorr, dimP))
+    if (return.depth){
+      return(c(se, pDepthCorr))
+    }else{return(se)}
 }
 
+
+featplot <- function(name.sig, se, curr.outdir, feat.names=NULL){
+  if (!is.null(feat.names)){
+    name <- feat.names[name.sig,]
+  }else{
+    name <- name.sig
+  }
+  if (name.sig %in% rownames(se)){
+    feat <- FeaturePlot(se,  features=name.sig) + ggtitle(name)
+    ggsave(plot=feat,
+           file=file.path(curr.outdir, paste0(name.sig,".embedFeat.top.png")))
+  }else{
+    print(paste0("Feature no in object: ", name.sig))
+  }
+}
 
 vPlot <- function(se){
       vPlot <- VlnPlot(
@@ -122,10 +141,13 @@ de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10,
         names.sig <- names.sig[1:max.size]
     }
     if (is.null(feature.names)){
-      dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis()
+      names <- names.sig
     }else{
-      dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis() + scale_x_discrete(labels=feature.names[names.sig, "gene.id"])
+      names <- feature.names[1:length(names.sig)]
     }
+    
+    dot <- DotPlot(se.filt, features = names.sig) + RotatedAxis() + ggtitle(curr.name) + scale_x_discrete(labels=names) 
+    
     feat <- FeaturePlot(se.filt,  features=names.sig)
     if (to.vln){
     vln <- VlnPlot(se.filt,  features=names.sig, pt.size = 0)
@@ -154,12 +176,14 @@ de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10,
     ## pdfs
     ggsave(plot=dot,
            file=file.path(curr.outdir, paste0(curr.name, ".dot.top.pdf")))
+    return(dot)
 
 }
 
 
 find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct, p.thresh=0.1,
-                                  latent.vars=NULL, test.use="wilcox", assay="RNA" ){
+                                  latent.vars=NULL, test.use="wilcox", assay="RNA" ,
+                                  to.plot=T){
     se.filt <- subset(se, idents = c(id1,id2))
     response <- FindMarkers(se,
                             ident.1 = id1,
@@ -197,19 +221,21 @@ find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct,
         print('response plots')
         print(head(response))
         print(head(names.sig))
-        if (assay == "ATAC"){
-          de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name, feature.names=response)
-        }else{
-        de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name)
+        if (to.plot){
+          if (assay == "ATAC"){
+            de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name, feature.names=response)
+          }else{
+          de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name)
+          }
+          write.csv(response,
+                    file=file.path(curr.outdir, paste(curr.name,"DE.csv",sep="_")), quote=F)
+          try({
+              print(head(response))
+              gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", "avg_diff", "p_val_adj_BH" )], aes(alpha = 0.4))
+              ggsave(plot=gally, file=file.path(curr.outdir,
+                                                paste(curr.name,".DE.pvalHist.png", sep="_")))
+          })
         }
-        write.csv(response,
-                  file=file.path(curr.outdir, paste(curr.name,"DE.csv",sep="_")), quote=F)
-        try({
-            print(head(response))
-            gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", "avg_diff", "p_val_adj_BH" )], aes(alpha = 0.4))
-            ggsave(plot=gally, file=file.path(curr.outdir,
-                                              paste(curr.name,".DE.pvalHist.png", sep="_")))
-        })
     }
     return(curr.sig)
 }

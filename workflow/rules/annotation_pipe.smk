@@ -18,7 +18,7 @@ cfg_anno = config['annotations']
 extrnl = cfg_anno["name"]
 samples = pd.read_table(join(ROOT_DIR, config["samples_meta"]), dtype=str,sep=',').set_index(["sample_name"], drop=False)
 #res = config["results"]
-
+gff = params["genome_path"][config["genome"]]["gff"]
 
 # rule all:
 #     input:
@@ -73,31 +73,31 @@ def get_extrnl_frags(wildcards):
     return f"{wildcards.outdir}/annotation/data/{cfg_anno['name']}/{cfg_anno['name']}.fragments.sort.tsv.gz"
 
 
-rule createMergedSignac:
-    """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
-    The peaks are reduced to the overlapping sets, and if a fragments file is provided,
-    Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
-
-    """
-    input:
-        sample_indir=get_cellr_dir
-        #"{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz"
-
-    output:
-        "{outdir}/data/annotation{sample}/{sample}.merged.ipynb",
-        "{outdir}/data/annotation{sample}/{sample}.merged.rds",
-        report("{outdir}/data/annotation{sample}/{sample}.merged.lsi.Batchlabels.png")
-    params:
-        outdir=lambda wildcards, output: dirname(output[0]),
-        exp = lambda wildcards: wildcards.sample,
-        #cells_subset=None, To add. Text file of cell labels.
-        # # External
-        external_frag_file = get_extrnl_frags, #lambda wc: f"{wc.outdir}/annotation/data/{wc.outdir}/{wc.outdir}.fragments.sort.tsv.gz",
-        external_prefix = cfg_anno["ID"],
-        rscript= join(ROOT_DIR, "R_scripts/annotations/01_createMergedSignac.ipynb"), # The script defaults to the granja data
-        #workdir = os.getcwd(),
-    shell: "papermill  -p sample_indir {input} -p exp {params.exp} -p outdir {params.outdir} -p external_prefix {params.external_prefix} -p external_frag_file {params.external_frag_file} {params.rscript} {output[0]}"
-
+# rule createMergedSignac:
+#     """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
+#     The peaks are reduced to the overlapping sets, and if a fragments file is provided,
+#     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
+#
+#     """
+#     input:
+#         sample_indir=get_cellr_dir
+#         #"{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz"
+#
+#     output:
+#         "{outdir}/data/annotation{sample}/{sample}.merged.ipynb",
+#         "{outdir}/data/annotation{sample}/{sample}.merged.rds",
+#         report("{outdir}/data/annotation{sample}/{sample}.merged.lsi.Batchlabels.png")
+#     params:
+#         outdir=lambda wildcards, output: dirname(output[0]),
+#         exp = lambda wildcards: wildcards.sample,
+#         #cells_subset=None, To add. Text file of cell labels.
+#         # # External
+#         external_frag_file = get_extrnl_frags, #lambda wc: f"{wc.outdir}/annotation/data/{wc.outdir}/{wc.outdir}.fragments.sort.tsv.gz",
+#         external_prefix = cfg_anno["ID"],
+#         rscript= join(ROOT_DIR, "R_scripts/annotations/01_createMergedSignac.ipynb"), # The script defaults to the granja data
+#         #workdir = os.getcwd(),
+#     shell: "papermill  -p sample_indir {input} -p exp {params.exp} -p outdir {params.outdir} -p external_prefix {params.external_prefix} -p external_frag_file {params.external_frag_file} {params.rscript} {output[0]}"
+#
 
 #####################
 ## V02

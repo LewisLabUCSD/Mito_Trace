@@ -17,17 +17,24 @@ genome_path:
     genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
     ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
     mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
+    # Gene file needs to be confirmed as same as the new 10x genome downloaded
+    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+    gff: "hg38_1_2"
   MTblacklist_mtasnucl:
     # Genome paths
     genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
     ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
     mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
-
+    # Gene file needs to be confirmed as same as the new 10x genome downloaded
+    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+    gff: "hg38_1_2"
   MTBlacklist_A2: # cellranger new genoem version with MT blacklist
     # Genome paths
-    genome_dir: "data/external/GRCh38_MT_Blacklist_A2/" #"data/external/GRCh38_MT_blacklist/" #
-    ref_fa: "data/external/GRCh38_MT_Blacklist_A2/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    genome_dir: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
     mt_ref_fa: "data/external/GRCh38_MT_Blacklist_A2/chrM.fasta"
+    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+    gff: "A2_black"
 
 mtpreproc:
   version: 02
@@ -75,12 +82,12 @@ multiplex:
 
 clones:
   variants:
-    - "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
-    - "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
+   # - "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
+   # - "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
     - "init"
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:
-    - "vireo"
+    #- "vireo"
     - "knn" #["vireo", "phylogeny", "knn"]
   vireo:
     params:
@@ -92,7 +99,7 @@ clones:
       dpthresh: 2
   knn:
     params:
-      resolution: [10,3]
+      resolution: [3] #[10,3]
 
 
 #clones:
@@ -135,24 +142,32 @@ annotations:
       - "RNA"
       - "ATAC"
 
+#  gene_file: "/data/Mito_Trace/data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+#  gene_type:
+#    - "custom"
+
 
 annotation_clones:
   params:
     cdf_thresh:
       - 0.3
+
     min_pct:
+      - 0.01 # for TF
+    btwnMinpct:
       #- 0.01
       - 0
     logfc_threshold:
+      - 0.01
+      #- 0.25
+    p_thresh:
       - 0.1
-      - 0
-
+    assay:
+      - "RNA"
     betweenClust_pval_thresh:
       - 0.01
       - 0.1
-
     betweenCond_pval_thresh:
       - 0.01
       - 0.1
-
 

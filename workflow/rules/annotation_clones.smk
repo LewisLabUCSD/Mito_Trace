@@ -39,12 +39,6 @@ from src.utils.parse_config import read_config_file
 #                 ),
 
 
-# def get_comps():
-#     if "comparisons" in config:
-#         return config["comparisons"]
-#     else:
-#         return 'NULL'
-
 def get_anno_integrate(wildcards):
     print(join(config["anno_res"], "mergedSamples","allSamples.integrated.rds"))
     return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
@@ -193,3 +187,52 @@ rule runGSEA:
 #
 #     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p cells_meta {params.cells_meta} {params.rscript} {output[0]}"
 #
+
+
+################
+## RUN DE for gene activity and peaks as markers.
+## Use the demultiplexed cells from addClones.
+rule btwnClust_DE:
+    """ Compares clusters to each other. For now works with Gene Activity
+    
+    Not tested with peaks as gene activity yet.
+    """
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note =  "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/pthresh_{p_thresh}.ipynb",
+    params:
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/DE_genes_btwnClusters.ipynb"), # The script defaults to the granja data
+        outdir = lambda wildcards, output: dirname(output.note),
+        assay=lambda wildcards: wildcards.assay,
+        minPct=lambda wildcards: wildcards.btwnMinpct,
+        logfcthresh= lambda wildcards: wildcards.logfc_threshold,
+        top_de=3,
+        p_thresh=lambda wildcards: wildcards.p_thresh,
+        # test_use="wilcox",
+        # latent_vars="NULL",
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p top_de {params.top_de} {params.rscript} {output.note}"
+
+
+## RUN DE for gene activity and peaks as markers.
+## Use the demultiplexed cells from addClones.
+rule btwnCond_DE:
+    """ Compares clusters to each other. For now works with Gene Activity
+    
+    Not tested with peaks as gene activity yet.
+    """
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note =  "{outdir}/annotation_clones/de_btwnCond_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/pthresh_{p_thresh}.ipynb",
+    params:
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_genes_btwnConditions.ipynb"), # The script defaults to the granja data
+        outdir = lambda wildcards, input: dirname(input.se_f), #"{outdir}/annotation_clones/de_btwnConds_{assay}/minPct_{btwnMinpct}_logfc{logfcthresh}/pthresh_{p_thresh}",
+        assay=lambda wildcards: wildcards.assay,
+        minPct=lambda wildcards: wildcards.btwnMinpct,
+        logfcthresh= lambda wildcards: wildcards.logfc_threshold,
+        top_de=3,
+        p_thresh=lambda wildcards: wildcards.p_thresh,
+        # test_use="wilcox",
+        # latent_vars="NULL",
+    shell: "papermill -p se_f {input.se_f} -p p_thresh {params.p_thresh} -p outdir {params.outdir} -p top_de {params.top_de} {params.rscript} {output.note}"

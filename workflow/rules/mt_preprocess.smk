@@ -57,7 +57,7 @@ rule link_bam:
 rule index_bam:
     """Index the bam file"""
     input: ("{output}/data/{sample}/00_bam/{sample}.bam") #rules.link_bam.output
-    output: temp("{output}/data/{sample}/00_bam/{sample}.bam.bai")
+    output: ("{output}/data/{sample}/00_bam/{sample}.bam.bai")
     shell: "samtools index {input}"
 
 rule MT_map:
@@ -66,8 +66,8 @@ rule MT_map:
         #bam = "{output}/data/{sample}/00_bam/{sample}.bam",
         bai = ("{output}/data/{sample}/00_bam/{sample}.bam.bai"),
     output:
-        mt_bam=temp("{output}/data/{sample}/MT/{sample}.MT.bam"),
-        mt_bai=temp("{output}/data/{sample}/MT/{sample}.MT.bam.bai")
+        mt_bam=("{output}/data/{sample}/MT/{sample}.MT.bam"),
+        mt_bai=("{output}/data/{sample}/MT/{sample}.MT.bam.bai")
     params:
         bam = lambda wildcards, input: input.bai.replace('.bai', ''),
         mt_chr= mt["mito_character"],
@@ -110,36 +110,48 @@ rule barcode_filter:
 ######################################################################
 ## Create cell specfic files and then merge them into a pileup matrix
 ######################################################################
-rule extractCB_from_bam_01:
-    input: 
-        "{output}/data/{sample}/MT/{sample}.MT.bam",
-    output: 
-        head=temp("{output}/data/{sample}/MT/SAM_HEADER"),
-    shell: "samtools view -H {input[0]} > {output.head}"
-    
-rule extractCB_from_bam_02:
-    input: 
-        "{output}/data/{sample}/MT/{sample}.MT.bam",
-        cells="{output}/data/{sample}/MT/cellr_True/{sample}_barcode_data.txt"
-    output: 
-        body = temp("{output}/data/{sample}/MT/filtered_SAM_body"),
-    shell: "samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells} > {output.body}"
-    
 rule extractCB_from_bam_03:
     input:
-        head_f = "{output}/data/{sample}/MT/SAM_HEADER",
-        body = "{output}/data/{sample}/MT/filtered_SAM_body"
-    output: 
-        sam = temp("{output}/data/{sample}/MT/filtered.sam")
-    shell: "cat {input.head_f} {input.body} > {output.sam}"
+        "{output}/data/{sample}/MT/{sample}.MT.bam",
+        cells="{output}/data/{sample}/MT/cellr_True/{sample}_barcode_data.txt"
+    output:
+        sam = "{output}/data/{sample}/MT/filtered.sam",
+    params:
+        cmd = lambda wildcards, input: f"{{ samtools view -H {input[0]} & samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells}; }}"
+    run: shell("{params.cmd} > {output.sam} 2> {output.sam}.log")
+    #shell:  "{{ samtools view -H {input[0]} & samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells}; }} > {output.sam} 2> {output.sam}.log"
+
+# rule extractCB_from_bam_01:
+#     input:
+#         "{output}/data/{sample}/MT/{sample}.MT.bam",
+#     output:
+#         head=temp("{output}/data/{sample}/MT/SAM_HEADER"),
+#     shell: "samtools view -H {input[0]} > {output.head}"
+
+# rule extractCB_from_bam_02:
+#     """Extract only the barcodes given"""
+#     input:
+#         "{output}/data/{sample}/MT/{sample}.MT.bam",
+#         cells="{output}/data/{sample}/MT/cellr_True/{sample}_barcode_data.txt"
+#     output:
+#         body = temp("{output}/data/{sample}/MT/filtered_SAM_body"),
+#     shell: "samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells} > {output.body}"
+#
+# rule extractCB_from_bam_03:
+#     input:
+#         head_f = "{output}/data/{sample}/MT/SAM_HEADER",
+#         body = "{output}/data/{sample}/MT/filtered_SAM_body"
+#     output:
+#         sam = temp("{output}/data/{sample}/MT/filtered.sam")
+#     shell: "samtools view -b {input.body} > {output.sam}"
 
 rule extractCB_from_bam_04:
-    input: 
+    input:
         sam = "{output}/data/{sample}/MT/filtered.sam"
     output:
         bam = temp("{output}/data/{sample}/MT/filtered.bam"),
     shell: "samtools view -b {input.sam} > {output.bam}"
-    
+
     
 # rule extractCB_from_bam:
 #     input:
