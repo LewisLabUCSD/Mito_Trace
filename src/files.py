@@ -2,6 +2,7 @@
 from os.path import join
 import pandas as pd
 import itertools
+
 def create_f(p, rule, sample=None):
     #print('p', p)
     print('rule', rule)
@@ -37,7 +38,7 @@ def create_f(p, rule, sample=None):
 
 def wrap_create_f(params_ser, cfg, rule, sample=None):
     if rule == "main":
-        return join(cfg["outdir"],"pipeline", cfg["prefix"], "data")
+        return join(cfg["outdir"], "pipeline", cfg["prefix"], "data")
     elif rule == "cellrbc":
        # print('main run', wrap_create_f(params_ser, cfg, "main"))
         #print('create cellrbc', create_f(params_ser, "cellrbc"))
@@ -48,7 +49,7 @@ def wrap_create_f(params_ser, cfg, rule, sample=None):
                     create_f(params_ser, "cellrbc_sample", sample=sample))
     elif rule == "create_filters":
 
-        return join(wrap_create_f(params_ser,cfg, "cellrbc"),
+        return join(wrap_create_f(params_ser, cfg, "cellrbc"),
                     create_f(params_ser, "create_filters"))
 
     elif rule == "mgatk":
@@ -75,8 +76,8 @@ def wrap_create_f(params_ser, cfg, rule, sample=None):
 
 def create_single_files(cfg, rule, sample=None):
     all_p = {}
-    all_p['filt']= cfg["filters"]["params"]
-    all_p['mtpreproc']= cfg["mtpreproc"]["params"]
+    all_p['filt'] = cfg["filters"]["params"]
+    all_p['mtpreproc'] = cfg["mtpreproc"]["params"]
     #print(cfg["clones"]["method"])
     all_p['mgatk'] = cfg["mgatk"]["params"]
     all_p['clones'] = {}
@@ -110,6 +111,7 @@ def create_single_files(cfg, rule, sample=None):
     #print(list(itertools.product(*col_vals)))
     params_df = pd.DataFrame(list(itertools.product(*(col_vals))), columns=cols)
                             #columns=["mtpreproc","filt", "mgatk", "clones", "annotation_clones"])
+    print("cfg", cfg)
     params_df["file"] = params_df.apply(wrap_create_f, cfg=cfg, rule=rule, sample=sample, axis=1)
     return params_df
 

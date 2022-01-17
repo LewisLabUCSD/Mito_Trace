@@ -10,30 +10,32 @@ main:
 
 cellranger_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/"
 samtools_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/external/anaconda/bin"
+annotation_granges: "/mnt/md0/isshamie/Projects/Mito_Trace/data/processed/annotation_granges/"
+
 genome_path:
   #genome: "MTBlacklist" # ["MTBlacklist", "MTBlacklist_mtasnucl", "noblacklist_hg38"]
   MTBlacklist:
     # Genome paths
     genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
-    ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
-    mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
+    ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/chrM.fasta"
     # Gene file needs to be confirmed as same as the new 10x genome downloaded
-    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+    gene_file: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/genes/genes.gtf"
     gff: "hg38_1_2"
   MTblacklist_mtasnucl:
     # Genome paths
     genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
-    ref_fa: "data/external/GRCh38_MT_blacklist/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
-    mt_ref_fa: "data/external/GRCh38_MT_blacklist/chrM.fasta"
+    ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/chrM.fasta"
     # Gene file needs to be confirmed as same as the new 10x genome downloaded
-    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+    gene_file: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0"
     gff: "hg38_1_2"
   MTBlacklist_A2: # cellranger new genoem version with MT blacklist
     # Genome paths
     genome_dir: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/" #"data/external/GRCh38_MT_blacklist/" #
     ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
-    mt_ref_fa: "data/external/GRCh38_MT_Blacklist_A2/chrM.fasta"
-    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+    mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
+    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.gtf"
     gff: "A2_black"
 
 mtpreproc:

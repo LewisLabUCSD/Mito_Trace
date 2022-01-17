@@ -51,13 +51,13 @@ def get_sample_barcodes(wildcards):
 rule link_bam:
     #input: get_sample_bam
     input: get_sample_bam
-    output: "{output}/data/{sample}/00_bam/{sample}.bam"
+    output: temp("{output}/data/{sample}/00_bam/{sample}.bam")
     shell: 'ln -sr {input} {output}'
 
 rule index_bam:
     """Index the bam file"""
     input: ("{output}/data/{sample}/00_bam/{sample}.bam") #rules.link_bam.output
-    output: ("{output}/data/{sample}/00_bam/{sample}.bam.bai")
+    output: temp("{output}/data/{sample}/00_bam/{sample}.bam.bai")
     shell: "samtools index {input}"
 
 rule MT_map:
@@ -66,8 +66,8 @@ rule MT_map:
         #bam = "{output}/data/{sample}/00_bam/{sample}.bam",
         bai = ("{output}/data/{sample}/00_bam/{sample}.bam.bai"),
     output:
-        mt_bam=("{output}/data/{sample}/MT/{sample}.MT.bam"),
-        mt_bai=("{output}/data/{sample}/MT/{sample}.MT.bam.bai")
+        mt_bam=temp("{output}/data/{sample}/MT/{sample}.MT.bam"),
+        mt_bai=temp("{output}/data/{sample}/MT/{sample}.MT.bam.bai")
     params:
         bam = lambda wildcards, input: input.bai.replace('.bai', ''),
         mt_chr= mt["mito_character"],
@@ -115,7 +115,7 @@ rule extractCB_from_bam_03:
         "{output}/data/{sample}/MT/{sample}.MT.bam",
         cells="{output}/data/{sample}/MT/cellr_True/{sample}_barcode_data.txt"
     output:
-        sam = "{output}/data/{sample}/MT/filtered.sam",
+        sam = temp("{output}/data/{sample}/MT/filtered.sam"),
     params:
         cmd = lambda wildcards, input: f"{{ samtools view -H {input[0]} & samtools view {input[0]} | LC_ALL=C grep -F -f {input.cells}; }}"
     run: shell("{params.cmd} > {output.sam} 2> {output.sam}.log")
@@ -186,7 +186,7 @@ rule scBam:
     input: "{output}/data/{sample}/MT/{sample}.MT.CB.bam"
         #mt_bam="{output}/data/{sample}/MT/{sample}.MT.bam",
         #mt_bai="{output}/data/{sample}/MT/{sample}.MT.bam.bai"
-    output: directory("{output}/data/{sample}/MT/{sample}_scBam")
+    output: temp(directory("{output}/data/{sample}/MT/{sample}_scBam"))
     threads: 18
     #directory("/data/isshamie/miito_lineage/mttrace/{sample}/MT/{sample}_scBam")
     shell:
