@@ -160,16 +160,31 @@ annotation_clones:
       #- 0.01
       - 0
     logfc_threshold:
-      - 0.01
+      #- 0.1
+      - 0
       #- 0.25
     p_thresh:
       - 0.1
     assay:
       - "RNA"
+      #- "ATAC"
     betweenClust_pval_thresh:
       - 0.01
       - 0.1
     betweenCond_pval_thresh:
       - 0.01
       - 0.1
+    gsea_pval:
+      - 0.01
+      - 0.1
 
+    prefilter:
+      - "TRUE"
+      #- "FALSE"
+
+    stat_col:
+      - "log2FoldChange"
+      - "padj"
+
+    padjmethod:
+      - "BH"

@@ -63,7 +63,7 @@ rule index_bam:
 rule MT_map:
     """Extract the MT genome"""
     input:
-        #bam = "{output}/data/{sample}/00_bam/{sample}.bam",
+        bam = "{output}/data/{sample}/00_bam/{sample}.bam",
         bai = ("{output}/data/{sample}/00_bam/{sample}.bam.bai"),
     output:
         mt_bam=temp("{output}/data/{sample}/MT/{sample}.MT.bam"),

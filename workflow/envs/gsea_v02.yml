@@ -1,25 +1,27 @@
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
 
 dependencies:
+  - papermill
+  - jupyter
+  - r-irkernel
   - conda-forge::r-base=4
   - conda-forge::r-devtools
   - conda-forge::r-cairo
   - conda-forge::r-systemfonts
-  - conda-forge::r-irkernel
   - conda-forge::r-stringr
-  - conda-forge::papermill
-  - conda-forge::jupyter
-  - bioconda::bioconductor-org.hs.eg.db
-  - bioconda::bioconductor-clusterprofiler
-  - bioconda::bioconductor-gseabase
+  -
   - conda-forge::r-ggplot2
   - conda-forge::r-openxlsx
   - conda-forge::r-data.table
-  - bioconda::r-biomartr
   - conda-forge::r-writexls
   - r::r-gdata
+#  - bioconda::bioconductor-org.hs.eg.db
+#  - bioconda::bioconductor-clusterprofiler
+#  - bioconda::bioconductor-gseabase
+#  - bioconda::r-biomartr
+
   #BiocManager::install("GO.db")
   #- bioconductor-dose
 #  - r-signac=4

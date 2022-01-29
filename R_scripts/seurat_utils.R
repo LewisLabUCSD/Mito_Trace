@@ -1,6 +1,6 @@
 library(Signac)
 library(Seurat)
-#library(dplyr)
+library(dplyr)
 
 filtCells <- function(se, min_peak_region_fragments=10,
                       max_peak_region_fragments=15000,
@@ -181,20 +181,25 @@ de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10,
 }
 
 
-find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct, p.thresh=0.1,
+find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct, logfcthresh,
+                                  p.thresh=0.1,
                                   latent.vars=NULL, test.use="wilcox", assay="RNA" ,
-                                  to.plot=T){
+                                  to.plot=T, fc.name=NULL, mean.fxn=NULL){
+    print('se filt before')
     se.filt <- subset(se, idents = c(id1,id2))
+    print('se filt')
+    print(se.filt)
     response <- FindMarkers(se,
                             ident.1 = id1,
                             ident.2 = id2,
                             verbose = T,
                             only.pos = FALSE,
-                            mean.fxn = rowMeans,
-                            logfc.threshold = 0.1,
+                            mean.fxn = mean.fxn,
+                            logfc.threshold = logfcthresh,
                             min.pct = min.pct, test.use=test.use,
                             latent.vars=latent.vars,
-                            fc.name = "avg_diff")
+                            fc.name = fc.name)
+              
     ncells <- data.frame(table(Idents(se.filt)))
     write.csv(ncells, file=file.path(curr.outdir, paste0(curr.name,".counts.csv")), quote=F)
     response$p_val_adj_BH <- stats::p.adjust(response$p_val, method = "BH", n = length(response$p_val))
@@ -207,7 +212,7 @@ find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct,
     names.sig <- rownames(curr.sig)
     
     if (assay == "ATAC"){
-      response.features <- ClosestFeature(se, regions = rownames(response))
+      response.features <- ClosestFeature(se.filt, regions = rownames(response))
       response.features = response.features %>% dplyr::mutate(gene.id = paste(gene_name,type, sep="_"))
       response$gene.id = response.features$gene.id
     }
@@ -218,24 +223,30 @@ find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct,
     print('dim response')
     print(dim(response))
     if (!(dim(response)[1]==0)){
-        print('response plots')
-        print(head(response))
-        print(head(names.sig))
+        write.csv(response,
+                  file=file.path(curr.outdir, paste(curr.name,"DE.csv",sep="_")), quote=F)
+      if (!(length(names.sig)==0)){
+        # print('response plots')
+        # print(head(response))
+        # print(head(names.sig))
         if (to.plot){
           if (assay == "ATAC"){
-            de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name, feature.names=response)
+            de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name, feature.names=response[names.sig,]$gene.id)
           }else{
-          de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name)
+            de.plots(se.filt, names.sig, curr.outdir, curr.name=curr.name)
           }
-          write.csv(response,
-                    file=file.path(curr.outdir, paste(curr.name,"DE.csv",sep="_")), quote=F)
           try({
-              print(head(response))
-              gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", "avg_diff", "p_val_adj_BH" )], aes(alpha = 0.4))
+              print("gally")
+              print(colnames(response))
+              if (is.null(mean.fxn)){
+                mean.fxn = "avg_log2FC"
+              }
+              gally <- GGally::ggpairs(response[,c("p_val", "p_val_adj", mean.fxn, "p_val_adj_BH")], aes(alpha = 0.4))
               ggsave(plot=gally, file=file.path(curr.outdir,
                                                 paste(curr.name,".DE.pvalHist.png", sep="_")))
           })
         }
+      }
     }
     return(curr.sig)
 }
@@ -353,3 +364,66 @@ get.pwm <- function(se, genome, out_f=""){
 }
 
 
+
+# process.cells.meta <- function(se, cells_meta){
+#   new_cells_meta = merge(cells_meta, se[[]], by=0, all=TRUE)
+#   rownames(new_cells_meta) <- new_cells_meta$Row.names
+#   head(new_cells_meta)
+#   new_cells_meta$name <- paste0(new_cells_meta$donor, "_", new_cells_meta$lineage)
+#   
+#   donor_levels <- levels(factor(new_cells_meta$donor))
+#   donor_levels[length(donor_levels) + 1] <- "None"
+#   
+#   condition_levels <- levels(factor(new_cells_meta$condition))
+#   condition_levels[length(condition_levels) + 1] <- "None"
+#   
+#   lineage_levels <- levels(factor(new_cells_meta$lineage))
+#   lineage_levels[length(lineage_levels) + 1] <- "None"
+#   
+#   new_cells_meta$name <- paste0(new_cells_meta$donor, "_", new_cells_meta$lineage)
+#   name_levels <- levels(factor(new_cells_meta$name))
+#   name_levels[length(name_levels) + 1] <- "None"
+#   
+#   new_cells_meta$donor <- factor(new_cells_meta$donor, levels=donor_levels)
+#   new_cells_meta$condition <- factor(new_cells_meta$condition, levels=condition_levels)
+#   new_cells_meta$lineage <- factor(new_cells_meta$lineage, levels=lineage_levels)
+#   new_cells_meta$name <- factor(new_cells_meta$name, levels=name_levels)
+#   
+#   new_cells_meta$donor[is.na(new_cells_meta$donor)] <- "None"
+#   new_cells_meta$condition[is.na(new_cells_meta$condition)] <- "None"
+#   new_cells_meta$lineage[is.na(new_cells_meta$lineage)] <- "None"
+#   new_cells_meta$name[(is.na(new_cells_meta$name) | grepl("NA", new_cells_meta$name))] <- "None"
+#   return(new_cells_meta)
+# }
+
+add.cell.meta <- function(se, new_cells_meta){
+  #se$ID <- apply(stringr::str_split((rownames(se[[]])), "_", simplify=T)[,1:2], 1, function(x) {paste0(x[[1]],  "_", x[[2]])})
+  #se <- RenameCells(se, new.names=se$ID)
+  se <- AddMetaData(se, new_cells_meta)
+  se
+  return(se)
+}
+
+
+get.clone.sizes <- function(se){
+  counts <- se[[]] %>%
+    group_by(condition, donor, lineage, name) %>%
+    summarize(size=n()) %>% filter(!name=="None")
+  
+  counts.norm <- counts %>% group_by(condition, donor) %>% mutate(total=sum(size)) %>% ungroup() %>% mutate(norm=size/total)
+  
+  counts.conds.norm = counts.norm[order(counts.norm[,"norm"], decreasing=T),]
+  counts.conds.norm
+  clone.sizes <- counts.conds.norm %>% 
+    group_by(donor,lineage) %>% 
+    summarize(norm.total=sum(norm), total=sum(size)) %>% 
+    arrange(desc(norm.total)) %>% 
+    mutate(name=factor(paste0(donor,"_", lineage)))
+  
+  clone.sizes <- clone.sizes %>% group_by(donor) %>% arrange(donor, desc(norm.total)) %>% 
+    mutate(cdf.norm=cumsum(norm.total)/2, cdf =cumsum(total),
+           index=1:n()) %>% 
+    ungroup %>% arrange(donor, desc(norm.total)) 
+  
+  return(list("counts.norm"=counts.conds.norm, "clone.size"= clone.sizes))
+}

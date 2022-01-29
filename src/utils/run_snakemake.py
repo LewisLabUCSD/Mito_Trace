@@ -137,7 +137,7 @@ def check_input(config, files_config, curr_p, git_commit=None,
 
 
 def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, dryrun=False, forcetargets=False,
-        to_gitpush=False, cores=2):
+        to_gitpush=False, cores=2, forcerun=None):
     ic(targets)
     if targets==None or len(targets) == 0:
         targets=None
@@ -145,9 +145,11 @@ def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, 
 
     curr_time = datetime.datetime.now().strftime("%B_%d_%Y_%H%M%S")
 
+    if forcerun is None:
+        forcerun = []
     out = snakemake.snakemake(smkfile, configfiles=[configfile],
                         targets=targets, dryrun=dryrun,
-                              forcetargets=forcetargets,
+                              forcetargets=forcetargets, forcerun=forcerun,
                               cores=cores, force_incomplete=True)
     print("out")
     print(out)

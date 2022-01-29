@@ -11,6 +11,16 @@ cfg_f = join(ROOT_DIR, "parameters/pipeline/wrappers", "wrap_pipeline.yaml")
 
 config = read_config_file(cfg_f)  # join(ROOT_DIR,"parameters/pipeline/wrap_annotation.yaml"))
 print(config['indir'])
+if "targets" not in config:
+    targets = None
+    forcetargets=False
+else:
+    targets = config["targets"]
+    forcetargets = True
+    print('targets', targets)
+
+dryrun = config.get("dryrun", False)
+
 for i in config["indir"]:
     print('i', i)
     curr_config = join(config["params_dir"], config["indir"][i])
@@ -23,5 +33,5 @@ for i in config["indir"]:
     #                                         'vireo_enrichment'],
     #                           cores=8, verbose=True)
     run(config["snakefile"], curr_config, config["pipename"], outdir=None,
-        to_git=False, targets=None, dryrun=False,
-            forcetargets=["vireo_enrichment", "knn_enrichment"], to_gitpush=False, cores=16)
+        to_git=False, targets=None, dryrun=dryrun, forcerun=targets,
+            forcetargets=forcetargets, to_gitpush=False, cores=16)
