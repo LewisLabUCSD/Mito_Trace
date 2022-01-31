@@ -172,19 +172,37 @@ annotation_clones:
       - 0.01
       - 0.1
     betweenCond_pval_thresh:
-      - 0.01
+     # - 0.01
       - 0.1
     gsea_pval:
-      - 0.01
+     # - 0.01
       - 0.1
 
     prefilter:
-      - "TRUE"
-      #- "FALSE"
+      #- "TRUE"
+      - "FALSE"
 
     stat_col:
       - "log2FoldChange"
-      - "padj"
+      #- "padj"
 
     padjmethod:
       - "BH"
+
+    min_cells:
+      - 1
+     # - 10
+
+    hyperMinCl:
+      - 1
+      - 10
+    bothConds:
+      - True
+      - False
+
+    t:
+      - 0.1
+      - 0.01
+    rt:
+      - 10
+      #- 50

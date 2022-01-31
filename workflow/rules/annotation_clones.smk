@@ -68,7 +68,18 @@ rule plotMarkers:
         markers_f="/data/Mito_Trace/data/processed/pbmc_markers.txt"
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
 
-
+rule counts_clones:
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        multiext("{outdir}/annotation_clones/clone_counts/minCellConds_{min_cells}/",
+            "clone_sizes.ipynb", "clone_sizes.csv", "clone_sizes_norm.csv")
+    params:
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/counts_inClones.ipynb"),
+        outdir = lambda wildcards, output: dirname(output[0]),
+        sample_names = ",".join(config["samples"].index),
+    shell:
+        "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p sample_names {params.sample_names} -p minCell {wildcards.min_cells} {params.rscript} {output[0]}"
 rule runDE_enrich:
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
@@ -85,6 +96,9 @@ rule runDE_enrich:
     shell: "papermill -p enrich_d {params.enrich_d} -p se_f {input.se_f} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} {params.rscript} {output.note}"
 
 
+########################################################################################################################
+## TF analysis on larger clones
+########################################################################################################################
 rule setup_motifs_largeClones:
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
@@ -130,7 +144,6 @@ rule summary_TF_largeClones:
         donorDot = expand("{{outdir}}/annotation_clones/DE_large/minPct_{{minPct}}__logThresh_{{logThresh}}/cdf_thresh__{{cdf_thresh}}/donor{d}_TF/dot.top.png",
                         d=range(config["N_DONORS"])),
         #note="{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
-
     params:
         indir = lambda wildcards, input: dirname(input.de),
         se_indir = lambda wildcards, input: dirname(input.se_f),
@@ -140,6 +153,8 @@ rule summary_TF_largeClones:
     shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output[0]}" #{output[0]}
 
 rule output_largeclones:
+    """ Summarizes TF results across all clonal comparisons. 
+    """
     input:
         de = "{outdir}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/output_DE.ipynb",
         se_f = "{outdir}/annotation_clones/DE_large/se.clonesfilt.rds"
@@ -157,6 +172,10 @@ rule output_largeclones:
     shell: "papermill -p indir {params.indir} -p se_indir {params.se_indir} -p n_donors {params.n_donors} -p cdf_thresh {params.cdf_thresh} {params.rscript} {output.note}"
 
 rule runGSEA:
+    """ GSEA on large clones DE
+            
+        TODO: implement
+    """
     input:
         DE_out_path = "{outdir}/annotation_clones/DE/donor{n}/DE.ipynb"
     output:
@@ -166,9 +185,6 @@ rule runGSEA:
         output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
         rscript = join(ROOT_DIR, "R_scripts/annotations/clones/runGSEA_clones.ipynb")
     shell: "papermill -p DE.out.path {params.input} -p export.path {params.output} {params.rscript} {output[0]}"
-
-
-#rule runDE_TF_Donors:
 
 
 # rule runDE_TF:
@@ -183,7 +199,6 @@ rule runGSEA:
 #         comps_f = get_comps()
 #     shell: "papermill -p integrated_f {input} -p outdir {params.outdir} -p sample_names {params.sample_names} -p comps_f {params.comps_f:q} {params.rscript} {output[0]}"
 #
-
 
 # rule overlay_cells_meta:
 #     input:
@@ -200,8 +215,15 @@ rule runGSEA:
 #     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p cells_meta {params.cells_meta} {params.rscript} {output[0]}"
 #
 
+## Till Here
+########################################################################################################################
 
-################
+########################################################################################################################
+# Run DE for genes and peak and GSEA (for genes) in different comparisons.
+# Comparisons include either across nuclear clusters, across conditions within each cluster,
+# and across conditions within each clone.
+########################################################################################################################
+
 ## RUN DE for gene activity and peaks as markers.
 ## Use the demultiplexed cells from addClones.
 def get_btwnClust_rscript(wildcards):
@@ -222,7 +244,6 @@ rule btwnClust_DE:
     output:
         note =  "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/pthresh_{p_thresh}.ipynb",
     params:
-        #rscript = join(ROOT_DIR, "R_scripts/annotation_clones/DE_genes_btwnClusters.ipynb"), # The script defaults to the granja data
         outdir = lambda wildcards, output: dirname(output.note),
         assay=lambda wildcards: wildcards.assay,
         minPct=lambda wildcards: wildcards.btwnMinpct,
@@ -230,14 +251,11 @@ rule btwnClust_DE:
         top_de=3,
         samples = ",".join(config["samples"].index),
         p_thresh=lambda wildcards: wildcards.p_thresh,
-        # test_use="wilcox",
-        # latent_vars="NULL",
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p top_de {params.top_de} -p sample_names {params.samples}  {input.rscript} {output.note}"
 
 rule runGSEA_btwnClust:
     input:
         DE_out_path = "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/pthresh_{p_thresh}.ipynb",
-    #DE_out_path = "{outdir}/data/annotation/gff_{gff}/mergedSamples/DE/DE.ipynb",
     output:
         note= "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh_{gsea_pval}/GSEA.ipynb",
     #note="{outdir}/data/annotation/gff_{gff}/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
@@ -250,12 +268,6 @@ rule runGSEA_btwnClust:
         #conda_env = "../envs/gsea_manual.yml"
     conda:
         "../envs/gsea_manual.yml" #environment with clusterprofiler
-    # shell:
-    #     """
-    #     conda init bash
-    #     conda activate {params.conda_env}
-    #     papermill -p DE.out.path {params.input} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}
-    #     """
     shell: "papermill -p DE.out.path {params.input} -p pthresh {params.gsea_pval} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
 
 
@@ -310,11 +322,149 @@ rule runGSEA_btwnCond:
     #conda_env = "../envs/gsea_manual.yml"
     conda:
         "../envs/gsea_manual.yml" #environment with clusterprofiler
-    # shell:
-    #     """
-    #     conda init bash
-    #     conda activate {params.conda_env}
-    #     papermill -p DE.out.path {params.input} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}
-    #     """
     shell: "papermill -p padjmethod {params.padjmethod} -p pthresh {params.pthresh} -p gsea_pthresh {params.gsea_pval} -p prefilter {params.prefilter} -p stat_col {params.stat_col:q} -p DE.out.path {params.input} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
+
+rule summaryGSEA_btwnCond:
+    input:
+        "{outdir}/annotation_clones/de_btwncond_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
+    output:
+        note="{outdir}/annotation_clones/de_btwncond_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
+    params:
+        input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+    shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
+
+
+
+rule inClone_btwnCond_DE:
+    """ Compares clusters to each other. For now works with Gene Activity
+    
+    Not tested with peaks as gene activity yet.
+    """
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note =  "{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/de.ipynb",
+    params:
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_genes_inClones_btwnConditions.ipynb"), # The script defaults to the granja data
+        samples = ",".join(config["samples"].index),
+        outdir = lambda wildcards, output: f"{dirname(output.note)}_pthresh_{wildcards.p_thresh}", #"{outdir}/annotation_clones/de_btwnConds_{assay}/minPct_{btwnMinpct}_logfc{logfcthresh}/pthresh_{p_thresh}",
+        minPct=lambda wildcards: wildcards.btwnMinpct,
+        logfcthresh= lambda wildcards: wildcards.logfc_threshold,
+        top_de=3,
+        p_thresh=lambda wildcards: wildcards.p_thresh,
+    # test_use="wilcox",
+    # latent_vars="NULL",
+    threads: 8
+    shell: "papermill -p se_f {input.se_f} -p min_cells {wildcards.min_cells} -p p_thresh {params.p_thresh} -p outdir {params.outdir} -p top_de {params.top_de} -p sample_names {params.samples} {params.rscript} {output.note}"
+
+rule runGSEA_inClone_btwnCond:
+    input:
+        DE_out_path = "{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/de.ipynb",
+    output:
+        note= "{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
+    params:
+        input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
+        output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/runGSEA_btwnCond.ipynb"),
+        gsea_dir = join(ROOT_DIR, "software/Bioinformatics_Tools/"), #/ is necessary
+        gsea_pval = lambda wildcards: wildcards.gsea_pval,
+        stat_col = lambda wildcards: wildcards.stat_col,
+        prefilter = lambda wildcards: wildcards.prefilter,
+        padjmethod = lambda wildcards: wildcards.padjmethod,
+        pthresh = lambda wildcards: wildcards.p_thresh
+    #conda_env = "../envs/gsea_manual.yml"
+    conda:
+        "../envs/gsea_manual.yml" #environment with clusterprofiler
+    shell: "papermill -p padjmethod {params.padjmethod} -p pthresh {params.pthresh} -p gsea_pthresh {params.gsea_pval} -p prefilter {params.prefilter} -p stat_col {params.stat_col:q} -p DE.out.path {params.input} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
+
+rule summaryGSEA_inClone_btwnCond:
+    input:
+        "{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
+    output:
+        note="{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
+    params:
+        input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+    shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
+
+
+
+## Hypergeometric distribution for clones and clusters
+rule se_meta:
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+        note = "{outdir}/annotation_clones/se_cells_meta.ipynb",
+    params:
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/clusters_cells_meta.ipynb"),
+    shell: "papermill -p se_f {input.se_f} {params.rscript} {output.note}"
+
+
+rule cluster_clone_hypergeom:
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+    output:
+        result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/result.csv",
+        note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/result.ipynb"
+    params:
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/clones_clusters_hypergeometric.ipynb")
+    shell: "papermill -p out_f {output.result} -p se_cells_meta_f {input.se_meta} -p min_clone_size {wildcards.hyperMinCl} -p conds_sep {wildcards.bothConds} -p p_thresh {wildcards.pthresh} {params.rscript} {output.note}"
+
+
+# DE btwnVars
+rule inVar_btwnCond_DE:
+    """ Compares clusters to each other. For now works with Gene Activity
+    
+    Not tested with peaks as gene activity yet.
+    """
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+        mt_cells = "cells_meta.tsv" if "cells_meta" not in config else config["cells_meta"]
+    output:
+        note =  "{outdir}/annotation_clones/de_clone_btwnvars_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/de.ipynb",
+    params:
+        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/DE_genes_inVariants_btwnConditions.ipynb"), # The script defaults to the granja data
+        samples = ",".join(config["samples"].index),
+        outdir = lambda wildcards, output: f"{dirname(output.note)}_pthresh_{wildcards.p_thresh}", #"{outdir}/annotation_clones/de_btwnConds_{assay}/minPct_{btwnMinpct}_logfc{logfcthresh}/pthresh_{p_thresh}",
+        minPct=lambda wildcards: wildcards.btwnMinpct,
+        logfcthresh= lambda wildcards: wildcards.logfc_threshold,
+        top_de=3,
+        p_thresh=lambda wildcards: wildcards.p_thresh,
+    # test_use="wilcox",
+    # latent_vars="NULL",
+    threads: 8
+    shell: "papermill -p cells_meta_f {input.mt_cells} -p min_cells {wildcards.min_cells} -p p_thresh {params.p_thresh} -p outdir {params.outdir} -p top_de {params.top_de} -p sample_names {params.samples} {params.rscript} {output.note}"
+
+
+rule runGSEA_inVars_btwnCond:
+    input:
+        DE_out_path = "{outdir}/annotation_clones/de_clone_btwnvars_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/de.ipynb",
+    output:
+        note= "{outdir}/annotation_clones/de_clone_btwnvars_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
+    params:
+        input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
+        output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/runGSEA_btwnCond.ipynb"),
+        gsea_dir = join(ROOT_DIR, "software/Bioinformatics_Tools/"), #/ is necessary
+        gsea_pval = lambda wildcards: wildcards.gsea_pval,
+        stat_col = lambda wildcards: wildcards.stat_col,
+        prefilter = lambda wildcards: wildcards.prefilter,
+        padjmethod = lambda wildcards: wildcards.padjmethod,
+        pthresh = lambda wildcards: wildcards.p_thresh
+    #conda_env = "../envs/gsea_manual.yml"
+    conda:
+        "../envs/gsea_manual.yml" #environment with clusterprofiler
+    shell: "papermill -p padjmethod {params.padjmethod} -p pthresh {params.pthresh} -p gsea_pthresh {params.gsea_pval} -p prefilter {params.prefilter} -p stat_col {params.stat_col:q} -p DE.out.path {params.input} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
+
+rule summaryGSEA_inVars_btwnCond:
+    input:
+        "{outdir}/annotation_clones/de_clone_btwnvars_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
+    output:
+        note= "{outdir}/annotation_clones/de_clone_btwnvars_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
+    params:
+        input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+    shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
 

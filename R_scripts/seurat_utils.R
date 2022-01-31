@@ -83,8 +83,8 @@ check.if.one.clone <- function(large.clones, init.large.clones, n_top_clones) {
         print(donor.n.clones[i, "size"])
         if (donor.n.clones[i, "size"] < n_top_clones) {
             print(paste('only 1 clone. Using top', n_top_clones, 'clones'))
-            new.large <- init.large.clones %>% filter(donor==as.character(curr.d)) %>% slice_min(order_by = cdf.norm, n=n_top_clones)
-            large.clones <- large.clones %>% filter(donor!=as.character(curr.d)) %>% bind_rows(new.large)
+            new.large <- init.large.clones %>% dplyr::filter(donor==as.character(curr.d)) %>% slice_min(order_by = cdf.norm, n=n_top_clones)
+            large.clones <- large.clones %>% dplyr::filter(donor!=as.character(curr.d)) %>% bind_rows(new.large)
         }
 
     }
@@ -92,9 +92,9 @@ check.if.one.clone <- function(large.clones, init.large.clones, n_top_clones) {
 }
 
 get.top.clones <- function(d, clones, cdf_thresh, n_top_clones){
-    curr.clones = clones %>% filter(donor==as.character(d))
-    curr.clones = curr.clones %>% slice_min(order_by = cdf.norm, n=n_top_clones)
-    cdf.clones = curr.clones %>% filter(cdf.norm<cdf_thresh)
+    curr.clones = clones %>% dplyr::filter(donor==as.character(d))
+    curr.clones = curr.clones %>% dplyr::slice_min(order_by = cdf.norm, n=n_top_clones)
+    cdf.clones = curr.clones %>% dplyr::filter(cdf.norm<cdf_thresh)
     print('cdf thresh clones')
     print(dim(cdf.clones))
 
@@ -253,7 +253,7 @@ find.markers.and.plot <- function(se, id1, id2, curr.outdir, curr.name, min.pct,
 
 ## Run TF DE summary on filtered clone set
 filter.clone.size <- function(clone.sizes, cdf.thresh){
-    large.clones <- clone.sizes %>% filter(cdf.norm<cdf.thresh)
+    large.clones <- clone.sizes %>% dplyr::filter(cdf.norm<cdf.thresh)
     return(large.clones)
 }
 
@@ -261,7 +261,7 @@ filter.clone.size <- function(clone.sizes, cdf.thresh){
 setup.donor.clones <- function(se, d, large.clones, outdir){
         curr.outdir <- file.path(outdir, paste0("donor", d, "_TF"))
         dir.create(curr.outdir)
-        donor.large.clones <- large.clones %>% filter(donor==d)
+        donor.large.clones <- large.clones %>% dplyr::filter(donor==d)
         clones.filt.ids <- donor.large.clones$lineage
         se.filt <- subset(se, subset = (donor==d) & (lineage %in% donor.large.clones$lineage))
         pairs = combn(clones.filt.ids,2)
@@ -408,7 +408,7 @@ add.cell.meta <- function(se, new_cells_meta){
 get.clone.sizes <- function(se){
   counts <- se[[]] %>%
     group_by(condition, donor, lineage, name) %>%
-    summarize(size=n()) %>% filter(!name=="None")
+    summarize(size=n()) %>% dplyr::filter(!name=="None")
   
   counts.norm <- counts %>% group_by(condition, donor) %>% mutate(total=sum(size)) %>% ungroup() %>% mutate(norm=size/total)
   
