@@ -2,12 +2,13 @@ snakefile: "workflow/Snakefile"
 pipename: "pipeline"
 params_dir: "/data/Mito_Trace/parameters/pipeline/cosmo_server/"
 indir:
-  DUPI_april08_2021: "DUPI_april08_2021_mtasnucl_Bonly.yaml"
+  v2_DUPI_april08_2021: "v2_DUPI_april08_2021_mtasnucl_Bonly.yaml"
   TcellDupi_may17_2021: "TcellDupi_may17_2021.yaml"
   jan21_2021: "jan21_2021.yaml"
   CHIP_nameFix_april08_2021: "CHIP_nameFix_april08_2021.yaml"
   Lareau_2020: "Lareau_2020.yaml"
+  DUPI_april08_2021: "DUPI_april08_2021_mtasnucl_Bonly.yaml"
 
 targets:
-  - "annClo_runGSEA_btwnClust"
-  - "annClo_runGSEA_btwnCond"
+  - "annClo_runGSEA_inVars_btwnCond"
+  - "annClo_inClone_btwnCond_DE"
