@@ -80,6 +80,8 @@ rule counts_clones:
         sample_names = ",".join(config["samples"].index),
     shell:
         "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p sample_names {params.sample_names} -p minCell {wildcards.min_cells} {params.rscript} {output[0]}"
+
+
 rule runDE_enrich:
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
