@@ -20,6 +20,7 @@ else:
     print('targets', targets)
 
 dryrun = config.get("dryrun", False)
+to_report = config.get("to_report", False)
 
 for i in config["indir"]:
     print('i', i)
@@ -33,5 +34,5 @@ for i in config["indir"]:
     #                                         'vireo_enrichment'],
     #                           cores=8, verbose=True)
     run(config["snakefile"], curr_config, config["pipename"], outdir=None,
-        to_git=False, targets=None, dryrun=dryrun, forcerun=targets,
+        to_git=False, targets=None, dryrun=dryrun, forcerun=targets, to_report=to_report,
             forcetargets=forcetargets, to_gitpush=False, cores=16)

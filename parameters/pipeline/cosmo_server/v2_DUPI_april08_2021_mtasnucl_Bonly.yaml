@@ -18,7 +18,18 @@ genome: "MTblacklist_mtasnucl"
 
 N_DONORS: 4
 
+markers_f: "/data/Mito_Trace/data/processed/pbmc_markers.txt"
+umap_clusters_f: "/data/Mito_Trace/output/pipeline/DUPI_april08_2021/v2_MTblacklist_mtasnucl_Bonly/results/atac_clusters.txt"
+#umap_clusters:
+#  0: "0"
+#  1: "myeloid_DC;naive_B;memory_B"
+#  2: "2"
+#  3: "CD8+ A"
+#  4: "CD4"
+#  5: "CD8+ B"
+#  6: "DC;monocyte"
+#  7: "NK-CD8"
+#  8: "NK"
+#  9: "naive B"
+#  10: "non_classical_monocyte"
 
-#parameters:
-#  annotation:
-#    rmClust: "13,16,15"

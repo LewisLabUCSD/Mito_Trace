@@ -101,7 +101,7 @@ clones:
       dpthresh: 2
   knn:
     params:
-      resolution: [3] #[10,3]
+      resolution: [3] #, 30, 50] #[10,3]
 
 
 #clones:
@@ -169,7 +169,7 @@ annotation_clones:
       - "RNA"
       #- "ATAC"
     betweenClust_pval_thresh:
-      - 0.01
+      #- 0.01
       - 0.1
     betweenCond_pval_thresh:
      # - 0.01
@@ -218,6 +218,7 @@ de_clones_change:
       - True
     min_cell:
       - 1
+      #- 5
       #- 10
       #- 50
     min_cell_both:
@@ -226,7 +227,7 @@ de_clones_change:
       #- 10
     shuffle:
       - False
-      #- True
+      - True
 
     min_pct:
       - 0.1
@@ -244,3 +245,12 @@ de_clones_change:
       - "log2FoldChange"
     padjmethod:
       - "BH"
+
+clone_clust_embed:
+  params:
+    perplexity:
+      - 30
+      - 50
+      #- 20
+    donor_perplexity:
+      - 10

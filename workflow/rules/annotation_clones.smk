@@ -65,7 +65,7 @@ rule plotMarkers:
     params:
         rscript = join(ROOT_DIR, "R_scripts/annotation_clones/umap_immune_markers.ipynb"),
         outdir = lambda wildcards, output: dirname(output.note),
-        markers_f="/data/Mito_Trace/data/processed/pbmc_markers.txt"
+        markers_f = config["markers_f"]
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
 
 rule counts_clones:
@@ -259,7 +259,7 @@ rule runGSEA_btwnClust:
     input:
         DE_out_path = "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/pthresh_{p_thresh}.ipynb",
     output:
-        note= "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh_{gsea_pval}/GSEA.ipynb",
+        note= "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/de_p{p_thresh}_GSEA_pthresh_{gsea_pval}/GSEA.ipynb",
     #note="{outdir}/data/annotation/gff_{gff}/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
     params:
         input = lambda wildcards, input: join(dirname(input[0]), "btwnClust"),
@@ -270,7 +270,18 @@ rule runGSEA_btwnClust:
         #conda_env = "../envs/gsea_manual.yml"
     conda:
         "../envs/gsea_manual.yml" #environment with clusterprofiler
-    shell: "papermill -p DE.out.path {params.input} -p pthresh {params.gsea_pval} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
+    shell: "papermill -p DE.out.path {params.input} -p gsea_pthresh {params.gsea_pval} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
+
+rule summaryGSEA_btwnClust:
+    input:
+        #"{outdir}/annotation_clones/de_btwnclust_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
+        note = "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/de_p{p_thresh}_GSEA_pthresh_{gsea_pval}/GSEA.ipynb",
+    output:
+        note= "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/de_p{p_thresh}_GSEA_pthresh_{gsea_pval}/summary.ipynb",
+    params:
+        input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
+        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+    shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
 
 
 ## RUN DE for gene activity and peaks as markers.
@@ -391,9 +402,12 @@ rule summaryGSEA_inClone_btwnCond:
     shell: "papermill -p export_path {params.input} {params.script} {output.note}"
 
 
+####################################
+## Clones-clusters analysis by size.
+####################################
 
-## Hypergeometric distribution for clones and clusters
 rule se_meta:
+    """Prepare clone-by-cluster counts for umap and hypergeometric test"""
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
     output:
@@ -404,7 +418,40 @@ rule se_meta:
     shell: "papermill -p se_f {input.se_f} {params.rscript} {output.note}"
 
 
+rule dominant_clone_clust_in_clone:
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+    output:
+        note= "{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
+        results = report(multiext("{outdir}/annotation_clones/dominant_clone_clust/",
+            "dominant_cluster.csv", "cluster_clone_meta.csv", "cluster_clone_counts_normalized.csv",
+            "combinedConditions_dominant_cluster.csv", "combinedConditions_cluster_clone_meta.csv", "combinedConditions_cluster_clone_counts_normalized.csv"))
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        script = join(ROOT_DIR, "src", "clone_cluster_count_embed", "dominant_clust_in_clone.ipynb"),
+        samples = ",".join(config["samples"].index),
+        cluster_names_f= config.get("cluster_names_f", "None")
+    shell:
+        "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p sample_names {params.samples} -p cluster_names_f {params.cluster_names_f:q} {params.script} {output.note}"
+
+rule count_clust_embed:
+    input:
+        dominant = "{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb"
+    output:
+        note = "{outdir}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/embed.ipynb",
+        sepDonors = "{outdir}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/combinedConditions_combinedDonors/umap.pdf",
+        combinedDonors = "{outdir}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/combinedDonors/umap.pdf"
+        #"{outdir}/annotation_clones/clone_clust_umap/"
+    params:
+        indir = lambda wildcards, input: dirname(input.dominant),
+        outdir = lambda wildcards, output: dirname(output.note),
+        samples = ",".join(config["samples"].index),
+        script = join(ROOT_DIR, "src/clone_cluster_count_embed/run_count_clust_embed.ipynb"),
+    shell:  "papermill -p indir {params.indir} -p outdir {params.outdir} -p sample_names {params.samples} -p perplexity {wildcards.perp} {params.script} {output.note}"
+
+
 rule cluster_clone_hypergeom:
+    """Hypergeometric distribution for clones and clusters"""
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
     output:

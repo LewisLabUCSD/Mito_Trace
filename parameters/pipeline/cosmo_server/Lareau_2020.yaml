@@ -12,3 +12,4 @@ genome: "MTBlacklist"
 
 
 N_DONORS: 1
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"

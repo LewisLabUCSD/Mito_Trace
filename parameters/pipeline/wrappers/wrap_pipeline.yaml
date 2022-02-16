@@ -2,15 +2,20 @@ snakefile: "workflow/Snakefile"
 pipename: "pipeline"
 params_dir: "/data/Mito_Trace/parameters/pipeline/cosmo_server/"
 indir:
+  jan21_2021: "jan21_2021.yaml"
+  CHIP_b1: "CHIP_dec172021/CHIP_b1_dec172021.yaml"
+  CHIP_Input_nameFix_april08_2021: "CHIP_Input_nameFix_april08_2021.yaml"
 #  v2_DUPI_april08_2021: "v2_DUPI_april08_2021_mtasnucl_Bonly.yaml"
 #  TcellDupi_may17_2021: "TcellDupi_may17_2021.yaml"
-  #jan21_2021: "jan21_2021.yaml"
-  CHIP_b1: "CHIP_dec172021/CHIP_b1_dec172021.yaml"
-#  CHIP_nameFix_april08_2021: "CHIP_nameFix_april08_2021.yaml"
 #  Lareau_2020: "Lareau_2020.yaml"
 #  DUPI_april08_2021: "DUPI_april08_2021_mtasnucl_Bonly.yaml"
 
 targets:
-  - "annClo_runGSEA_inVars_btwnCond"
-  - "annClo_inClone_btwnCond_DE"
+  - "annClo_count_clust_embed"
+  #- "annClo_runGSEA_inVars_btwnCond"
+  #- "annClo_inClone_btwnCond_DE"
+  - "annClo_dominant_clone_clust_in_clone"
+  #- "clone_shuffle_stats_knn"
 dryrun: False
+
+to_report: False

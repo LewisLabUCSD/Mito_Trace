@@ -11,6 +11,7 @@ fastq_dir: "/data/Mito_Trace/data/raw/TcellDupi_may17_2021/" #igm-storage2.ucsd.
 mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/PBMC_may17_2021/MTblacklist"
 genome: "MTBlacklist"
 N_DONORS: 2
+markers_f: "/data/Mito_Trace/data/processed/pbmc_markers.txt"
 
 parameters:
   annotation:

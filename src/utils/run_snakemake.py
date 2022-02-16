@@ -137,7 +137,7 @@ def check_input(config, files_config, curr_p, git_commit=None,
 
 
 def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, dryrun=False, forcetargets=False,
-        to_gitpush=False, cores=2, forcerun=None):
+        to_gitpush=False, cores=2, forcerun=None, to_report=True):
     ic(targets)
     if targets==None or len(targets) == 0:
         targets=None
@@ -175,12 +175,13 @@ def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, 
 
     if not dryrun:
         # Make the report
-        report_f = join(outdir,
-                      f"report_{basename(smkfile)}_cfg_{basename(configfile)}_{curr_time}.html")
-        ic(report_f)
-        snakemake.snakemake(smkfile, configfiles=[configfile],
-                            targets=targets, report=report_f,
-                            force_incomplete=True)
+        if to_report:
+            report_f = join(outdir,
+                          f"report_{basename(smkfile)}_cfg_{basename(configfile)}_{curr_time}.html")
+            ic(report_f)
+            snakemake.snakemake(smkfile, configfiles=[configfile],
+                                targets=targets, report=report_f,
+                                force_incomplete=True)
 
         ################
         # copy over snakemake and configfile to output:

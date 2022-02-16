@@ -12,4 +12,4 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec17
 #results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
 N_DONORS: 2
 
-
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"

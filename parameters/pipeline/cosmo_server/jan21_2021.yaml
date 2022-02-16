@@ -13,3 +13,21 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/jan21_2021
 N_DONORS: 4
 
 
+# Cluster names
+umap_clusters_f: "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/cd34norm/MTblacklist/results/atac_clusters.txt"
+umap_clusters:
+  0: "macrophages"
+  1: "neutrophil"
+  2: "NeP"
+  3: "Eosinophil"
+  4: "neutrophil"
+  5: "Erythroid"
+  6: "neutrophil"
+  7: "pDC?"
+  8: "erythroid"
+  9: "progenitor"
+  10: "monocyte"
+  11: "CLP"
+
+
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"

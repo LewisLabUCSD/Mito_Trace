@@ -13,3 +13,4 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec17
 N_DONORS: 2
 
 
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"
