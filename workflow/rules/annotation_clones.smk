@@ -462,21 +462,21 @@ rule cluster_clone_hypergeom:
     shell: "papermill -p out_f {output.result} -p se_cells_meta_f {input.se_meta} -p min_clone_size {wildcards.hyperMinCl} -p conds_sep {wildcards.bothConds} -p p_thresh {wildcards.pthresh} {params.rscript} {output.note}"
 
 
-# DE btwnVars
-rule mtVarsPlot:
-    input:
-        se_f = "{outdir}/annotation_clones/SE.rds",
-        mt_cells = "cells_meta.tsv" if "cells_meta" not in config else config["cells_meta"]
-    output:
-        note =  "{outdir}/annotation_clones/de_clone_btwnvars_RNA_af/mtPlots.ipynb",
-    params:
-        mt_cells = lambda wildcards, input: input.mt_cells.replace("cells_meta.tsv", "cells_mt.tsv"),
-        rscript= join(ROOT_DIR, "R_scripts/annotation_clones/mtVarsPlot.ipynb"), # The script defaults to the granja data
-        outdir = lambda wildcards, output: dirname(output.note),
-    # test_use="wilcox",
-    # latent_vars="NULL",
-    threads: 8
-    shell: "papermill -p se_f {input.se_f} -p cells_meta_f {input.mt_cells} -p outdir {params.outdir} {params.rscript} {output.note}"
+# # DE btwnVars
+# rule mtVarsPlot:
+#     input:
+#         se_f = "{outdir}/annotation_clones/SE.rds",
+#         mt_cells = "cells_meta.tsv" if "cells_meta" not in config else config["cells_meta"]
+#     output:
+#         note =  "{outdir}/annotation_clones/de_clone_btwnvars_RNA_af/mtPlots.ipynb",
+#     params:
+#         mt_cells = lambda wildcards, input: input.mt_cells.replace("cells_meta.tsv", "cells_mt.tsv"),
+#         rscript= join(ROOT_DIR, "R_scripts/annotation_clones/mtVarsPlot.ipynb"), # The script defaults to the granja data
+#         outdir = lambda wildcards, output: dirname(output.note),
+#     # test_use="wilcox",
+#     # latent_vars="NULL",
+#     threads: 8
+#     shell: "papermill -p se_f {input.se_f} -p cells_meta_f {input.mt_cells} -p outdir {params.outdir} {params.rscript} {output.note}"
 
 rule inVar_btwnCond_DE:
     """ Compares clusters to each other. For now works with Gene Activity
