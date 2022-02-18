@@ -1,0 +1,35 @@
+# Global parameters
+outdir: "/data/Mito_Trace/output"
+#results: "output/pipeline/DUPI_april08_2021"
+config: "parameters/pipeline/pipeline.yaml"
+#params: "parameters/pipeline/params.csv"
+
+## Experimental parameters
+prefix: "DUPI_april08_2021/v2_MTblacklist_mtasnucl_Bonly"
+samples_meta: "parameters/pipeline/cosmo_server/DUPI_april08_2021_Bonly.csv"
+
+
+## Files that require full paths:
+fastq_dir: "/data/Mito_Trace/data/raw/CHIP_april08_2021_Croker/"
+mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/DUPI_april08_2021_Croker/MTblacklist_mtasnucl"
+genome: "MTblacklist_mtasnucl"
+#comparisons: 'B,preB,postB' #"A,pre,rxn1,post,rxn3;B,pre,rxn2,post,rxn4"
+#tests: "A,pre,preA,post,postA;B,pre,preB,post,postB"
+
+N_DONORS: 4
+
+markers_f: "/data/Mito_Trace/data/processed/pbmc_markers.txt"
+umap_clusters_f: "/data/Mito_Trace/output/pipeline/DUPI_april08_2021/v2_MTblacklist_mtasnucl_Bonly/results/atac_clusters.txt"
+#umap_clusters:
+#  0: "0"
+#  1: "myeloid_DC;naive_B;memory_B"
+#  2: "2"
+#  3: "CD8+ A"
+#  4: "CD4"
+#  5: "CD8+ B"
+#  6: "DC;monocyte"
+#  7: "NK-CD8"
+#  8: "NK"
+#  9: "naive B"
+#  10: "non_classical_monocyte"
+

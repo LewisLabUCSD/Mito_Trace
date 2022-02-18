@@ -5,6 +5,16 @@ import os
 import numpy as np
 from icecream import ic
 
+def get_counts_in(wildcards):
+    w = wildcards
+    if w.variants == "mgatkdonor":
+        return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{w.d}/mgatk/d{w.d}.variant.rds"
+    elif w.variants == "simple":
+        return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb"
+    elif w.variants == "init":
+        return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_init/donor{w.d}/af.tsv"
+    return
+
 
 wildcard_constraints:
     variants = "simple|mgatkdonor",
@@ -24,101 +34,64 @@ nclonelist = clones_cfg['vireo']['params']['nclonelist']
 #     return f"{config['cov_indir']['sample']}/{wildcards.sample}.coverage.txt"
 
 
-
-########################################################################
-## Vireo A: Directly from multiplex output
-########################################################################
-rule vireo:
+rule knn_mgatkdonor:
     input:
-        "{outdir}/multiplex/multiplex.ipynb" #get_input_multiplex
+        in_vars="{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{d}/mgatk/d{d}.variant.rds"
     output:
-        expand("{{outdir}}/clones/variants_simple/vireo/nclones{{nclones}}/donor{d}.labels.png", d=np.arange(config["N_DONORS"])),#, category="lineage"),
-        expand("{{outdir}}/clones/variants_simple/vireo/nclones{{nclones}}/donor{d}.variants.labels.png", d=np.arange(config["N_DONORS"])),#, category="lineage"),
-        "{outdir}/clones/variants_simple/vireo/nclones{nclones}/cells_meta.tsv"
+        cells= "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
+        fig = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/donor{d}.variants.labels.png"
+    # fig=report("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/donor{d}.variants.labels.png",
+    #        category="enrichment")
     params:
-        notebook=join("src", "vireo", "2_MT_Lineage_Construct.ipynb"),
-        #output_notebook = lambda wildcards, output: join(dirname(output[0]), 'clones.ipynb'),
-        INDIR = lambda wildcards, input: dirname(input[0]),
-        OUTDIR = lambda wildcards, output: dirname(output[0]),
-        N_DONORS=config["N_DONORS"],
-        nclones= lambda wildcards: wildcards.nclones #",".join([str(x) for x in nclonelist])
-    threads: 8
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p nclones {params.nclones} {params.notebook} {params.OUTDIR}/output.ipynb"
+        mgatk_in = lambda wildcards, input: input[0].replace(".variant.rds", ".af.tsv"),
+        name = lambda wildcards: f"donor{wildcards.d}", #"/data2/mito_lineage/data/processed/mttrace/TcellDupi_may17_2021/MTblacklist/pre/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/filter_mgatk/pre.variant.rds"
+        donor = lambda wildcards: wildcards.d,
+        outdir = lambda wildcards, output: dirname(output[0]),
+        kparam = lambda wildcards: wildcards.kparam,
+        note = join(ROOT_DIR, "R_scripts", "knn_clones.ipynb"),
+    shell:
+        "papermill -k ir -p mgatk_in {params.mgatk_in} -p name {params.name} -p donor {params.donor} -p outdir {params.outdir} -p kparam {params.kparam} {params.note} {params.outdir}/output.ipynb"
 
 
-########################################################################
-## Vireo B: After multiplexing, separate by donor, grab variants from filters
-## that overlap with both conditions, and then run mgatk to call variants again.
-##
-# Extract pileups for each donor from original filter matrices
-########################################################################
-rule vireo_mgatkdonor:
+rule clone_dendro:
     input:
-        mtx= "{outdir}/clones/variants_mgatkdonor/vireo/donor{d}/mgatk_donor/cellSNP.tag.AD.mtx",
-        cells="{outdir}/clones/variants_mgatkdonor/vireo/donor{d}/mgatk_donor/cells_meta.tsv",
-    #output: "clones/variants_mgatkdonor/vireo/clones.ipynb"
+        cells_meta = "{outdir}/cells_meta.tsv",
+        counts_in = get_counts_in #"{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb",
     output:
-        #"{{outdir}}/clones/variants_mgatkdonor/vireo/nclones{nclones}/clones.ipynb",
-        "{outdir}/clones/variants_mgatkdonor/vireo/nclones{nclones}/donor{d}.labels.png",#, category="lineage", subcategory="donorMGATK"),
-        "{outdir}/clones/variants_mgatkdonor/vireo/nclones{nclones}/donor{d}.variants.labels.png",# category="lineage", subcategory="donorMGATK"),
-        "{outdir}/clones/variants_mgatkdonor/vireo/nclones{nclones}/donor{d}_cells_meta.tsv",
+        note = "{outdir}/btwnClones_barcode/donor{d}.ipynb",
+        dendros = report("{outdir}/btwnClones_barcode/donor{d}.na.clust.max2.AF.png",
+                          category="lineage", subcategory="Clone Barcodes (conditions separate): Donor {d}"),
+        dendrodp  =  report("{outdir}/btwnClones_barcode/donor{d}.na.clust.max2.DP.png",
+            category="lineage", subcategory="Clone Barcodes (conditions separate): Donor {d}"),
+        dendrosCond = report("{outdir}/btwnClones_barcode/donor{d}.NoCondition.na.clust.max2.AF.png",
+            category="lineage",subcategory="Clone Barcodes: Donor {d}"),
+        dendrodpCond =  report("{outdir}/btwnClones_barcode/donor{d}.NoCondition.na.clust.max2.DP.png",
+            category="lineage", subcategory="Clone Barcodes: Donor {d}"),
     params:
-        INDIR = lambda wildcards, input: dirname(input[0]),
-        OUTDIR = lambda wildcards, output: dirname(output[0]),
-        #N_DONORS =config["N_DONORS"], #config["multiplex"]["N_DONORS"],
-        notebook=join("src", "vireo", "2b_MT_Lineage_Construct_mgatkDonors.ipynb"),
-        d = lambda wildcards: wildcards.d,
-        #workdir = os.getcwd(),
-        nclones= lambda wildcards: wildcards.nclones
-    threads: 8
-    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p donor {params.d} -p nclones {params.nclones} {params.notebook} {params.OUTDIR}/output.ipynb"
+        note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        indir = lambda wildcards, input: dirname(input.cells_meta),
+        DONOR = lambda wildcards: wildcards.d,
+        counts_indir = lambda wildcards, input: dirname(input.counts_in),
+        var_type = lambda wildcards: wildcards.variants
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {params.DONOR} -p COUNT_INDIR {params.counts_indir} -p var_type {params.var_type} {params.note} {output.note}"
 
 
-rule vireo_mgatkdonor_concat:
+
+rule clone_barcodes_condition:
     input:
-        expand("{{outdir}}/clones/variants_mgatkdonor/vireo/nclones{{nclones}}/donor{d}_cells_meta.tsv",
-               d = np.arange(config["N_DONORS"])),
+        cells_meta = "{outdir}/cells_meta.tsv",
+        counts_in = get_counts_in #"{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb",
     output:
-         "{outdir}/clones/variants_mgatkdonor/vireo/nclones{nclones}/cells_meta.tsv",
-    run:
-        all = []
-        for i in input:
-            all.append(pd.read_csv(i, sep='\t'))
-        all = pd.concat(all, ignore_index=True).sort_values(["donor", "lineage", "donor_index", "lineage_index"])
-        if 'level_0' in all.columns:
-                all = all.drop('level_0', axis=1)
-        ic('all')
-        ic(all.head())
-        all.to_csv(output[0], sep='\t', index=False)
-
-## Enrichment
-rule vireo_enrichment:
-    version: '1.0' # no +1 norm error
-    input:
-        "{outdir}/clones/variants_{variants}/vireo/nclones{nclones}/cells_meta.tsv"
-    output:
-        report("{outdir}/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/volcano_Fisher_foldNorm.png", category="enrichment"),
+        note = "{outdir}/clones_barcodes/donor{d}.ipynb",
     params:
-        #clones_indir = lambda wildcards, input: dirname(input[0]),#lambda wildcards, input: dirname(input[0]),
-        OUTDIR = lambda wildcards, output: dirname(output[0]),
-        script = join("src", "lineage", "lineage_enrichment.py"),
-        samples=",".join(samples.index)
-    shell: "python {params.script} {input} {params.OUTDIR} {params.samples}"
+        note = join(ROOT_DIR, "worklow/notebooks/clone_af_dendrograms", "MT_inClones_Barcode.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        indir = lambda wildcards, input: dirname(input.cells_meta),
+        DONOR = lambda wildcards: wildcards.d,
+        counts_indir = lambda wildcards, input: dirname(input.counts_in),
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {params.DONOR} -p COUNT_INDIR {params.counts_indir} -p var_type {wildcards.variants} {params.note} {output.note}"
 
-
-# Bring enrichment results into same space
-rule vireo_process:
-    input:
-        expand("{{outdir}}/clones/variants_{{variants}}/vireo/nclones{nclones}/enrichment/volcano_Fisher_foldNorm.png",
-                    nclones=nclonelist)
-    output:
-        temp("{outdir}/clones/variants_{variants}/vireo/temp/.tmp")
-
-    shell: "touch {output}"
-
-################################################
-## Till here
-################################################
 
 
 ################################################
