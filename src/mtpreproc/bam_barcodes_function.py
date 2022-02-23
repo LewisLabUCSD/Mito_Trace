@@ -5,7 +5,7 @@ import pickle
 import click
 
 
-def extract_barcode_info(bam_f, out_f,rm_slash=False, mt_chr="MT"):
+def extract_barcode_info(bam_f, out_f, rm_slash=False, mt_chr="MT"):
     """
     Args:
         bam_f:

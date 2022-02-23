@@ -1,10 +1,10 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline.yaml"
+config: "parameters/pipeline/pipeline_v02.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
-prefix: "CHIP_b1/MTBlacklist_A2"
+prefix: "v02/CHIP_b1/MTBlacklist_A2"
 samples_meta: "parameters/pipeline/cosmo_server/CHIP_dec172021/CHIP_b1_dec172021.csv"
 genome: "MTBlacklist_A2"  #"MTBlacklist_A2"
 fastq_dir: "/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/" #/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/"

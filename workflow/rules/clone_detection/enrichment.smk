@@ -32,3 +32,11 @@ rule clone_shuffle_stats:
     threads: 16
     shell: "papermill -p enrich_f {input.enrich_f} -p cells_meta_f {input.cells_meta_f} -p OUTDIR {params.outdir} -p samples {params.samples:q} {params.note} {output[0]}"
 
+
+rule finalize:
+    input:
+        "{outdir}/enrichment/enrichmentNorm.csv",
+        "{outdir}/enrichment/shuffle_stats/shuffle_stats.csv",
+    output:
+        "{outdir}/enrichment/_enrichment_complete",
+    shell: "touch {output}"

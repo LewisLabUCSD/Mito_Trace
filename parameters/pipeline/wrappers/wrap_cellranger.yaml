@@ -1,0 +1,15 @@
+snakefile: "/data2/mito_lineage/workflow/cellranger_atac.snakefile"
+pipename: "mtscATAC"
+params_dir: "/data2/mito_lineage/parameters/pipeline/cosmo_server/CHIP_dec172021_nameFix/"
+indir:
+  CHIP_b1: "CHIP_b1_dec172021.yaml"
+  CHIP_b2: "CHIP_b2_dec172021.yaml"
+  CHIP_b3: "CHIP_b3_dec172021.yaml"
+  CHIP_b4: "CHIP_b4_dec172021.yaml"
+
+targets:
+#  - "annClo_count_clust_embed"
+
+dryrun: True
+
+to_report: False

@@ -4,11 +4,11 @@ config: "parameters/pipeline/pipeline.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
-prefix: "CHIP_b4/MTBlacklist_A2"
-samples_meta: "parameters/pipeline/cosmo_server/CHIP_dec172021/CHIP_b4_dec172021.csv"
+prefix: "CHIP_b4/MTBlacklist_A2_nameFix"
+samples_meta: "parameters/pipeline/cosmo_server/CHIP_dec172021_nameFix/CHIP_b4_dec172021.csv"
 genome: "MTBlacklist_A2"
-fastq_dir: "/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/"
-mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b4/MTBlacklist_A2"
+fastq_dir: "/data3/isshamie/mito_lineage/data/processed/CHIP_dec172021/"
+mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b4/MTBlacklist_A2_nameFix"
 #results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTBlacklist_A2" # Output directory
 N_DONORS: 3
 markers: "/data/Mito_Trace/data/processed/cd34_markers.txt"

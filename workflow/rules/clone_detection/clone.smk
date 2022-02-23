@@ -5,26 +5,20 @@ import os
 import numpy as np
 from icecream import ic
 
-def get_counts_in(wildcards):
-    w = wildcards
-    if w.variants == "mgatkdonor":
-        return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{w.d}/mgatk/d{w.d}.variant.rds"
-    elif w.variants == "simple":
-        return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb"
-    elif w.variants == "init":
-        return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_init/donor{w.d}/af.tsv"
-    return
+# def get_counts_in(wildcards):
+#     w = wildcards
+#     if w.variants == "mgatkdonor":
+#         return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{w.d}/mgatk/d{w.d}.variant.rds"
+#     elif w.variants == "simple":
+#         return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb"
+#     elif w.variants == "init":
+#         return f"{w.output}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_init/donor{w.d}/af.tsv"
+#     return
 
 
-wildcard_constraints:
-    variants = "simple|mgatkdonor",
-    d = "%d"
 
 
-samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
-
-clones_cfg = config["params"]["clones"]
-nclonelist = clones_cfg['vireo']['params']['nclonelist']
+#samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
 ########################################################################
 ## Variant Intermediate step for other workflows.
@@ -33,65 +27,77 @@ nclonelist = clones_cfg['vireo']['params']['nclonelist']
 # def get_coverage(wildcards):
 #     return f"{config['cov_indir']['sample']}/{wildcards.sample}.coverage.txt"
 
-
-rule knn_mgatkdonor:
-    input:
-        in_vars="{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{d}/mgatk/d{d}.variant.rds"
-    output:
-        cells= "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
-        fig = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/donor{d}.variants.labels.png"
-    # fig=report("{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/knn/kparam_{kparam}/donor{d}/donor{d}.variants.labels.png",
-    #        category="enrichment")
-    params:
-        mgatk_in = lambda wildcards, input: input[0].replace(".variant.rds", ".af.tsv"),
-        name = lambda wildcards: f"donor{wildcards.d}", #"/data2/mito_lineage/data/processed/mttrace/TcellDupi_may17_2021/MTblacklist/pre/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/filter_mgatk/pre.variant.rds"
-        donor = lambda wildcards: wildcards.d,
-        outdir = lambda wildcards, output: dirname(output[0]),
-        kparam = lambda wildcards: wildcards.kparam,
-        note = join(ROOT_DIR, "R_scripts", "knn_clones.ipynb"),
-    shell:
-        "papermill -k ir -p mgatk_in {params.mgatk_in} -p name {params.name} -p donor {params.donor} -p outdir {params.outdir} -p kparam {params.kparam} {params.note} {params.outdir}/output.ipynb"
-
-
-rule clone_dendro:
+rule convert_to_af:
     input:
         cells_meta = "{outdir}/cells_meta.tsv",
-        counts_in = get_counts_in #"{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb",
+        counts_in = "af.tsv"
     output:
-        note = "{outdir}/btwnClones_barcode/donor{d}.ipynb",
-        dendros = report("{outdir}/btwnClones_barcode/donor{d}.na.clust.max2.AF.png",
-                          category="lineage", subcategory="Clone Barcodes (conditions separate): Donor {d}"),
-        dendrodp  =  report("{outdir}/btwnClones_barcode/donor{d}.na.clust.max2.DP.png",
-            category="lineage", subcategory="Clone Barcodes (conditions separate): Donor {d}"),
-        dendrosCond = report("{outdir}/btwnClones_barcode/donor{d}.NoCondition.na.clust.max2.AF.png",
-            category="lineage",subcategory="Clone Barcodes: Donor {d}"),
-        dendrodpCond =  report("{outdir}/btwnClones_barcode/donor{d}.NoCondition.na.clust.max2.DP.png",
-            category="lineage", subcategory="Clone Barcodes: Donor {d}"),
+        note="{outdir}/sc_af/donor{d}/sc_af.ipynb"
+        #af="{outdir}/sc_af/donor{d}/af.tsv",
+    params:
+        note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "Convert_to_AF.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        indir = lambda wildcards, input: dirname(input.cells_meta),
+        counts_indir = lambda wildcards, input: dirname(input.counts_in),
+        var_type = "init"
+    shell:
+        "papermill -p INDIR {params.indir} -p COUNT_INDIR {params.counts_indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d}  -p var_type {params.var_type} {params.note} {output.note}"
+
+rule barcodes_btwnClones:
+    input:
+        cells_meta = "{outdir}/cells_meta.tsv",
+        af_note = "{outdir}/sc_af/donor{d}/sc_af.ipynb",
+    output:
+        note = "{outdir}/barcodes/btwnClones/donor{d}.ipynb",
+        # dendros = report("{outdir}/barcodes/btwnClones/donor{d}.na.clust.max2.AF.png",
+        #                   category="lineage", subcategory="Clone Barcodes (conditions separate): Donor {d}"),
+        # dendrodp  =  report("{outdir}/barcodes/btwnClones/donor{d}.na.clust.max2.DP.png",
+        #     category="lineage", subcategory="Clone Barcodes (conditions separate): Donor {d}"),
+        # dendrosCond = report("{outdir}/barcodes/btwnClones/donor{d}.NoCondition.na.clust.max2.AF.png",
+        #     category="lineage",subcategory="Clone Barcodes: Donor {d}"),
+        # dendrodpCond =  report("{outdir}/barcodes/btwnClones/donor{d}.NoCondition.na.clust.max2.DP.png",
+        #     category="lineage", subcategory="Clone Barcodes: Donor {d}"),
     params:
         note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note),
         indir = lambda wildcards, input: dirname(input.cells_meta),
-        DONOR = lambda wildcards: wildcards.d,
-        counts_indir = lambda wildcards, input: dirname(input.counts_in),
-        var_type = lambda wildcards: wildcards.variants
-    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {params.DONOR} -p COUNT_INDIR {params.counts_indir} -p var_type {params.var_type} {params.note} {output.note}"
+        outdir = lambda wildcards, output: dirname(output.note),
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d}  {params.note} {output.note}"
 
 
-
-rule clone_barcodes_condition:
+rule barcodes_inClones:
     input:
         cells_meta = "{outdir}/cells_meta.tsv",
-        counts_in = get_counts_in #"{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb",
+        af_note = "{outdir}/sc_af/donor{d}/sc_af.ipynb",
     output:
-        note = "{outdir}/clones_barcodes/donor{d}.ipynb",
+        note = "{outdir}/barcodes/inClones/donor{d}.ipynb",
     params:
-        note = join(ROOT_DIR, "worklow/notebooks/clone_af_dendrograms", "MT_inClones_Barcode.ipynb"),
+        note = join(ROOT_DIR, "workflow/notebooks/clone_af_dendrograms", "MT_inClones_Barcode.ipynb"),
         outdir = lambda wildcards, output: dirname(output.note),
         indir = lambda wildcards, input: dirname(input.cells_meta),
-        DONOR = lambda wildcards: wildcards.d,
-        counts_indir = lambda wildcards, input: dirname(input.counts_in),
-    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {params.DONOR} -p COUNT_INDIR {params.counts_indir} -p var_type {wildcards.variants} {params.note} {output.note}"
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} {params.note} {output.note}"
 
+
+rule distinguishing_vars:
+    input:
+        cells_meta = "{outdir}/cells_meta.tsv",
+        af_note = "{outdir}/sc_af/donor{d}/sc_af.ipynb",
+    output:
+        note = "{outdir}/distinct_variants/donor{d}/output.ipynb",
+    params:
+        note = join(ROOT_DIR, "workflow/notebooks/clone_vars", "distinguishing_vars.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        indir = lambda wildcards, input: dirname(input.cells_meta),
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} {params.note} {output.note}"
+
+
+rule finalize:
+    input:
+        inClones =  expand("{{outdir}}/barcodes/btwnClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
+        btwnClones = expand("{{outdir}}/barcodes/inClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
+        dist_vars = expand("{{outdir}}/distinct_variants/donor{d}/output.ipynb", d=np.arange(config["N_DONORS"])),
+    output:
+        out = "{outdir}/barcodes/_clone_complete.txt",
+    shell: "touch {output}"
 
 
 ################################################
@@ -192,10 +198,10 @@ rule clone_barcodes_condition:
 #
 
 # Sort of like an all rule to bring downstream results together.
-rule complete_lineage:
-    input:
-        "{outdir}/clones/variants_{variants}/{method}/temp/.tmp",
-    output: "{outdir}/clones/variants_{variants}/{method}/.completed"
-    shell: "touch {output}"
-
-
+# rule complete_lineage:
+#     input:
+#         "{outdir}/clones/variants_{variants}/{method}/temp/.tmp",
+#     output: "{outdir}/clones/variants_{variants}/{method}/.completed"
+#     shell: "touch {output}"
+#
+#

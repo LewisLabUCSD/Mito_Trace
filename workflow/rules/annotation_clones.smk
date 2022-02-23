@@ -6,6 +6,8 @@ def get_anno_integrate(wildcards):
     print(join(config["anno_res"], "mergedSamples","allSamples.integrated.rds"))
     return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
 
+params = config["annotation_clones"]["params"]
+params_cl_embed = config["clone_clust_embed"]["params"]
 
 rule addClones:
     input:
@@ -99,4 +101,18 @@ rule cluster_clone_hypergeom:
     params:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clones_clusters_hypergeometric.ipynb")
     shell: "papermill -p out_f {output.result} -p se_cells_meta_f {input.se_meta} -p min_clone_size {wildcards.hyperMinCl} -p conds_sep {wildcards.bothConds} -p p_thresh {wildcards.pthresh} {params.rscript} {output.note}"
+
+
+rule finalize:
+    input:
+        dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
+        markers="{outdir}/annotation_clones/markers/markers.ipynb",
+        cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/minCellConds_{min_cells}/clone_sizes.ipynb",min_cells=params["min_cells"]),
+        hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/result.csv",
+                       hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
+        embed = expand("{{outdir}}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/embed.ipynb",
+                        perp=params_cl_embed["perplexity"], donperp=params_cl_embed["donor_perplexity"])
+    output:
+        "{outdir}/annotation_clones/_nuclear_clones_complete.txt"
+    shell: "touch {output}"
 

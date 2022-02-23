@@ -1,4 +1,0 @@
-sample_name,cellr_ID,fastq_ID,barcode_f,bam_f
-Control,Input,BC_10xATAC_rxn5,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist/Input/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist/Input/outs/possorted_bam.bam
-Flt3l,Control,BC_10xATAC_Fn,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist/Control/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist/Control/outs/possorted_bam.bam
-Input,Flt3l,BC_10xATAC_Fp,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist/Flt3l/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist/Flt3l/outs/possorted_bam.bam
