@@ -21,6 +21,7 @@ rule addClones:
         rscript= join(ROOT_DIR, "workflow/notebooks/lineage_clones/addClones.ipynb"), # The script defaults to the granja data
     shell: "papermill -p cells_meta_f {input.clones} -p se_f {input.noc} -p outdir {params.outdir} {params.rscript} {output.note}"
 
+
 rule se_meta:
     """Prepare clone-by-cluster counts for umap and hypergeometric test"""
     input:
@@ -42,6 +43,16 @@ rule plotMarkers:
         outdir = lambda wildcards, output: dirname(output.note),
         markers_f = config["markers_f"]
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
+
+rule overlayClones_umap:
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note = "{outdir}/annotation_clones/umap_clones_overlay/output.ipynb",
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/overlayClones_on_umap.ipynb"),
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} {params.rscript} {output.note}"
 
 rule counts_clones:
     input:
@@ -96,11 +107,41 @@ rule cluster_clone_hypergeom:
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
     output:
-        result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/result.csv",
-        note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/result.ipynb"
+        result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
+        note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.ipynb"
     params:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clones_clusters_hypergeometric.ipynb")
     shell: "papermill -p out_f {output.result} -p se_cells_meta_f {input.se_meta} -p min_clone_size {wildcards.hyperMinCl} -p conds_sep {wildcards.bothConds} -p p_thresh {wildcards.pthresh} {params.rscript} {output.note}"
+
+
+rule cluster_clone_input_hypergeom:
+    """Hypergeometric distribution for clones and clusters"""
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+    output:
+        result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv",
+        enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv.png",
+        note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.ipynb"
+    params:
+        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clones_clusters_hypergeometric_input.ipynb"),
+        input_cond = "Input"
+    shell: "papermill -p out_f {output.result} -p se_cells_meta_f {input.se_meta} -p min_clone_size {wildcards.hyperMinCl} -p conds_sep {wildcards.bothConds} -p p_thresh {wildcards.pthresh} {params.rscript} {output.note}"
+
+
+def get_hypergeom(wildcards):
+    w = wildcards
+    hyper = f"{w.outdir}/annotation_clones/hypergeom_clone_clust/mincl.{w.hyperMinCl}_bothConds.{w.bothConds}_p{w.pthresh}/hypergeom.csv"
+    if "Input" in config['samples'].index:
+        return [hyper, f"{w.outdir}/annotation_clones/hypergeom_clone_clust/mincl.{w.hyperMinCl}_bothConds.{w.bothConds}_p{w.pthresh}/input_hypergeom.csv"]
+    return [hyper]
+
+rule run_hypergeom:
+    input:
+        get_hypergeom
+    output:
+        "{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/_complete.txt"
+    shell:
+        "touch {output}"
 
 
 rule finalize:
@@ -108,10 +149,13 @@ rule finalize:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/minCellConds_{min_cells}/clone_sizes.ipynb",min_cells=params["min_cells"]),
-        hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/result.csv",
+        hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
                        hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
+        hyperg_f=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/_complete.txt",
+            hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
         embed = expand("{{outdir}}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/embed.ipynb",
-                        perp=params_cl_embed["perplexity"], donperp=params_cl_embed["donor_perplexity"])
+                        perp=params_cl_embed["perplexity"], donperp=params_cl_embed["donor_perplexity"]),
+        overlay = "{outdir}/annotation_clones/umap_clones_overlay/output.ipynb",
     output:
         "{outdir}/annotation_clones/_nuclear_clones_complete.txt"
     shell: "touch {output}"

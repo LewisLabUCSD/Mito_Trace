@@ -3,6 +3,7 @@ from os.path import join
 import pandas as pd
 import itertools
 
+
 def create_f(p, rule, sample=None):
     #print('p', p)
     print('rule', rule)

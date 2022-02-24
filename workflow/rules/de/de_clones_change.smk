@@ -13,7 +13,7 @@ rule preprocess:
         note="{outdir}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/preproc.ipynb"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
-        script = "workflow/notebooks/de_clones_change/preprocess_clones.ipynb",
+        script = "workflow/notebooks/nuclear_de/de_clones_change/preprocess_clones.ipynb",
         enrichment_dir = lambda wildcards, input: dirname(input.enrichment_dir)
     shell:
         "papermill -p enrichment_dir {params.enrichment_dir} -p outdir {params.outdir} -p clone_filt {wildcards.filt}  "
@@ -24,9 +24,9 @@ rule preprocess:
 
 def get_de_script(wildcards):
     if wildcards.de_group == "btwnChange_inClust":
-        return join(ROOT_DIR,"workflow/notebooks/de_clones_change/DE_genes_btwnChange_inClust.ipynb")
+        return join(ROOT_DIR,"workflow/notebooks/nuclear_de/de_clones_change/DE_genes_btwnChange_inClust.ipynb")
     elif wildcards.de_group == "btwnChange":
-        return join(ROOT_DIR,"workflow/notebooks/de_clones_change/DE_genes_btwnChange.ipynb")
+        return join(ROOT_DIR,"workflow/notebooks/nuclear_de/de_clones_change/DE_genes_btwnChange.ipynb")
     return
 
 rule btwnClone_DE:
@@ -58,7 +58,7 @@ rule btwnClone_runGSEA_sepDonors:
     params:
         input = lambda wildcards, input: join(dirname(input[0]), "sepDonors"), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
         output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
-        rscript = "workflow/notebooks/de_clones_change/runGSEA.ipynb",
+        rscript = "workflow/notebooks/nuclear_de/de_clones_change/runGSEA.ipynb",
         gsea_dir = join(ROOT_DIR, "software/Bioinformatics_Tools/"), #/ is necessary
         #pattern = "donor_*",
         #is_dir="FALSE"
@@ -75,7 +75,7 @@ rule btwnClone_summaryGSEA_sepDonors:
         note="{outdir}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/de/{de_group}/minPct_{minPct}_logfc{logfc_threshold}_pthresh_{p_thresh}/sepDonors/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
     params:
         input = lambda wildcards, input: dirname(input[0]),
-        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+        rscript = "workflow/notebooks/utils/summarizeGSEA.ipynb",
     shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
 
 
@@ -87,7 +87,7 @@ rule btwnClone_runGSEA_allDonors:
     params:
         input = lambda wildcards, input: join(dirname(input[0]), "allDonors"), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
         output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
-        rscript = "workflow/notebooks/de_clones_change/runGSEA.ipynb",
+        rscript = "workflow/notebooks/nuclear_de/de_clones_change/runGSEA.ipynb",
         gsea_dir = join(ROOT_DIR, "software/Bioinformatics_Tools/"), #/ is necessary
         #pattern = "donor_*",
         #is_dir="FALSE"
@@ -104,7 +104,9 @@ rule btwnClone_summaryGSEA_allDonors:
         note="{outdir}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/de/{de_group}/minPct_{minPct}_logfc{logfc_threshold}_pthresh_{p_thresh}/allDonors/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
     params:
         input = lambda wildcards, input: dirname(input[0]),
-        rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+        #rscript = join(ROOT_DIR, "R_scripts/annotation_clones/summarizeGSEA.ipynb"),
+        rscript = "workflow/notebooks/utils/summarizeGSEA.ipynb",
+
     shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
 
 

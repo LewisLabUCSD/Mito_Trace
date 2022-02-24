@@ -19,11 +19,20 @@ def preprocess_variants(variants, style=">"):
     return curr
 
 
-def annotate_vcf(vcf_in, gff_in, out_f):
-    cmd = f"bedtools annotate -i {vcf_in} -files {gff_in} > {out_f}"
-    print(cmd)
-    os.system(cmd)
+def add_vcf_header(vcf, mt_fasta, out_vcf):
+    header = "##fileformat=VCFv4.0"
+    header = header + "\n" + f"##reference=file:/{mt_fasta}"
+    #vcf.to_csv(vcf_path, sep='\t', index=False)
+    with open(out_vcf, 'a') as file:
+        file.write(header)
+        #vcf.to_csv(vcf_path, sep='\t', index=False)
+        vcf.to_csv(out_vcf, index=False, sep="\t")
     return
+# def annotate_vcf(vcf_in, gff_in, out_f):
+#     cmd = f"bedtools annotate -i {vcf_in} -files {gff_in} > {out_f}"
+#     print(cmd)
+#     os.system(cmd)
+#     return
 
 
 def type_of_variants(variants, style=">", to_preproc=True):

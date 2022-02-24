@@ -26,7 +26,6 @@ from icecream import ic
 ########################################################################
 # def get_coverage(wildcards):
 #     return f"{config['cov_indir']['sample']}/{wildcards.sample}.coverage.txt"
-
 rule convert_to_af:
     input:
         cells_meta = "{outdir}/cells_meta.tsv",
@@ -42,6 +41,7 @@ rule convert_to_af:
         var_type = "init"
     shell:
         "papermill -p INDIR {params.indir} -p COUNT_INDIR {params.counts_indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d}  -p var_type {params.var_type} {params.note} {output.note}"
+
 
 rule barcodes_btwnClones:
     input:
@@ -97,7 +97,7 @@ rule finalize:
         dist_vars = expand("{{outdir}}/distinct_variants/donor{d}/output.ipynb", d=np.arange(config["N_DONORS"])),
     output:
         out = "{outdir}/barcodes/_clone_complete.txt",
-    shell: "touch {output}"
+    shell: "touch {output.out}"
 
 
 ################################################
