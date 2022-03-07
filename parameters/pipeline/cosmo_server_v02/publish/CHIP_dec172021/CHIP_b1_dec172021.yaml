@@ -1,6 +1,6 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline_v02.yaml"
+config: "parameters/pipeline/publish/publish_v01.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
@@ -12,5 +12,4 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec17
 #results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
 N_DONORS: 2
 
-variants_f: "/data/Mito_Trace/data/processed/gilead_chip_profile/20210726_Croker_CD34_sample_ship_MW_20210726_Variants.csv"
 markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"

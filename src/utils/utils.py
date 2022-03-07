@@ -16,6 +16,68 @@ from mplh.fig_utils import helper_save as hs
 from pandarallel import pandarallel
 
 
+def get_continuous_colors(df, col, clr_key=1, clr_type='sequential'):
+    anno_labels = np.sort(df[col].unique())
+
+
+    clr_keys = {1:sns.cubehelix_palette(len(anno_labels),
+                                        light=.9, dark=.2, reverse=True,
+                                        rot=.1, start=2.8),
+                2:sns.cubehelix_palette(len(anno_labels),
+                                        light=.9, dark=.2, reverse=True,
+                                        rot=.1, start=4.2),
+                3:sns.cubehelix_palette(len(anno_labels),
+                        light=.9, dark=.2, reverse=True,
+                        rot=.3, start=0)}
+    divergent_clr_keys = {1:sns.diverging_palette(240, 10, n=len(anno_labels)),
+                          2:sns.diverging_palette(150, 275, s=80, l=55, n=len(anno_labels))
+                          }
+    cat_clr_keys = {1:sns.color_palette("Set2"), 
+                    2:sns.color_palette("Paired")
+                    }
+    if clr_type=="sequential":
+        anno_pal = clr_keys[clr_key]
+    elif clr_type=="divergent":
+        anno_pal = divergent_clr_keys[clr_key]
+    elif clr_type=="categorical":
+        anno_pal = cat_clr_keys[clr_key]
+    else:
+        raise ValueError
+
+    anno_lut = dict(zip(map(str, anno_labels), anno_pal))
+
+    anno_colors = pd.Series(anno_lut)
+    anno_colors
+
+    df[f"{col}_map"] = df[col].apply(lambda x: anno_colors.loc[str(x)])
+
+    return df, anno_labels, anno_lut
+
+def plot_continuous_legend(g, anno_labels, anno_lut, n_labs=-1, title=None, loc='right', decimal_places=3):
+    if n_labs == -1 or n_labs>len(anno_labels):
+        n_labs = len(anno_labels)
+    
+    step = int(np.round(len(anno_labels)/n_labs))
+
+    # if title is not None:
+    #     tit = g.ax_heatmap.bar(0, 0,label=title, linewidth=0)
+    for label in anno_labels[::step]:   
+        if type(label) == str:
+            g.ax_heatmap.bar(0, 0, color=anno_lut[str(label)],
+                                    label=f'{label}', linewidth=0)  
+        else:            
+            g.ax_heatmap.bar(0, 0, color=anno_lut[str(label)],
+                                    label=f'{label:.3g}', linewidth=0)
+        # g.ax_col_dendrogram.bar(0, 0, color=anno_lut[str(label)],
+        #                         label=label, linewidth=0)
+        # plt.bar(0, 0, color=anno_lut[str(label)],
+        #                 label=label, linewidth=0)
+
+    g.ax_heatmap.legend(bbox_to_anchor=(1.4, 1.2), ncol=4, loc=loc, borderaxespad=1)
+    #g.ax_col_dendrogram.legend(ncol=4 )#loc="best", ncol=6)
+    return g.ax_heatmap.legend()
+
+
 
 def biplot(score, coeff, labels=None, PCs=(1, 2)):
     xs = score[:, 0]
