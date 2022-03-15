@@ -1,0 +1,66 @@
+Mar-09 17:46:25.584 [main] DEBUG nextflow.cli.Launcher - $> nextflow run iarcbioinfo/needlestack --bed /data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_3/gff_A2_black/annotation_clones/merged_peaks.tsv --input_bams /data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/somatic_variants/preproc/bam/ --ref data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta --output_vcf /data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/somatic_variants/all_variants.vcf
+Mar-09 17:46:25.675 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.6
+Mar-09 17:46:25.745 [main] INFO  nextflow.cli.CmdRun - Pulling iarcbioinfo/needlestack ...
+Mar-09 17:46:25.747 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/iarcbioinfo/needlestack/contents/nextflow.config
+Mar-09 17:46:28.056 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/iarcbioinfo/needlestack/contents/needlestack.nf
+Mar-09 17:46:28.425 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/iarcbioinfo/needlestack
+Mar-09 17:46:28.632 [main] DEBUG nextflow.scm.AssetManager - Pulling iarcbioinfo/needlestack -- Using remote clone url: https://github.com/IARCbioinfo/needlestack.git
+Mar-09 17:46:36.927 [main] INFO  nextflow.cli.CmdRun -  downloaded from https://github.com/IARCbioinfo/needlestack.git
+Mar-09 17:46:36.978 [main] INFO  nextflow.cli.CmdRun - Launching `iarcbioinfo/needlestack` [stupefied_gautier] - revision: 8883a4ad65 [master]
+Mar-09 17:46:37.000 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /home/isaac/.nextflow/assets/iarcbioinfo/needlestack/nextflow.config
+Mar-09 17:46:37.002 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/isaac/.nextflow/assets/iarcbioinfo/needlestack/nextflow.config
+Mar-09 17:46:37.014 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-09 17:46:37.147 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/isaac/.nextflow/plugins
+Mar-09 17:46:37.150 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Mar-09 17:46:37.167 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Mar-09 17:46:37.169 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Mar-09 17:46:37.180 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Mar-09 17:46:37.196 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Mar-09 17:46:37.295 [main] DEBUG nextflow.Session - Session uuid: abeb34f1-43fa-442b-a27b-8c5c0e37c90e
+Mar-09 17:46:37.295 [main] DEBUG nextflow.Session - Run name: stupefied_gautier
+Mar-09 17:46:37.296 [main] DEBUG nextflow.Session - Executor pool size: 32
+Mar-09 17:46:37.330 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.6 build 5660
+  Created: 21-12-2021 16:55 UTC (11:55 EDT)
+  System: Linux 5.13.0-28-generic
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 11.0.1-internal+0-adhoc..src
+  Encoding: UTF-8 (UTF-8)
+  Process: 1992655@isaac-HP-Z640-Workstation [127.0.1.1]
+  CPUs: 32 - Mem: 125.8 GB (535 MB) - Swap: 46.6 GB (8.1 GB)
+Mar-09 17:46:37.365 [main] DEBUG nextflow.Session - Work-dir: /mnt/md0/isshamie/Projects/Mito_Trace/work [ext2/ext3]
+Mar-09 17:46:37.389 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Mar-09 17:46:37.406 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Mar-09 17:46:37.505 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 33; maxThreads: 1000
+Mar-09 17:46:37.628 [main] DEBUG nextflow.Session - Session start invoked
+Mar-09 17:46:37.634 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /mnt/md0/isshamie/Projects/Mito_Trace/trace.txt
+Mar-09 17:46:40.486 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Mar-09 17:46:40.559 [main] INFO  nextflow.Nextflow - 
+Mar-09 17:46:40.559 [main] INFO  nextflow.Nextflow - --------------------------------------------------------
+Mar-09 17:46:40.560 [main] INFO  nextflow.Nextflow -                       _ _           _             _     
+Mar-09 17:46:40.560 [main] INFO  nextflow.Nextflow -                      | | |         | |           | |    
+Mar-09 17:46:40.560 [main] INFO  nextflow.Nextflow -   _ __   ___  ___  __| | | ___  ___| |_ __ _  ___| | __ 
+Mar-09 17:46:40.560 [main] INFO  nextflow.Nextflow -  |  _ \ / _ \/ _ \/ _` | |/ _ \/ __| __/ _` |/ __| |/ / 
+Mar-09 17:46:40.561 [main] INFO  nextflow.Nextflow -  | | | |  __/  __/ (_| | |  __/\__ \ || (_| | (__|   <  
+Mar-09 17:46:40.561 [main] INFO  nextflow.Nextflow -  |_| |_|\___|\___|\__,_|_|\___||___/\__\__,_|\___|_|\_\ 
+Mar-09 17:46:40.561 [main] INFO  nextflow.Nextflow -                                                         
+Mar-09 17:46:40.561 [main] INFO  nextflow.Nextflow - NEEDLESTACK v1.1: A MULTI-SAMPLE SOMATIC VARIANT CALLER
+Mar-09 17:46:40.562 [main] INFO  nextflow.Nextflow - --------------------------------------------------------
+Mar-09 17:46:40.562 [main] INFO  nextflow.Nextflow - Copyright (C) IARC/WHO
+Mar-09 17:46:40.562 [main] INFO  nextflow.Nextflow - This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE.txt
+Mar-09 17:46:40.562 [main] INFO  nextflow.Nextflow - This is free software, and you are welcome to redistribute it
+Mar-09 17:46:40.563 [main] INFO  nextflow.Nextflow - under certain conditions; see LICENSE.txt for details.
+Mar-09 17:46:40.564 [main] INFO  nextflow.Nextflow - --------------------------------------------------------
+Mar-09 17:46:40.568 [main] DEBUG nextflow.Session - Session aborted -- Cause: input fasta reference does not seem to have a .fai index (use samtools faidx). Expression: fasta_ref_fai.exists()
+Mar-09 17:46:40.601 [main] ERROR nextflow.cli.Launcher - @unknown
+java.lang.AssertionError: input fasta reference does not seem to have a .fai index (use samtools faidx). Expression: fasta_ref_fai.exists()
+	at org.codehaus.groovy.runtime.InvokerHelper.assertFailed(InvokerHelper.java:438)
+	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.assertFailed(ScriptBytecodeAdapter.java:670)
+	at Script_4bda8832.runScript(Script_4bda8832:302)
+	at nextflow.script.BaseScript.runDsl1(BaseScript.groovy:163)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:200)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:221)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:212)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:120)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:308)
+	at nextflow.cli.Launcher.run(Launcher.groovy:480)
+	at nextflow.cli.Launcher.main(Launcher.groovy:639)

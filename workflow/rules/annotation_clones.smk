@@ -122,7 +122,7 @@ rule cluster_clone_input_hypergeom:
         result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv",
         noIn="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv",
         enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv.png",
-        noIn_enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv.png",
+        noIn_enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv.png",
         note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.ipynb"
     params:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clones_clusters_hypergeometric_sepInput.ipynb"),
