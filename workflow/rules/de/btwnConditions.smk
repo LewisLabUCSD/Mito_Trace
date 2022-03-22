@@ -52,6 +52,7 @@ rule runGSEA_btwnCond:
         "../../envs/gsea_manual.yml" #environment with clusterprofiler
     shell: "papermill -p padjmethod {params.padjmethod} -p pthresh {params.pthresh} -p gsea_pthresh {params.gsea_pval} -p prefilter {params.prefilter} -p stat_col {params.stat_col:q} -p DE.out.path {params.input} -p export.path {params.output} -p gsea_dir {params.gsea_dir} {params.rscript} {output[0]}"
 
+
 rule summaryGSEA_btwnCond:
     input:
         "{outdir}/annotation_clones/de_btwncond_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/GSEA.ipynb",
@@ -59,6 +60,6 @@ rule summaryGSEA_btwnCond:
         note="{outdir}/annotation_clones/de_btwncond_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
     params:
         input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
-        rscript = join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_conditions/summarizeGSEA.ipynb"),
+        rscript = join(ROOT_DIR, "workflow/notebooks/utils/summarizeGSEA.ipynb"),
     shell: "papermill -p export_path {params.input} {params.rscript} {output.note}"
 

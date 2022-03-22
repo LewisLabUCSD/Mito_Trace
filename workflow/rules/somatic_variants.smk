@@ -31,7 +31,7 @@ rule all:
 rule move_bam:
     input:
         bam_files = expand("{mtscATAC_dir}/{s}/outs/possorted_bam.bam", mtscATAC_dir=config['mtscATAC_OUTDIR'], s=samples.index),
-    output: 
+    output:
         bam_in = expand("{{outdir}}/preproc/bam/{s}.bam", s=samples.index),
         bai_in = expand("{{outdir}}/preproc/bam/{s}.bam.bai", s=samples.index)
     params:
@@ -45,20 +45,20 @@ rule move_bam:
           print('cmd2', cmd2)
           os.system(cmd2)
 
-
-# peak files from the merged peaks in annotation
-rule needlestack:
-    input:
-        bam_in = expand("{{outdir}}/preproc/bam/{s}.bam", s=samples.index),
-        bai_in = expand("{{outdir}}/preproc/bam/{s}.bam.bai", s=samples.index),
-        bed_in = config["merged_peaks_needle_f"]  # "{outdir}/bed/peaks.bed"
-    output:
-        vcf = "{outdir}/all_variants.vcf"
-    params:
-        bam_indir = lambda wildcards, input: dirname(input.bam_in[0]),
-        mt_ref = ref_fa
-    shell:
-        "nextflow run iarcbioinfo/needlestack --bed {input.bed_in} --input_bams {params.bam_indir}/ --ref {params.mt_ref} --output_vcf {output.vcf}"
+#
+# # peak files from the merged peaks in annotation
+# rule needlestack:
+#     input:
+#         bam_in = expand("{{outdir}}/preproc/bam/{s}.bam", s=samples.index),
+#         bai_in = expand("{{outdir}}/preproc/bam/{s}.bam.bai", s=samples.index),
+#         bed_in = config["merged_peaks_needle_f"]  # "{outdir}/bed/peaks.bed"
+#     output:
+#         vcf = "{outdir}/all_variants.vcf"
+#     params:
+#         bam_indir = lambda wildcards, input: dirname(input.bam_in[0]),
+#         mt_ref = ref_fa
+#     shell:
+#         "nextflow run iarcbioinfo/needlestack --bed {input.bed_in} --input_bams {params.bam_indir}/ --ref {params.mt_ref} --output_vcf {output.vcf}"
 
 
 rule barcode_addnames:
@@ -72,20 +72,47 @@ rule barcode_addnames:
 
 
 
-rule merge_bams:
+rule filt_bams:
     input:
-        bam_in = expand("{{outdir}}/preproc/bam/{s}.bam", s=samples.index),
+        bam_f = "{outdir}/preproc/bam/{s}.bam",
+    output:
+        "{outdir}/preproc/bam/{s}.peaks.bam"
+    params:
+        bed_in = config["merged_peaks_small_f"]
+    shell: "bedtools intersect -wa -a {input.bam_f} -b {params.bed_in} > {output}"
+
+
+rule merge_bams_v01:
+    input:
+        bam_in = expand("{{outdir}}/preproc/bam/{s}.peaks.bam", s=samples.index),
         barcode_files = expand("{mtscATAC_dir}/{s}/outs/filtered_peak_bc_matrix/barcodes.tsv",
-            mtscATAC_dir = config['mtscATAC_OUTDIR'], s=samples.index),
-        bed_in = config["merged_peaks_f"]
+                                mtscATAC_dir = [config['mtscATAC_OUTDIR']], s=samples.index),
+        #bed_in = config["merged_peaks_small_f"]
         #barcode_files = expand("{{outdir}}/preproc/barcodes/{s}.barcodes.tsv", s=samples.index),
         #bam_files = expand("{mtscATAC_dir}/{s}/outs/possorted_bam.bam", mtscATAC_dir=config['mtscATAC_OUTDIR'], s=samples.index),
     output:
         #outdir = directory("{outdir}/preproc/merge_bam"),
-        bam = "{outdir}/preproc/merge_bam/pooled.sorted.bam"
+        #bam = "{outdir}/preproc/merge_bam/pooled.sorted.bam",
+        bam = expand("{{outdir}}/preproc/merge_bam/pooled.{s}.bam", s=samples.index)
     params:
-        outdir = lambda wildcards, output: dirname(output.bam),
+        outdir = lambda wildcards, output: dirname(output.bam[0]),
         barcode_files = lambda wildcards, input: ",".join(input.barcode_files),
         bam_files = lambda wildcards, input: ",".join(input.bam_in),
-        seed = 42
-    shell: "python workflow/notebooks/merge_bam/merge_bams.py --samFiles {params.bam_files} --barcodeFiles {params.barcode_files} --regionFile {input.bed_in} --outDir {params.outdir} --randomSEED {params.seed}"
+        seed = 42,
+        samples = ",".join(samples.index)
+    shell: "python workflow/notebooks/merge_bam/merge_bams.py --samFiles {params.bam_files} --barcodeFiles {params.barcode_files} --outDir {params.outdir} --samples {params.samples} --randomSEED {params.seed}"
+
+rule merge_bams_v02:
+    input:
+        bam = "{outdir}/preproc/merge_bam/pooled.{sample}.bam"
+    output:
+        bai = "{outdir}/preproc/merge_bam/pooled.{sample}.bai"
+    shell: "samtools index {input.bam}"
+
+rule merge_bams_v03:
+    input:
+        bam = expand("{{outdir}}/preproc/merge_bam/pooled.{sample}.bam", sample=samples.index),
+        bai = expand("{{outdir}}/preproc/merge_bam/pooled.{sample}.bai", sample=samples.index)
+    output:
+        "{outdir}/preproc/merge_bam/pooled.sorted.bam"
+    shell: "samtools merge {input.bam} -o {output} && samtools sort {output}"

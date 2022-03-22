@@ -12,6 +12,7 @@ reports/
 output/
 figures/
 Analysis/
+.nextflow*
 *.bam
 *.bai
 *.svg

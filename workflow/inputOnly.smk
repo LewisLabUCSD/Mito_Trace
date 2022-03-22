@@ -106,6 +106,7 @@ rule all:
             out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh']),
+
         # Clone stats
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/_clone_complete.txt",
             out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -124,14 +125,32 @@ rule all:
             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], gff=gff,
             kparam=params_clones["knn"]["params"]["resolution"]),
 
-        # MT Plots
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/thr__{t}_rt__{rt}/annotation_clones/de_clone_btwnvars_RNA_af/mtPlots.ipynb",
+        # Cluster DE
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwnclust_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}/de_p{p_thresh}_GSEA_pthresh_{gsea_pval}/summary.ipynb",
             out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
             kparam=config["params_clones"]["knn"]["params"]["resolution"],
             variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
-            t=params_annclo["t"], rt=params_annclo["rt"]),
+            p_thresh=params_annclo["p_thresh"],
+            min_cells=params_annclo["min_cells"],
+            logfc_threshold=params_annclo["logfc_threshold"],
+            btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
+            ),
+
+        # Within each clone run DE btwn conditions
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
+            out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
+            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+            kparam=config["params_clones"]["knn"]["params"]["resolution"],
+            variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
+            p_thresh=params_annclo["p_thresh"],
+            min_cells=params_annclo["min_cells"],
+            logfc_threshold=params_annclo["logfc_threshold"],
+            btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
+            prefilter=params_annclo["prefilter"],
+            stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
 
 
         ##  Methods compare
@@ -140,18 +159,6 @@ rule all:
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh']),
 
-        # Merge clone enrich and nuclear
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/merge_enrich_and_lineage/out.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"],
-            minPct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"], #assay=params_annclo["assay"],
-            gff=gff, min_cells=params_annclo["min_cells"],
-            variants=[x for x in params_clones["variants"] if x != "simple"],
-            stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"],
-            filt = params_clch["filt"], shuffle=params_clch["shuffle"], use_p_adjust=params_clch["use_p_adjust"],
-            pthresh=params_clch["pthresh"], min_cell=params_clch["min_cell"], min_cell_both=params_clch["min_cell_both"],),
 
 ################################################################
 ## Import from prior snakefile modules
@@ -258,17 +265,6 @@ rule merged:
     #log: "logs/{prefix}/vireo/chrM/pseudo/minC{mt_minC}_minAF{mt_minAF}/numC{num_cells}_isprop{is_prop}.log"
     shell: "python -m src.pseudo_batch {params.outdir} {params.indirs} --num_cells {params.num_cells} --is_prop {params.is_prop} --samples {params.prefix}" # > {log} 2>&1"
 
-
-# def check_conds(wildcards):
-#     w = wildcards
-#     if samples.shape[0] == 1:
-#         return f"{w.out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/cellSNP.tag.AD.mtx"
-#
-# rule one_cond_merged:
-#     input:
-#         "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/cellSNP.tag.AD.mtx"
-#     output:
-#         "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/cellSNP.tag.AD.mtx"
 
 ########################################################################
 ## 4. De-multiplex the merged conditions using Vireo
@@ -498,11 +494,11 @@ use rule convert_to_af from cloneMod as clone_convert_to_af with:
 ########################################################################
 ## Enrichment
 ########################################################################
-module cloneEnrichMod:
-    snakefile: "./rules/clone_detection/enrichment.smk"
-    config: params
-
-use rule * from cloneEnrichMod as cloneEnrich_*
+# module cloneEnrichMod:
+#     snakefile: "./rules/clone_detection/enrichment.smk"
+#     config: params
+#
+# use rule * from cloneEnrichMod as cloneEnrich_*
 
 # rule vireo_enrichment:
 #     version: '1.0' # no +1 norm error
@@ -537,8 +533,6 @@ use rule * from cloneEnrichMod as cloneEnrich_*
 #         samples = ",".join(samples.index),
 #         comparisons = config["comparisons"] if "comparisons" in config else "None"
 #     shell: "python {params.script} {input} {params.OUTDIR} {params.samples} --tests {params.comparisons:q}"
-
-
 
 
 ############################################
@@ -629,20 +623,28 @@ use rule preprocess from cloneChangeMod as cloneChange_preprocess with:
         clone_change_f = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/clone_change.csv",
         note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/preproc.ipynb"
 
+# use rule btwnClone_DE from cloneChangeMod as cloneChange_btwnClone_DE with:
+#     input:
+#         se_f = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/SE.rds",
+#         clone_change_f = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/clone_change.csv",
+#     output:
+#         note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/de/{de_group}/minPct_{minPct}_logfc{logfc_threshold}_pthresh_{pthresh}/de.ipynb",
+
 
 ## get clone meta from stats and immune clusters
 rule merge_enrich_and_lineage:
     input:
-        clone_change_f = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/clone_change.csv",
+        clone_change_f = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/clone_change.csv",
         dominant_cluster = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/dominant_clone_clust/combinedConditions_dominant_cluster.csv"
     output:
-        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/merge_enrich_and_lineage/out.ipynb",
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/merge_enrich_and_lineage/out.ipynb",
     params:
         dom_indir = lambda wildcards, input: dirname(input.dominant_cluster),
         script = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_count_embed", "aggregate_clone_meta.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note)
+        outdir = lambda wildcards, output: dirname(output.note),
+        input_id = "Input" if "Input" in samples.index else "None"
     shell:
-        "papermill -p dom_indir {params.dom_indir} -p enrichment_f {input.clone_change_f} -p outdir {params.outdir} {params.script} {output.note}"
+        "papermill -p dom_indir {params.dom_indir} -p enrichment_f {input.clone_change_f} -p outdir {params.outdir} -p input_id {params.input_id} {params.script} {output.note}"
 
 # rule merge_enrich_and_lineage_and_input:
 #     input:

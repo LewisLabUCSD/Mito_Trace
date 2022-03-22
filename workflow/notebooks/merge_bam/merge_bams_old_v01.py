@@ -146,7 +146,7 @@ def fetch_reads(samFile_list, chroms, positions, outbam,
     return None
 
 
-def add_bam_tag(bamefile_list, samples, out_prefix, cell_tag='CB'):
+def add_bam_tag(bamefile_list, samples, outbam, cell_tag='CB'):
     ##TODO: The input should be the filtered bam based on the bed regions
     for ii in range(len(bamefile_list)):
         bamfile = bamefile_list[ii]
@@ -157,7 +157,7 @@ def add_bam_tag(bamefile_list, samples, out_prefix, cell_tag='CB'):
             print(f"{bamfile} corrupt. Skipping..")
             return
 
-        curr_outbam = pysam.AlignmentFile(f"{out_prefix}.{suffix}.bam", "wb", template=curr_bam)
+        outbam = pysam.AlignmentFile(f"{outbam}_{ii}", "wb", template=curr_bam)
         READ_CNT = 0
         reads_all = []
         for read in curr_bam:
@@ -179,9 +179,9 @@ def add_bam_tag(bamefile_list, samples, out_prefix, cell_tag='CB'):
         print(len(reads_all), READ_CNT)
 
         for _read in reads_all:
-            curr_outbam.write(_read)
+            outbam.write(_read)
         curr_bam.close()
-        curr_outbam.close()
+        outbam.close()
     return None
 
 
@@ -265,10 +265,58 @@ def main():
     barcodes_out = pool_barcodes(barcodes_in, out_dir, options.doublet_rate,
         seed=options.random_seed)
 
+    ## Bed file
+    # print("Processing region bed file.")
+    # pandarallel.initialize(progress_bar=True, nb_workers=options.nproc)
+    # bed_dat = pd.read_csv(options.region_file, header=None, sep="\t")
+    # bed_dat = bed_dat.rename({0:"Chr", 1:"Start", 2:"End"}, axis=1)
+    # def flatten_bed(curr_region):
+    #     """ Create chr and pos dataframe based on the bed region, and add 1 from start"""
+    #     start = curr_region["Start"]+1
+    #     positions = np.arange(start, curr_region["End"]+1)
+    #     df = pd.DataFrame(positions, columns=["Pos"], dtype=int)
+    #     df["Chr"] = curr_region["Chr"]
+    #     return df
+    # bed_df = pd.concat(bed_dat.parallel_apply(flatten_bed, axis=1).values, axis=0, ignore_index=True)
+    # chroms = bed_df["Chr"]
+    # positions = bed_df["Pos"]
+    # vcf_dat = load_VCF(options.region_file, biallelic_only=False,
+    #                    load_sample=False)
+    # chroms = vcf_dat['FixedINFO']['CHROM']
+    # positions = [int(x) for x in vcf_dat['FixedINFO']['POS']]
+
     # fetch each position
-    BAM_FILE_PREFIX = out_dir + "/pooled"
-    add_bam_tag(samFile_list, options.samples,
-                out_prefix=BAM_FILE_PREFIX, cell_tag='CB')
+    BAM_FILE = out_dir + "/pooled.bam"
+    add_bam_tag(samFile_list, options.samples, BAM_FILE, cell_tag='CB')
+
+    # if (options.nproc == 1):
+    #     BAM_FILE = out_dir + "/pooled.bam"
+    #     # fetch_reads(samFile_list, chroms, positions,
+    #     #     BAM_FILE, barcodes_in, barcodes_out)
+    #     add_bam_tag(samFile_list, options.samples, BAM_FILE, cell_tag='CB')
+    # else:
+    #     result = []
+    #     pool = multiprocessing.Pool(processes=options.nproc)
+    #     for ii in range(len(samFile_list)):
+    #         BAM_FILE = out_dir + "/pooled_temp%d.bam" %(ii)
+    #         print(ii, BAM_FILE)
+    #         # result.append(pool.apply_async(fetch_reads, ([samFile_list[ii]],
+    #         #     chroms, positions, BAM_FILE, [barcodes_in[ii]],
+    #         #     [barcodes_out[ii]], "CB"), callback=show_progress))
+    #         result.append(pool.apply_async(add_bam_tag, ([samFile_list[ii]], options.samples, BAM_FILE, "CB"),
+    #                                        callback=show_progress))
+    #     pool.close()
+    #     pool.join()
+    #
+    #     ## merge bam files
+    #     file_list = [out_dir + "/pooled.bam"]
+    #     file_list += [out_dir + "/pooled_temp%d.bam" %(x)
+    #                     for x in range(len(samFile_list))]
+    #     bashCommand = "samtools merge %s" %(" ".join(file_list))
+    #     pro = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    #     pro.communicate()[0]
+    #     for dd in range(len(samFile_list)):
+    #         os.remove(out_dir + "/pooled_temp%d.bam" %(dd))
 
     ## sort and index bam file
     # bashCommand = "samtools sort %s -o %s" %(out_dir + "/pooled.bam",

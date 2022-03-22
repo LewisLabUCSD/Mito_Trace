@@ -1,0 +1,16 @@
+outdir: "/data/Mito_Trace/output/somatic_variants"
+#pipename: "somatic_variants"
+prefix: "CHIP_dec172021"
+snakefile: "workflow/rules/somatic_variants.smk"
+params_dir: "/data/Mito_Trace/parameters/pipeline/cosmo_server/CHIP_dec172021"
+samples_csv:
+  CHIP_b1: "CHIP_b1_dec172021.csv"
+  CHIP_b2: "CHIP_b2_dec172021.csv"
+  CHIP_b3: "CHIP_b3_dec172021.csv"
+  CHIP_b4: "CHIP_b4_dec172021.csv"
+
+#mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
+ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa"
+ncpus: 16
+bed_regions:
+  chip_genes: "/data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed"

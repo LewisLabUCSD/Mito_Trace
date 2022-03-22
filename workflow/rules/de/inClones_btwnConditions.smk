@@ -13,7 +13,7 @@ rule inClone_btwnCond_DE:
     output:
         note =  "{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/de.ipynb",
     params:
-        rscript= join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_conditions/DE_genes_inClones_btwnConditions.ipynb"), # The script defaults to the granja data
+        rscript= join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_clones_btwnConditions/DE_genes_inClones_btwnConditions.ipynb"), # The script defaults to the granja data
         samples = ",".join(config["samples"].index),
         outdir = lambda wildcards, output: dirname(output.note), #"{outdir}/annotation_clones/de_btwnConds_{assay}/minPct_{btwnMinpct}_logfc{logfcthresh}/pthresh_{p_thresh}",
         minPct=lambda wildcards: wildcards.btwnMinpct,
@@ -33,7 +33,7 @@ rule runGSEA_inClone_btwnCond:
     params:
         input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
         output = lambda wildcards, output: dirname(output[0])+"/", #/ needed for the GSEA script
-        rscript = join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_conditions/runGSEA_inClones_btwnConditions.ipynb"),
+        rscript = join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_clones_btwnConditions/runGSEA_inClones_btwnConditions.ipynb"),
         gsea_dir = join(ROOT_DIR, "software/Bioinformatics_Tools/"), #/ is necessary
         gsea_pval = lambda wildcards: wildcards.gsea_pval,
         stat_col = lambda wildcards: wildcards.stat_col,
@@ -53,7 +53,7 @@ rule summaryGSEA_inClone_btwnCond:
         note="{outdir}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
     params:
         input = lambda wildcards, input: dirname(input[0]), #join(f"{dirname(input[0])}_pthresh_{wildcards.p_thresh}", "btwnConds_inClust"),
-        script = join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_conditions/summarizeGSEA.ipynb"),
+        script = join(ROOT_DIR, "workflow/notebooks/utils/summarizeGSEA.ipynb"),
     shell: "papermill -p export_path {params.input} {params.script} {output.note}"
 
 ####################
