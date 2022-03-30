@@ -120,9 +120,9 @@ rule cluster_clone_input_hypergeom:
         se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
     output:
         result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv",
-        noIn="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv",
-        enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv.png",
-        noIn_enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv.png",
+        #noIn="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv",
+        #enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv.png",
+        #noIn_enrich="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv.png",
         note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.ipynb"
     params:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clones_clusters_hypergeometric_sepInput.ipynb"),
@@ -152,8 +152,8 @@ rule finalize:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/minCellConds_{min_cells}/clone_sizes.ipynb",min_cells=params["min_cells"]),
-        hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
-                       hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
+        # hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
+        #                hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
         hyperg_f=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/_complete.txt",
             hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
         embed = expand("{{outdir}}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/embed.ipynb",

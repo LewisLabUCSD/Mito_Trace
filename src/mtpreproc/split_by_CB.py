@@ -21,7 +21,7 @@ import sys
 # os.system(cmd)
 
 
-def split(in_f, out_d, to_overwrite=False):
+def split(in_f, out_d, to_overwrite=False, use_cb_suffix=True):
     """ Splits bam file into single-cell bam files with CB as barcode.
 
     Input file is a CB sorted bam file, but if not, then will sort.
@@ -33,10 +33,13 @@ def split(in_f, out_d, to_overwrite=False):
     :return:
     """
     # Sort on CB
-    if ".CB.bam" in in_f:
-        unsplit_file = in_f
+    if use_cb_suffix:
+        if ".CB.bam" in in_f:
+            unsplit_file = in_f
+        else:
+            unsplit_file = in_f.replace(".bam","") + ".CB.bam"
     else:
-        unsplit_file = in_f.replace(".bam","") + ".CB.bam"
+        unsplit_file = in_f
     print(in_f, unsplit_file)
 
     if to_overwrite or (not os.path.exists(unsplit_file)):

@@ -20,29 +20,6 @@ samples = pd.read_table(join(ROOT_DIR, config["samples_meta"]), dtype=str,sep=',
 #res = config["results"]
 gff = params["genome_path"][config["genome"]]["gff"]
 
-# rule all:
-#     input:
-#         expand("{outdir}/data/annotation/gff_{gff}/mergedSamples/allSamples.integrated.ipynb",
-#                outdir=config['outdir'], prefix=config["prefix"]),
-#
-#         # expand("{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz",
-#         #        extrnl=config['annotations']['name'], outdir=config['outdir'],
-#         #        ),
-#         # expand("{outdir}/data/annotation{sample}/lareau/{proj}/{sample}.clusters.csv",
-#         #        outdir=config['outdir'], sample=samples.index,
-#         #        proj=cfg_anno["lareau"]["proj_ref"],
-#         #        prefix=config["prefix"]),
-#          expand("{outdir}/data/annotation/gff_{gff}/mergedSamples/DE/seuratImmuneDotPlot.png",
-#                  outdir=config['outdir'],prefix=config["prefix"]),
-#
-#         expand("{outdir}/data/annotation/gff_{gff}/mergedSamples/DE_TF/DE_TF.ipynb",
-#                  outdir=config['outdir'],prefix=config["prefix"]),
-#          expand("{outdir}/data/annotation/gff_{gff}/mergedSamples/DE/GSEA/clusters/GSEA.ipynb",
-#                  outdir=config['outdir'],prefix=config["prefix"])
-#
-#         # expand("{outdir}/data/annotation{sample}/anchors/{assay}/{sample}.clusters.csv", sample=samples.index,
-#         #         assay=cfg_anno["anchors"]["assay"], outdir=config['outdir'],
-#         #         prefix=config["prefix"])
 
 def get_cellr_input():
     out_d = cfg_anno['datadir']
@@ -73,31 +50,6 @@ def get_extrnl_frags(wildcards):
     return f"{wildcards.outdir}/annotation/data/{cfg_anno['name']}/{cfg_anno['name']}.fragments.sort.tsv.gz"
 
 
-# rule createMergedSignac:
-#     """ Creates a merged R SummarizedExperiment object with the external data and reference combined.
-#     The peaks are reduced to the overlapping sets, and if a fragments file is provided,
-#     Will re-count peaks after creating overlapping peak set (and changing the lengths if the overlaps extend)
-#
-#     """
-#     input:
-#         sample_indir=get_cellr_dir
-#         #"{outdir}/annotation/data/{extrnl}/{extrnl}.fragments.sort.tsv.gz"
-#
-#     output:
-#         "{outdir}/data/annotation{sample}/{sample}.merged.ipynb",
-#         "{outdir}/data/annotation{sample}/{sample}.merged.rds",
-#         report("{outdir}/data/annotation{sample}/{sample}.merged.lsi.Batchlabels.png")
-#     params:
-#         outdir=lambda wildcards, output: dirname(output[0]),
-#         exp = lambda wildcards: wildcards.sample,
-#         #cells_subset=None, To add. Text file of cell labels.
-#         # # External
-#         external_frag_file = get_extrnl_frags, #lambda wc: f"{wc.outdir}/annotation/data/{wc.outdir}/{wc.outdir}.fragments.sort.tsv.gz",
-#         external_prefix = cfg_anno["ID"],
-#         rscript= join(ROOT_DIR, "R_scripts/annotations/01_createMergedSignac.ipynb"), # The script defaults to the granja data
-#         #workdir = os.getcwd(),
-#     shell: "papermill  -p sample_indir {input} -p exp {params.exp} -p outdir {params.outdir} -p external_prefix {params.external_prefix} -p external_frag_file {params.external_frag_file} {params.rscript} {output[0]}"
-#
 
 #####################
 ## V02
@@ -124,6 +76,13 @@ rule createExpSignac:
     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} -p gff_id {params.gff} {params.rscript} {output[0]}"
 
 
+def get_integrate_or_single_rscript(wildcards):
+    if len(samples.index)==1:
+        return join(ROOT_DIR, "R_scripts/annotations/integrateSignac_singleSample.ipynb"), # The script defaults to the granja data
+    return join(ROOT_DIR, "R_scripts/annotations/integrateSignac.ipynb"), # The script defaults to the granja data
+
+
+
 rule integrateSignac:
     input:
         a="{outdir}/data/annotation/gff_{gff}/mergedSamples/allSamples.rds",
@@ -137,7 +96,7 @@ rule integrateSignac:
                          "integrated.lsi.clusters.png"]), category="Nuclear ATAC")
     params:
         outdir =lambda wildcards, output: dirname(output[0]),
-        rscript= join(ROOT_DIR, "R_scripts/annotations/integrateSignac.ipynb"), # The script defaults to the granja data
+        rscript= get_integrate_or_single_rscript, #join(ROOT_DIR, "R_scripts/annotations/integrateSignac.ipynb"), # The script defaults to the granja data
         sample_names = ",".join(samples.index),
         gff = gff
     shell: "papermill -p outdir {params.outdir} -p sample_names {params.sample_names} -p gff_id {params.gff} {params.rscript} {output[0]}"

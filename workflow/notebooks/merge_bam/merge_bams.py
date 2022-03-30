@@ -147,7 +147,6 @@ def fetch_reads(samFile_list, chroms, positions, outbam,
 
 
 def add_bam_tag(bamefile_list, samples, out_prefix, cell_tag='CB'):
-    ##TODO: The input should be the filtered bam based on the bed regions
     for ii in range(len(bamefile_list)):
         bamfile = bamefile_list[ii]
         suffix = samples[ii]
@@ -157,6 +156,7 @@ def add_bam_tag(bamefile_list, samples, out_prefix, cell_tag='CB'):
             print(f"{bamfile} corrupt. Skipping..")
             return
 
+        print(f"New name: {out_prefix}.{suffix}.bam")
         curr_outbam = pysam.AlignmentFile(f"{out_prefix}.{suffix}.bam", "wb", template=curr_bam)
         READ_CNT = 0
         reads_all = []
@@ -182,7 +182,7 @@ def add_bam_tag(bamefile_list, samples, out_prefix, cell_tag='CB'):
             curr_outbam.write(_read)
         curr_bam.close()
         curr_outbam.close()
-    return None
+    return
 
 
 def main():

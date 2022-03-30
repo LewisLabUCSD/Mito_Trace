@@ -14,3 +14,9 @@ ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genom
 ncpus: 16
 bed_regions:
   chip_genes: "/data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed"
+
+
+samples:
+  - "CHIP_b1_Input"
+  - "CHIP_b1_Control"
+  - "CHIP_b1_Flt3l"

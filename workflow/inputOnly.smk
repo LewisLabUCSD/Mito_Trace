@@ -138,21 +138,6 @@ rule all:
             btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
             ),
 
-        # Within each clone run DE btwn conditions
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
-            out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"],
-            variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
-            p_thresh=params_annclo["p_thresh"],
-            min_cells=params_annclo["min_cells"],
-            logfc_threshold=params_annclo["logfc_threshold"],
-            btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
-            prefilter=params_annclo["prefilter"],
-            stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
-
-
         ##  Methods compare
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/comparisons.ipynb",
             out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,

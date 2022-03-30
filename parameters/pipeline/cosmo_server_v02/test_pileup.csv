@@ -1,0 +1,4 @@
+sample_name,cellr_ID,fastq_ID,barcode_f,bam_f
+cond0,cond0,,,
+cond1,cond1,,,
+cond2,cond2,,,
