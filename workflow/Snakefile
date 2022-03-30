@@ -634,6 +634,7 @@ rule compare_methods:
         "papermill -p all_files {params.all} -p outdir {params.outdir} -p cfg_outdir {params.cfg_outdir} -p prefix {params.prefix} -p params_f {params.params_f} {params.note} {output.note}"
 
 
+
 ############################################
 ## Annotation
 ############################################
@@ -904,68 +905,25 @@ use rule runGSEA from annoMod as anno_runGSEA with:
 #         #note2= "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/de/minPct_{minPct}_logfc{logfc_threshold}_pthresh_{p_thresh}/sepDonors/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb"
 #
 
-# Summarize over clone results
-# rule vireo_process:
-#     input:
-#         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/volcano_Fisher_foldNorm.png",
-#                 nclones=nclonelist,
-#                 variants=params_clones["variants"]),
-#         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/gff_{gff}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
-#                 nclones=nclonelist,
-#                 variants=params_clones["variants"],
-#                 logThresh=params["annotation_clones"]["params"]["logfc_threshold"],
-#                 minPct=params["annotation_clones"]["params"]["min_pct"],
-#                 cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"],
-#                 gff = [gff] ),
-#         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/enrichment/shuffle_stats/shuffle_stats.csv",
-#                 nclones=nclonelist, variants=params_clones["variants"]),
-#         expand("{{out_dir}}/results/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/vireo/nclones{nclones}/clones_dendro/donor{d}.{f}na.clust.max2.AF.png",
-#                 d=np.arange(config["N_DONORS"]), nclones=nclonelist,
-#                 variants=params_clones["variants"], f=["", "NoCondition."]),
-#     output:
-#         temp("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/temp/vireo/.tmp")
-#     shell: "touch {out_dir}"
-#
-#
-# rule knn_process:
-#     input:
-#         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/volcano_Fisher_foldNorm.png",
-#                 kparam=config["params_clones"]["knn"]["params"]["resolution"],
-#                 variants=[x for x in params_clones["variants"] if x != "simple"]),
-#         # expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/DE_large/minPct_{minPct}__logThresh_{logThresh}/cdf_thresh__{cdf_thresh}/output_Summary.ipynb",
-#         #         kparam=config["params_clones"]["knn"]["params"]["resolution"],
-#         #         variants=[x for x in params_clones["variants"] if x != "simple"],
-#         #         logThresh=params["annotation_clones"]["params"]["logfc_threshold"],
-#         #         minPct=params["annotation_clones"]["params"]["min_pct"],
-#         #         cdf_thresh=params["annotation_clones"]["params"]["cdf_thresh"],
-#         #         gff=[gff]),
-#         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/shuffle_stats/shuffle_stats.csv",
-#                 kparam=config["params_clones"]["knn"]["params"]["resolution"],
-#                 variants=[x for x in params_clones["variants"] if x != "simple"]),
-#         expand("{{out_dir}}/results/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/clones_dendro/donor{d}.{f}na.clust.max2.AF.png",
-#                 d=np.arange(config["N_DONORS"]),kparam=config["params_clones"]["knn"]["params"]["resolution"],
-#                 f=["", "NoCondition."], variants=[x for x in params_clones["variants"] if x != "simple"]),
-#     output:
-#         "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/temp/knn/.tmp"#.pipeline"
-#     shell:
-#         "touch {out_dir}"
-#
-#
-#
-# rule complete_lineage:
-#     input:
-#         "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/temp/{method}/.tmp",
-#     output: "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/{method}/.completed"
-#     shell: "touch {out_dir}"
 
-#########################################################################
-#########################################################################
+############################################
+## Somatic variants and clones:
+############################################
 
-# rule terminate:
-#     input:
-#          rules.complete_lineage.output
-#     output:
-#           "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/{method}/.pipeline"
-#     shell: "touch {out_dir}"
-#
-#
+module somvarsMod:
+    snakefile: "./rules/vcf_bam_to_cells.smk"
+    config: params
+
+use rule * from somvarsMod
+
+rule merge_som_clones:
+    input:
+        clones = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/_clone_complete.txt",
+        AF = "{out_dir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.AF.tsv",
+        DP = "{out_dir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.DP.tsv",
+    output:
+          multiext("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/",
+                   "clones_somvars.png", "somvars_donors.png", "somvars_clones.tsv")
+    params:
+        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/pileup_to_cell_vars.py")
+

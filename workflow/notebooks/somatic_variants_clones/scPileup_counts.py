@@ -29,12 +29,12 @@ def parallel_run_pileup(bam_files, pileup_dir,
     return
 
 
-def get_coverage(bamdir, outdir, base_qual=0,
+def get_coverage(bamdir, outdir, barcodes_f=None, base_qual=0,
                  alignment_qual=0, num_proc=4):
     """
-
     :param bamdir: the split single cell files here
     :param outdir:
+    :param barcodes:
     :param base_qual:
     :param alignment_qual:
     :return:
@@ -45,6 +45,19 @@ def get_coverage(bamdir, outdir, base_qual=0,
         os.mkdir(outdir)
 
     bam_files = np.array(glob(bamdir+"/*CB*.bam"))
+    if barcodes_f is not None:
+        with open(barcodes_f, 'w') as f:
+            barcodes = f.readlines()
+        barcodes = [x.strip() for x in barcodes]
+
+        new_bam_files = []
+        for b in barcodes:
+            if join(bamdir,f"CB_{b}.bam") in bam_files:
+                new_bam_files.append(b)
+        if len(new_bam_files)==0:
+            raise ValueError("Barcodes are not matching")
+        bam_files = new_bam_files
+
     print('bam_files', bam_files[:10])
     parar(bam_files, parallel_run_pileup,
           func_args=(outdir, base_qual, alignment_qual),
@@ -54,13 +67,14 @@ def get_coverage(bamdir, outdir, base_qual=0,
 @click.command()
 @click.argument("bamdir", type=click.Path(exists=True))
 @click.argument("outdir", type=click.Path())
+@click.option("--barcodes", default=None)
 @click.option("--bq", default=20)
 @click.option("--aq", default=0)
 @click.option("--nproc", default=8)
-
-def main(bamdir, outdir, bq, aq, nproc):
-    get_coverage(bamdir, outdir, bq, aq, nproc)
+def main(bamdir, outdir, barcodes, bq, aq, nproc):
+    get_coverage(bamdir, outdir, barcodes, bq, aq, nproc)
     return
+
 
 if __name__ == "__main__":
     main()

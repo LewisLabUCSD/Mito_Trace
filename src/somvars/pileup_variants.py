@@ -80,10 +80,10 @@ def run_pileup(bamfile, outpre, base_qual, alignment_quality): # vcf, vcf_chr_co
 		#print('pileups_d', pileups_d)
 		pileups_df = pd.DataFrame(pileups_d, index=['count']).transpose().reset_index().rename({'level_0':"chr", 'level_1':"pos", 'level_2': "nt"}, axis=1)
 		bq_df = pd.DataFrame(bq_d, index=['BQ']).transpose().reset_index().rename({'level_0':"chr", 'level_1':"pos", 'level_2': "nt"}, axis=1)#.rename({0:"chr", 1:"pos", 2: "BQ"},axis=1)
-		pileups_df.to_csv(outpre + "_pileups.tsv", sep="\t")
+		#pileups_df.to_csv(outpre + "_pileups.tsv", sep="\t")
 		pd.merge(pileups_df, bq_df, on=["chr", "pos", "nt"]).to_csv(outpre + "pileups.bq.tsv", sep="\t")
-
 	return
+
 
 def main():
 	bamfile = sys.argv[1]  # Filepath to raw bamfile

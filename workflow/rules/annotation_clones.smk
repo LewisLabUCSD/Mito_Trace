@@ -33,6 +33,33 @@ rule se_meta:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clusters_cells_meta.ipynb"),
     shell: "papermill -p se_f {input.se_f} {params.rscript} {output.note}"
 
+def get_cluster_labels():
+    return config.get("umap_clusters_f", "FALSE")
+
+rule add_cluster_labels:
+    """Prepare clone-by-cluster counts for umap and hypergeometric test"""
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
+        note = "{outdir}/annotation_clones/add_cluster_labels.ipynb",
+    params:
+        labels = get_cluster_labels(),
+        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/add_cluster_labels.ipynb"),
+    shell: "papermill -p se_f {input.se_f} -p cluster_labels_f {params.labels} {params.rscript} {output.note}"
+
+# Barplots of lineage and clones
+rule lineage_clone_counts:
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
+    output:
+        note = "{outdir}/annotation_clones/cluster_clone_counts/cluster_clone_counts.ipynb"
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        script = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_input.ipynb"),
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {} -p cluster_labels_f {} {params.script} {output.note}"
+
+
 rule plotMarkers:
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
@@ -66,6 +93,7 @@ rule counts_clones:
         sample_names = ",".join(config["samples"].index),
     shell:
         "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p sample_names {params.sample_names} -p minCell {wildcards.min_cells} {params.rscript} {output[0]}"
+
 
 ####################################
 ## Clones-clusters analysis by size.
@@ -137,6 +165,7 @@ def get_hypergeom(wildcards):
     if "Input" in config['samples'].index:
         return [hyper, f"{w.outdir}/annotation_clones/hypergeom_clone_clust/mincl.{w.hyperMinCl}_bothConds.{w.bothConds}_p{w.pthresh}/input_hypergeom.csv"]
     return [hyper]
+
 
 rule run_hypergeom:
     input:

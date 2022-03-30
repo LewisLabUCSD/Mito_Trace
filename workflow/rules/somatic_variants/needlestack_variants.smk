@@ -90,62 +90,62 @@ rule needlestack:
 
     #nextflow run iarcbioinfo/needlestack --input_bams preproc/ --bed /data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed --ref /mnt/md0/isshamie/Projects/Mito_Trace/data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa --min_dp 15 --nsplit 16 --use_file_name --output_vcf chip_genes.variants.vcf
 
-
-
-#############################################
-# Convert needlestack results to cell-by-vars
-#############################################
-rule intersect_vcf:
-    input:
-        bam = "{outdir}/aggregate/preproc/{s}.bam",
-        vcf = "{outdir}/aggregate/variants.all.vcf"
-    output:
-        bam = "{outdir}/aggregate/needle_post/{s}.bam",
-        bai = "{outdir}/aggregate/needle_post/{s}.bam.bai",
-    resources:
-        mem_mb=20000
-    shell:
-        "bedtools intersect -wa -a {input.bam} -b {input.vcf}  > {output.bam} && samtools index {output.bam}"
-
-
-rule split_by_cb:
-    input:
-        bam = "{outdir}/aggregate/needle_post/{s}.bam",
-        cb_bam = temp("{outdir}/aggregate/needle_post/{s}.CB.bam"),
-    output:
-        directory("{outdir}/aggregate/needle_post/{s}/scBam")
-    params:
-        #script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/needlestack_convert_vars_to_cells.ipynb")
-        script = join(ROOT_DIR, "src/mtpreproc/split_by_CB.py")
-    resources:
-        mem_mb=20000
-    shell:
-        "python {params.script} {input.bam} {output}"
-
-rule cb_to_pileup:
-    input:
-        "{outdir}/aggregate/needle_post/{s}/scBam"
-    output:
-        directory("{outdir}/aggregate/needle_post/{s}/scPileupVars"),
-    params:
-        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/scPileup_counts.py"),
-        nproc = lambda wildcards: config["nproc"] if "nproc" in config else 24
-    threads: 16
-    shell: "python {params.script} {input} {output} --nproc {params.nproc}"
-
-
-rule pileup_to_cell_vars:
-    input:
-        "{outdir}/aggregate/needle_post/{s}/scPileupVars",
-        "{outdir}/aggregate/needle_post.variants.vcf"
-    output:
-        "{outdir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.AD.tsv",
-        "{outdir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.DP.tsv"
-    params:
-        outdir = lambda wildcards, output: dirname(output[0]),
-        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/pileup_to_cell_vars.py")
-    shell: "python {params.script} {input}"
-
-#############################################
-#############################################
-
+#
+#
+# #############################################
+# # Convert needlestack results to cell-by-vars
+# #############################################
+# rule intersect_vcf:
+#     input:
+#         bam = "{outdir}/aggregate/preproc/{s}.bam",
+#         vcf = "{outdir}/aggregate/variants.all.vcf"
+#     output:
+#         bam = "{outdir}/aggregate/needle_post/{s}.bam",
+#         bai = "{outdir}/aggregate/needle_post/{s}.bam.bai",
+#     resources:
+#         mem_mb=20000
+#     shell:
+#         "bedtools intersect -wa -a {input.bam} -b {input.vcf}  > {output.bam} && samtools index {output.bam}"
+#
+#
+# rule split_by_cb:
+#     input:
+#         bam = "{outdir}/aggregate/needle_post/{s}.bam",
+#         cb_bam = temp("{outdir}/aggregate/needle_post/{s}.CB.bam"),
+#     output:
+#         directory("{outdir}/aggregate/needle_post/{s}/scBam")
+#     params:
+#         #script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/needlestack_convert_vars_to_cells.ipynb")
+#         script = join(ROOT_DIR, "src/mtpreproc/split_by_CB.py")
+#     resources:
+#         mem_mb=20000
+#     shell:
+#         "python {params.script} {input.bam} {output}"
+#
+# rule cb_to_pileup:
+#     input:
+#         "{outdir}/aggregate/needle_post/{s}/scBam"
+#     output:
+#         directory("{outdir}/aggregate/needle_post/{s}/scPileupVars"),
+#     params:
+#         script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/scPileup_counts.py"),
+#         nproc = lambda wildcards: config["nproc"] if "nproc" in config else 24
+#     threads: 16
+#     shell: "python {params.script} {input} {output} --nproc {params.nproc}"
+#
+#
+# rule pileup_to_cell_vars:
+#     input:
+#         "{outdir}/aggregate/needle_post/{s}/scPileupVars",
+#         "{outdir}/aggregate/needle_post.variants.vcf"
+#     output:
+#         "{outdir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.AD.tsv",
+#         "{outdir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.DP.tsv"
+#     params:
+#         outdir = lambda wildcards, output: dirname(output[0]),
+#         script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/pileup_to_cell_vars.py")
+#     shell: "python {params.script} {input}"
+#
+# #############################################
+# #############################################
+#
