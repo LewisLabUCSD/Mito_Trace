@@ -124,12 +124,12 @@ rule all:
             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
             kparam=params_clones["knn"]["params"]["resolution"]),
 
-        ##  Methods compare
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/comparisons.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh']),
-
+        # ##  Methods compare
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/comparisons.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh']),
+        #
 
 ################################################################
 ## Import from prior snakefile modules

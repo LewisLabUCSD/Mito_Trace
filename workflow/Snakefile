@@ -32,6 +32,8 @@ samples = pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["s
 anno_res = join(config["outdir"], "annotation", "data", config["prefix"])
 
 
+somvar_res = join(config["outdir"], "somatic_variants", "data", config["somvars_dir"])
+
 # Merge the experiment-specific config with the pipeline parameters
 params["results"] = res
 #params["samples_meta"] = config["samples_meta"]
@@ -78,6 +80,10 @@ if not os.path.exists(cluster_names_f):
     cluster_names_f = "None"
 params["cluster_names_f"] = cluster_names_f
 #workdir: config["work_dir"]
+
+
+peak_names = [] if "bed_peakss" not in config else list(config["bed_peakss"].keys())
+peak_names.append("all")
 
 
 ###################################
@@ -226,7 +232,15 @@ rule all:
             filt = params_clch["filt"], shuffle=params_clch["shuffle"], use_p_adjust=params_clch["use_p_adjust"],
             pthresh=params_clch["pthresh"], min_cell=params_clch["min_cell"], min_cell_both=params_clch["min_cell_both"],),
 
-    # # C. Clones: Variant types
+        # # C. Clones: Variant types
+
+        # Somatic variants
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{peaks}/{sample}/clone_altAndRef_numCells.png",
+            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"],
+            sample=samples.index, peaks=peak_names)
 
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb",
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -660,6 +674,8 @@ use rule integrateSignac from annoMod as anno_integrateSignac with:
 ############################################
 ## Clones DE
 ############################################
+params["umap_clusters_f"] = config.get("umap_clusters_f", "FALSE")
+
 module annCloMod:
     snakefile: "./rules/annotation_clones.smk"
     config: params
@@ -909,21 +925,50 @@ use rule runGSEA from annoMod as anno_runGSEA with:
 ############################################
 ## Somatic variants and clones:
 ############################################
+params["outdir"] = config["outdir"]
+params["prefix"] = config["prefix"]
+#params[]
+# module somvarsMod:
+#     snakefile: "./rules/somatic_variants/vcf_bam_to_cells.smk"
+#     config: params
+#
+# use rule * from somvarsMod
+#/data/Mito_Trace/output/somatic_variants/CHIP_dec172021/aggregate/needle_post/peaks_chip_genes/CHIP_b1_Control/scPileupVars
 
-module somvarsMod:
-    snakefile: "./rules/vcf_bam_to_cells.smk"
-    config: params
+def needle_af(wildcards):
+    w = wildcards
+    samplename = f"{config['experiment']}_{w.sample}"
+    curr_dir = join(config["outdir"], "somatic_variants", config["somvars_dir"], f"aggregate/needle_post/peaks_{w.peaks}/{samplename}/cells_vars/vcfpad_1")
+    return join(curr_dir, "af.pileup.tsv")
 
-use rule * from somvarsMod
+def needle_ref(wildcards):
+    w = wildcards
+    samplename = f"{config['experiment']}_{w.sample}"
+    curr_dir = join(config["outdir"], "somatic_variants", config["somvars_dir"], f"aggregate/needle_post/peaks_{w.peaks}/{samplename}/cells_vars/vcfpad_1")
+    return  join(curr_dir, "af.ref.pileup.tsv")
+
+
+# use rule pileup_to_cell_vars from somvarsMod with:
+#     input:
+#     output:
+#         ref = "{config['outdir']}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.ref.pileup.tsv",
+#         af = "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.pileup.tsv"
 
 rule merge_som_clones:
     input:
+        af = needle_af,
+        ref = needle_ref,
         clones = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/_clone_complete.txt",
-        AF = "{out_dir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.AF.tsv",
-        DP = "{out_dir}/aggregate/needle_post/{s}/cell_by_var/cell_vars.DP.tsv",
+        #ref= "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.ref.pileup.tsv",
+        #af= "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.pileup.tsv"
     output:
-          multiext("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/",
-                   "clones_somvars.png", "somvars_donors.png", "somvars_clones.tsv")
+          note="{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{peaks}{sample}/som_clones.ipynb",
+          figs=multiext("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{peaks}/{sample}/",
+                   "clone_altAndRef_numCells.png","clone_altAndRef_sumCounts.png", "donor_altAndRef_numCells.png","donor_altAndRef_sumCounts.png")
     params:
-        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/pileup_to_cell_vars.py")
+        indir = lambda wildcards, input: dirname(input.af),
+        outdir = lambda wildcards, output: dirname(output.note),
+        cells_meta = lambda wildcards, input: join(dirname(dirname(input.clones)), "cells_meta.tsv"),
+        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/vars_to_clones.ipynb")
+    shell: "papermill -p cells_meta_f {params.cells_meta} -p indir {params.indir} -p condition {wildcards.sample} -p outdir {params.outdir} {params.script} {output.note}"
 

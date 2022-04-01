@@ -36,6 +36,7 @@ rule se_meta:
 def get_cluster_labels():
     return config.get("umap_clusters_f", "FALSE")
 
+
 rule add_cluster_labels:
     """Prepare clone-by-cluster counts for umap and hypergeometric test"""
     input:
@@ -48,16 +49,22 @@ rule add_cluster_labels:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/add_cluster_labels.ipynb"),
     shell: "papermill -p se_f {input.se_f} -p cluster_labels_f {params.labels} {params.rscript} {output.note}"
 
+
+def get_lineage_clone_counts_script(wildcards):
+    if wildcards.donType == "combinedDonors":
+        return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_input.ipynb")
+    return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_input_donors.ipynb")
+
 # Barplots of lineage and clones
 rule lineage_clone_counts:
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
     output:
-        note = "{outdir}/annotation_clones/cluster_clone_counts/cluster_clone_counts.ipynb"
+        note = "{outdir}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
-        script = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_input.ipynb"),
-    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {} -p cluster_labels_f {} {params.script} {output.note}"
+        script = get_lineage_clone_counts_script
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta}  {params.script} {output.note}"
 
 
 rule plotMarkers:
@@ -80,6 +87,7 @@ rule overlayClones_umap:
         outdir = lambda wildcards, output: dirname(output.note),
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/overlayClones_on_umap.ipynb"),
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} {params.rscript} {output.note}"
+
 
 rule counts_clones:
     input:
@@ -176,11 +184,13 @@ rule run_hypergeom:
         "touch {output}"
 
 
+
 rule finalize:
     input:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/minCellConds_{min_cells}/clone_sizes.ipynb",min_cells=params["min_cells"]),
+        cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
         # hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
         #                hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
         hyperg_f=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/_complete.txt",

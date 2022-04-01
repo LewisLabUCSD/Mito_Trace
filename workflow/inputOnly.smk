@@ -569,6 +569,8 @@ use rule integrateSignac from annoMod as anno_integrateSignac with:
 ############################################
 ## Clones DE
 ############################################
+params["umap_clusters_f"] = config.get("umap_clusters_f", "FALSE")
+
 module annCloMod:
     snakefile: "./rules/annotation_clones.smk"
     config: params

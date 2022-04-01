@@ -5,7 +5,7 @@
 ###################################################
 
 import sys
-
+from os.path import basename
 import pandas as pd
 import pysam
 pysam.set_verbosity(0)
@@ -47,6 +47,11 @@ def run_pileup(bamfile, outpre, base_qual, alignment_quality): # vcf, vcf_chr_co
 	variants = {}
 	#pileups_d = {"nt": [], "chr": [], "counts": [], "BQ": []}
 	from collections import defaultdict
+
+	cell = basename(bamfile).split(".bam")[0]
+	if "CB_" in cell:
+		cell = cell.split("CB_")[1]
+
 	pileups_d = defaultdict(lambda: 0)
 	bq_d = defaultdict(lambda: 0)
 
@@ -81,7 +86,9 @@ def run_pileup(bamfile, outpre, base_qual, alignment_quality): # vcf, vcf_chr_co
 		pileups_df = pd.DataFrame(pileups_d, index=['count']).transpose().reset_index().rename({'level_0':"chr", 'level_1':"pos", 'level_2': "nt"}, axis=1)
 		bq_df = pd.DataFrame(bq_d, index=['BQ']).transpose().reset_index().rename({'level_0':"chr", 'level_1':"pos", 'level_2': "nt"}, axis=1)#.rename({0:"chr", 1:"pos", 2: "BQ"},axis=1)
 		#pileups_df.to_csv(outpre + "_pileups.tsv", sep="\t")
-		pd.merge(pileups_df, bq_df, on=["chr", "pos", "nt"]).to_csv(outpre + "pileups.bq.tsv", sep="\t")
+		pileups_df = pd.merge(pileups_df, bq_df, on=["chr", "pos", "nt"])
+		pileups_df["cell"] = cell
+		pileups_df.to_csv(outpre + "_pileups.bq.tsv", sep="\t")
 	return
 
 

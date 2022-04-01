@@ -14,42 +14,43 @@ import subprocess as subp
 ########################################################################
 # Setup parameters and outdir
 ########################################################################
-res = join(config["outdir"], config["prefix"])
-
-samples_csv = config["samples_csv"]
-allSamples = {}
-allCellBarcodes = {}
-for exper in samples_csv:
-    curr = pd.read_csv(join(config["params_dir"],samples_csv[exper]))
-    for ind, val in curr.iterrows(): #["sample_name"].values:
-        sample_name = val["sample_name"]
-        name = f"{exper}_{sample_name}"
-        allSamples[name] = val["bam_f"]
-        allCellBarcodes[name] = val["barcode_f"]
-
-
-print("allSamples")
-print(allSamples)
-
-if "samples" in config:
-    allSamples = {x:x for x in config["samples"]}
-
-
-peak_names = [] if "bed_regions" not in config else list(config["bed_regions"].keys())
-peak_names.append("all")
-print('peak names', peak_names)
-
-rule all:
-    input:
-        # expand("{outdir}/aggregate/needle_post/{s}/scPileupVars",
-        #     outdir=join(res), s=allSamples.keys()),
-        expand("{outdir}/aggregate/needle_post/peaks_{peaks}/{s}/concat_scPileupVars/pileup.tsv",
-                outdir=join(res), s=allSamples.keys(),
-                peaks=peak_names
-               ),
-        expand("{outdir}/aggregate/needle_post/peaks_{peaks}/{s}/cells_vars/vcfpad_1/af.pileup.tsv",
-                outdir=join(res), s=allSamples.keys(),
-                peaks=peak_names)
+# res = join(config["outdir"], config["prefix"])
+#
+# samples_csv = config["samples_csv"]
+# allSamples = {}
+# allCellBarcodes = {}
+# for exper in samples_csv:
+#     curr = pd.read_csv(join(config["params_dir"],samples_csv[exper]))
+#     for ind, val in curr.iterrows(): #["sample_name"].values:
+#         sample_name = val["sample_name"]
+#         name = f"{exper}_{sample_name}"
+#         allSamples[name] = val["bam_f"]
+#         allCellBarcodes[name] = val["barcode_f"]
+#
+#
+# print("allSamples")
+# print(allSamples)
+#
+# if "samples" in config:
+#     allSamples = {x:x for x in config["samples"]}
+#
+#
+# peak_names = [] if "bed_regions" not in config else list(config["bed_regions"].keys())
+# peak_names.append("all")
+# print('peak names', peak_names)
+#
+# rule all:
+#     input:
+#         # expand("{outdir}/aggregate/needle_post/{s}/scPileupVars",
+#         #     outdir=join(res), s=allSamples.keys()),
+#         expand("{outdir}/aggregate/needle_post/peaks_{peaks}/{s}/scPileupVars",
+#                 outdir=join(res), s=allSamples.keys(),
+#                 peaks=peak_names
+#                ),
+#         expand("{outdir}/aggregate/needle_post/peaks_{peaks}/{s}/concat_scPileupVars/pileup.tsv",
+#                 outdir=join(res), s=allSamples.keys(),
+#                 peaks=peak_names
+#                )
 
 
 #############################################
@@ -144,6 +145,7 @@ rule cb_to_pileup:
     shell: "python {params.script} {input} {output} --nproc {params.nproc}"
 
 
+
 rule scPileup_concat:
     """ Concat the pileups for each separate cell pileup file
     """
@@ -168,9 +170,7 @@ rule pileup_to_cell_vars:
         outdir = lambda wildcards, output: dirname(output.note),
         script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/pileup_to_af_dp.ipynb"),
         vcf_pad = 1
-    resources:
-        mem_mb=80000
-    shell: "papermill -p vcf {input.vcf} -p scPileupVars {input.pileup} -p vcf_pad {params.vcf_pad} -p outdir {params.outdir} {params.script} {output.note}"
+    shell: "python {params.script} -p vcf {input.vcf} -p scPileupVars {input.pileup} -p vcf_pad {params.vcf_pad} -p outdir {params.outdir} {params.script} {output.note}"
 
 
 

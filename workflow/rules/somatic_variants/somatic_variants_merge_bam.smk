@@ -29,8 +29,9 @@ rule all:
     #expand("{outdir}/preproc/merge_bam/pooled.sorted.bam",outdir=join(res, "somatic_variants")),
     expand("{outdir}/merge_filt_bam/pooled.sorted.bam",outdir=join(res, "somatic_variants")),
     #expand("{outdir}/varCA_pt1/callers", outdir=join(res,"somatic_variants")),
-    expand("{outdir}/gatk/variants.vcf.gz",  outdir=join(res,"somatic_variants")),
+    #expand("{outdir}/gatk/variants.vcf.gz",  outdir=join(res,"somatic_variants")),
     expand("{outdir}/gatk_mutect/variants.vcf.gz", outdir=join(res,"somatic_variants")),
+
 
 rule move_bam:
     input:
@@ -49,7 +50,6 @@ rule move_bam:
           print('cmd2', cmd2)
           os.system(cmd2)
 
-
 rule barcode_addnames:
     input:
         barcode_files = expand("{mtscATAC_dir}/{s}/outs/filtered_peak_bc_matrix/barcodes.tsv",
@@ -58,7 +58,6 @@ rule barcode_addnames:
     output:
         barcode_files = expand("{{outdir}}/preproc/barcodes/{s}.barcodes.tsv", s=samples.index)
     #run:
-
 
 
 rule filt_bams:
@@ -161,6 +160,8 @@ rule create_varca_config:
         samples = f"merged\t{output['samples']}"
         with open(output['samples'],'w') as f:
             f.write(samples)
+
+
 rule run_varCA:
     """Run GATK with varCA. Setup bam files to run"""
     input:
@@ -238,4 +239,4 @@ rule run_mutect_gatk:
         vcf="{outdir}/gatk_mutect/variants.vcf.gz"
     params:
         genome = ref_fa
-    shell: "gatk Mutect2 -R {params.genome} -I {input.bam} -O {output.vcf"
+    shell: "gatk Mutect2 -R {params.genome} -I {input.bam} -O {output.vcf}"
