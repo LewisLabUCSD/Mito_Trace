@@ -36,6 +36,7 @@ genome_path:
     ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
     mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
     gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.gtf"
+    gene_sorted_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.sorted.gtf.bgz"
     gff: "A2_black"
 
 mtpreproc:

@@ -66,7 +66,7 @@ rule filt_bams:
     output:
         "{outdir}/preproc/bam/{s}.peaks.bam"
     params:
-        bed_in = config["merged_peaks_small_f"]
+        bed_in = config["merged_peaks_f"]
     shell: "bedtools intersect -wa -a {input.bam_f} -b {params.bed_in} > {output}"
 
 

@@ -5,6 +5,7 @@
 ##### OUTPUT: .bam file for each unique barcode, best to make a new directory
 # Split_script code modified from https://github.com/pezmaster31/bamtools/issues/135
 ### Python 3.6.8
+import click
 import pysam
 import os
 from os.path import join
@@ -37,7 +38,7 @@ def split(in_f, out_d, to_overwrite=False, use_cb_suffix=True):
         if ".CB.bam" in in_f:
             unsplit_file = in_f
         else:
-            unsplit_file = in_f.replace(".bam","") + ".CB.bam"
+            unsplit_file = in_f.replace(".bam", "") + ".CB.bam"
     else:
         unsplit_file = in_f
     print(in_f, unsplit_file)
@@ -105,8 +106,16 @@ def split(in_f, out_d, to_overwrite=False, use_cb_suffix=True):
     return
 
 
-def main():
-    split(sys.argv[1], sys.argv[2], to_overwrite=False)
+#@click.option("--rg", default=False) #in_f, out_d, to_overwrite=False, use_cb_suffix=True
+#@click.option("--rdict", default=None) #in_f, out_d, to_overwrite=False, use_cb_suffix=True
+@click.command()
+@click.argument("in_f", type=click.Path(exists=True))
+@click.argument("out_d", type=click.Path())
+def main(in_f, out_d): #, rg, rdict):
+    # if rdict is not None:
+    #     rdict = rdict.split(";")
+    #     rdict = {x.split(",")[0]:x.split(",")[1] for x in rdict}
+    split(in_f, out_d) #, rg, rg_dict=rdict) #sys.argv[1], sys.argv[2], to_overwrite=False)
 
 
 if __name__ == "__main__":

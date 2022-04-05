@@ -82,9 +82,9 @@ params["cluster_names_f"] = cluster_names_f
 #workdir: config["work_dir"]
 
 
-peak_names = [] if "bed_peakss" not in config else list(config["bed_peakss"].keys())
+peak_names = [] if "bed_regions" not in config else list(config["bed_regions"].keys())
 peak_names.append("all")
-
+print("peak_names")
 
 ###################################
 ## Rules and workflow
@@ -175,43 +175,43 @@ rule all:
             logfc_threshold=params_annclo["logfc_threshold"],
             btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
             ),
-
-        # Condition DE
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
-            out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"],
-            variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
-            p_thresh=params_annclo["p_thresh"],
-            logfc_threshold=params_annclo["logfc_threshold"],
-            btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
-            prefilter=params_annclo["prefilter"],
-            stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
-
-
-        # Within each clone run DE btwn conditions
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
-            out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"],
-            variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
-            p_thresh=params_annclo["p_thresh"],
-            min_cells=params_annclo["min_cells"],
-            logfc_threshold=params_annclo["logfc_threshold"],
-            btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
-            prefilter=params_annclo["prefilter"],
-            stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
-
-        # Clone expand-regress DE
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/clones_change/_de_clone_change_complete.txt",
-                    out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
-                    mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                    hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-                    kparam=config["params_clones"]["knn"]["params"]["resolution"],
-                    variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
-                    ),
+        #
+        # # Condition DE
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
+        #     out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"],
+        #     variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
+        #     p_thresh=params_annclo["p_thresh"],
+        #     logfc_threshold=params_annclo["logfc_threshold"],
+        #     btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
+        #     prefilter=params_annclo["prefilter"],
+        #     stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
+        #
+        #
+        # # Within each clone run DE btwn conditions
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
+        #     out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"],
+        #     variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
+        #     p_thresh=params_annclo["p_thresh"],
+        #     min_cells=params_annclo["min_cells"],
+        #     logfc_threshold=params_annclo["logfc_threshold"],
+        #     btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
+        #     prefilter=params_annclo["prefilter"],
+        #     stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
+        #
+        # # Clone expand-regress DE
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/clones_change/_de_clone_change_complete.txt",
+        #             out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
+        #             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #             hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+        #             kparam=config["params_clones"]["knn"]["params"]["resolution"],
+        #             variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
+        #             ),
 
         ##  Methods compare
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons/comparisons.ipynb",
@@ -235,12 +235,12 @@ rule all:
         # # C. Clones: Variant types
 
         # Somatic variants
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{peaks}/{sample}/clone_altAndRef_numCells.png",
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/{sample}/som_clones.ipynb",
             out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
             kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"],
-            sample=samples.index, peaks=peak_names)
+            sample=samples.index, regions=peak_names)
 
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb",
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -938,13 +938,13 @@ params["prefix"] = config["prefix"]
 def needle_af(wildcards):
     w = wildcards
     samplename = f"{config['experiment']}_{w.sample}"
-    curr_dir = join(config["outdir"], "somatic_variants", config["somvars_dir"], f"aggregate/needle_post/peaks_{w.peaks}/{samplename}/cells_vars/vcfpad_1")
+    curr_dir = join(config["outdir"], "somatic_variants", config["somvars_dir"], f"aggregate/needle_post/peaks_{w.regions}/{samplename}/cells_vars/vcfpad_1")
     return join(curr_dir, "af.pileup.tsv")
 
 def needle_ref(wildcards):
     w = wildcards
     samplename = f"{config['experiment']}_{w.sample}"
-    curr_dir = join(config["outdir"], "somatic_variants", config["somvars_dir"], f"aggregate/needle_post/peaks_{w.peaks}/{samplename}/cells_vars/vcfpad_1")
+    curr_dir = join(config["outdir"], "somatic_variants", config["somvars_dir"], f"aggregate/needle_post/peaks_{w.regions}/{samplename}/cells_vars/vcfpad_1")
     return  join(curr_dir, "af.ref.pileup.tsv")
 
 
@@ -962,9 +962,9 @@ rule merge_som_clones:
         #ref= "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.ref.pileup.tsv",
         #af= "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.pileup.tsv"
     output:
-          note="{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{peaks}{sample}/som_clones.ipynb",
-          figs=multiext("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{peaks}/{sample}/",
-                   "clone_altAndRef_numCells.png","clone_altAndRef_sumCounts.png", "donor_altAndRef_numCells.png","donor_altAndRef_sumCounts.png")
+          note="{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/{sample}/som_clones.ipynb"
+          # figs=multiext("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/{sample}/",
+          #          "clone_altAndRef_numCells.png","clone_altAndRef_sumCounts.png", "donor_altAndRef_numCells.png","donor_altAndRef_sumCounts.png")
     params:
         indir = lambda wildcards, input: dirname(input.af),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -972,3 +972,24 @@ rule merge_som_clones:
         script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/vars_to_clones.ipynb")
     shell: "papermill -p cells_meta_f {params.cells_meta} -p indir {params.indir} -p condition {wildcards.sample} -p outdir {params.outdir} {params.script} {output.note}"
 
+
+rule som_clones_samples:
+    input:
+         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{{variants}}/knn/kparam_{{kparam}}/somatic_variants/needle/peaks_{{regions}}/{sample}/som_clones.ipynb",
+             sample = samples.index)
+         #note="{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/{sample}/som_clones.ipynb",
+    output:
+          vars="{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_allSamples_{regions}/allSamples.variants.tsv",
+          stats="{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_allSamples_{regions}/allSamples.variants.stats.tsv"
+    run:
+        allVars = []
+        for i in input:
+            curr_dir = dirname(i)
+            curr_f = join(curr_dir, "clones_alt_numCells.csv")
+            if os.path.exists(curr_f):
+                curr_vars = pd.read_csv(curr_f)
+                allVars.append(curr_vars)
+        if len(allVars) != 0:
+            pd.concat(allVars).to_csv(output.vars)
+        else:
+            os.system(f"touch {output.vars}")

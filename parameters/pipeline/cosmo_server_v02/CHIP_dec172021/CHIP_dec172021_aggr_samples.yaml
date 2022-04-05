@@ -11,6 +11,8 @@ samples_csv:
 
 #mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
 ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa"
+gene_sorted_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.sorted.gtf"
+gene_ids_f:
 ncpus: 16
 bed_regions:
   chip_genes: "/data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed"

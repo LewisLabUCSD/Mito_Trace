@@ -10,3 +10,12 @@ print('hi')
 # print(tmp.columns)
 # sns.pairplot(tmp[["p_val", "p_val_adj"]])
 # plt.show()
+
+import pysam
+samfile = pysam.AlignmentFile("/data/Mito_Trace/merged.vcf_0.bam", "rb")
+for read in (samfile.fetch(until_eof=True)):
+    # barcode itr for current read
+    #if "CB" in read.tags():
+    print("Flt3" in read.get_tag('RG').split(":"))
+    print(read.get_tag('RG'))
+    break
