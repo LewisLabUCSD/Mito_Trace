@@ -23,14 +23,19 @@ ref_fa = params["genome_path"][config["genome"]] ["ref_fa"] #data/processed/geno
 #mt_ref_fa = params["genome_path"][config["genome"]]["mt_ref_fa"]
 print('samples', samples.index)
 
+peaks=config["gatk_bed_regions"].keys()
+
 rule all:
   input:
+    expand("{outdir}/regions_{peaks}/gatk_mutect/variants.vcf.gz",
+           outdir=join(res, "somatic_variants"), peaks=peaks),
     #expand("{outdir}/all_variants.vcf", outdir=join(res, "somatic_variants")),
     #expand("{outdir}/preproc/merge_bam/pooled.sorted.bam",outdir=join(res, "somatic_variants")),
-    expand("{outdir}/merge_filt_bam/pooled.sorted.bam",outdir=join(res, "somatic_variants")),
+    expand("{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam",
+           outdir=join(res, "somatic_variants"), peaks=peaks),
     #expand("{outdir}/varCA_pt1/callers", outdir=join(res,"somatic_variants")),
     #expand("{outdir}/gatk/variants.vcf.gz",  outdir=join(res,"somatic_variants")),
-    expand("{outdir}/gatk_mutect/variants.vcf.gz", outdir=join(res,"somatic_variants")),
+    #expand("{outdir}/gatk_mutect/variants.vcf.gz", outdir=join(res,"somatic_variants")),
 
 
 rule move_bam:
@@ -64,56 +69,62 @@ rule filt_bams:
     input:
         bam_f = "{outdir}/preproc/bam/{s}.bam",
     output:
-        "{outdir}/preproc/bam/{s}.peaks.bam"
+        temp("{outdir}/regions_{peaks}/preproc/bam/{s}.peaks.bam")
     params:
-        bed_in = config["merged_peaks_f"]
+        bed_in = lambda wildcards: config["bed_regions"][wildcards.peaks],
+        #bed_in = config["merged_regions_f"]
     shell: "bedtools intersect -wa -a {input.bam_f} -b {params.bed_in} > {output}"
 
 
 rule merge_filt_bams:
     input:
-        bam = expand("{{outdir}}/preproc/bam/{s}.peaks.bam", s=samples.index),
+        bam = expand("{{outdir}}/regions_{{peaks}}/preproc/bam/{s}.peaks.bam", s=samples.index),
         #bai = expand("{{outdir}}/preproc/{s}.peaks.bai", sample=samples.index)
     output:
-        bam= temp("{outdir}/merge_filt_bam/pooled.bam"),
-        sort_bam = "{outdir}/merge_filt_bam/pooled.sorted.bam"
-    shell: "samtools merge {input.bam} -o {output.bam} && samtools sort {output} > {output.sort_bam} && samtools index {output.sort_bam} "
+        bam= temp("{outdir}/regions_{peaks}/merge_filt_bam/pooled.bam"),
+        sort_bam = "{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam"
+    shell: "samtools merge {output.bam} {input.bam} && samtools sort {output.bam} > {output.sort_bam} && samtools index {output.sort_bam} "
 
 
-# rule merge_bams_v01:
-#     input:
-#         bam_in = expand("{{outdir}}/preproc/bam/{s}.peaks.bam", s=samples.index),
-#         barcode_files = expand("{mtscATAC_dir}/{s}/outs/filtered_peak_bc_matrix/barcodes.tsv",
-#                                 mtscATAC_dir = [config['mtscATAC_OUTDIR']], s=samples.index),
-#         #bed_in = config["merged_peaks_small_f"]
-#         #barcode_files = expand("{{outdir}}/preproc/barcodes/{s}.barcodes.tsv", s=samples.index),
-#         #bam_files = expand("{mtscATAC_dir}/{s}/outs/possorted_bam.bam", mtscATAC_dir=config['mtscATAC_OUTDIR'], s=samples.index),
-#     output:
-#         #outdir = directory("{outdir}/preproc/merge_bam"),
-#         #bam = "{outdir}/preproc/merge_bam/pooled.sorted.bam",
-#         bam = expand("{{outdir}}/preproc/merge_bam/pooled.{s}.bam", s=samples.index)
-#     params:
-#         outdir = lambda wildcards, output: dirname(output.bam[0]),
-#         barcode_files = lambda wildcards, input: ",".join(input.barcode_files),
-#         bam_files = lambda wildcards, input: ",".join(input.bam_in),
-#         seed = 42,
-#         samples = ",".join(samples.index)
-#     shell: "python workflow/notebooks/merge_bam/merge_bams.py --samFiles {params.bam_files} --barcodeFiles {params.barcode_files} --outDir {params.outdir} --samples {params.samples} --randomSEED {params.seed}"
-#
-# rule merge_bams_v02:
-#     input:
-#         bam = "{outdir}/preproc/merge_bam/pooled.{sample}.bam"
-#     output:
-#         bai = "{outdir}/preproc/merge_bam/pooled.{sample}.bai"
-#     shell: "samtools index {input.bam}"
-#
-# rule merge_bams_v03:
-#     input:
-#         bam = expand("{{outdir}}/preproc/merge_bam/pooled.{sample}.bam", sample=samples.index),
-#         bai = expand("{{outdir}}/preproc/merge_bam/pooled.{sample}.bai", sample=samples.index)
-#     output:
-#         "{outdir}/preproc/merge_bam/pooled.sorted.bam"
-#     shell: "samtools merge {input.bam} -o {output} && samtools sort {output}"
+
+rule genome_dict:
+    input: ref_fa
+    output: ref_fa.replace(".fa", "") + ".dict"
+    shell: "gatk CreateSequenceDictionary -R {input}"
+
+
+
+rule run_mutect_gatk:
+    input:
+        bam= "{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam",
+        ref_dict = ref_fa.replace(".fa", "") + ".dict"
+        #regions =
+    output:
+        vcf="{outdir}/regions_{peaks}/gatk_mutect/variants.vcf.gz"
+    params:
+        genome = ref_fa
+    shell: "gatk Mutect2 -R {params.genome} -I {input.bam} -O {output.vcf}"
+
+
+rule run_gatk:
+    input:
+        bam= "{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam",
+        ref_dict = ref_fa.replace(".fa", "") + ".dict"
+        #regions =
+    output:
+        tmp="{outdir}/regions_{peaks}/gatk_haplotype/variants.vcf.gz",
+        vcf="{outdir}/regions_{peaks}/gatk/variants.vcf.gz"
+    params:
+        genome = ref_fa
+    shell:
+         """
+            gatk --java-options "-Xmx4g" HaplotypeCaller -R {params.genome} -I {input.bam}  -O {output.tmp}
+            && \
+            gatk --java-options "-Xmx4g" GenotypeGVCFs  --include-non-variant-sites  -R {params.genome} -V {output.tmp} -O {output.vcf}
+        """
+         # # -ERC GVCF -G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation
+
+
 
 def get_varca_cfg():
     if "varCA_path" in config:
@@ -144,10 +155,10 @@ rule create_varca_config:
     """Create the input config for varCA to run"""
     input:
         get_varca_cfg(),  #join(ROOT_DIR, "software/varCA/configs/config.yaml"),
-        "{outdir}/merge_filt_bam/pooled.sorted.bam"
+        "{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam"
     output:
-        cfg="{outdir}/varCA/config.yaml",
-        samples="{outdir}/varCA/samples.tsv"
+        cfg="{outdir}/regions_{peaks}/varCA/config.yaml",
+        samples="{outdir}/regions_{peaks}/varCA/samples.tsv"
     params:
         snp_call = get_snp_call(),
         indel_call = get_indel_call()
@@ -161,14 +172,13 @@ rule create_varca_config:
         with open(output['samples'],'w') as f:
             f.write(samples)
 
-
 rule run_varCA:
     """Run GATK with varCA. Setup bam files to run"""
     input:
-        "{outdir}/merge_filt_bam/pooled.sorted.bam",
-        cfg="{outdir}/varCA/config.yaml",
+        "{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam",
+        cfg="{outdir}/regions_{peaks}/varCA/config.yaml",
     output:
-        "{outdir}/varCA/all_variants.vcf"
+        "{outdir}/regions_{peaks}/varCA/all_variants.vcf"
     shell: "varCA {input}"
 
 
@@ -176,10 +186,10 @@ rule create_varca_prepare_config:
     """Create the input config for varCA to run"""
     input:
         get_varca_prep(),  #join(ROOT_DIR, "software/varCA/configs/config.yaml"),
-        bam="{outdir}/merge_filt_bam/pooled.sorted.bam"
+        bam="{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam"
     output:
-        cfg="{outdir}/varCA_pt1/prepare.yaml",
-        samples="{outdir}/varCA_pt1/samples.tsv"
+        cfg="{outdir}/regions_{peaks}/varCA_pt1/prepare.yaml",
+        samples="{outdir}/regions_{peaks}/varCA_pt1/samples.tsv"
     params:
         snp_call = get_snp_call(),
         indel_call = get_indel_call()
@@ -196,47 +206,13 @@ rule create_varca_prepare_config:
             f.write(samples)
 
 
-rule genome_dict:
-    input: ref_fa
-    output: ref_fa.replace(".fa", "") + ".dict"
-    shell: "gatk CreateSequenceDictionary -R {input}"
-
 rule run_varca_prepare:
     input:
-        cfg = "{outdir}/varCA_pt1/prepare.yaml",
+        cfg = "{outdir}/regions_{peaks}/varCA_pt1/prepare.yaml",
     output:
-        directory("{outdir}/varCA_pt1/callers")
+        directory("{outdir}/regions_{peaks}/varCA_pt1/callers")
     params:
         prep_rule = join(ROOT_DIR, "software", "varCA", "rules", "prepare.smk")
     shell: "snakemake -s {params.prep_rule} --use-conda -j 16 --configfile {input.cfg}"
 
 
-rule run_gatk:
-    input:
-        bam= "{outdir}/merge_filt_bam/pooled.sorted.bam",
-        ref_dict = ref_fa.replace(".fa", "") + ".dict"
-        #regions =
-    output:
-        tmp="{outdir}/gatk_haplotype/variants.vcf.gz",
-        vcf="{outdir}/gatk/variants.vcf.gz"
-    params:
-        genome = ref_fa
-    shell:
-         """
-            gatk --java-options "-Xmx4g" HaplotypeCaller -R {params.genome} -I {input.bam}  -O {output.tmp}
-            && \
-            gatk --java-options "-Xmx4g" GenotypeGVCFs  --include-non-variant-sites  -R {params.genome} -V {output.tmp} -O {output.vcf}
-        """
-         # # -ERC GVCF -G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation
-
-
-rule run_mutect_gatk:
-    input:
-        bam= "{outdir}/merge_filt_bam/pooled.sorted.bam",
-        ref_dict = ref_fa.replace(".fa", "") + ".dict"
-        #regions =
-    output:
-        vcf="{outdir}/gatk_mutect/variants.vcf.gz"
-    params:
-        genome = ref_fa
-    shell: "gatk Mutect2 -R {params.genome} -I {input.bam} -O {output.vcf}"

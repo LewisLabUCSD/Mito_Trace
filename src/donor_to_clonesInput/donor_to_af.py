@@ -39,7 +39,11 @@ for d, curr_donor in cells_meta.groupby('donor'):
         curr_samp_donor_df = curr_donor[
             curr_donor["condition"] == condition]  # Condition-donors
         af_donor_samp = af.loc[af.index.isin(curr_samp_donor_df["ID"].values)]
+        print("af_donor_samp before filt")
+        print(af_donor_samp.shape)
         af_donor_samp = af_donor_samp.loc[(af_donor_samp.sum(axis=1) > 0), (af_donor_samp.sum(axis=0) > 0)]
+        print("af_donor_samp after filt")
+        print(af_donor_samp.shape)
         vars_conds.append(set(af_donor_samp.columns))
         af_donor_conds.append(af_donor_samp)
         ic(curr_cov_f)

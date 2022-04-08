@@ -90,8 +90,7 @@ rule needlestack:
 
     #nextflow run iarcbioinfo/needlestack --input_bams preproc/ --bed /data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed --ref /mnt/md0/isshamie/Projects/Mito_Trace/data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa --min_dp 15 --nsplit 16 --use_file_name --output_vcf chip_genes.variants.vcf
 
-#
-#
+
 # #############################################
 # # Convert needlestack results to cell-by-vars
 # #############################################

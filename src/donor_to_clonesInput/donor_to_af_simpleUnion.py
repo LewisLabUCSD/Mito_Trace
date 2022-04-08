@@ -36,8 +36,7 @@ for d, curr_donor in cells_meta.groupby('donor'):
         af.index = af.index + "_" + condition
         #print('af')
         #print(af.head())
-        curr_samp_donor_df = curr_donor[
-            curr_donor["condition"] == condition]  # Condition-donors
+        curr_samp_donor_df = curr_donor[curr_donor["condition"] == condition]  # Condition-donors
         af_donor_samp = af.loc[af.index.isin(curr_samp_donor_df["ID"].values)]
         af_donor_samp = af_donor_samp.loc[(af_donor_samp.sum(axis=1) > 0), (af_donor_samp.sum(axis=0) > 0)]
         vars_conds.append(set(af_donor_samp.columns))
@@ -88,13 +87,13 @@ for d, curr_donor in cells_meta.groupby('donor'):
     # print(af_donor_df.shape)
     # Save allele + depth matrix + cells_meta
     af_donor_df.to_csv(join(dirname(snakemake.output[int(d)]), "af.tsv"),
-                      sep='\t', index=True)
+                       sep='\t', index=True)
     dp_donor_df.to_csv(join(dirname(snakemake.output[int(d)]), "dp.tsv"),
-                      sep='\t', index=True)
+                       sep='\t', index=True)
 
     curr_cells_meta = cells_meta[cells_meta["ID"].isin(af_donor_df.index)].copy()
     curr_cells_meta.to_csv(join(dirname(snakemake.output[int(d)]), "cells_meta.tsv"),
-                      sep='\t', index=False)
+                           sep='\t', index=False)
 
     # Create VireoIn
     # Requires AD sparse matrix
