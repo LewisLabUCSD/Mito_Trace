@@ -57,6 +57,7 @@ def get_lineage_clone_counts_script(wildcards):
 
 # Barplots of lineage and clones
 rule lineage_clone_counts:
+    """ ISSUE with the output the size is not accurate"""
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
     output:

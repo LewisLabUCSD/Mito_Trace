@@ -21,6 +21,10 @@ min_version("6.0")
 print('config', config)
 
 import pickle
+from snakemake.utils import Paramspace
+
+cells_pspace = Paramspace(config["cells_setup"]["params"], filename_params="*", param_sep="__")
+seq_pspace = Paramspace(config["seq_setup"]["params"], param_sep="__")
 
 ########################################################################
 # Setup parameters and outdir
@@ -71,15 +75,6 @@ nclonelist = params_clones['vireo']['params']['nclonelist']
 config["params_clones"] = params_clones
 
 
-#params["markers_f"] = config["markers_f"]
-
-# # Add cell markers to annotation:
-# cluster_names_f = join(res, "results", "atac_clusters.txt")
-# if not os.path.exists(cluster_names_f):
-#     cluster_names_f = "None"
-# params["cluster_names_f"] = cluster_names_f
-# #workdir: config["work_dir"]
-
 
 ###################################
 ## Rules and workflow
@@ -87,6 +82,12 @@ config["params_clones"] = params_clones
 ###################################
 rule all:
     input:
+        expand("{outdir}/{sim_cells}/{sim_seq}/results/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex.pdf",
+            out_dir=res,sim_cells=cells_pspace.instance_patterns, sim_seq=seq_pspace.instance_patterns,
+            cellrbc=cellrbc, num_read=num_reads_filter,
+            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh']),
+
         # Multiplex: Multiplexed VAF and depth dendrograms for each donor and selected variants
         expand("{out_dir}/results/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex.pdf",
             out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,

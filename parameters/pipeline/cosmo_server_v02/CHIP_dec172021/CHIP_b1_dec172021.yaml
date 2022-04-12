@@ -40,3 +40,7 @@ merged_peaks_needle_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist
 
 
 rg_dict: "Flt3l,Control;Control,Flt3l;Input,Input"
+
+
+# For dendrogram clustering
+dendro_thresh: 0.6

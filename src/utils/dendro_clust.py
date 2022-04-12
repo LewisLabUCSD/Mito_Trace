@@ -2,6 +2,7 @@ import scipy
 from collections import defaultdict
 import seaborn as sns
 #mean_af_clust = mean_af.iloc[inds,cols]
+import pandas as pd
 
 
 def dendro_plot(df, row_meta):
@@ -20,7 +21,7 @@ def dendro_cluster(df, g, d_thresh=0.6):
     return den
 
 
-def get_cluster_classes(den, label='ivl'):
+def old_v01_get_cluster_classes(den, label='ivl'):
     cluster_idxs = defaultdict(list)
     for c, pi in zip(den['color_list'], den['icoord']):
         for leg in pi[1:3]:
@@ -35,9 +36,8 @@ def get_cluster_classes(den, label='ivl'):
 
     return cluster_classes
 
-
-def add_cluster_labels(df, den, row_meta):
-    clusters = get_cluster_classes(den)
+def old_v01_add_cluster_labels(df, den, row_meta):
+    clusters = old_v01_add_cluster_labels(den)
     cluster = []
     for i in df.index:
         included=False
@@ -46,10 +46,22 @@ def add_cluster_labels(df, den, row_meta):
                 cluster.append(j)
                 included=True
         if not included:
-            cluster.append(None)
+            cluster.append("None")
     row_meta.loc[df.index,"den_clust"] = cluster
     return row_meta
 
+
+def add_cluster_labels(den, row_meta):
+    clusters = {}
+    for ivl, lv_clust in zip(den["ivl"], den["leaves_color_list"]):
+        #print('ivl', ivl)
+        #print('lv clr', lv_clust)
+        clusters[ivl] = lv_clust
+        #clusters[den['ivl'][lv]] = lv_clust
+
+    row_meta["den_clust"] = pd.Series(clusters)
+
+    return row_meta
 
 def cluster_stats(clusters_df, out_f=None):
     from itertools import combinations
@@ -64,7 +76,7 @@ def cluster_stats(clusters_df, out_f=None):
         size_pvals.append(f"{pair[0]}, {pair[1]}, {str(p_val)}")
 
     if out_f is not None:
-        with open(out_f + "dendrogram_pvals.txt", "w") as f:
+        with open(out_f + ".dendrogram_pvals.txt", "w") as f:
             # for l in size_pvals:
             f.write("\n".join(size_pvals))
     return size_pvals

@@ -62,6 +62,9 @@ def get_coverage(bamdir, outdir, barcodes_f=None, base_qual=0,
     parar(bam_files, parallel_run_pileup,
           func_args=(outdir, base_qual, alignment_qual),
           num_processes=num_proc)
+    columns = ["chr","pos", "nt", "count", "BQ"	,"cell"]
+    with open(join(outdir, "columns.txt"), "w") as f:
+        f.write("\n".join(columns))
     return
 
 @click.command()

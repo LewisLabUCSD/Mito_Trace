@@ -64,6 +64,29 @@ rule barcodes_btwnClones:
     shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d}  {params.note} {output.note}"
 
 
+
+
+rule barcodes_btwnClones_dendro:
+    input:
+        cells_meta = "{outdir}/cells_meta.tsv",
+        af_note = "{outdir}/sc_af/donor{d}/sc_af.ipynb",
+    output:
+        note = "{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.ipynb",
+        mean = "{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+        res = report(multiext("{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.",
+                                  "clones_dendro.csv", "dendrogram_pvals.txt",
+                                  "dendro.NoCondition.max2.AF.png"),
+                         category="lineage")
+
+    params:
+        note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode_dendro.ipynb"),
+        indir = lambda wildcards, input: dirname(input.cells_meta),
+        outdir = lambda wildcards, output: dirname(output.note),
+        dendro_thresh = 0.6
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} -p dendroThresh {wildcards.dendro_thresh} {params.note} {output.note}"
+
+
+
 rule barcodes_inClones:
     input:
         cells_meta = "{outdir}/cells_meta.tsv",
@@ -75,6 +98,7 @@ rule barcodes_inClones:
         outdir = lambda wildcards, output: dirname(output.note),
         indir = lambda wildcards, input: dirname(input.cells_meta),
     shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} {params.note} {output.note}"
+
 
 
 rule distinguishing_vars:
@@ -95,6 +119,8 @@ rule finalize:
         inClones =  expand("{{outdir}}/barcodes/btwnClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
         btwnClones = expand("{{outdir}}/barcodes/inClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
         dist_vars = expand("{{outdir}}/distinct_variants/donor{d}/output.ipynb", d=np.arange(config["N_DONORS"])),
+        dendroClones = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+                              d=np.arange(config["N_DONORS"]), dendro_thresh=[config["dendro_thresh"]]),
     output:
         out = "{outdir}/barcodes/_clone_complete.txt",
     shell: "touch {output.out}"

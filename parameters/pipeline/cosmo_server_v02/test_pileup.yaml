@@ -14,6 +14,10 @@ fastq_dir: "/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/" #/hom
 N_DONORS: 2
 
 
+useSamePos:
+  - True
+  - False
+
 cells_setup:
   params:
     donors:

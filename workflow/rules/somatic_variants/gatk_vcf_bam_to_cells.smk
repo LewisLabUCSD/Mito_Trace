@@ -26,12 +26,12 @@ print('peak names', peak_names)
 
 rule all:
     input:
-        expand("{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/af.pileup.tsv",
+        expand("{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/af.pileup.tsv.gz",
                outdir=res, peaks=peak_names, s=samples.index),
         expand("{outdir}/regions_{peaks}/gatk_mutect/post/variants.annotate.gene.vcf",
-                outdir=res, peaks=peak_names)
-        # expand("{outdir}/regions_{peaks}/gatk_mutect/post/{s}/scPileupVars",
-        #     outdir=join(res), s=samples.index),
+                outdir=res, peaks=peak_names),
+        # expand("{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/scPileupVars",
+        #     outdir=join(res), s=samples.index, peaks=peak_names),
         #expand("{outdir}/merge_filt_bam/_split_rg.txt", outdir=res),
         # expand("{outdir}/gatk_mutect/post/{s}/concat_scPileupVars/pileup.tsv",
         #         outdir=join(res), s=samples.index,
@@ -290,11 +290,11 @@ rule pileup_to_cell_vars:
         #"{outdir}/regions_{peaks}/gatk_mutect/post.variants.vcf"
     output:
         note = "{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/out.ipynb",
-        ref="{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/af.ref.pileup.tsv",
-        af="{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/af.pileup.tsv"
+        ref="{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/af.ref.pileup.tsv.gz",
+        af="{outdir}/regions_{peaks}/gatk_mutect/post/pileup/{s}/cells_vars/vcfpad_1/af.pileup.tsv.gz"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
-        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/pileup_to_af_dp.ipynb"),
+        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/gatk_pileup_to_af_dp.ipynb"),
         vcf_pad = 1
     resources:
         mem_mb=80000

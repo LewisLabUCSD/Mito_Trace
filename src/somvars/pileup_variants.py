@@ -88,7 +88,8 @@ def run_pileup(bamfile, outpre, base_qual, alignment_quality): # vcf, vcf_chr_co
 		#pileups_df.to_csv(outpre + "_pileups.tsv", sep="\t")
 		pileups_df = pd.merge(pileups_df, bq_df, on=["chr", "pos", "nt"])
 		pileups_df["cell"] = cell
-		pileups_df.to_csv(outpre + "_pileups.bq.tsv.gz", sep="\t", compression="gzip")
+		pileups_df.to_csv(outpre + "_pileups.bq.tsv.gz", sep="\t", compression="gzip", columns=None, index=False)
+
 	return
 
 
