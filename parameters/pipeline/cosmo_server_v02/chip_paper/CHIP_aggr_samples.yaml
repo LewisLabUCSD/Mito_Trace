@@ -1,0 +1,25 @@
+outdir: "/data/Mito_Trace/output/somatic_variants"
+#pipename: "somatic_variants"
+prefix: "CHIP_dec172021"
+snakefile: "workflow/rules/somatic_variants.smk"
+params_dir: "/data/Mito_Trace/parameters/pipeline/cosmo_server/CHIP_dec172021"
+samples_csv:
+  CHIP_b1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/CHIP_b1_dec172021.csv"
+  CHIP_b2: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/InputOnly/CHIP_b2_dec172021.csv"
+  CHIP_a1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_Input_nameFix_april08_2021.csv"
+  cd34norm: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/cd34norm.csv"
+
+#mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
+ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa"
+gene_sorted_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.sorted.gtf"
+gene_ids_f:
+ncpus: 16
+bed_regions:
+  chip_genes: "/data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed"
+
+#MTBlacklist_A2
+
+#samples:
+#  - "CHIP_b1_Input"
+#  - "CHIP_b1_Control"
+#  - "CHIP_b1_Flt3l"
