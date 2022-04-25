@@ -129,6 +129,34 @@ rule som_dendro:
     shell: "papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} -p dendro_indir {params.dendro_indir} -p outdir {params.outdir} -p vars_f {input.vars_f} {params.script} {output.note}"
 
 
+rule chip_som_dendro:
+    input:
+        note = expand("{{outdir}}/somatic_variants/{{somvar_method}}/peaks_{{regions}}/{sample}/som_clones.ipynb",
+             sample = config['samples'].index),
+        vars_f = vars_anno, #"{outdir}/regions_{peaks}/gatk_mutect/post/variants.annotate.gene.vcf"
+        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{dendro_thresh}}/donor{d}.mean.csv",
+                          d= np.arange(config["N_DONORS"])),
+         #"{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+        cells_meta = "{outdir}/cells_meta.tsv",
+    output:
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/filt_chip/som_dendro_{dendro_thresh}/som_clones.ipynb",
+    params:
+        indir = lambda wildcards, input: dirname(dirname(input.note[0])),
+        chip_genes = config["bed_regions"]["chip_genes"],
+        outdir = lambda wildcards, output: dirname(output.note),
+        dendro_indir = lambda wildcards, input: dirname(input.dendro_f[0]),
+        #cells_meta = lambda wildcards, input: join(dirname(dirname(input.clones)), "cells_meta.tsv"),
+        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/dendro_vars_to_clones.ipynb")
+    shell: "papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} -p dendro_indir {params.dendro_indir} -p chip_genes_f {params.chip_genes}  -p outdir {params.outdir} -p vars_f {input.vars_f} {params.script} {output.note}"
+
+
+
+
+def get_output(wildcards):
+    w = wildcards
+    return
+
+
 rule summary_som:
     input:
         note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/som_clones.ipynb",
@@ -140,5 +168,24 @@ rule summary_som:
     params:
         indir = lambda wildcards, input: dirname(dirname(input.note)),
         outdir = lambda wildcards, output: dirname(output.note),
-        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/summarize_vars_clones.ipynb")
+        dendro_indir = lambda wildcards, input: dirname(input.dendro_f[0]),
+        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/summarize_vars_clones.ipynb"),
     shell: "papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} -p outdir {params.outdir} {params.script} {output.note}"
+
+
+rule chip_summary_som:
+    input:
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/som_clones.ipynb",
+        cells_meta = "{outdir}/cells_meta.tsv",
+        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{dendro_thresh}}/donor{d}.mean.csv",
+                  d= np.arange(config["N_DONORS"])),
+    output:
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/chip_clones_variants_summary/summary_som.ipynb",
+    params:
+        chip_genes = config["bed_regions"]["chip_genes"],
+        indir = lambda wildcards, input: dirname(dirname(input.note)),
+        outdir = lambda wildcards, output: dirname(output.note),
+        dendro_indir = lambda wildcards, input: dirname(input.dendro_f[0]),
+        script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/summarize_vars_clones.ipynb"),
+    shell: "papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} -p dendro_indir {params.dendro_indir} -p outdir {params.outdir} -p to_chip True -p chip_genes_f {params.chip_genes} {params.script} {output.note}"
+

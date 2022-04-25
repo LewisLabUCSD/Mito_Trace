@@ -19,6 +19,17 @@ bed_regions:
 
 #MTBlacklist_A2
 
+
+files:
+  - hypergeo_split_donor
+  - anno_umap
+  - clone_count
+  - clone_cluster_count
+  - barcodes
+  - clone_clust_embed
+  #- mt_vars
+
+
 #samples:
 #  - "CHIP_b1_Input"
 #  - "CHIP_b1_Control"

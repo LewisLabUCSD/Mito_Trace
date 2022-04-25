@@ -38,7 +38,6 @@ merged_peaks_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/dat
 merged_peaks_small_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_3/gff_A2_black/annotation_clones/merged_peaks_small.bed"
 merged_peaks_needle_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_3/gff_A2_black/annotation_clones/merged_peaks.tsv"
 
-
 rg_dict: "Flt3l,Control;Control,Flt3l;Input,Input"
 
 

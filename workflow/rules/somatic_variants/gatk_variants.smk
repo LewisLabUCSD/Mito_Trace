@@ -25,6 +25,8 @@ print('samples', samples.index)
 
 peaks=config["gatk_bed_regions"].keys()
 
+mut_filt = params["som_vars"]["mutect"]["params"]
+
 rule all:
   input:
     expand("{outdir}/regions_{peaks}/gatk_mutect/variants.vcf.gz",
@@ -33,6 +35,12 @@ rule all:
     #expand("{outdir}/preproc/merge_bam/pooled.sorted.bam",outdir=join(res, "somatic_variants")),
     expand("{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam",
            outdir=join(res, "somatic_variants"), peaks=peaks),
+    expand("{outdir}/regions_{peaks}/gatk_mutect/post/variants.filt_af.{af_low}_{af_high}_ad.{ad_low}.vcf.gz",
+           outdir=join(res, "somatic_variants"), peaks=peaks,
+           af_low=mut_filt["af_low"], af_high=mut_filt["af_high"],
+           ad_low=mut_filt["ad_low"]),
+    expand("{outdir}/regions_{peaks}/gatk_mutect/post/variants.varscan.filt.vcf.gz",
+       outdir=join(res, "somatic_variants"), peaks=peaks)
     #expand("{outdir}/varCA_pt1/callers", outdir=join(res,"somatic_variants")),
     #expand("{outdir}/gatk/variants.vcf.gz",  outdir=join(res,"somatic_variants")),
     #expand("{outdir}/gatk_mutect/variants.vcf.gz", outdir=join(res,"somatic_variants")),
@@ -106,6 +114,32 @@ rule run_mutect_gatk:
     shell: "gatk Mutect2 -R {params.genome} -I {input.bam} -O {output.vcf}"
 
 
+rule filter_mutect:
+    input:
+        vcf="{outdir}/regions_{peaks}/gatk_mutect/variants.vcf.gz"
+    output:
+        vcf="{outdir}/regions_{peaks}/gatk_mutect/post/variants.filt_af.{af_low}_{af_high}_ad.{ad_low}.vcf.gz"
+    params:
+        genome = ref_fa
+    shell:
+        "gatk FilterMutectCalls --min-allele-fraction 0.05 -R {params.genome}  -V {input.vcf}  -O {output.vcf}"
+
+rule unzip:
+    input: "{outdir}/regions_{peaks}/gatk_mutect/variants.vcf.gz"
+    output: "{outdir}/regions_{peaks}/gatk_mutect/variants.vcf"
+    shell: "gunzip -c {input} > {output}"
+
+    
+rule filter_varscan_mutect:
+    input:
+        vcf="{outdir}/regions_{peaks}/gatk_mutect/variants.vcf"
+    output:
+        vcf="{outdir}/regions_{peaks}/gatk_mutect/post/variants.varscan.filt.vcf.gz"
+    params:
+        genome = ref_fa
+    shell: "varscan somaticFilter {input.vcf} --output-file {output.vcf} --min-coverage 20 --min-avg-qual 25 --min-var-freq 0.05 --min-reads2 10 "
+
+
 rule run_gatk:
     input:
         bam= "{outdir}/regions_{peaks}/merge_filt_bam/pooled.sorted.bam",
@@ -123,7 +157,6 @@ rule run_gatk:
             gatk --java-options "-Xmx4g" GenotypeGVCFs  --include-non-variant-sites  -R {params.genome} -V {output.tmp} -O {output.vcf}
         """
          # # -ERC GVCF -G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation
-
 
 
 def get_varca_cfg():

@@ -1,6 +1,6 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline_v02.yaml"
+config: "parameters/pipeline/test_pileup_pipeline_v02.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
@@ -46,3 +46,4 @@ seq_setup:
     depth_lim:
       - "4,10"
 
+dendro_thresh: 0.6

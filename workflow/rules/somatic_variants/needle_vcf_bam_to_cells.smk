@@ -28,16 +28,12 @@ for exper in samples_csv:
         allCellBarcodes[name] = val["barcode_f"]
 
 
-print("allSamples")
-print(allSamples)
-
 if "samples" in config:
     allSamples = {x:x for x in config["samples"]}
 
 
 peak_names = [] if "bed_regions" not in config else list(config["bed_regions"].keys())
 peak_names.append("all")
-print('peak names', peak_names)
 
 rule all:
     input:
