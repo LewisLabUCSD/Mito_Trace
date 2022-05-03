@@ -88,7 +88,7 @@ clones:
    # - "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
     #- "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
     - "init"
-    #- "simpleUnion"
+    - "simpleUnion"
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:
     #- "vireo"
@@ -103,7 +103,7 @@ clones:
       dpthresh: 2
   knn:
     params:
-      resolution: [30] #, 3] #, 30, 50] #[10,3]
+      resolution: [3, 30, 50] #, 3] #, 30, 50] #[10,3]
 
   params:
     dendro_thresh: 0.6
@@ -247,8 +247,8 @@ de_clones_change:
     min_pct:
       - 0.1
     logfc_threshold:
-      - 0
       #- 0.1
+      - 0
       #- 0.25
     p_thresh:
       - 0.1

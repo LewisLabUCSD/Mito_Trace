@@ -129,7 +129,7 @@ rule unzip:
     output: "{outdir}/regions_{peaks}/gatk_mutect/variants.vcf"
     shell: "gunzip -c {input} > {output}"
 
-    
+
 rule filter_varscan_mutect:
     input:
         vcf="{outdir}/regions_{peaks}/gatk_mutect/variants.vcf"

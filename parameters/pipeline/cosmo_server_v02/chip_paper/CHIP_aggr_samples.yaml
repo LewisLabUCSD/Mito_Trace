@@ -1,25 +1,24 @@
-outdir: "/data/Mito_Trace/output/somatic_variants"
-#pipename: "somatic_variants"
-prefix: "CHIP_dec172021"
-snakefile: "workflow/rules/somatic_variants.smk"
-params_dir: "/data/Mito_Trace/parameters/pipeline/cosmo_server/CHIP_dec172021"
-samples_csv:
-  CHIP_b1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/CHIP_b1_dec172021.csv"
-  CHIP_b2: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/InputOnly/CHIP_b2_dec172021.csv"
-  CHIP_a1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_Input_nameFix_april08_2021.csv"
-  cd34norm: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/cd34norm.csv"
+outdir: "/data/Mito_Trace/output/aggregate/"
+prefix: "CHIP_aggr"
+snakefile: "workflow/rules/data/chip.smk"
+pileup_dir: "data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/"
+config: "parameters/pipeline/pipeline_v02.yaml"
 
-#mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
-ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa"
-gene_sorted_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.sorted.gtf"
-gene_ids_f:
-ncpus: 16
-bed_regions:
-  chip_genes: "/data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed"
+## Sample files to aggregate!
+samples_config:
+  CHIP_b1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/CHIP_b1_dec172021.yaml"
+  CHIP_b2: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/InputOnly/CHIP_b2_dec172021.yaml"
+  CHIP_a1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_Input_nameFix_april08_2021.yaml"
+  cd34norm: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/cd34norm.yaml"
 
-#MTBlacklist_A2
+#samples_csv:
+#  CHIP_b1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/CHIP_b1_dec172021.csv"
+#  CHIP_b2: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_dec172021/InputOnly/CHIP_b2_dec172021.csv"
+#  CHIP_a1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/CHIP_Input_nameFix_april08_2021.csv"
+#  cd34norm: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v02/cd34norm.csv"
 
 
+# Analyses to get output from
 files:
   - hypergeo_split_donor
   - anno_umap
@@ -28,6 +27,22 @@ files:
   - barcodes
   - clone_clust_embed
   #- mt_vars
+
+
+# Run config
+ncpus: 16
+
+
+## Genome information
+ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa"
+gene_sorted_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.sorted.gtf"
+bed_regions:
+  chip_genes: "/data/Mito_Trace/output/geneRegions/gff_A2/chip_genes.bed"
+gene_ids_f:
+#mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
+
+
+
 
 
 #samples:

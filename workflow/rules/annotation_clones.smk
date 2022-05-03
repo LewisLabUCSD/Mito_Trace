@@ -90,19 +90,36 @@ rule overlayClones_umap:
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} {params.rscript} {output.note}"
 
 
+
+####TODO: Remove this for the python one
+# rule counts_clones:
+#     input:
+#         se_f = "{outdir}/annotation_clones/SE.rds",
+#     output:
+#         multiext("{outdir}/annotation_clones/clone_counts/minCellConds_{min_cells}/",
+#             "clone_sizes.ipynb", "clone_sizes.csv", "clone_sizes_norm.csv")
+#     params:
+#         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/counts_inClones.ipynb"),
+#         outdir = lambda wildcards, output: dirname(output[0]),
+#         sample_names = ",".join(config["samples"].index),
+#     shell:
+#         "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p sample_names {params.sample_names} -p minCell {wildcards.min_cells} {params.rscript} {output[0]}"
+#
 rule counts_clones:
     input:
-        se_f = "{outdir}/annotation_clones/SE.rds",
+        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
     output:
-        multiext("{outdir}/annotation_clones/clone_counts/minCellConds_{min_cells}/",
-            "clone_sizes.ipynb", "clone_sizes.csv", "clone_sizes_norm.csv")
+        multiext("{outdir}/annotation_clones/clone_counts/",
+                 "clone_counts.barplot_conditions.png",
+                 "top20_minCell25_clone_counts.barplot_conditions.png",
+                 ),
+        note = "{outdir}/annotation_clones/clone_counts/counts_clones.ipynb"
     params:
-        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/counts_inClones.ipynb"),
-        outdir = lambda wildcards, output: dirname(output[0]),
+        outdir = lambda wildcards, output: dirname(output.note),
+        note = join(ROOT_DIR, "workflow/notebooks/lineage_clones/python_clone_cell_counts.ipynb"),
         sample_names = ",".join(config["samples"].index),
     shell:
-        "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p sample_names {params.sample_names} -p minCell {wildcards.min_cells} {params.rscript} {output[0]}"
-
+        "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p sample_names {params.sample_names} {params.note} {output.note}"
 
 ####################################
 ## Clones-clusters analysis by size.
@@ -190,7 +207,7 @@ rule finalize:
     input:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
-        cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/minCellConds_{min_cells}/clone_sizes.ipynb",min_cells=params["min_cells"]),
+        cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/counts_clones.ipynb"),
         cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
         # hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
         #                hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),

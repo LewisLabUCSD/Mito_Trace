@@ -32,7 +32,6 @@ samples = pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["s
 anno_res = join(config["outdir"], "annotation", "data", config["prefix"])
 
 
-somvar_res = join(config["outdir"], "somatic_variants", "data", config["somvars_dir"])
 
 # Merge the experiment-specific config with the pipeline parameters
 params["results"] = res
@@ -84,11 +83,18 @@ params["cluster_names_f"] = cluster_names_f
 
 
 # somvars parameters
+if "somvars_dir" in config:
+    somvar_res = join(config["outdir"], "somatic_variants", "data", config["somvars_dir"])
+else:
+    somvar_res = join(config["outdir"], "somatic_variants", "data", "somvars")
+
 peak_names = [] if "bed_regions" not in config else list(config["bed_regions"].keys())
 peak_names.append("all")
 print("peak_names")
 
 gatk_peak_names = [] if "gatk_bed_regions" not in config else list(config["gatk_bed_regions"].keys())
+
+params_somvar = params["som_vars"]["mutect"]["params"]
 
 ###################################
 ## Rules and workflow
@@ -154,9 +160,9 @@ rule all:
         # Annotation clones
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/_nuclear_clones_complete.txt",
             out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            variants=[x for x in params_clones["variants"] if x != "simple"],
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], gff=gff,
+            variants=[x for x in params_clones["variants"] if x != "simple"],
             kparam=params_clones["knn"]["params"]["resolution"]),
 
         # MT Plots
@@ -180,6 +186,7 @@ rule all:
             logfc_threshold=params_annclo["logfc_threshold"],
             btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
             ),
+
         #
         # # Condition DE
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
@@ -240,49 +247,60 @@ rule all:
         # # C. Clones: Variant types
 
         # Somatic variants
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/{sample}/som_clones.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"],
-            sample=samples.index, regions=peak_names),
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/som_dendro_{d_thresh}/som_clones.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
-            sample=samples.index, regions=peak_names),
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/som_dendro_{d_thresh}/som_clones.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
-            sample=samples.index, regions=gatk_peak_names),
+
         #clones_variants_summary/summary_som.ipynb
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/som_dendro_{d_thresh}/clones_variants_summary/summary_som.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
-            sample=samples.index, regions=gatk_peak_names),
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/som_dendro_{d_thresh}/clones_variants_summary/summary_som.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
-            sample=samples.index, regions=peak_names),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/clones_variants_summary/summary_som.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
+        #     sample=samples.index, regions=gatk_peak_names,
+        #     minaf=params_somvar["min_af"], midaf=params_somvar["mid_af"], minad=params_somvar["min_ad"],
+        #     mindp=params_somvar["min_dp"], qual=params_somvar["qual"]),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/som_clones.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
+        #     sample=samples.index, regions=gatk_peak_names,
+        #     minaf=params_somvar["min_af"], midaf=params_somvar["mid_af"], minad=params_somvar["min_ad"],
+        #     mindp=params_somvar["min_dp"], qual=params_somvar["qual"]),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/filt_chip/som_clones.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
+        #     sample=samples.index, regions=gatk_peak_names,
+        #     minaf=params_somvar["min_af"], midaf=params_somvar["mid_af"], minad=params_somvar["min_ad"],
+        #     mindp=params_somvar["min_dp"], qual=params_somvar["qual"]),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/{sample}/som_clones.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"],
+        #     sample=samples.index, regions=peak_names),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/som_dendro_{d_thresh}/som_clones.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
+        #     sample=samples.index, regions=peak_names),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/needle/peaks_{regions}/som_dendro_{d_thresh}/clones_variants_summary/summary_som.ipynb",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
+        #     sample=samples.index, regions=peak_names,
+        #     minaf=params_somvar["min_af"], midaf=params_somvar["mid_af"], minad=params_somvar["min_ad"],
+        #     mindp=params_somvar["min_dp"], qual=params_somvar["qual"]),
+
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/som_dendro_{d_thresh}/chip_clones_variants_summary/summary_som.ipynb",
         #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
         #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
         #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
         #     kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
         #     sample=samples.index, regions=gatk_peak_names),
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/somatic_variants/gatk_mutect/peaks_{regions}/filt_chip/som_dendro_{d_thresh}/som_clones.ipynb",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"], variants=[x for x in params_clones["variants"] if x!="simple"], d_thresh=params_clones["params"]["dendro_thresh"],
-            sample=samples.index, regions=gatk_peak_names),
+
 #"{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/filt_chip/som_dendro_{dendro_thresh}/som_clones.ipynb",
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/n_clones_{n_clones}/variants.ipynb",
         #        output=res, cellrbc=cellrbc, num_read=num_reads_filter,
@@ -362,6 +380,7 @@ rule mgatk_to_variant:
         print(all_vcf.columns)
         all_vcf.to_csv(output.vcf, mode='a', index=False, sep="\t", header=True)
 
+
 rule merge_variant_samples:
     input:
         "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/variants.vcf",
@@ -373,6 +392,7 @@ rule merge_variant_samples:
         outdir = lambda wildcards, output: dirname(output.note),
     shell:
         "papermill -p vcf {input[0]} -p outdir {params.outdir} {params.note} {output.note}"
+
 ########################################################################
 ## 3. Merge the sample inputs together by concatenating.
 ########################################################################
@@ -1065,13 +1085,14 @@ params["prefix"] = config["prefix"]
 #         #cells_meta = lambda wildcards, input: join(dirname(dirname(input.clones)), "cells_meta.tsv"),
 #         script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/dendro_vars_to_clones.ipynb")
 #     shell: "papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} -p dendro_indir {params.dendro_indir} -p outdir {params.outdir} -p vars_f {input.vars_f} {params.script} {output.note}"
-#
+
 
 ## Somatic variants merge
 # Run for gatk_mutect and needle.
 module somvarsMod:
-    snakefile: "./rules/somatic_variants/merge_somvars_clones.smk"
+    snakefile: "./rules/somatic_variants/affilt_merge_somvars_clones.smk"
     config: config
 
-use rule * from somvarsMod
+
+#use rule * from somvarsMod
 

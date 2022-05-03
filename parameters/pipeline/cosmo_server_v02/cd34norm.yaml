@@ -12,6 +12,8 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/jan21_2021
 #results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
 N_DONORS: 4
 
+bed_regions:
+  A: ""
 
 # Cluster names
 umap_clusters_f: "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/cd34norm/MTblacklist/results/atac_clusters.txt"

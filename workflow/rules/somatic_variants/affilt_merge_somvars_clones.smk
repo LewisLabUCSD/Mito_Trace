@@ -17,7 +17,7 @@ import subprocess as subp
 ########################################################################
 # rule all:
 #     input:
-#         expand("{outdir}/som_dendro_{dendro_thresh}/som_clones.ipynb")
+#         expand("{outdir}/som_dendro_{d_thresh}/som_clones.ipynb")
 
 
 #############################################
@@ -66,8 +66,9 @@ def vars_anno(wildcards):
 
 
 def get_vcf(wildcards):
-    print(f"{wildcards.outdir}/regions_{wildcards.regions}/gatk_mutect/variants.vcf.gz")
-    return f"{wildcards.outdir}/regions_{wildcards.regions}/gatk_mutect/variants.vcf.gz"
+    #print(f"{wildcards.outdir}/regions_{wildcards.regions}/gatk_mutect/variants.vcf.gz")
+    print(join(config["results"], f"somatic_variants/regions_{wildcards.regions}/gatk_mutect/variants.vcf.gz"))
+    return join(config["results"], f"somatic_variants/regions_{wildcards.regions}/gatk_mutect/variants.vcf.gz")
 
 
 rule merge_som_clones:
@@ -98,11 +99,11 @@ rule filt_af_vars:
     input:
         vcf = get_vcf,
     output:
-        note = "{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/affilt/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/out.note",
-        vcf = "{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/affilt/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/variants.vcf"
+        note = "{outdir}/somatic_variants/{somvar_method}/affilt_peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/out.note",
+        vcf = "{outdir}/somatic_variants/{somvar_method}/affilt_peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/variants.vcf"
     params:
         note = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/affilt_cyvcf.ipynb")
-    shell: """papermill -p vcf_f {input.vcf} } -p out_f {output.vcf}  
+    shell: """papermill -p vcf_f {input.vcf} -p out_f {output.vcf}  
               -p min_aaf {wildcards.minaf} -p mid_aaf {wildcards.midaf}
               -p qual {wildcards.qual} -p min_ad {wildcards.minad} -p min_dp {wildcards.mindp}
               {params.note} {output.note}
@@ -110,15 +111,15 @@ rule filt_af_vars:
 
 rule vars_to_clones_affilt:
     input:
-        af = get_af,
-        ref = get_ref,
         cells_meta = "{outdir}/cells_meta.tsv",
         vars_f = vars_anno,
+        vars_filt = "{outdir}/somatic_variants/{somvar_method}/affilt_peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/variants.vcf",
+        af = get_af
         #clones = "{outdir}/barcodes/_clone_complete.txt",
         #ref= "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.ref.pileup.tsv",
         #af= "{out_dir}/aggregate/needle_post/peaks_{peaks}/{sample}/cells_vars/vcfpad_1/af.pileup.tsv"
     output:
-          note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/{sample}/som_clones.ipynb"
+          note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/{sample}/vars_to_clones.ipynb"
           # figs=multiext("{outdir}/somatic_variants/needle/peaks_{regions}/{sample}/",
           #          "clone_altAndRef_numCells.png","clone_altAndRef_sumCounts.png", "donor_altAndRef_numCells.png","donor_altAndRef_sumCounts.png")
     params:
@@ -128,11 +129,7 @@ rule vars_to_clones_affilt:
         script = join(ROOT_DIR, "workflow/notebooks/somatic_variants_clones/affilt_vars_to_clones.ipynb")
     resources:
         mem_mb=80000
-    shell: """papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} 
-              -p condition {wildcards.sample} -p outdir {params.outdir} 
-              -p vars_f {input.vars_f} -p min_af {wildcards.minaf} -p mid_af {wildcards.midaf}
-              -p qual {wildcards.qual} -p minad {wildcards.minad} -p mindp {wildcards.mindp}
-              {params.script} {output.note}
+    shell: """papermill -p cells_meta_f {input.cells_meta} -p indir {params.indir} -p vars_filt_f {input.vars_filt} -p condition {wildcards.sample} -p outdir {params.outdir} -p vars_f {input.vars_f} {params.script} {output.note}
            """
 #
 # rule som_clones_samples:
@@ -158,15 +155,15 @@ rule vars_to_clones_affilt:
 
 rule som_dendro:
     input:
-        note = expand("{{outdir}}/somatic_variants/{{somvar_method}}/peaks_{{regions}}/{sample}/som_clones.ipynb",
+        note = expand("{{outdir}}/somatic_variants/{{somvar_method}}/peaks_{{regions}}/minaf{{minaf}}_midaf{{midaf}}_ad{{minad}}_dp{{mindp}}_qual{{qual}}/{sample}/vars_to_clones.ipynb",
              sample = config['samples'].index),
         vars_f = vars_anno, #"{outdir}/regions_{peaks}/gatk_mutect/post/variants.annotate.gene.vcf"
-        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{dendro_thresh}}/donor{d}.mean.csv",
+        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{d_thresh}}/donor{d}.mean.csv",
                           d= np.arange(config["N_DONORS"])),
-         #"{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+         #"{outdir}/barcodes/btwnClones_dendro_dt_{d_thresh}/donor{d}.mean.csv",
         cells_meta = "{outdir}/cells_meta.tsv",
     output:
-        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/som_clones.ipynb",
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/som_clones.ipynb",
     params:
         indir = lambda wildcards, input: dirname(dirname(input.note[0])),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -178,15 +175,15 @@ rule som_dendro:
 
 rule chip_som_dendro:
     input:
-        note = expand("{{outdir}}/somatic_variants/{{somvar_method}}/peaks_{{regions}}/{sample}/som_clones.ipynb",
+        note = expand("{{outdir}}/somatic_variants/{{somvar_method}}/peaks_{{regions}}/minaf{{minaf}}_midaf{{midaf}}_ad{{minad}}_dp{{mindp}}_qual{{qual}}/{sample}/som_clones.ipynb",
              sample = config['samples'].index),
         vars_f = vars_anno, #"{outdir}/regions_{peaks}/gatk_mutect/post/variants.annotate.gene.vcf"
-        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{dendro_thresh}}/donor{d}.mean.csv",
+        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{d_thresh}}/donor{d}.mean.csv",
                           d= np.arange(config["N_DONORS"])),
-         #"{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+         #"{outdir}/barcodes/btwnClones_dendro_dt_{d_thresh}/donor{d}.mean.csv",
         cells_meta = "{outdir}/cells_meta.tsv",
     output:
-        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/filt_chip/som_dendro_{dendro_thresh}/som_clones.ipynb",
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/filt_chip/som_clones.ipynb",
     params:
         indir = lambda wildcards, input: dirname(dirname(input.note[0])),
         chip_genes = config["bed_regions"]["chip_genes"],
@@ -205,12 +202,12 @@ def get_output(wildcards):
 
 rule summary_som:
     input:
-        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/som_clones.ipynb",
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/som_clones.ipynb",
         cells_meta = "{outdir}/cells_meta.tsv",
-        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{dendro_thresh}}/donor{d}.mean.csv",
+        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{d_thresh}}/donor{d}.mean.csv",
                   d= np.arange(config["N_DONORS"])),
     output:
-        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/clones_variants_summary/summary_som.ipynb",
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/clones_variants_summary/summary_som.ipynb",
     params:
         indir = lambda wildcards, input: dirname(dirname(input.note)),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -221,12 +218,12 @@ rule summary_som:
 
 rule chip_summary_som:
     input:
-        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/som_clones.ipynb",
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/som_clones.ipynb",
         cells_meta = "{outdir}/cells_meta.tsv",
-        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{dendro_thresh}}/donor{d}.mean.csv",
+        dendro_f = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{{d_thresh}}/donor{d}.mean.csv",
                   d= np.arange(config["N_DONORS"])),
     output:
-        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/som_dendro_{dendro_thresh}/chip_clones_variants_summary/summary_som.ipynb",
+        note="{outdir}/somatic_variants/{somvar_method}/peaks_{regions}/minaf{minaf}_midaf{midaf}_ad{minad}_dp{mindp}_qual{qual}/som_dendro_{d_thresh}/chip_clones_variants_summary/summary_som.ipynb",
     params:
         chip_genes = config["bed_regions"]["chip_genes"],
         indir = lambda wildcards, input: dirname(dirname(input.note)),

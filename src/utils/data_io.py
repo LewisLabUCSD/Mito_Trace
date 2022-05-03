@@ -105,11 +105,14 @@ def combine_dfs(dfs, use_key=True, key_label="Key", na_val=0,
         na_val)  # return  pd.concat(dfs.values()).fillna(fillna)
 
 
-def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', verbose=False, **pd_kwargs):
+def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', verbose=False,
+                       return_head=False, **pd_kwargs):
     if verbose:
         ic.enable()
     else:
         ic.disable()
+
+    head=[]
     if multicomment is None:
         return pd.read_csv(in_f, **pd_kwargs)
     else:
@@ -126,12 +129,22 @@ def read_csv_multichar(in_f, multicomment=None, encoding='utf-8', verbose=False,
                 ic(f'skipping {curr} rows')
                 break
             else:
+                head.append(aline)
                 curr += 1
         f.close()
-        return pd.read_csv(in_f, skiprows=curr, encoding=encoding,
+
+        out = pd.read_csv(in_f, skiprows=curr, encoding=encoding,
                            **pd_kwargs)
+        if return_head:
+            return out, "".join(head)
+        return out
 
 
+def write_header_df(df, out_f, header, **pd_kwargs):
+    with open(out_f, 'a') as file:
+        file.write(header)
+        df.to_csv(file, **pd_kwargs)
+    return
 
 
 ##############################################

@@ -2,3 +2,4 @@
 
 Outdir is {{ snakemake.config["outdir"] }}
 Preifx is {{ snakemake.config["prefix"] }}
+
