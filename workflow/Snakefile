@@ -166,13 +166,13 @@ rule all:
             kparam=params_clones["knn"]["params"]["resolution"]),
 
         # MT Plots
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/thr__{t}_rt__{rt}/annotation_clones/de_clone_btwnvars_RNA_af/mtPlots.ipynb",
-            out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            kparam=config["params_clones"]["knn"]["params"]["resolution"],
-            variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
-            t=params_annclo["t"], rt=params_annclo["rt"]),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/thr__{t}_rt__{rt}/annotation_clones/de_clone_btwnvars_RNA_af/mtPlots.ipynb",
+        #     out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+        #     kparam=config["params_clones"]["knn"]["params"]["resolution"],
+        #     variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
+        #     t=params_annclo["t"], rt=params_annclo["rt"]),
 
         # Cluster DE
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwnclust_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}/de_p{p_thresh}_GSEA_pthresh_{gsea_pval}/summary.ipynb",
@@ -691,7 +691,7 @@ use rule * from cloneEnrichMod as cloneEnrich_*
 
 
 
-
+print('params_clones', params_clones)
 ############################################
 ## Compare methods:
 ############################################

@@ -52,12 +52,39 @@ rule add_cluster_labels:
 
 def get_lineage_clone_counts_script(wildcards):
     if wildcards.donType == "combinedDonors":
-        return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_input.ipynb")
-    return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_input_donors.ipynb")
+        return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb")
+    return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_donors.ipynb")
+
+
 
 # Barplots of lineage and clones
-rule lineage_clone_counts:
+rule lineage_clone_counts_input:
     """ ISSUE with the output the size is not accurate"""
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
+    output:
+        note = "{outdir}/annotation_clones/cluster_clone_counts/{donType}/input_cluster_clone_counts.ipynb"
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        script = get_lineage_clone_counts_script
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True {params.script} {output.note}" #-p use_input True
+
+
+def input_lin_clone_file(wildcards):
+    w = wildcards
+    if "Input" in config['samples'].index:
+        return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/input_cluster_clone_counts.ipynb"
+    return
+
+rule finalize_lineage_clone_counts_input:
+    input:
+        input_lin_clone_file
+    output:
+        "{outdir}/annotation_clones/cluster_clone_counts/{donType}/.summarize_input.txt"
+    shell: "touch {output}"
+
+
+rule lineage_clone_counts:
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
     output:
@@ -65,7 +92,22 @@ rule lineage_clone_counts:
     params:
         outdir = lambda wildcards, output: dirname(output.note),
         script = get_lineage_clone_counts_script
-    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta}  {params.script} {output.note}"
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input False {params.script} {output.note}"
+
+
+def lin_clone_file(wildcards):
+    """ If it's an inputOnly run, we dont need this as redunndant to the input version"""
+    w = wildcards
+    if not ("Input" in config['samples'].index and len(config["samples"]==1)):
+        return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/cluster_clone_counts.ipynb"
+    return
+
+rule finalize_lineage_clone_counts:
+    input:
+        lin_clone_file
+    output:
+        "{outdir}/annotation_clones/cluster_clone_counts/{donType}/.summarize.txt"
+    shell: "touch {output}"
 
 
 rule plotMarkers:
