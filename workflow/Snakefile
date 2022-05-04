@@ -60,6 +60,7 @@ num_reads_filter = params_mt["params"]["numreadsfilter"]
 maxBP = params_mt["maxBP"]
 ref_fa = params["genome_path"][config["genome"]]["ref_fa"]
 mt_ref_fa = params["genome_path"][config["genome"]]["mt_ref_fa"]
+config["mt_ref"] = mt_ref_fa
 
 gff = params["genome_path"][config["genome"]]["gff"]
 
@@ -738,6 +739,10 @@ use rule integrateSignac from annoMod as anno_integrateSignac with:
                          "integrated.batch.png",
                          "integrated.lsi.clusters.png"]), category="Nuclear ATAC", subcategory="UMAP")
 
+use rule add_cluster_labels from annoMod as anno_add_cluster_label with:
+    output:
+        note = "{out_dir}/data/annotation/gff_{gff}/mergedSamples/add_cluster_labels.ipynb",
+        se_meta = "{out_dir}/data/annotation/gff_{gff}/mergedSamples/se_cells_meta_labels.tsv"
 
 ############################################
 ## Clones DE
@@ -1095,4 +1100,21 @@ module somvarsMod:
 
 
 #use rule * from somvarsMod
+
+module mtcloneMod:
+    snakefile: "./rules/mt_as_clone.smk"
+    config: config
+
+
+use rule * from mtCloneMod as mtclone_
+
+
+use rule nuclear_and_mtclone_counts from mtcloneMod as mtclone_nuclear_and_mtclone_counts with:
+    output:
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_{variant}/anno_mt_clones_thresh/anno_mt_clones.ipynb",
+
+
+use rule nuclear_and_mtclone_counts from mtcloneMod as mtclone_ with:
+    output:
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_A2_black/mt_as_clones/out.ipynb"
 

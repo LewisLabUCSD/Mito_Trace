@@ -51,13 +51,24 @@ rule add_cluster_labels:
 
 
 def get_lineage_clone_counts_script(wildcards):
+    print('script', join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb"))
     if wildcards.donType == "combinedDonors":
         return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb")
     return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_donors.ipynb")
 
 
+"""
+################################################################
+# Barplots of lineage from the umap clusters and clones from the MT
+# Runs for combined donors and separate donors
+# Also runs for input only and for all samples. This is data-dependent
+################################################################
+"""
 
-# Barplots of lineage and clones
+"""
+## Lineage clone counts for the input
+################################################################
+"""
 rule lineage_clone_counts_input:
     """ ISSUE with the output the size is not accurate"""
     input:
@@ -69,12 +80,15 @@ rule lineage_clone_counts_input:
         script = get_lineage_clone_counts_script
     shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True {params.script} {output.note}" #-p use_input True
 
+rule tmp_no_input:
+    output: temp("{outdir}/annotation_clones/cluster_clone_counts/{donType}/.tmp_input")
+    shell: "touch {output}"
 
 def input_lin_clone_file(wildcards):
     w = wildcards
     if "Input" in config['samples'].index:
         return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/input_cluster_clone_counts.ipynb"
-    return
+    return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/.tmp_input"
 
 rule finalize_lineage_clone_counts_input:
     input:
@@ -83,33 +97,47 @@ rule finalize_lineage_clone_counts_input:
         "{outdir}/annotation_clones/cluster_clone_counts/{donType}/.summarize_input.txt"
     shell: "touch {output}"
 
-
+"""
+################################################################
+## Lineage clone counts for all
+################################################################
+"""
 rule lineage_clone_counts:
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
     output:
-        note = "{outdir}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb"
+        note = "{outdir}/annotation_clones/cluster_clone_counts/{donType}/all_cluster_clone_counts.ipynb"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
         script = get_lineage_clone_counts_script
     shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input False {params.script} {output.note}"
 
 
+rule tmp_no_all:
+    output: temp("{outdir}/annotation_clones/cluster_clone_counts/{donType}/.tmp_all")
+    shell: "touch {output}"
+
 def lin_clone_file(wildcards):
     """ If it's an inputOnly run, we dont need this as redunndant to the input version"""
     w = wildcards
+    #print(config["samples"])
+    print(f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb")
     if not ("Input" in config['samples'].index and len(config["samples"]==1)):
-        return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/cluster_clone_counts.ipynb"
-    return
+        return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb"
+    return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/.tmp_all"
 
 rule finalize_lineage_clone_counts:
     input:
         lin_clone_file
     output:
-        "{outdir}/annotation_clones/cluster_clone_counts/{donType}/.summarize.txt"
+        "{outdir}/annotation_clones/cluster_clone_counts/{donType}/.summarize_all.txt"
     shell: "touch {output}"
 
-
+"""
+################################################################
+## Overlay pre-specified gene markers on the umap, as defined in the config file
+################################################################
+"""
 rule plotMarkers:
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
@@ -250,7 +278,9 @@ rule finalize:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/counts_clones.ipynb"),
-        cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
+        #cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
+        cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/.summarize_{sampType}.txt",
+                              donType=["combinedDonors", "sepDonors"], sampType=["input", "all"]),
         # hyperg=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
         #                hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
         hyperg_f=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/_complete.txt",

@@ -1,6 +1,6 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline_v02.yaml"
+config: "parameters/pipeline/pipeline_v02_chip.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
@@ -16,7 +16,7 @@ bed_regions:
   A: ""
 
 # Cluster names
-umap_clusters_f: "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/cd34norm/MTblacklist/results/atac_clusters.txt"
+umap_clusters_f: "/data/Mito_Trace/output/pipeline/v02/cd34norm/MTblacklist/results/atac_clusters.txt"
 umap_clusters:
   0: "macrophages"
   1: "neutrophil"
