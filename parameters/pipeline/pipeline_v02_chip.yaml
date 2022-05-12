@@ -221,6 +221,7 @@ annotation_clones:
     rt:
       - 10
       #- 50
+    clone_sizes_min_cell: 10
 
 de_clones_change:
   params:
@@ -273,10 +274,18 @@ clone_clust_embed:
 
 mt_as_clones:
   params:
-    af_ts: [0.01, 0.1, 0.4, 0.8,],
-    oth_af_ts: [0.01, 0.1, 0.4],
-    cov_ts: [2, 10, 30], # mean coverage at position for cells with the AF
-    oth_cov_ts: [2, 10, 30],  # mean coverage for cells without AF
-    num_cells: [5, 10, 30], # num cells and fraction are for cells with sufficient coverage
-    oth_num_cells: [0.25, 0.6, 0.8], # fraction is of cells with sufficient coverage
-    mean_pos_cov: [0, 10],
+    af_ts: [0.01, 0.1, 0.4, 0.8]
+    oth_af_ts: [0.01, 0.1, 0.4]
+    cov_ts: [2, 10, 30] # mean coverage at position for cells with the AF
+    oth_cov_ts: [2, 10, 30]  # mean coverage for cells without AF
+    num_cells: [5, 10, 30] # num cells and fraction are for cells with sufficient coverage
+    oth_num_cells: [10, 100, 500, 0.25] #, 0.6, 0.8] # fraction is of cells with sufficient coverage
+    mean_pos_cov: [0, 10]
+  best_params:
+    af: 0.1
+    oth_af: 0.1
+    cov: 10
+    oth_cov: 10
+    num_cells: 10
+    oth_num_cells: 0.25
+    mean_pos_cov: 0

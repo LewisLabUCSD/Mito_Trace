@@ -101,22 +101,34 @@ rule integrateSignac:
         gff = gff
     shell: "papermill -p outdir {params.outdir} -p sample_names {params.sample_names} -p gff_id {params.gff} {params.rscript} {output[0]}"
 
-
-def get_cluster_labels():
-    return config.get("umap_clusters_f", "FALSE")
-
-rule add_cluster_labels:
-    """Prepare clone-by-cluster counts for umap and hypergeometric test"""
-    input:
-        se_f = "{outdir}/data/annotation/gff_{gff}/mergedSamples/allSamples.integrated.rds",
-    output:
-        se_meta = "{outdir}/data/annotation/gff_{gff}/mergedSamples/se_cells_meta_labels.tsv",
-        note = "{outdir}/data/annotation/gff_{gff}/mergedSamples/add_cluster_labels.ipynb",
-    params:
-        labels = get_cluster_labels(),
-        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/add_cluster_labels.ipynb"),
-    shell: "papermill -p se_f {input.se_f} -p cluster_labels_f {params.labels} {params.rscript} {output.note}"
-
+#
+# rule se_meta:
+#     """Save seurat meta-data as csv"""
+#     input:
+#         se_f = "{outdir}/data/annotation/gff_{gff}/mergedSamples/allSamples.integrated.rds",
+#     output:
+#         se_meta = "{outdir}/data/annotation/gff_{gff}/mergedSamples/se_cells_meta.tsv",
+#         note = "{outdir}/data/annotation/gff_{gff}/mergedSamples/se_cells_meta.ipynb",
+#     params:
+#         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clusters_cells_meta.ipynb"),
+#     shell: "papermill -p se_f {input.se_f} {params.rscript} {output.note}"
+#
+#
+# def get_cluster_labels():
+#     return config.get("umap_clusters_f", "FALSE")
+#
+# rule add_cluster_labels:
+#     """Prepare clone-by-cluster counts for umap and hypergeometric test"""
+#     input:
+#         se_f = "{outdir}/data/annotation/gff_{gff}/mergedSamples/allSamples.integrated.rds",
+#     output:
+#         se_meta = "{outdir}/data/annotation/gff_{gff}/mergedSamples/se_cells_meta_labels.tsv",
+#         note = "{outdir}/data/annotation/gff_{gff}/mergedSamples/add_cluster_labels.ipynb",
+#     params:
+#         labels = get_cluster_labels(),
+#         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/add_cluster_labels.ipynb"),
+#     shell: "papermill -p se_f {input.se_f} -p cluster_labels_f {params.labels} {params.rscript} {output.note}"
+#
 
 #######################################################################
 

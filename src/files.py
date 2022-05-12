@@ -103,7 +103,11 @@ def create_single_files(cfg, rule, sample=None):
             else:
                 cols += [k]
                 col_d[p].append(k)
-            col_vals.append(tuple(all_p[p][k]))
+            print(all_p[p][k])
+            if isinstance(all_p[p][k], list) or isinstance(all_p[p][k], dict):
+                col_vals.append(tuple(all_p[p][k]))
+            else:
+                col_vals.append(tuple([all_p[p][k]]))
     print('cols', cols)
     print('col_vals', col_vals)
     print(len(cols))

@@ -3,11 +3,18 @@ from src.utils.data_io import sparse_to_cellranger_fragments
 from src.config import ROOT_DIR
 
 def get_anno_integrate(wildcards):
-    print(join(config["anno_res"], "mergedSamples","allSamples.integrated.rds"))
-    return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
+    #print(join(config["anno_res"], "mergedSamples","allSamples.integrated.rds"))
+    #return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
+    return join(config["anno_res"], config["gff"] , "mergedSamples","allSamples.integrated.rds")
+
+# def get_se_meta(wildcards):
+#     return join(config["anno_res"], config["gff"], "mergedSamples","se_cells_meta.tsv")
+
 
 params = config["annotation_clones"]["params"]
 params_cl_embed = config["clone_clust_embed"]["params"]
+
+print('params', params)
 
 rule addClones:
     input:
@@ -33,9 +40,13 @@ rule se_meta:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/clusters_cells_meta.ipynb"),
     shell: "papermill -p se_f {input.se_f} {params.rscript} {output.note}"
 
-def get_cluster_labels():
-    return config.get("umap_clusters_f", "FALSE")
 
+
+def get_cluster_labels():
+    if "umap_clusters_f" in config and config["umap_clusters_f"] is None:
+        return "FALSE"
+    else:
+        return config.get("umap_clusters_f", "FALSE")
 
 rule add_cluster_labels:
     """Prepare clone-by-cluster counts for umap and hypergeometric test"""
@@ -47,15 +58,30 @@ rule add_cluster_labels:
     params:
         labels = get_cluster_labels(),
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/add_cluster_labels.ipynb"),
-    shell: "papermill -p se_f {input.se_f} -p cluster_labels_f {params.labels} {params.rscript} {output.note}"
+    shell: "papermill -p se_f {input.se_f} -p cluster_labels_f {params.labels:q} {params.rscript} {output.note}"
 
 
-def get_lineage_clone_counts_script(wildcards):
-    print('script', join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb"))
-    if wildcards.donType == "combinedDonors":
-        return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb")
-    return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_donors.ipynb")
 
+"""
+################################################################
+# Barplots of clone sizes
+################################################################
+"""
+rule counts_clones:
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+    output:
+        multiext("{outdir}/annotation_clones/clone_counts/",
+                 "clone_counts.barplot_conditions.png",
+                 ),
+        note = "{outdir}/annotation_clones/clone_counts/counts_clones.ipynb"
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        note = join(ROOT_DIR, "workflow/notebooks/lineage_clones/python_clone_cell_counts.ipynb"),
+        sample_names = ",".join(config["samples"].index),
+        min_cell = params["clone_sizes_min_cell"]
+    shell:
+        "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p sample_names {params.sample_names} -p min_cell {params.min_cell} {params.note} {output.note}"
 
 """
 ################################################################
@@ -69,6 +95,12 @@ def get_lineage_clone_counts_script(wildcards):
 ## Lineage clone counts for the input
 ################################################################
 """
+def get_lineage_clone_counts_script(wildcards):
+    #print('script', join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb"))
+    if wildcards.donType == "combinedDonors":
+        return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb")
+    return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_donors.ipynb")
+
 rule lineage_clone_counts_input:
     """ ISSUE with the output the size is not accurate"""
     input:
@@ -77,8 +109,9 @@ rule lineage_clone_counts_input:
         note = "{outdir}/annotation_clones/cluster_clone_counts/{donType}/input_cluster_clone_counts.ipynb"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
-        script = get_lineage_clone_counts_script
-    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True {params.script} {output.note}" #-p use_input True
+        script = get_lineage_clone_counts_script,
+        min_cell = params["clone_sizes_min_cell"]
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True -p min_cell {params.min_cell} {params.script} {output.note}" #-p use_input True
 
 rule tmp_no_input:
     output: temp("{outdir}/annotation_clones/cluster_clone_counts/{donType}/.tmp_input")
@@ -109,9 +142,9 @@ rule lineage_clone_counts:
         note = "{outdir}/annotation_clones/cluster_clone_counts/{donType}/all_cluster_clone_counts.ipynb"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
-        script = get_lineage_clone_counts_script
-    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input False {params.script} {output.note}"
-
+        script = get_lineage_clone_counts_script,
+        min_cell = params["clone_sizes_min_cell"]
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input False -p min_cell {params.min_cell} {params.script} {output.note}"
 
 rule tmp_no_all:
     output: temp("{outdir}/annotation_clones/cluster_clone_counts/{donType}/.tmp_all")
@@ -121,7 +154,7 @@ def lin_clone_file(wildcards):
     """ If it's an inputOnly run, we dont need this as redunndant to the input version"""
     w = wildcards
     #print(config["samples"])
-    print(f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb")
+    #print(f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb")
     if not ("Input" in config['samples'].index and len(config["samples"]==1)):
         return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb"
     return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/.tmp_all"
@@ -175,21 +208,6 @@ rule overlayClones_umap:
 #     shell:
 #         "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p sample_names {params.sample_names} -p minCell {wildcards.min_cells} {params.rscript} {output[0]}"
 #
-rule counts_clones:
-    input:
-        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
-    output:
-        multiext("{outdir}/annotation_clones/clone_counts/",
-                 "clone_counts.barplot_conditions.png",
-                 "top20_minCell25_clone_counts.barplot_conditions.png",
-                 ),
-        note = "{outdir}/annotation_clones/clone_counts/counts_clones.ipynb"
-    params:
-        outdir = lambda wildcards, output: dirname(output.note),
-        note = join(ROOT_DIR, "workflow/notebooks/lineage_clones/python_clone_cell_counts.ipynb"),
-        sample_names = ",".join(config["samples"].index),
-    shell:
-        "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p sample_names {params.sample_names} {params.note} {output.note}"
 
 ####################################
 ## Clones-clusters analysis by size.
@@ -229,7 +247,7 @@ rule count_clust_embed:
 rule cluster_clone_hypergeom:
     """Hypergeometric distribution for clones and clusters"""
     input:
-        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+        se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv", #"{outdir}/annotation_clones/se_cells_meta.tsv",
     output:
         result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.csv",
         note="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/hypergeom.ipynb"
@@ -241,7 +259,7 @@ rule cluster_clone_hypergeom:
 rule cluster_clone_input_hypergeom:
     """Hypergeometric distribution for clones and clusters"""
     input:
-        se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
+        se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv", #se_meta = "{outdir}/annotation_clones/se_cells_meta.tsv",
     output:
         result="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/input_hypergeom.csv",
         #noIn="{outdir}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/noInput_hypergeom.csv",

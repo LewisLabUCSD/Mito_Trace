@@ -1,6 +1,6 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline_v02.yaml"
+config: "parameters/pipeline/pipeline_v02_chip.yaml"
 experiment: "CHIP_b1" # Only used for somatic variants as of now
 ## Experiment params
 prefix: "v02/CHIP_b1/MTBlacklist_A2"
@@ -18,10 +18,8 @@ variants_f: "/data/Mito_Trace/data/processed/gilead_chip_profile/20210726_Croker
 mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b1/MTBlacklist_A2" #"/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b1/MTblacklist"
 
 
-
 markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"
 umap_clusters_f: "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/results/atac_clusters.txt"
-
 
 
 ## Somatic variant calling to help.
@@ -37,10 +35,7 @@ gatk_bed_regions: # gatk
 merged_peaks_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_3/gff_A2_black/annotation_clones/merged_peaks.bed"
 merged_peaks_small_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_3/gff_A2_black/annotation_clones/merged_peaks_small.bed"
 merged_peaks_needle_f: "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_3/gff_A2_black/annotation_clones/merged_peaks.tsv"
-
 rg_dict: "Flt3l,Control;Control,Flt3l;Input,Input"
-
-
 # For dendrogram clustering
 dendro_thresh: 0.6
 

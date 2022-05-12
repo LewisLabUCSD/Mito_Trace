@@ -8,7 +8,7 @@ params = config["de_clones_change"]["params"]
 ########################################################################################################################
 rule preprocess:
     input:
-        enrichment_dir = "enrichmentNorm.csv"
+        enrichment_dir = "_enrichment_complete" #"enrichmentNorm.csv"
     output:
         clone_change_f="{outdir}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/clone_change.csv",
         note="{outdir}/clones_change/filt_{filt}__shuffle_{shuffle}__padj_{use_p_adjust}__pthresh_{pthresh}_minC_{min_cell}__bothMinC__{min_cell_both}/preproc/preproc.ipynb"

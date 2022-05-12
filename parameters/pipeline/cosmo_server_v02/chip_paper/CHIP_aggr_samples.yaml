@@ -2,7 +2,7 @@ outdir: "/data/Mito_Trace/output/aggregate/"
 prefix: "CHIP_aggr"
 snakefile: "workflow/rules/data/chip.smk"
 pileup_dir: "data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/"
-config: "parameters/pipeline/pipeline_v02.yaml"
+config: "parameters/pipeline/pipeline_v02_chip.yaml"
 
 ## Sample files to aggregate!
 samples_config:
@@ -20,13 +20,22 @@ samples_config:
 
 # Analyses to get output from
 files:
-  - hypergeo_split_donor
-  - anno_umap
-  - clone_count
-  - clone_cluster_count
-  - barcodes
-  - clone_clust_embed
-  #- mt_vars
+  hypergeo_split_donor:
+    hypergeo: "hypergeo.png"
+  anno_umap:
+  clone_count:
+  clone_cluster_count:
+  barcodes:
+  clone_clust_embed:
+
+directories:
+  pileup_dir:
+    parent: ""
+    name: ""
+  clone_dir:
+    parent: pileup_dir
+    name: "clones/"
+
 
 
 # Run config
@@ -49,3 +58,5 @@ gene_ids_f:
 #  - "CHIP_b1_Input"
 #  - "CHIP_b1_Control"
 #  - "CHIP_b1_Flt3l"
+
+

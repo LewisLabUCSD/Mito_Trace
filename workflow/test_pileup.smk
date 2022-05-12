@@ -228,7 +228,7 @@ rule create_filters:
         filt_params = get_filt,
     resources:
         mem_mb=90000
-    shell: "python src/mtpreproc/calculate_AF_by_cell.py {params.concat_d} {output.af} {params.ref_fa} {params.name} {params.filt_params}" # --log {log}"
+    shell: "python src/mtpreproc/calculate_AF_by_cell_v02.py {params.concat_d} {output.af} {params.ref_fa} {params.name} {params.filt_params}" # --log {log}"
 
 
 ########################################################################

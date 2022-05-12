@@ -33,10 +33,24 @@ rule clone_shuffle_stats:
     shell: "papermill -p enrich_f {input.enrich_f} -p cells_meta_f {input.cells_meta_f} -p OUTDIR {params.outdir} -p samples {params.samples:q} {params.note} {output[0]}"
 
 
+rule tmp_noenrichment:
+    output: "{outdir}/enrichment/.noenrichment.txt"
+    shell: "touch {output}"
+
+
+def get_enrich_out(wildcards):
+    w = wildcards
+    if len(config["samples"]) == 1:
+        return f"{w.outdir}/enrichment/.noenrichment.txt"
+    else:
+        return f"{w.outdir}/enrichment/shuffle_stats/shuffle_stats.csv",
+
+
 rule finalize:
     input:
-        "{outdir}/enrichment/enrichmentNorm.csv",
-        "{outdir}/enrichment/shuffle_stats/shuffle_stats.csv",
+         get_enrich_out,
+        #"{outdir}/enrichment/enrichmentNorm.csv",
+        #"{outdir}/enrichment/shuffle_stats/shuffle_stats.csv",
     output:
         "{outdir}/enrichment/_enrichment_complete",
     shell: "touch {output}"

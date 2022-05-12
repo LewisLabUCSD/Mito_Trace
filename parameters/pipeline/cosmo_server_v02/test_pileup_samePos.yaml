@@ -1,0 +1,49 @@
+## Global params
+outdir: "/data/Mito_Trace/output" # Global output directory
+config: "parameters/pipeline/test_pileup_pipeline_v02.yaml"
+#params: "parameters/pipeline/params.csv"
+
+## Experiment params
+#prefix: "v02/test_pileup"
+prefix: "samePos/donors_2__conditions_3__cells_per_donor_cond_300__clones_in_don_5__positions_100__variants_per_clone_lambda_1__donor_variants_10/seq_error_0.01__don_var_lim_0.8_1.0__clone_var_lim_0.1_0.4__depth_lim_4_10"
+samples_meta: "parameters/pipeline/cosmo_server_v02/test_pileup.csv"
+genome: "MTBlacklist_A2"  #"MTBlacklist_A2"
+fastq_dir: "/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/" #/home/isaac/lewis/mito_lineage/data/processed/CHIP_dec172021/"
+#mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b1/MTBlacklist_A2" #"/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b1/MTblacklist"
+#results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
+N_DONORS: 2
+
+
+useSamePos:
+  - True
+  - False
+
+cells_setup:
+  params:
+    donors:
+      - 2
+    conditions:
+      - 3
+    cells_per_donor_cond:
+      - 300
+    clones_in_don:
+      - 5
+    positions:
+      - 100
+    variants_per_clone_lambda:
+      - 1
+    donor_variants:
+      - 10
+
+seq_setup:
+  params:
+    seq_error:
+      - 0.01
+    don_var_lim:
+      - "0.8,1.0"
+    clone_var_lim:
+      - "0.1,0.4"
+    depth_lim:
+      - "4,10"
+
+dendro_thresh: 0.6

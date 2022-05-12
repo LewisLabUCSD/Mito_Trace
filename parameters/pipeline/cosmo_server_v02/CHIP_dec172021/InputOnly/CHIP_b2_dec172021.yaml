@@ -1,6 +1,6 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline_v02.yaml"
+config: "parameters/pipeline/pipeline_v02_chip.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params
@@ -13,3 +13,5 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec17
 N_DONORS: 2
 
 markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"
+
+umap_clusters_f:

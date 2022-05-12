@@ -1,0 +1,16 @@
+# This environment uses R after to install packages
+# Conda environment install isn't great for it
+
+steps:
+  cli:
+    one: 'conda create -n monocle3 jupyter pip'
+    two: 'conda activate monocle3'
+    three: 'conda install -c conda-forge r-base'
+    four: 'conda install -c r r-irkernel'
+  r:
+    four: 'BiocManager::install(c("Biobase", "BiocGenerics","DelayedArray","DelayedMatrixStats","limma","S4Vectors","SingleCellExperiment","SummarizedExperiment"))'
+    five: 'install.packages("devtools")'
+    six: 'BiocManager::install("batchelor")'
+    seven: 'conda install r-sf'
+    eight: 'devtools::install_github("cole-trapnell-lab/monocle3")'
+    nine: ""
