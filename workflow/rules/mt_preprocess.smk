@@ -5,7 +5,7 @@ from snakemake.utils import min_version
 min_version("6.0")
 import subprocess as subp
 from os.path import join, dirname
-
+from src.config import ROOT_DIR
 
 res = config['results']
 samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
@@ -322,10 +322,31 @@ def get_filt(w):
     return w.mincells, w.minreads, w.topN, w.hetthresh, w.minhetcells, w.hetcountthresh, w.bqthresh
 
 
-rule create_filters:
+# rule create_filters:
+#     input:
+#         concat_dir = (rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
+#     output:
+#         cov = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
+#         af = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv",
+#         fig = report("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/heatmap.png",
+#                       category="mtpreproc", subcategory="filter"),
+#         fig2 = report("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/initial_cell_depth.png",
+#                       category="mtpreproc",subcategory="filter"),
+#     params:
+#         concat_d = lambda wildcards, input: dirname(input.concat_dir),
+#         ref_fa = config["genome_path"][config['genome']]['mt_ref_fa'],
+#         name = lambda wildcards: wildcards.sample,
+#         filt_params = get_filt,
+#     resources:
+#         mem_mb=90000
+#     shell: "python src/mtpreproc/calculate_AF_by_cell.py {params.concat_d} {output.af} {params.ref_fa} {params.name} {params.filt_params}" # --log {log}"
+#
+
+rule create_filters_v02:
     input:
         concat_dir = (rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
     output:
+        note = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/out.note",
         cov = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
         af = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv",
         fig = report("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/heatmap.png",
@@ -336,7 +357,16 @@ rule create_filters:
         concat_d = lambda wildcards, input: dirname(input.concat_dir),
         ref_fa = config["genome_path"][config['genome']]['mt_ref_fa'],
         name = lambda wildcards: wildcards.sample,
-        filt_params = get_filt,
+        #filt_params = get_filt,
+        note = join(ROOT_DIR, "workflow/notebooks/af_filter/filter_af_by_cell_v02.ipynb")
     resources:
         mem_mb=90000
-    shell: "python src/mtpreproc/calculate_AF_by_cell.py {params.concat_d} {output.af} {params.ref_fa} {params.name} {params.filt_params}" # --log {log}"
+    shell:
+        """
+        papermill -p scpileup_dir {params.concat_d} -p af_f {output.af} -p mt_ref_fa {params.ref_fa} -p name {params.name} \ 
+            -p min_cells {wildcards.mincells} -p min_reads {wildcards.minreads} -p topn {wildcards.topN} 
+            -p het_thresh {wildcards.hetthresh} -p min_het_cells {wildcards.minhetcells} -p het_count_thresh {wildcards.hetcountthresh} \
+            -p bq_thresh {wildcards.bqthresh} {params.note} {output.note}
+        """
+
+
