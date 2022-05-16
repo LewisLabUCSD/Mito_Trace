@@ -109,10 +109,9 @@ else:
 ###################################
 rule all:
     input:
-        # A. Preproc: Initial MT coverage per position per cell
-        expand("{out_dir}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
-            out_dir=res,sample=samples.index, num_read=num_reads_filter, cellrbc=cellrbc),
-
+        # # A. Preproc: Initial MT coverage per position per cell
+        # expand("{out_dir}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
+        #     out_dir=res,sample=samples.index, num_read=num_reads_filter, cellrbc=cellrbc),
         # B. Multiplex: Multiplexed VAF and depth dendrograms for each donor and selected variants
         expand("{out_dir}/results/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex.pdf",
             out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
@@ -350,7 +349,7 @@ module multMod:
 ########################################################################
 ## 1. Go from 10x output to filtered scPileup outdir.
 ########################################################################
-use rule * from mtpreprocMod
+use rule * from mtpreprocMod as mtpreproc_*
 
 ########################################################################
 ## 2. Call variants using MGATK and convert to the Vireo multiplex input

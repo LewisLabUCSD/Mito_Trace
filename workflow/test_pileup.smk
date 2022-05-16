@@ -140,6 +140,10 @@ module mtpreprocMod:
     snakefile: "./rules/mt_preprocess.smk"
     config: params
 
+
+use rule * from mtpreprocMod as mtpreproc_*
+
+
 module mgatkMod:
     snakefile: "./rules/mgatk.smk"
     config: params
@@ -210,26 +214,26 @@ module multMod:
 def get_filt(w):
     return w.mincells, w.minreads, w.topN, w.hetthresh, w.minhetcells, w.hetcountthresh, w.bqthresh
 
-
-rule create_filters:
-    input:
-        concat_dir =  "{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt" #(rules.filter_cell_bc.output[0]) #"{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
-    output:
-        cov = "{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
-        af = "{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv",
-        fig = report("{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/heatmap.png",
-                      category="mtpreproc", subcategory="filter"),
-        fig2 = report("{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/initial_cell_depth.png",
-                      category="mtpreproc",subcategory="filter"),
-    params:
-        concat_d = lambda wildcards, input: dirname(input.concat_dir),
-        ref_fa = params["genome_path"][config['genome']]['mt_ref_fa'],
-        name = lambda wildcards: wildcards.sample,
-        filt_params = get_filt,
-    resources:
-        mem_mb=90000
-    shell: "python src/mtpreproc/calculate_AF_by_cell_v02.py {params.concat_d} {output.af} {params.ref_fa} {params.name} {params.filt_params}" # --log {log}"
-
+#
+# rule create_filters:
+#     input:
+#         concat_dir =  "{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt" #(rules.filter_cell_bc.output[0]) #"{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
+#     output:
+#         cov = "{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
+#         af = "{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv",
+#         fig = report("{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/heatmap.png",
+#                       category="mtpreproc", subcategory="filter"),
+#         fig2 = report("{outdir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/initial_cell_depth.png",
+#                       category="mtpreproc",subcategory="filter"),
+#     params:
+#         concat_d = lambda wildcards, input: dirname(input.concat_dir),
+#         ref_fa = params["genome_path"][config['genome']]['mt_ref_fa'],
+#         name = lambda wildcards: wildcards.sample,
+#         filt_params = get_filt,
+#     resources:
+#         mem_mb=90000
+#     shell: "python src/mtpreproc/calculate_AF_by_cell_v02.py {params.concat_d} {output.af} {params.ref_fa} {params.name} {params.filt_params}" # --log {log}"
+#
 
 ########################################################################
 ## 2. Call variants using MGATK and convert to the Vireo multiplex input

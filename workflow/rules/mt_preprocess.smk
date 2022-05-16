@@ -66,8 +66,8 @@ rule MT_map:
         bam = "{output}/data/{sample}/00_bam/{sample}.bam",
         bai = ("{output}/data/{sample}/00_bam/{sample}.bam.bai"),
     output:
-        mt_bam=temp("{output}/data/{sample}/MT/{sample}.MT.bam"),
-        mt_bai=temp("{output}/data/{sample}/MT/{sample}.MT.bam.bai")
+        mt_bam = temp("{output}/data/{sample}/MT/{sample}.MT.bam"),
+        mt_bai = temp("{output}/data/{sample}/MT/{sample}.MT.bam.bai")
     params:
         bam = lambda wildcards, input: input.bai.replace('.bai', ''),
         mt_chr= mt["mito_character"],
@@ -253,8 +253,8 @@ rule scPileup_mergeStrands:
         expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}{strand}.txt",
                nt=["coverage", "A", "C", "G", "T"], strand=[".minus", ""])
     output:
-        all = expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
-                     nt=["coverage", "A", "C", "G", "T"])
+        all = (expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
+                     nt=["coverage", "A", "C", "G", "T"]))
     params:
         concat_dir = lambda wildcards, input: dirname(input[0]),
         samplename = lambda wildcards, output: basename(output.all[0]).split("_all.coverage.strands.txt")[0]
@@ -346,7 +346,7 @@ rule create_filters_v02:
     input:
         concat_dir = (rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
     output:
-        note = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/out.note",
+        note = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/out.ipynb",
         cov = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
         af = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv",
         fig = report("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/heatmap.png",
@@ -363,10 +363,10 @@ rule create_filters_v02:
         mem_mb=90000
     shell:
         """
-        papermill -p scpileup_dir {params.concat_d} -p af_f {output.af} -p mt_ref_fa {params.ref_fa} -p name {params.name} \ 
-            -p min_cells {wildcards.mincells} -p min_reads {wildcards.minreads} -p topn {wildcards.topN} 
-            -p het_thresh {wildcards.hetthresh} -p min_het_cells {wildcards.minhetcells} -p het_count_thresh {wildcards.hetcountthresh} \
-            -p bq_thresh {wildcards.bqthresh} {params.note} {output.note}
+        papermill -p scpileup_dir {params.concat_d} -p af_f {output.af} -p mt_ref_fa {params.ref_fa} -p name {params.name} \
+        -p min_cells {wildcards.mincells} -p min_reads {wildcards.minreads} -p topn {wildcards.topN} \
+        -p het_thresh {wildcards.hetthresh} -p min_het_cells {wildcards.minhetcells} -p het_count_thresh {wildcards.hetcountthresh} \
+        -p bq_thresh {wildcards.bqthresh} {params.note} {output.note}
         """
 
 
