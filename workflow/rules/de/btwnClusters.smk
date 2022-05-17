@@ -29,12 +29,14 @@ rule btwnClust_DE:
     params:
         outdir = lambda wildcards, output: dirname(output.note),
         assay=lambda wildcards: wildcards.assay,
-        minPct=lambda wildcards: wildcards.btwnMinpct,
-        logfcthresh= lambda wildcards: wildcards.logfc_threshold,
+        #minPct=lambda wildcards: wildcards.btwnMinpct,
+        #logfcthresh= lambda wildcards: wildcards.logfc_threshold,
         top_de=3,
         samples = ",".join(config["samples"].index),
-        p_thresh=lambda wildcards: wildcards.p_thresh,
-    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p top_de {params.top_de} -p sample_names {params.samples}  {input.rscript} {output.note}"
+        to_donors = "TRUE"
+        #p_thresh=lambda wildcards: wildcards.p_thresh,
+
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p top_de {params.top_de} -p minPct {wildcards.btwnMinpct} -p logfcthresh {wildcards.logfc_threshold} -p p_thresh {wildcards.p_thresh} -p sample_names {params.samples} -p to_donors {params.to_donors} {input.rscript} {output.note}"
 
 
 rule runGSEA_btwnClust:

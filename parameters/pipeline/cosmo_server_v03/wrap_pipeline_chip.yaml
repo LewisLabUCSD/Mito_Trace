@@ -1,0 +1,16 @@
+snakefile: "workflow/Snakefile"
+pipename: "pipeline"
+params_dir:
+indir:
+  CHIP_b1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v03/CHIP_dec172021/CHIP_b1_dec172021.yaml"
+  CHIP_b2: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v03/CHIP_dec172021/InputOnly/CHIP_b2_dec172021.yaml"
+  CHIP_a1: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v03/CHIP_Input_nameFix_april08_2021.yaml"
+  cd34norm: "/data/Mito_Trace/parameters/pipeline/cosmo_server_v03/cd34norm.yaml"
+
+targets:
+#  - "annClo_lineage_clone_counts"
+#  - "annClo_lineage_clone_counts_input"
+#  - "annClo_counts_clones"
+dryrun: False
+
+to_report: False

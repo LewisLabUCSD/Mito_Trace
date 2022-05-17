@@ -322,6 +322,8 @@ def get_filt(w):
     return w.mincells, w.minreads, w.topN, w.hetthresh, w.minhetcells, w.hetcountthresh, w.bqthresh
 
 
+
+
 # rule create_filters:
 #     input:
 #         concat_dir = (rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
@@ -359,6 +361,7 @@ rule create_filters_v02:
         name = lambda wildcards: wildcards.sample,
         #filt_params = get_filt,
         note = join(ROOT_DIR, "workflow/notebooks/af_filter/filter_af_by_cell_v02.ipynb")
+    version: "v02"
     resources:
         mem_mb=90000
     shell:
