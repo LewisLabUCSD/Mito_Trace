@@ -351,7 +351,7 @@ def wrap_write_mtx_df(outdir, ad, dp, oth=None, to_rm=True,
 
 
 
-def af_to_vireo(af,  coverage, outdir, out_name):
+def af_to_vireo(af, coverage, outdir, out_name):
     cell_samples = list(af.columns.values)
     variants = list(af.index.values)
     # Covert af_meta to vcf-like
