@@ -1,0 +1,186 @@
+---
+title: "run_pseudo_groups"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r files}
+se_f = "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_30/gff_A2_black/annotation_clones/SE.rds"
+labels_meta = "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_30/gff_A2_black/annotation_clones/se_cells_meta_labels.tsv"
+outdir = "/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_30/gff_A2_black/annotation_clones/pseudotime"
+order_f = ""
+to_de = FALSE
+```
+
+```{r library}
+library(monocle3)
+library(Signac)
+library(Seurat)
+library(SeuratWrappers)
+library(Matrix)
+library(ggplot2)
+library(patchwork)
+set.seed(1234)
+```
+
+
+```{r load and process}
+labels.meta <- read.table(labels_meta, sep="\t")
+se <- readRDS(se_f)
+se <- AddMetaData(se, labels.meta["cluster_labels"])
+DefaultAssay(se) <- "ATAC"
+
+se.cds <- as.cell_data_set(se)
+se.cds <- cluster_cells(cds = se.cds, reduction_method = "UMAP")
+```
+
+```{r}
+left_subset <- choose_cells(se.cds)
+```
+
+```{r}
+right_subset <- choose_cells(se.cds)
+```
+
+```{r}
+top_subset <- choose_cells(se.cds)
+```
+
+```{r}
+saveRDS(c(left=left_subset, right=right_subset, top=top_subset), file=file.path(outdir, "cell_groups.RDS"))
+```
+
+```{r}
+cell_subsets <- c(left=left_subset, right=right_subset, top=top_subset)
+```
+
+
+```{r}
+# run.pseudo <- function(x){
+#   x <- learn_graph(x, use_partition = TRUE)
+#   # plot trajectories colored by pseudotime
+#   plot_cells(
+#     cds = x,
+#     show_trajectory_graph = TRUE, label_principal_points = TRUE
+#   )
+#   return(x)
+# }
+```
+
+```{r}
+#se.cds <- learn_graph(se.cds)# , use_partition = TRUE)
+
+se.cds <- learn_graph(se.cds, use_partition = TRUE)
+# plot trajectories colored by pseudotime
+
+
+plot_cells(
+    cds = se.cds,
+    show_trajectory_graph = TRUE, label_principal_points = TRUE
+  )
+
+#cds.left_subset <- run.pseudo(right_subset)
+```
+
+```{r}
+#learned.pseudo <- sapply(cell_subsets, run.pseudo, simplify=T, USE.NAMES = F)
+```
+
+```{r}
+# interactive mode or not
+if (order_f == "") {
+   se.cds <- order_cells(se.cds, reduction_method = "UMAP", root_pr_nodes = c('Y_168','Y_157', 'Y_127', 'Y_114'))
+} else{
+    se.cds <- order_cells(se.cds, reduction_method = "UMAP", root_cells = hsc)
+}
+```
+
+```{r}
+plot_cells(se.cds, color_cells_by="partition", group_cells_by="partition")
+```
+
+
+# Break cells into graph segments
+```{r}
+l1.branch <- choose_graph_segments(se.cds)
+```
+```{r}
+l2.branch <- choose_graph_segments(se.cds)
+```
+
+```{r}
+l1.2.branch <- choose_graph_segments(se.cds) #not including middle portion
+```
+
+```{r}
+t1.branch <- choose_graph_segments(se.cds) #up branch 4
+```
+
+```{r}
+t1.2branch <- choose_graph_segments(se.cds) #not including the middle portion
+```
+
+```{r}
+r1branch <- choose_graph_segments(se.cds) #not including the middle portion
+```
+
+```{r}
+r1.2.branch <- choose_graph_segments(se.cds) #not including the middle portion
+```
+
+```{r}
+b1.branch <- choose_graph_segments(se.cds) #not including the middle portion
+```
+
+
+```{r}
+saveRDS(c(l1=l1.branch, l2=l2.branch,l1.2=l1.2.branch, t1=t1.branch, t1.2=t1.2branch, r1=r1branch, r1.2=r1.2.branch, b1=b1.branch), file=file.path(outdir, "cell_branches.rds"))
+
+```
+
+
+```{r}
+# plot trajectories colored by pseudotime
+plot_cells(
+  cds = se.cds,
+  color_cells_by = "pseudotime",
+  show_trajectory_graph = TRUE
+)
+ggsave(file.path(outdir, "SE.pseudotime.trajectory.png"))
+
+se <- AddMetaData(
+  object = se,
+  metadata = se.cds@principal_graph_aux@listData$UMAP$pseudotime,
+  col.name = "pseudotime"
+)
+FeaturePlot(se, c("pseudotime"), pt.size = 0.1) & scale_color_viridis_c()
+ggsave(file.path(outdir, "SE.pseudotime.png"))
+FeaturePlot(se, c("nCount_ATAC"), pt.size = 0.1) & scale_color_viridis_c()
+ggsave(file.path(outdir, "SE.pseudotime.nCountPeaks.png"))
+
+
+plot_cells(se.cds, color_cells_by="cluster_labels", label_cell_groups=TRUE)
+
+plot_cells(se.cds, color_cells_by="name")
+ggsave(file.path(outdir, "pseudo.clone.png"))
+
+#cds_subset = cluster_cells(cds_subset, resolution=1e-2)
+plot_cells(se.cds, color_cells_by="donor")
+ggsave(file.path(outdir, "pseudo.donor.png"))
+
+
+saveRDS(se, file.path(outdir, "SE.pseudotime.rds"))
+
+saveRDS(se.cds, file.path(outdir, "SE.cds.rds"))
+```
+
+

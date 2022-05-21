@@ -33,7 +33,7 @@ rule plot_mtclones_informative:
         indir = "{outdir}/mt_as_clones/variants_{variants}/mt_clones_thresh/.complete",
     output:
           note = "{outdir}/mt_as_clones/variants_{variants}/mt_clones_thresh/params_plot.ipynb",
-          fig = expand("{{outdir}}/mt_as_clones/variants_{{variants}}/mt_clones_thresh/donor{d}_params_scatter.png",d=np.arange(config["N_DONORS"]))
+          #fig = expand("{{outdir}}/mt_as_clones/variants_{{variants}}/mt_clones_thresh/donor{d}_params_scatter.png",d=np.arange(config["N_DONORS"]))
     params:
         indir = lambda wildcards, input: dirname(input.indir),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -69,9 +69,26 @@ rule nuclear_and_mtclone_counts:
            -p ncells {wildcards.ncells} -p oth_ncells {wildcards.othncells} -p mean_pos_cov {wildcards.mean} {params.script} {output.note}"""
 
 
-rule mtclone_bin_dendro:
+rule best_params_out:
     input:
         indir = "{outdir}/mt_as_clones/variants_{variants}/mt_clones_thresh/.complete", # "{outdir}/multiplex/clones_{variants}/mt_clones_thresh",
+    output:
+        note = "{outdir}/mt_as_clones/variants_{variants}/bestparams/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/best_params_save.ipynb",
+    params:
+        indir  = lambda wildcards, input: dirname(input.indir),
+        outdir = lambda wildcards, output: dirname(output.note),
+        script = join(ROOT_DIR, "workflow/notebooks/mt_as_clones/best_params_mt_to_clones_informative.ipynb"),
+        N_DONORS= config["N_DONORS"],
+    shell: """ \
+           papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} \
+           -p af_t {wildcards.af} -p oth_af_t {wildcards.othaf} -p cov_t {wildcards.cov} -p oth_cov_t {wildcards.othcov} \
+           -p ncells {wildcards.ncells} -p oth_ncells {wildcards.othncells} -p mean_pos_cov {wildcards.mean} {params.script} {output.note}"""
+
+
+rule mtclone_bin_dendro:
+    input:
+        #indir = "{outdir}/mt_as_clones/variants_{variants}/mt_clones_thresh/.complete", # "{outdir}/multiplex/clones_{variants}/mt_clones_thresh",
+        indir = "{outdir}/mt_as_clones/variants_{variants}/bestparams/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/best_params_save.ipynb",
     output:
         note = "{outdir}/mt_as_clones/variants_{variants}/dendro/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/dendro_mt_clones.ipynb",
     params:
@@ -80,10 +97,12 @@ rule mtclone_bin_dendro:
         script = join(ROOT_DIR, "workflow/notebooks/mt_as_clones/dendro_mt_to_clones_informative.ipynb"),
         N_DONORS= config["N_DONORS"],
     #shell: "papermill -p indir {input.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p best_p {params.script} {output.note}"
-    shell: """ \
-           papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} \
-           -p af_t {wildcards.af} -p oth_af_t {wildcards.othaf} -p cov_t {wildcards.cov} -p oth_cov_t {wildcards.othcov} \
-           -p ncells {wildcards.ncells} -p oth_ncells {wildcards.othncells} -p mean_pos_cov {wildcards.mean} {params.script} {output.note}"""
+    shell: """ papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} {params.script} {output.note}"""
+
+    # shell: """ \
+    #        papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} \
+    #        -p af_t {wildcards.af} -p oth_af_t {wildcards.othaf} -p cov_t {wildcards.cov} -p oth_cov_t {wildcards.othcov} \
+    #        -p ncells {wildcards.ncells} -p oth_ncells {wildcards.othncells} -p mean_pos_cov {wildcards.mean} {params.script} {output.note}"""
 
 
 rule nuclear_mtclones_af:
@@ -97,6 +116,7 @@ rule nuclear_mtclones_af:
         outdir = lambda wildcards, output: dirname(output.note),
         script = join(ROOT_DIR,"workflow/notebooks/mt_as_clones/mt_nuclear_af.ipynb"),
     shell: "papermill -p indir {params.don_dir} -p se_meta {input.se_meta} -p outdir {params.outdir} {params.script} {output.note}"
+
 
 
 rule finalize:

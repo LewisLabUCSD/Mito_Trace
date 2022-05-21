@@ -254,6 +254,12 @@ rule all:
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/mt_as_clones/variants_{variants}/.complete.txt",
                 out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],),
+
+        # clonal_shifts
+         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clonal_shifts/variants_{variants}/.complete.txt",
+                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
                 hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],)
 
 
@@ -584,7 +590,22 @@ use rule * from procDonMgatkMod as donMGATK_*
 # ##
 # # Extract pileups for each donor from original filter matrices
 # ########################################################################
-rule scPileup_init:
+# rule scPileup_init:
+#     input:
+#         cov =  expand("{{out_dir}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/{sample}.coverage.txt",
+#             sample=samples.index),
+#         mult = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb"
+#     output:
+#         af = expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/multiplex/clones_init/donor{d}/af.tsv",
+#                     d=np.arange(config["N_DONORS"]))
+#     params:
+#         sample = samples['sample_name'].values,
+#         cells_meta = lambda wildcards, input: join(dirname(input.mult),"cells_meta.tsv"),
+#         ref_mt = params_mgatk["chrM_refAllele"]
+#     script: join(ROOT_DIR, "src/donor_to_clonesInput/donor_to_af.py")
+
+
+rule scPileup_init_v02:
     input:
         cov =  expand("{{out_dir}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/{sample}.coverage.txt",
             sample=samples.index),
@@ -595,8 +616,11 @@ rule scPileup_init:
     params:
         sample = samples['sample_name'].values,
         cells_meta = lambda wildcards, input: join(dirname(input.mult),"cells_meta.tsv"),
-        ref_mt = params_mgatk["chrM_refAllele"]
-    script: join(ROOT_DIR, "src/donor_to_clonesInput/donor_to_af.py")
+        ref_mt = params_mgatk["chrM_refAllele"],
+        var_type = "init"
+    version: "v02"
+    notebook:
+        join(ROOT_DIR, "workflow/notebooks/af_filter/donor_to_af_v02.ipynb")
 
 
 module procInitMod:
@@ -616,7 +640,21 @@ use rule * from procInitMod as procInitMod_*
 ## Variants D: 'simpleUnion': Union of variants from both mgatk outputs. Similar to init,
 # but it also adds in coverage if a variant was filtered out in a specific condition.
 ########################################################################
-rule scPileup_simpleUnion:
+# rule scPileup_simpleUnion:
+#     input:
+#         cov =  expand("{{out_dir}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/{sample}.coverage.txt",
+#             sample=samples.index),
+#         mult = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb"
+#     output:
+#         af = expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/multiplex/clones_simpleUnion/donor{d}/af.tsv",
+#             d=np.arange(config["N_DONORS"]))
+#     params:
+#         sample = samples['sample_name'].values,
+#         cells_meta = lambda wildcards, input: join(dirname(input.mult),"cells_meta.tsv"),
+#         ref_mt = params_mgatk["chrM_refAllele"]
+#     script: join(ROOT_DIR, "src/donor_to_clonesInput/donor_to_af_simpleUnion.py")
+
+rule scPileup_simpleUnion_v02:
     input:
         cov =  expand("{{out_dir}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/{sample}.coverage.txt",
             sample=samples.index),
@@ -627,8 +665,11 @@ rule scPileup_simpleUnion:
     params:
         sample = samples['sample_name'].values,
         cells_meta = lambda wildcards, input: join(dirname(input.mult),"cells_meta.tsv"),
-        ref_mt = params_mgatk["chrM_refAllele"]
-    script: join(ROOT_DIR, "src/donor_to_clonesInput/donor_to_af_simpleUnion.py")
+        ref_mt = params_mgatk["chrM_refAllele"],
+        var_type = "simpleUnion"
+    version: "v02"
+    notebook:
+        join(ROOT_DIR, "workflow/notebooks/af_filter/donor_to_af_v02.ipynb")
 
 
 module procSimUnMod:
@@ -1144,12 +1185,83 @@ module somvarsMod:
 
 
 #use rule * from somvarsMod
-
 module mtCloneMod:
     snakefile: "./rules/mt_as_clone.smk"
     config: params
 
 use rule * from mtCloneMod as mtclone_*
+
+
+module cloneShiftMod:
+    snakefile: "./rules/clonal_shift.smk"
+    config: params
+
+use rule * from cloneShiftMod as cloneshift_*
+
+
+
+# def get_script(wildcards):
+#     clone_type = wildcards.clone_type
+#     if clone_type == "clones":
+#         return join(ROOT_DIR, "workflow/notebooks/clonal_shifts/hypergeometric_clones.ipynb")
+#     elif clone_type == "mt_den":
+#         return join(ROOT_DIR, "workflow/notebooks/clonal_shifts/hypergeometric_mt_as_clones_dendro.ipynb")
+#     elif clone_type == "mt_bin":
+#         return join(ROOT_DIR, "workflow/notebooks/clonal_shifts/hypergeometric_mt_as_clones.ipynb")
+#     elif clone_type == "dendro_bc":
+#         return join(ROOT_DIR, "workflow/notebooks/clonal_shifts/dendro.ipynb")
+#     raise ValueError("clone_type variable")
+#     return
+#
+# #"{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/mt_as_clones/variants_{variants}/
+# #"clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/",
+# rule clonalshift_mt_as_clones:
+#     input:
+#         clones = "{outdir}/mt_as_clones/variants_{variants}/dendro/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/best_params_save.ipynb",
+#         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv"
+#     output:
+#         "{outdir}/clonal_shifts/mt_as_clones/results/{condition}/variants_{variants}/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
+#     params:
+#         script = get_script,
+#         outdir = lambda wildcards, output: dirname(output[0])
+#     shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} {params.script} {output}"
+#
+#
+# rule clonalshift_mt_as_clones_dendro:
+#     input:
+#         clones = "{outdir}/mt_as_clones/variants_{variants}/dendro/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/dendro_mt_clones.ipynb",
+#         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv"
+#     output:
+#         "{outdir}/clonal_shifts/mt_as_clones_dendro/results/{condition}/variants_{variants}/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
+#     params:
+#         indir = lambda wildcards, input: dirname(input.clones),
+#         script = get_script,
+#         outdir = lambda wildcards, output: dirname(output[0])
+#     shell: "papermill -p indir {params.indir} -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} {params.script} {output}"
+#
+#
+# rule clonalshift_clones:
+#     input:
+#         se_meta = "{outdir}/annotation_clones/variants_{variants}/se_cells_meta_labels.tsv"
+#     output:
+#         "{outdir}/clonal_shifts/clones/results/{condition}/variants_{variants}/output.ipynb"
+#     params:
+#         script = get_script,
+#         outdir = lambda wildcards, output: dirname(output[0])
+#     shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} {params.script} {output}"
+#
+#
+# rule clonalshift_dendro_bc:
+#     input:
+#         se_meta = "{outdir}/clones/annotation_clones/variants_{variants}/se_cells_meta_labels.tsv",
+#         barcodes_dir = "{outdir}/clones/variants_{variants}/knn/kparam_{kparams}/barcodes/btwnClones_dendro_dt_{dt}/",
+#     output:
+#         "{outdir}/clones/variants_{variants}/knn/kparam_{kparams}/barcodes/btwnClones_dendro_dt_{dt}/results/{condition}/output.ipynb"
+#     params:
+#         script = get_script,
+#         outdir = lambda wildcards, output: dirname(output[0])
+#     shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} {params.script} {output}"
+
 
 # use rule nuclear_and_mtclone_counts from mtcloneMod as mtclone_nuclear_and_mtclone_counts with:
 #     output:

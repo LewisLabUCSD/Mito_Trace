@@ -51,7 +51,7 @@ gene_ids_f:
 #mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
 
 
-
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"
 
 
 #samples:

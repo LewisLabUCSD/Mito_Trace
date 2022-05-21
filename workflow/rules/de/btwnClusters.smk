@@ -23,11 +23,11 @@ rule btwnClust_DE:
     """
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
-        rscript = get_btwnClust_rscript
     output:
         note =  "{outdir}/annotation_clones/de_btwnclust_{assay}/minPct_{btwnMinpct}_logfc{logfc_threshold}/pthresh_{p_thresh}.ipynb",
     params:
         outdir = lambda wildcards, output: dirname(output.note),
+        rscript = get_btwnClust_rscript,
         assay=lambda wildcards: wildcards.assay,
         #minPct=lambda wildcards: wildcards.btwnMinpct,
         #logfcthresh= lambda wildcards: wildcards.logfc_threshold,
@@ -36,7 +36,7 @@ rule btwnClust_DE:
         to_donors = "TRUE"
         #p_thresh=lambda wildcards: wildcards.p_thresh,
 
-    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p top_de {params.top_de} -p minPct {wildcards.btwnMinpct} -p logfcthresh {wildcards.logfc_threshold} -p p_thresh {wildcards.p_thresh} -p sample_names {params.samples} -p to_donors {params.to_donors} {input.rscript} {output.note}"
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p top_de {params.top_de} -p minPct {wildcards.btwnMinpct} -p logfcthresh {wildcards.logfc_threshold} -p p_thresh {wildcards.p_thresh} -p sample_names {params.samples} -p to_donors {params.to_donors} {params.rscript} {output.note}"
 
 
 rule runGSEA_btwnClust:
