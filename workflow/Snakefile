@@ -193,6 +193,7 @@ rule all:
             btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
             ),
 
+
         #
         # # Condition DE
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
@@ -257,11 +258,18 @@ rule all:
                 hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],),
 
         # clonal_shifts
-         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clonal_shifts/variants_{variants}/.complete.txt",
+         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clonal_shifts/variants_{variants}/.finalize_complete.txt",
                 out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],)
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"]),
 
+        # individual clones
+         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/single_clones/{f}",
+                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".preproc.txt", ".aggregate.txt"])
+
+        #"{outdir}/single_clones/.preproc.txt"
 
         # # C. Clones: Variant types
 
@@ -1198,7 +1206,11 @@ module cloneShiftMod:
 
 use rule * from cloneShiftMod as cloneshift_*
 
+module indClonesMod:
+    snakefile: "./rules/individual_clones.smk"
+    config: params
 
+use rule * from indClonesMod as indclones_*
 
 # def get_script(wildcards):
 #     clone_type = wildcards.clone_type

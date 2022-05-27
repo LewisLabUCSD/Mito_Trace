@@ -1,6 +1,6 @@
 ## Global parameters
 outdir: "/data/Mito_Trace/output"
-config: "parameters/pipeline/pipeline_v02_chip.yaml"
+config: "parameters/pipeline/pipeline_v03_chip.yaml"
 
 #results: "output/pipeline/CHIP_april08_2021/MTblacklist"
 ## Experimental parameters

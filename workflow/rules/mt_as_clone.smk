@@ -97,7 +97,7 @@ rule mtclone_bin_dendro:
         script = join(ROOT_DIR, "workflow/notebooks/mt_as_clones/dendro_mt_to_clones_informative.ipynb"),
         N_DONORS= config["N_DONORS"],
     #shell: "papermill -p indir {input.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p best_p {params.script} {output.note}"
-    shell: """ papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} {params.script} {output.note}"""
+    shell: "papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} {params.script} {output.note}"
 
     # shell: """ \
     #        papermill -p indir {params.indir} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} \

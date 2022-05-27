@@ -1,6 +1,6 @@
 ## Global params
 outdir: "/data/Mito_Trace/output" # Global output directory
-config: "parameters/pipeline/pipeline_v02_chip.yaml"
+config: "parameters/pipeline/pipeline_v03_chip.yaml"
 #params: "parameters/pipeline/params.csv"
 
 ## Experiment params

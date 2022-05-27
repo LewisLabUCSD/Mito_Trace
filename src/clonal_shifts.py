@@ -144,25 +144,25 @@ def run(groups, sizes, atac_col, clone_col, p_thresh,
                                                            )
     if to_plot:
         if output_df.shape[0] == 0:
-            g = sns.clustermap(-np.log10(bh_enrichment_df.fillna(1)),
-                               row_cluster=False)
-            g.fig.suptitle("No groups were significant")
+            f = plt.figure()
+            plt.heatmap(-np.log10(bh_enrichment_df.fillna(1)),row_cluster=False)
+            plt.title("-log10 p-value (No groups were significant)")
         else:
             g = sns.clustermap(
-                -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)),
-                row_cluster=False)
-        g.ax_heatmap.set(xlabel="Cluster ID")
-        g.ax_cbar.set(title="-log10 p-value")
+                -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)))
+            g.ax_heatmap.set(xlabel="Cluster ID")
+            g.ax_cbar.set(title="-log10 p-value")
 
         if out_f is not None:
-            plt.savefig(out_f)
+            plt.savefig(out_f,dpi=300, bbox_inches = "tight")
         # plot just the counts
         groups["log2_count"] = np.log2(groups["count"] + 1)
+        f = plt.figure()
         sns.clustermap(
             groups.pivot(index="cluster_labels", columns="den_clust",
                               values="log2_count").fillna(0))
         if out_f is not None:
-            plt.savefig(out_f + "groups_counts.png")
+            plt.savefig(out_f + "groups_counts.png",dpi=300, bbox_inches = "tight")
     return output_df, bh_enrichment_df
 
 
@@ -245,7 +245,7 @@ def get_shuffle_results(shuffle, clones, clone_map):
 
 
 def plot_glob_all(bh_enrichment_df, global_all, p_thresh, atac_col, out_f=None):
-    shuffle_pval_df = bh_enrichment_df.copy().applymap(lambda x: ((x<np.array(global_all)).sum())/len(global_all))
+    shuffle_pval_df = bh_enrichment_df.copy().applymap(lambda x: ((x>np.array(global_all)).sum())/len(global_all))
     #shuffle_pval_df = ((bh_enrichment_df) < global_all).sum() / len(global_all)
     curr_thresh = np.percentile(global_all, 100 * p_thresh)
     f, ax = plt.subplots()
@@ -256,16 +256,16 @@ def plot_glob_all(bh_enrichment_df, global_all, p_thresh, atac_col, out_f=None):
     group_vs_shuffle = bh_enrichment_df[bh_enrichment_df < curr_thresh]
     sig_pairs = group_vs_shuffle.stack().reset_index().rename({"level_1": atac_col, 0: "p_val"}, axis=1)
     print(f"Number of groups below p-val significance: {(sig_pairs.shape[0])}")
-    plt.title("p-value across all simulations")
+    plt.title(f"p-value across all simulations\ncutoff: {p_thresh}; nsig: {(sig_pairs.shape[0])}")
     sig_pairs = sig_pairs.sort_values("p_val")
     if out_f is not None:
-        plt.savefig(out_f)
+        plt.savefig(out_f,dpi=300, bbox_inches = "tight")
     return sig_pairs, shuffle_pval_df, curr_thresh
 
 
 def plot_glob_min(bh_enrichment_df, global_min, p_thresh, atac_col, out_f=None):
     shuffle_pval_df = bh_enrichment_df.copy().applymap(
-        lambda x: ((x < np.array(global_min)).sum()) / len(global_min))
+        lambda x: ((x > np.array(global_min)).sum()) / len(global_min))
     #shuffle_pval_df = ((bh_enrichment_df) < global_min).sum() / len(global_min)
     curr_thresh = np.percentile(global_min, 100 * p_thresh)
     f, ax = plt.subplots()
@@ -273,15 +273,14 @@ def plot_glob_min(bh_enrichment_df, global_min, p_thresh, atac_col, out_f=None):
     sns.histplot(bh_enrichment_df.values.flatten(), color="green",
                  stat='probability', alpha=0.4, ax=ax)
     plt.axvline(curr_thresh, color='r')
-    plt.title("Minimum p-value for all simulations")
     group_vs_shuffle = bh_enrichment_df[bh_enrichment_df < curr_thresh]
     sig_pairs = group_vs_shuffle.stack().reset_index().rename(
         {"level_1": atac_col, 0: "p_val"}, axis=1)
     print(f"Number of groups below p-val significance: {(sig_pairs.shape[0])}")
     sig_pairs = sig_pairs.sort_values("p_val")
-
+    plt.title(f"Minimum p-value across all simulations\ncutoff: {p_thresh}; nsig: {(sig_pairs.shape[0])}")
     if out_f is not None:
-        plt.savefig(out_f)
+        plt.savefig(out_f,dpi=300, bbox_inches = "tight")
     return sig_pairs, shuffle_pval_df, curr_thresh
 
 
@@ -297,7 +296,7 @@ def plot_clone_min(bh_enrichment_df, clone_min, p_thresh, out_f=None):
     shuffle_pval_df = bh_enrichment_df.copy()
     for i, ind in enumerate(bh_enrichment_df.index):
         shuffle_pval_df.loc[ind] = bh_enrichment_df.loc[ind].apply(
-            lambda x: (x < np.array(clone_min[ind])).sum() / len(
+            lambda x: (x > np.array(clone_min[ind])).sum() / len(
                 clone_min[ind]))
         #shuffle_pval_df.loc[ind] = ((bh_enrichment_df.loc[ind])< clone_min[ind]).sum()/len(clone_min[ind])
         curr_thresh = np.percentile(clone_min[ind], 100 * p_thresh)
@@ -308,7 +307,7 @@ def plot_clone_min(bh_enrichment_df, clone_min, p_thresh, out_f=None):
         sns.histplot(bh_enrichment_df.loc[ind], stat='probability',
                      color='green', alpha=0.4, ax=g.axes_dict[ind])
     if out_f is not None:
-        plt.savefig(out_f)
+        plt.savefig(out_f,dpi=300, bbox_inches = "tight")
     return clone_min_sig, shuffle_pval_df, curr_thresh
 
 
@@ -327,7 +326,7 @@ def plot_clone_all(bh_enrichment_df, clone_all, p_thresh, out_f=None):
         data = clone_all[ind]
         #print('data',data)
 
-        shuffle_pval_df.loc[ind] = bh_enrichment_df.loc[ind].apply(lambda x: (x < np.array(clone_all[ind])).sum()/len(clone_all[ind]))
+        shuffle_pval_df.loc[ind] = bh_enrichment_df.loc[ind].apply(lambda x: (x > np.array(clone_all[ind])).sum()/len(clone_all[ind]))
 
         curr_thresh = np.percentile(clone_all[ind], 100 * p_thresh)
         group_vs_shuffle = bh_enrichment_df.loc[ind] < curr_thresh
@@ -352,7 +351,7 @@ def plot_clone_all(bh_enrichment_df, clone_all, p_thresh, out_f=None):
 
     f.tight_layout()
     if out_f is not None:
-        plt.savefig(out_f)
+        plt.savefig(out_f,dpi=300, bbox_inches = "tight")
 
     return clone_min_sig, shuffle_pval_df, curr_thresh
 
@@ -387,14 +386,26 @@ def get_out(shuffle, clones, bh_enrichment_df, p_thresh, clone_map, atac_col, ou
 def plot_sig_results_per_method(results_df, p_thresh, outdir):
     for ind, val in results_df[results_df["value"] < p_thresh].groupby(
             "method"):
-        min_m = min(val.loc[val["value"] != 0, "value"])
-        val.loc[val["value"] == 0, "value"] = min_m
-        g = sns.clustermap(-np.log10(
-            val.astype(object).pivot(index="index", columns="variable",
-                                     values="value").fillna(1)))
-        plt.suptitle(ind)
-        g.ax_cbar.set(title=f"-log10 p-val;cutoff is {-np.log10(p_thresh)}")  # g.ax_cbar.set(title="-log10 p-value")
-        plt.savefig(join(outdir, f"{ind}_shuffle_sig"))
+        if len(val)==0 or val.shape[1]==0:
+            print('val empty')
+            print(ind)
+            continue
+        #min_m = min(val.loc[val["value"] != 0, "value"])
+        #val.loc[val["value"] == 0, "value"] = min_m
+
+        curr_df = val.astype(object).pivot(index="index", columns="variable",values="value").fillna(1)
+        if (curr_df.shape[0] > 1) and (curr_df.shape[1] > 1):
+            g = sns.clustermap(curr_df, vmax=float(p_thresh)+0.05)
+        else:
+            f = plt.figure()
+            sns.heatmap(curr_df, vmax=float(p_thresh)+0.05)
+
+        title = f"{ind}\np-val;cutoff is {p_thresh}; vmax {float(p_thresh)+0.05}"
+        plt.suptitle(title)
+        #g.fig.suptitle(title)
+        #g.ax_cbar.set(title=title)  # g.ax_cbar.set(title="-log10 p-value")
+        plt.savefig(join(outdir, f"{ind}_shuffle_sig"),dpi=300, bbox_inches = "tight")
+
     return
 
 
@@ -403,11 +414,12 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
     print("Running hypergeo and saving sig results")
     print("plotting counts")
     groups["log2_count"] = np.log2(groups["count"] + 1)
+
     g = sns.clustermap(groups.pivot(index=atac_col, columns=clone_col,
                                     values="log2_count").fillna(0))
     plt.gca().set_title("log2 ncells")
-    plt.savefig(join(outdir, "ncells.png"))
-
+    plt.savefig(join(outdir, "ncells.png"),dpi=300, bbox_inches = "tight")
+    groups.to_csv(join(outdir, "ncells.csv"))
     output_df, bh_enrichment_df = pipeline_groups_hypergeo(groups,
                                                               clones,
                                                               atac_cl,
@@ -419,17 +431,19 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
     output_df.to_csv(join(outdir, "hypergeo_padjusted_sigOnly.csv"))
 
     if output_df.shape[0] == 0:
-        g = sns.heatmap(-np.log10(bh_enrichment_df.fillna(1)))
-        g.fig.suptitle("No groups were significant")
+        sns.heatmap(-np.log10(bh_enrichment_df.fillna(1)))
+        plt.title("No groups were significant")
     else:
         g = sns.clustermap(
             -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)),
             row_cluster=False)
         g.ax_heatmap.set(xlabel="Cluster ID")
         g.ax_cbar.set(title="-log10 p-value")
-    plt.savefig(join(outdir, "hypergeo_padjusted_sigOnly.png"))
+
+    plt.savefig(join(outdir, "hypergeo_padjusted_sigOnly.png"),dpi=300, bbox_inches = "tight")
 
     return
+
 
 def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, atac_cl, to_p_correct=False, n_shuffle=1000, figs_close=False, n_cpus=4):
     # Run enrichment

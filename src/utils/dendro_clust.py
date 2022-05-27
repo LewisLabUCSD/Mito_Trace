@@ -5,6 +5,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def dendro_plot(df, row_meta):
     g = sns.clustermap(df, row_colors=row_meta,
                        row_cluster=True, col_cluster=True, vmax=0.2, vmin=0)
