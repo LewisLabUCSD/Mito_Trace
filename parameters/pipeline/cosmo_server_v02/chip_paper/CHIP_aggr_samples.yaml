@@ -1,7 +1,7 @@
 outdir: "/data/Mito_Trace/output/aggregate/"
 prefix: "CHIP_aggr"
 snakefile: "workflow/rules/data/chip.smk"
-pileup_dir: "data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/"
+pileup_dir: "data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn"
 config: "parameters/pipeline/pipeline_v02_chip.yaml"
 
 ## Sample files to aggregate!

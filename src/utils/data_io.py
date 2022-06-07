@@ -12,6 +12,12 @@ from pandarallel import pandarallel
 import tqdm
 import numpy as np
 
+
+
+def reverse_ids(df):
+    df.index = [f'{x.split("_")[-1]}_{x.split("_")[0]}' for x in df.index]
+    return df
+
 ####
 ## config utils
 ####

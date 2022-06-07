@@ -494,11 +494,12 @@ rule donors_se_meta:
     output:
         se_meta = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_multiplex/gff_{gff}/se_cells_meta.tsv",
         note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_multiplex/gff_{gff}/se_cells_meta.ipynb",
+        se = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_multiplex/gff_{gff}/SE.rds",
     params:
         outdir = lambda wildcards, output: dirname(output.note),
         cells_meta = lambda wildcards, input: join(dirname(input.cells_meta_dir), "cells_meta.tsv"),
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/addDonors.ipynb"),
-    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p cells_meta_f {params.cells_meta}  {params.rscript} {output.note}"
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p cells_meta_f {params.cells_meta}  -p save_rds TRUE {params.rscript} {output.note}"
 
 def get_cluster_labels():
     out = config.get("umap_clusters_f", "FALSE")
@@ -927,7 +928,7 @@ rule mtVarsPlot:
         note =  "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/thr__{t}_rt__{rt}/annotation_clones/de_clone_btwnvars_RNA_af/mtPlots.ipynb",
     params:
         mt_cells = lambda wildcards, input: input.mt_cells.replace("cells_meta.tsv", "cells_mt.tsv"),
-        rscript= join(ROOT_DIR, "workflow/notebooks/lineage_clones//mtVarsPlot.ipynb"), # The script defaults to the granja data
+        rscript= join(ROOT_DIR, "workflow/notebooks/lineage_clones/mtVarsPlot.ipynb"), # The script defaults to the granja data
         outdir = lambda wildcards, output: dirname(output.note),
     # test_use="wilcox",
     # latent_vars="NULL",

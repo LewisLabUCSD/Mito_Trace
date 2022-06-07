@@ -269,10 +269,11 @@ rule clonalshift_mt_as_clones:
     output:
         "{outdir}/clonal_shifts/variants_{variants}/mt_as_clones/results/{condition}/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
     params:
+        indir = lambda wildcards, input: dirname(input.clones),
         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/hypergeometric_mt_as_clones.ipynb"), #get_script,
         outdir = lambda wildcards, output: dirname(output[0]),
         N_DONORS = config["N_DONORS"],
-    shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
+    shell: "papermill -p indir {params.indir} -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
 
 
 rule compare_input_and_culture_mt_as_clones:

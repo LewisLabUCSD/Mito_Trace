@@ -68,7 +68,7 @@ rule createExpSignac:
     params:
         indir = config["mtscATAC_OUTDIR"],
         outdir =lambda wildcards, output: dirname(output[0]),
-        rscript= join(ROOT_DIR, "R_scripts/annotations/samplesCreateSignac.ipynb"),
+        rscript= join(ROOT_DIR, "R_scripts/annotations/createExpSignac.ipynb"),#join(ROOT_DIR, "R_scripts/annotations/samplesCreateSignac.ipynb"),
         sample_names = ",".join(samples.index),
         samples = ",".join(samples["cellr_ID"].values),
         gff = gff

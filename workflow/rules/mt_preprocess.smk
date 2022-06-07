@@ -253,7 +253,7 @@ rule scPileup_mergeStrands:
         expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}{strand}.txt",
                nt=["coverage", "A", "C", "G", "T"], strand=[".minus", ""])
     output:
-        all = (expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
+        all = temp(expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
                      nt=["coverage", "A", "C", "G", "T"]))
     params:
         concat_dir = lambda wildcards, input: dirname(input[0]),
@@ -271,7 +271,7 @@ rule filter_cell_bc:
                      nt=["coverage", "A", "C", "G", "T"]),
         barcode_p = "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p"
     output:
-        "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt"
+        temp("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt")
     run:
         for n in ["A", "C", "G", "T", "coverage"]:
             #print('n', n)

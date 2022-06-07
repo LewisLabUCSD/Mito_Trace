@@ -38,6 +38,7 @@ rule knn_init:
     shell:
         "papermill -k ir -p indir {params.indir} -p name {params.name} -p donor {params.donor} -p outdir {params.outdir} -p kparam {params.kparam} {params.note} {params.outdir}/output.ipynb"
 
+
 def concat_knn(in_files, out_name):
     all = []
     cols = ["donor", "lineage"]
