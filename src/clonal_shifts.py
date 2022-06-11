@@ -419,6 +419,7 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
                                     values="log2_count").fillna(0))
     plt.gca().set_title("log2 ncells")
     plt.savefig(join(outdir, "ncells.png"),dpi=300, bbox_inches = "tight")
+    #groups.rename({atac_col: "clusterID", clone_col: "cloneID"}, axis=1).to_csv(join(outdir, "ncells.csv"))
     groups.to_csv(join(outdir, "ncells.csv"))
     output_df, bh_enrichment_df = pipeline_groups_hypergeo(groups,
                                                               clones,

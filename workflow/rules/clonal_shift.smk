@@ -226,7 +226,7 @@ rule compare_input_and_culture_clones:
         outdir = lambda wildcards, output: dirname(output.note),
         donor = lambda wildcards: wildcards.d,
         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p outdir {params.outdir} {params.script} {output.note}"
+    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col name -p outdir {params.outdir} {params.script} {output.note}"
 
 
 rule clonalshift_dendro_bc:
@@ -258,7 +258,7 @@ rule compare_input_and_culture_dendro_bc:
         outdir = lambda wildcards, output: dirname(output.note),
         donor = lambda wildcards: wildcards.d,
         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p outdir {params.outdir} {params.script} {output.note}"
+    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col den_clust -p outdir {params.outdir} {params.script} {output.note}"
 
 
 
@@ -288,7 +288,7 @@ rule compare_input_and_culture_mt_as_clones:
         outdir = lambda wildcards, output: dirname(output.note),
         donor = lambda wildcards: wildcards.d,
         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p outdir {params.outdir} {params.script} {output.note}"
+    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col Variants -p outdir {params.outdir} {params.script} {output.note}"
 
 
 rule clonalshift_mt_as_clones_dendro:
@@ -317,7 +317,7 @@ rule compare_input_and_culture_mt_as_clones_dendro:
         outdir = lambda wildcards, output: dirname(output.note),
         donor = lambda wildcards: wildcards.d,
         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p outdir {params.outdir} {params.script} {output.note}"
+    shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col den_clust -p outdir {params.outdir} {params.script} {output.note}"
 
 
 
