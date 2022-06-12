@@ -503,7 +503,7 @@ rule individual_clone_complete:
 #     input:
 #          clone_order = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/clones_ranked/cloneID_rank_ncells.txt",
 #     output:
-#         note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/single/top_hypergeo_sig.ipynb",
+#         note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/top_hypergeo_sig.ipynb",
 #     params:
 #         note = join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_lineage_Sig_hypergeo.ipynb")
 #     shell: "papermill -p indir {input.indir} -p cloneID_f {input.cloneID_f} p_thresh 0.1 ntop_clones 10 {output.noote}"
@@ -516,7 +516,7 @@ rule top_clone_hypergeoSig_cl:
         indir = get_hypergeo,
         #cloneID = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/cloneIDs/{cloneID}.txt"
     output:
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/single/top_hypergeo_sig.ipynb",
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/top_hypergeo_sig.ipynb",
     params:
         notebook = join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_lineage_Sig_hypergeo.ipynb"),
         indir = lambda wildcards, input: dirname(input.indir),
@@ -532,7 +532,7 @@ rule top_clone_hypergeoSig_mt:
         indir = get_hypergeo,
         #cloneID = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/cloneIDs/{cloneID}.txt"
     output:
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/single/top_hypergeo_sig.ipynb",
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/top/top_hypergeo_sig.ipynb",
         #fig = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/single/{cloneID}/hypergeo_pval.png"
         # multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/{cloneID}/",
         #               "hypergeo_pval.png", "clone_shift.png")
@@ -553,8 +553,8 @@ rule top_clone_lineage_count:
         clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
         #se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"])
     output:
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/top_clone_lineage_count.ipynb",
-        #clust_cond_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/top_cluster_condition_ncells.pdf"
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/top_clone_lineage_count.ipynb",
+        #clust_cond_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/top_cluster_condition_ncells.pdf"
     params:
         script = join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_lineage_distribution.ipynb"),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -568,7 +568,7 @@ rule top_clone_mt_variants_cl:
         clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
         mt_f = get_mt_f
     output:
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{cloneShift_method}/single/top_clone_mt_variants.ipynb",
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{cloneShift_method}/top/top_clone_mt_variants.ipynb",
     params:
         indir = lambda wildcards, input: dirname(input.mt_f),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -585,7 +585,7 @@ rule top_clone_mt_variants_mt:
         clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
         mt_f = get_mt_f
     output:
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{cloneShift_method}/single/top_clone_mt_variants.ipynb",
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{cloneShift_method}/top/top_clone_mt_variants.ipynb",
     params:
         indir = lambda wildcards, input: dirname(input.mt_f),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -631,7 +631,7 @@ rule top_clone_umap_overlay:
         clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
         se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"])
     output:
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/top_umap_overlay.ipynb"
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/top_umap_overlay.ipynb"
     params:
         script = join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clones_umap_overlap.ipynb"),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -640,27 +640,26 @@ rule top_clone_umap_overlay:
 
 rule top_merge:
     input:
-        umap = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/top_umap_overlay.ipynb",
-        clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
+        ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
+        #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
     output:
-        out_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/merge_panels.pdf",
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/merge_panels.ipynb"
+        out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.pdf", "clone_variants_combine.pdf"),
+        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/merge_panels.ipynb"
     params:
-        outdir = lambda wildcards, output:  dirname(output.out_f),
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/concat_images_individual_clones.ipynb"),
-    shell: "papermill -p outdir {params.outdir} -p clone_order_f {input.clone_order_f} {params.script} {output.note}"
-
+        outdir = lambda wildcards, output:  dirname(output.note),
+        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/concat_images_top_clones.ipynb"),
+    shell: "papermill -p outdir {params.outdir} {params.script} {output.note}"
 
 
 rule top_clone_complete:
     input:
-        expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/single/{f}",
-              f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"],
+        expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/{f}",
+              f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "clone_shift_combine.pdf"],
               d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
               clone_shift_method = knn_clone_shift,
               kparam=params_clones["knn"]["params"]["resolution"]),
-        expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/single/{f}",
-                  f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"],
+        expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/top/{f}",
+                  f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "clone_shift_combine.pdf"],
                   d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
                   variants=[x for x in params_clones["variants"] if x != "simple"],
                   af= best_p["af"], othaf= best_p["oth_af"],

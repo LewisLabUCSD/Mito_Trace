@@ -5,6 +5,7 @@ from snakemake.utils import min_version
 min_version("6.0")
 from pathlib import Path
 import os
+from src.config import ROOT_DIR
 
 # rule all:
 #     input:
@@ -16,7 +17,7 @@ import os
 def get_mult_input(wc):
     if config["N_DONORS"] == 1:
         return [f"{wc.outdir}/multiplex/single_multiplex.ipynb"]
-    else: return [f"{wc.outdir}/multiplex/out_multiplex.ipynb"]
+    else: return [f"{wc.outdir}/multiplex/out_multiplex.ipynb" ]
 
 
 
@@ -33,6 +34,21 @@ rule multiplex:
         INDIR = lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         to_elbo = False
+    shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} --log-output {params.notebook} {output.note}"
+
+
+rule multiplex_elbo:
+    input: "{outdir}/cellSNP.tag.AD.mtx"
+    output:
+        note="{outdir}/multiplex/elbo/out_multiplex_elbo.ipynb",
+        #results = "{outdir}/multiplex/donors_elbo_lineage_elbow.png"
+    params:
+        N_DONORS=config["N_DONORS"],
+        notebook=join("src", "vireo", "Elbo_MT_Donors_multiplex.ipynb" ),
+        sample_names= ','.join(samples["sample_name"].values), # make it as a list
+        INDIR = lambda wildcards, input: dirname(input[0]),
+        OUTDIR = lambda wildcards, output: dirname(output[0]),
+        to_elbo = True
     shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} --log-output {params.notebook} {output.note}"
 
 
@@ -106,7 +122,7 @@ rule donors_type_variants:
         "{outdir}/multiplex/multiplex.ipynb"
     output: "{outdir}/multiplex/variants/variants.ipynb",
     params:
-        notebook=join("src", "vireo", join("5_MT_Donors_variantTypes.ipynb")),
+        notebook=join(ROOT_DIR, "workflow/notebooks/variant_types", join("5_MT_Donors_variantTypes.ipynb")),
         INDIR = lambda wildcards, input: dirname(input[0]),
         OUTDIR = lambda wildcards, output: dirname(output[0]),
         N_DONORS=config["N_DONORS"],

@@ -47,7 +47,6 @@ def type_of_variants(variants, style=">", to_preproc=True):
             return "Transition"
         return "Transversion"
     variants["variant type"] = variants.apply(var_type, axis=1)
-
     variants["variant change"] = variants["ref"]+">"+variants["alt"]
     return variants
 

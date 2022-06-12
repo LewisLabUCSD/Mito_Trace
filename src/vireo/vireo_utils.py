@@ -335,7 +335,7 @@ def run_elbo(ad, dp, out_f, cells_meta,
         plt.ylabel("ELBO")
         plt.xlabel("n_clones")
         if out_f != "":
-            plt.savefig(out_f+"_lineage_elbow.png")
+            plt.savefig(out_f+"_lineage_elbow.pdf", dpi=500)
         #plt.show()
     return _ELBO_mat, n_clone_list
 
