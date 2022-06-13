@@ -9,6 +9,71 @@ from statsmodels.stats import multitest
 import seaborn as sns
 import matplotlib.pyplot as plt
 from icecream import ic
+import pickle
+
+
+def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
+                    p_thresh=0.1, f_save=None,
+                    title="Number of clones that are significant"):
+    a_enrich_df.index.name = "name"
+    b_enrich_df.index.name = "name"
+
+    b_sig = b_enrich_df < p_thresh
+
+    b_sig = b_sig.reset_index().melt(id_vars="name", value_name="sig",
+                                     var_name=b_name)
+    b_sig = b_sig[b_sig["sig"]].drop("sig", axis=1)
+    a_sig = a_enrich_df < p_thresh
+    a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
+                                     var_name=a_name)
+    a_sig = a_sig[a_sig["sig"]].drop("sig", axis=1)
+
+    # merged_df = pd.DataFrame(index=a_sig[a_name].unique(),
+    #                          columns=b_sig[b_name].unique()).astype(object)
+    # merged_df.loc[:, :] = ""
+    # merged_count_df = pd.DataFrame(index=a_sig[a_name].unique(),
+    #                                columns=b_sig[
+    #                                    b_name].unique()).astype("Int64")
+    merged_df = pd.DataFrame(index=a_enrich_df.index,
+                             columns=b_enrich_df.index).astype(object)
+    merged_df.loc[:, :] = ""
+    merged_count_df = pd.DataFrame(index=a_enrich_df.index,
+                                   columns=b_enrich_df.index).astype("Int64")
+
+    merged_count_df = merged_count_df.fillna(0)
+
+    for inp_ind, val in a_sig.iterrows():
+        curr_clone = val["name"]
+        curr_cult_df = b_sig.loc[b_sig["name"] == curr_clone]
+        for noinp_ind, val2 in curr_cult_df.iterrows():
+            merged_df.loc[val[a_name], val2[b_name]] = merged_df.loc[
+                                                           val[a_name],
+                                                           val2[
+                                                               b_name]] + curr_clone + ";"
+            merged_count_df.loc[val[a_name], val2[b_name]] += 1
+    print('merge_df', merged_df)
+    print('count', merged_count_df)
+    merged_df = merged_df.apply(
+        lambda ser: ser.apply(lambda x: x.strip(";")), axis=0)
+    merged_df.index.name = a_name
+    merged_df.columns.name = b_name
+
+    f, ax = plt.subplots(figsize=(12, 12), dpi=300)
+    #try:
+    sns.heatmap(merged_count_df.astype(int),
+                annot=merged_df, fmt="s", vmin=0)
+    plt.ylabel(a_name)
+    plt.xlabel(b_name)
+    plt.title(title)
+    #except ValueError:  # raised if `y` is empty.
+     #   plt.title(f"{title} no significant clones")
+      #  pass
+
+
+    if f_save is not None:
+        plt.savefig(f_save + ".pdf")
+        merged_df.to_csv(f_save + ".csv")
+    return merged_df, merged_count_df
 
 
 def get_groups(groups, clones=None, atac_cl=None, clone_col=None,
@@ -72,6 +137,7 @@ def create_enrichment(groups, atac_col, clone_col, p_thresh, clones=None, atac_c
     #print(groups.head())
     #print('clones', clones)
     enrichment_df = run_hypergeo(groups, clones, atac_cl, atac_col, clone_col)
+    print('raw enrich', enrichment_df)
     #print(enrichment_df.shape)
     if to_correct:
         pvals_corrected = pval_correct(enrichment_df, p_thresh)
@@ -82,7 +148,7 @@ def create_enrichment(groups, atac_col, clone_col, p_thresh, clones=None, atac_c
     return enrichment_df
 
 
-def create_output_df(bh_enrichment_df, sizes, p_thresh):
+def create_output_df(bh_enrichment_df, sizes, p_thresh, to_filt=True):
     output_df = pd.DataFrame(index=sizes.index)
     # output_df = pd.DataFrame(index=bh_enrichment_df.index)
     output_df["significant clusters"] = ""
@@ -110,20 +176,28 @@ def create_output_df(bh_enrichment_df, sizes, p_thresh):
     #print(output_df.head())
     # output_df.to_csv(out_f, sep=",")
     output_df = output_df.sort_values("size", ascending=True)
-    bh_enrichment_df[bh_enrichment_df > p_thresh] = 1
-    bh_enrichment_df[bh_enrichment_df == 0] = min(p_thresh, min(
-        set((bh_enrichment_df.values).flatten()) - {
-        0}))  # Set to the next min, or p_thresh, whichever is smaller
+    if to_filt:
+        bh_enrichment_df[bh_enrichment_df > p_thresh] = 1
+
+    min_p = (set((bh_enrichment_df.values).flatten()) - {0})
+    if len(min_p) == 0:
+        min_p_val = p_thresh-(p_thresh/10**4)
+    else:
+        min_p_val = min(min(min_p), p_thresh-(p_thresh/10**4))
+
+    bh_enrichment_df[bh_enrichment_df == 0] = min_p_val  # Set to the next min, or p_thresh, whichever is smaller
     return output_df, bh_enrichment_df
 
 
-def pipeline_groups_hypergeo(groups, clones, atac_cl, sizes, p_thresh, atac_col, clone_col):
+def pipeline_groups_hypergeo(groups, clones, atac_cl, sizes, p_thresh, atac_col, clone_col, to_filt=True, to_correct=True):
     # bh_enrichment_df = create_enrichment(groups, clones, atac_cl,
     #                                      atac_col=atac_col,clone_col=clone_col, p_thresh=p_thresh)
     bh_enrichment_df =  create_enrichment(groups, atac_col, clone_col,
-                                          p_thresh, clones, atac_cl)
+                                          p_thresh, clones, atac_cl, to_correct=to_correct)
+    #print('bh', bh_enrichment_df)
+    #print('clones', clones)
     output_df, bh_enrichment_df = create_output_df(bh_enrichment_df,
-                                                   sizes=sizes, p_thresh=p_thresh)
+                                                   sizes=sizes, p_thresh=p_thresh, to_filt=to_filt)
     return output_df, bh_enrichment_df
 
 
@@ -168,7 +242,6 @@ def run(groups, sizes, atac_col, clone_col, p_thresh,
 
 def wrap_create_enrichment(ar, groups, atac_col, clone_col, p_thresh, clones, atac_cl, to_p_correct):
     out = []
-
     cell_pairs = []
     for ind, val in groups.iterrows():
         cell_pairs.extend(
@@ -374,7 +447,7 @@ def get_out(shuffle, clones, bh_enrichment_df, p_thresh, clone_map, atac_col, ou
                             out_cloneall[1].reset_index().melt(id_vars=["index"]).assign(method="clone_all"),
                             out_clonemin[1].reset_index().melt(id_vars=["index"]).assign(method="clone_min")),
                            axis=0)
-    import pickle
+
     out_d = {"sig_all":out_all, "sig_min":out_min,
              "sig_cloneAll": out_cloneall, "sig_cloneMin": out_clonemin}
     pickle.dump(out_d, open(join(outdir, "shuffle_results.p"), "wb"))
@@ -414,26 +487,36 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
     print("Running hypergeo and saving sig results")
     print("plotting counts")
     groups["log2_count"] = np.log2(groups["count"] + 1)
-
-    g = sns.clustermap(groups.pivot(index=atac_col, columns=clone_col,
+    if len(groups[clone_col].unique()) > 1:
+        g = sns.clustermap(groups.pivot(index=atac_col, columns=clone_col,
                                     values="log2_count").fillna(0))
+    else:
+        sns.heatmap(groups.pivot(index=atac_col, columns=clone_col,
+                                 values="log2_count").fillna(0))
+
     plt.gca().set_title("log2 ncells")
     plt.savefig(join(outdir, "ncells.png"),dpi=300, bbox_inches = "tight")
     #groups.rename({atac_col: "clusterID", clone_col: "cloneID"}, axis=1).to_csv(join(outdir, "ncells.csv"))
     groups.to_csv(join(outdir, "ncells.csv"))
     output_df, bh_enrichment_df = pipeline_groups_hypergeo(groups,
-                                                              clones,
-                                                              atac_cl,
-                                                              sizes,
-                                                              p_thresh,
-                                                              atac_col,
-                                                              clone_col)
+                                                           clones,
+                                                           atac_cl,
+                                                           sizes,
+                                                           p_thresh,
+                                                           atac_col,
+                                                           clone_col,
+                                                           to_filt=False,
+                                                           to_correct=True)
     bh_enrichment_df.to_csv(join(outdir, "hypergeo_padjusted.csv"))
     output_df.to_csv(join(outdir, "hypergeo_padjusted_sigOnly.csv"))
 
-    if output_df.shape[0] == 0:
+    if output_df.shape[0] == 0 and output_df.shape[1] == 0:
+        plt.figure()
+        plt.title("Empty data")
+        return
+    elif output_df.shape[0] <= 1:
         sns.heatmap(-np.log10(bh_enrichment_df.fillna(1)))
-        plt.title("No groups were significant")
+        plt.title("Empty data")
     else:
         g = sns.clustermap(
             -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)),
@@ -441,14 +524,15 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
         g.ax_heatmap.set(xlabel="Cluster ID")
         g.ax_cbar.set(title="-log10 p-value")
 
-    plt.savefig(join(outdir, "hypergeo_padjusted_sigOnly.png"),dpi=300, bbox_inches = "tight")
+    plt.savefig(join(outdir, "hypergeo_padjusted.png"),dpi=300, bbox_inches = "tight")
 
-    return
+    return True
+
 
 
 def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, atac_cl, to_p_correct=False, n_shuffle=1000, figs_close=False, n_cpus=4):
     # Run enrichment
-    hyper_df = create_enrichment(groups, atac_col, clone_col, p_thresh, clones=clones, atac_cl=atac_cl, to_correct=to_p_correct)
+    hyper_df = create_enrichment(groups, atac_col, clone_col, p_thresh, clones=clones, atac_cl=atac_cl, to_correct=False)
 
     # Run shuffled enrichment-same thing but shuffled labels and ran n_shuffle times
     shuffle = shuffle_hypergeo(groups, atac_col, clone_col, p_thresh, clones, atac_cl, to_p_correct=to_p_correct, n_shuffle=n_shuffle,
