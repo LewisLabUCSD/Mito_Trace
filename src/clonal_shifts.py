@@ -19,28 +19,25 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
     b_enrich_df.index.name = "name"
 
     b_sig = b_enrich_df < p_thresh
-
     b_sig = b_sig.reset_index().melt(id_vars="name", value_name="sig",
                                      var_name=b_name)
-    b_sig = b_sig[b_sig["sig"]].drop("sig", axis=1)
+
+
     a_sig = a_enrich_df < p_thresh
     a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
                                      var_name=a_name)
-    a_sig = a_sig[a_sig["sig"]].drop("sig", axis=1)
 
-    # merged_df = pd.DataFrame(index=a_sig[a_name].unique(),
-    #                          columns=b_sig[b_name].unique()).astype(object)
-    # merged_df.loc[:, :] = ""
-    # merged_count_df = pd.DataFrame(index=a_sig[a_name].unique(),
-    #                                columns=b_sig[
-    #                                    b_name].unique()).astype("Int64")
-    merged_df = pd.DataFrame(index=a_enrich_df.index,
-                             columns=b_enrich_df.index).astype(object)
+
+    merged_df = pd.DataFrame(index=a_sig[a_name].unique(),
+                             columns=b_sig[b_name].unique()).astype(object)
     merged_df.loc[:, :] = ""
-    merged_count_df = pd.DataFrame(index=a_enrich_df.index,
-                                   columns=b_enrich_df.index).astype("Int64")
-
+    merged_count_df = pd.DataFrame(index=a_sig[a_name].unique(),
+                                   columns=b_sig[
+                                       b_name].unique()).astype("Int64")
     merged_count_df = merged_count_df.fillna(0)
+
+    b_sig = b_sig[b_sig["sig"]].drop("sig", axis=1)
+    a_sig = a_sig[a_sig["sig"]].drop("sig", axis=1)
 
     for inp_ind, val in a_sig.iterrows():
         curr_clone = val["name"]
@@ -59,15 +56,16 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
     merged_df.columns.name = b_name
 
     f, ax = plt.subplots(figsize=(12, 12), dpi=300)
-    #try:
-    sns.heatmap(merged_count_df.astype(int),
-                annot=merged_df, fmt="s", vmin=0)
-    plt.ylabel(a_name)
-    plt.xlabel(b_name)
-    plt.title(title)
-    #except ValueError:  # raised if `y` is empty.
-     #   plt.title(f"{title} no significant clones")
-      #  pass
+    try:
+        sns.heatmap(merged_count_df.astype(int),
+                    annot=merged_df, fmt="s")
+        plt.ylabel(a_name)
+        plt.xlabel(b_name)
+        plt.title(title)
+    except ValueError:  # raised if `y` is empty.
+        print('No clones significant')
+        plt.title(f"{title} no significant clones")
+        pass
 
 
     if f_save is not None:
@@ -137,7 +135,7 @@ def create_enrichment(groups, atac_col, clone_col, p_thresh, clones=None, atac_c
     #print(groups.head())
     #print('clones', clones)
     enrichment_df = run_hypergeo(groups, clones, atac_cl, atac_col, clone_col)
-    print('raw enrich', enrichment_df)
+    #print('raw enrich', enrichment_df)
     #print(enrichment_df.shape)
     if to_correct:
         pvals_corrected = pval_correct(enrichment_df, p_thresh)
@@ -552,6 +550,7 @@ def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, 
         {"value": "p_value shuffle", "index": "clone",
          "variable": "lineage"}, axis=1)
     out_df = out_df[out_df["p_value shuffle"] < p_thresh]
+    print('out_df', out_df)
     out_df["BH_p_adj"] = out_df.apply(
         lambda x: hyper_df.loc[(x["clone"], x["lineage"]), "BH_p_adj"],
         axis=1)
