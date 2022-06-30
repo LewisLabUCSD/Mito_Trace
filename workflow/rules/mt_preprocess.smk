@@ -253,7 +253,7 @@ rule scPileup_mergeStrands:
         expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}{strand}.txt",
                nt=["coverage", "A", "C", "G", "T"], strand=[".minus", ""])
     output:
-        all = temp(expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
+        all = (expand("{{output}}/data/{{sample}}/MT/scPileup_concat_{{num_read}}/numread_{{num_read}}_all.{nt}.strands.txt",
                      nt=["coverage", "A", "C", "G", "T"]))
     params:
         concat_dir = lambda wildcards, input: dirname(input[0]),

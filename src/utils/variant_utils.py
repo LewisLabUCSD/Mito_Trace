@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 def preprocess_variants(variants, style=">"):
-    if style == ">":
+    if style == ">": # {pos}{ref}>{alt}
         def split(x):
             s = x.split(">")
             return [s[0][:-1], s[0][-1], x[-1]]
@@ -14,8 +14,9 @@ def preprocess_variants(variants, style=">"):
                             columns=["position", "ref", "alt"],
                             index=variants)
     else:
-        print(f"style {style} not implemented")
-        return
+        raise ValueError(f"style {style} not implemented")
+        #print(f"style {style} not implemented")
+
     return curr
 
 
@@ -34,8 +35,33 @@ def add_vcf_header(vcf, mt_fasta, out_vcf):
 #     os.system(cmd)
 #     return
 
+def load_mt_ref(mt_ref):
+    from Bio import SeqIO
+    mt_seq = SeqIO.read(mt_ref, format="fasta").seq
+    mt_seq = pd.DataFrame(index=np.arange(1,len(mt_seq)+1), columns=["pos"], data=list(str(mt_seq)))
+    return mt_seq
+
+def add_ref_to_variants(variants, mt_df):
+    variants_d = {}
+    for v in variants:
+        variants_d[v] = [v[:-1], v[-1]]
+
+    variants_df = pd.DataFrame(variants_d).transpose().rename(
+        {0: "pos", 1: "alt"}, axis=1)
+    variants_df["ref"] = variants_df["pos"].astype(int).apply(
+        lambda x: mt_df.loc[x, "pos"])
+    return variants_df[["pos", "ref", "alt"]]
 
 def type_of_variants(variants, style=">", to_preproc=True):
+    """ Generates df with variant type of transitions or transversion
+
+    :param variants: df of 'position','ref','alt'
+                     or list of "{ref}>{alt}" variants if to_preproc.
+    :param style: ">", only one implemented.
+    :param to_preproc: If True, creates the df from the list of variants
+    :return: variants df with variants as index (initial input variants are the IDs),
+             and columns are variant type and variant change
+    """
     if to_preproc:
         variants = preprocess_variants(variants, style=style)
     # Get types of mutations
