@@ -6,7 +6,8 @@ wildcard_constraints:
     cellr='True|False',
     kparam='[0-9]+',  #'%d', #[0-9]+',
     variants = "simple|mgatkdonor|init|simpleUnion",
-    d = "[0-9]+"
+    d = "[0-9]+",
+    outdir = '((?!enriched_barcodes).)*'
 
 #configfile:  "parameters/pipeline/cosmo_server/jan21_2021.yaml"
 from src.config import ROOT_DIR
@@ -271,17 +272,29 @@ rule all:
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
                 hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],),
 
-        # clonal_shifts
-         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clonal_shifts/variants_{variants}/.finalize_complete.txt",
-                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"]),
-
+        # # clonal_shifts
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clonal_shifts/variants_{variants}/.finalize_complete.txt",
+        #         out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"]),
+        #
         # individual clones
-         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/single_clones/{f}",
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/single_clones/{f}",
                 out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".preproc.txt", ".top_clones.txt"]) #".aggregate.txt"
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".preproc.txt", ".top_clones.txt"]), #".aggregate.txt"
+
+        # enriched barcodes process
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes/clonal_shifts/variants_{variants}/.finalize_complete.txt",
+        #         out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #         variants=[x for x in params_clones["variants"] if x != "simple"]) #".aggregate.txt"
+
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes/.finalize", #single_clones/{f}",
+                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])#, f = [".top_clones.txt"]) #".aggregate.txt"
 
         #"{outdir}/single_clones/.preproc.txt"
 
@@ -515,11 +528,13 @@ rule donors_se_meta:
         rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/addDonors.ipynb"),
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p cells_meta_f {params.cells_meta}  -p save_rds TRUE {params.rscript} {output.note}"
 
+
 def get_cluster_labels():
     out = config.get("umap_clusters_f", "FALSE")
     if out is None :
         out = "FALSE"
     return out
+
 
 rule don_add_cluster_labels:
     """Prepare clone-by-cluster counts for umap and hypergeometric test"""
@@ -1255,3 +1270,12 @@ module indClonesMod:
 
 use rule * from indClonesMod as indclones_*
 
+
+module enrichedCloneVars:
+    snakefile: "./rules/clone_detection/enriched_clone_variants.smk"
+    config: params
+
+
+use rule finalize from enrichedCloneVars as enrichvars_finalize
+
+use rule * from enrichedCloneVars as enrichvars_*

@@ -21,14 +21,20 @@ dendro_d = config['clones']['params']['dendro_thresh']
 
 def load_cells_meta(cells_meta_f):
     print(cells_meta_f)
-    cells_meta = pd.read_csv(cells_meta_f, sep="\t", index_col=0)
+    print('here')
+    try:
+        cells_meta = pd.read_csv(cells_meta_f, sep="\t", index_col=0)
+    except:
+        cells_meta = pd.read_csv(cells_meta_f[0], sep="\t", index_col=0)
+    #cells_meta = pd.read_csv(cells_meta_f, sep="\t", index_col=0)
     cells_meta = cells_meta.loc[~(cells_meta["name"]=="None")]
     if not "cluster_labels" in cells_meta.columns.values:
         cells_meta["clusterID"] = cells_meta["seurat_clusters"]
     else:
         cells_meta["clusterID"] = cells_meta["cluster_labels"]
+    print('cells_meta')
+    print(cells_meta.head())
     return cells_meta
-
 
 
 
@@ -37,8 +43,9 @@ Cell ID, Clone, Lineage, Condition
 """
 rule get_clone_cells:
     input:
-        se_cells_meta_f = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/gff_A2_black/annotation_clones/se_cells_meta_labels.tsv"
-    output: "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
+        se_cells_meta_f = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv", gff=config["gff"])
+    output:
+        cells_meta = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
     run:
         # cells_meta = pd.read_csv(input.se_cells_meta_f, sep="\t", index_col=0)
         # cells_meta = cells_meta.loc[~(cells_meta["name"]=="None")]
@@ -49,13 +56,13 @@ rule get_clone_cells:
         cells_meta = load_cells_meta(input.se_cells_meta_f)
         cells_meta = cells_meta.rename({"name":"cloneID"}, axis=1)
         cells_meta = cells_meta.loc[cells_meta["donor"] == wildcards.d]
-        cells_meta[["cloneID", "clusterID","condition", "donor"]].to_csv(output[0], sep="\t")
+        cells_meta[["cloneID", "clusterID","condition", "donor"]].to_csv(output.cells_meta, sep="\t")
 
 
 rule get_clone_dendro_cells:
     input:
         barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{{d}}.clones_dendro.csv", dt=dendro_d),
-        se_cells_meta_f = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/gff_A2_black/annotation_clones/se_cells_meta_labels.tsv"
+        se_cells_meta_f = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv", gff=config["gff"])#"{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv"
     output:
         cells = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_dendro_bc/cells_meta.tsv"
     #output: "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/{clone}/cells.txt"
@@ -66,13 +73,14 @@ rule get_clone_dendro_cells:
         barcodes_in = pd.read_csv(list(input.barcodes_dir)[0], index_col=0)
         print('d', wildcards.d)
         #print('barcodes_in')
-        print('a',barcodes_in.head())
+        print('a barcodes',barcodes_in.head())
         barcodes_in[clone_col] = str(wildcards.d) + "_" + barcodes_in[clone_col]
         print('b',barcodes_in.head())
         cells_meta = cells_meta[cells_meta["name"].isin(barcodes_in.index)]
         cells_meta[clone_col] = cells_meta.apply(lambda x: barcodes_in.loc[x["name"], clone_col] , axis=1)
         print('c', cells_meta.head())
         cells_meta = cells_meta.loc[cells_meta["donor"].astype(str) == str(wildcards.d)]
+
         cells_meta = cells_meta.rename({clone_col: "cloneID"}, axis=1)
         cells_meta[["cloneID", "clusterID","condition", "donor"]].to_csv(output.cells, sep="\t")
 
@@ -641,11 +649,12 @@ rule top_clone_hypergeoSig_mt:
         "papermill -p indir {params.indir} -p outdir {params.outdir} -p cloneID_f {input.cloneIDs_f} -p ntop_clones {params.ntop_clones} -p condition {params.condition} -p p_thresh {params.p_thresh} {params.notebook} {output.note}"
 
 
-def get_top_clone_lineage_count_script(wildcards):
-    if wildcards.clone_shift_method == "mt":
-        return join(ROOT_DIR, "workflow/notebooks/individual_clones/mt_top_individual_clone_lineage_distribution.ipynb")
-    else:
-        return join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_lineage_distribution.ipynb")
+# def get_top_clone_lineage_count_script(wildcards):
+#     if wildcards.clone_shift_method == "mt":
+#         return join(ROOT_DIR, "workflow/notebooks/individual_clones/mt_top_individual_clone_lineage_distribution.ipynb")
+#     else:
+#         return join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_lineage_distribution.ipynb")
+
 
 rule top_clone_lineage_count:
     input:

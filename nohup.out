@@ -1,0 +1,32 @@
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+ssh: connect to host 192.168.1.138 port 22: Network is unreachable
+ssh: connect to host 192.168.1.138 port 22: Network is unreachable
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+bind [127.0.0.1]:8888: Address already in use
+channel_setup_fwd_listener_tcpip: cannot listen to port: 8888
+Could not request local forwarding.
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+Timeout, server 192.168.1.138 not responding.
+bind [127.0.0.1]:8888: Address already in use
+channel_setup_fwd_listener_tcpip: cannot listen to port: 8888
+Could not request local forwarding.
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+ssh: connect to host 192.168.1.138 port 22: Network is unreachable
+ssh: connect to host 192.168.1.138 port 22: Network is unreachable
+client_loop: send disconnect: Broken pipe
+ssh: connect to host 192.168.1.138 port 22: Network is unreachable
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+Timeout, server 192.168.1.138 not responding.
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+client_loop: send disconnect: Broken pipe
+Permission denied, please try again.
