@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[2]:
-
-
 import multiprocessing
 
 import pandas as pd
@@ -70,26 +66,6 @@ topn = snakemake.params.get("topn", 16)
 #     topn=16
 
 
-# In[4]:
-
-
-objectives_l
-
-
-# In[5]:
-
-
-indir
-
-
-# In[6]:
-
-
-outdir
-
-
-# In[7]:
-
 
 from os.path import join, exists, dirname
 from glob import glob
@@ -113,9 +89,6 @@ from vireoSNP import Vireo
 np.set_printoptions(formatter={'float': lambda x: format(x, '.3f')})
 
 from icecream import ic
-
-
-# In[8]:
 
 
 objectives = {ind:x for ind,x in enumerate(objectives_l)}
@@ -382,16 +355,6 @@ results_df.isna().sum()
 
 
 # In[ ]:
-
-
-def set_multi_rank(results, weights):
-    if "multi" in results.columns: #in case multi was added before
-        rank_results = results.drop("multi",axis=1).rank(na_option='top')
-    else:
-        rank_results = results.rank(na_option='top')
-    rank_results["multi"] = (weights*rank_results).sum(axis=1)
-    return rank_results.sort_values(by="multi")[::-1]
-
 def set_multi(results, weights):
     print(results.shape)
     # first normalize results for each column to sum to 1
@@ -403,19 +366,17 @@ def set_multi(results, weights):
     return results_norm.sort_values(by="multi")[::-1]
 
 
-
-
-results_df.replace([-np.inf, np.inf], np.nan).sum(axis=0)
+def set_multi_rank(results, weights):
+    if "multi" in results.columns: #in case multi was added before
+        rank_results = results.drop("multi",axis=1).rank(na_option='top')
+    else:
+        rank_results = results.rank(na_option='top')
+    rank_results["multi"] = (weights*rank_results).sum(axis=1)
+    return rank_results.sort_values(by="multi")[::-1]
 
 
 results_norm = set_multi(results_df, weights)
-
 rank_df = set_multi_rank(results_norm, weights)
-rank_df
-
-
-results_df.replace([-np.inf], np.nan).sum()
-
 
 
 drop_results = results_norm.loc[results_norm["multi"].isnull()]
@@ -447,9 +408,6 @@ plt.title("objective: Number of clones with at least 2 unique variants (want to 
 plt.savefig(join(outdir, "loss_variants_with_clone_norm_by_1_over_nclones_with_variant.pdf"))
 
 
-# In[ ]:
-
-
 def get_top_n_results(results_df, rank_df, n=12):
     filt_rank = rank_df.sort_values(by=["multi"])[::-1].iloc[:n]
     filt_results = results_df.loc[filt_rank.index]
@@ -476,7 +434,6 @@ for ind, val in filt_results.iterrows():
     all_objs[ind] = obj_out 
 all_df = pd.concat(all_df)
 
-
 heatmap_input = all_df[["n_cells", "variant"]].reset_index().pivot(index="id", columns="variant", values="n_cells").fillna(0).astype(int)
 meta_df = all_df[["af_thresh", "other_pct_thresh", "pct_thresh", "clone"]]
 meta_df = meta_df.loc[~(meta_df.index.duplicated())]
@@ -495,8 +452,6 @@ def clone_sum(val):
 clone_sums = meta_df.groupby("clone").apply(clone_sum)
 clone_sums = clone_sums.loc[:, clone_sums.sum().sort_values()[::-1].index]
 clones_order = clone_sums.index
-clones_order
-
 
 
 def params_to_str(ser, param_names):
@@ -504,6 +459,7 @@ def params_to_str(ser, param_names):
     for p in param_names:
         name = name + f"{p}={ser[p]:.3f}\n"
     return name
+
 
 def params_and_multi_str(ser):
     param_str = ser["params"]
@@ -616,9 +572,6 @@ out_AF_df = AF_df.loc[vars_keep, out_cells_meta["ID"]].transpose()
 out_DP_df = DP_df.loc[vars_keep, out_cells_meta["ID"]].transpose()
 
 
-# In[ ]:
-
-
 print(out_cells_meta.shape)
 print(out_AF_df.shape)
 print(out_DP_df.shape)
@@ -629,7 +582,6 @@ assert((out_AF_df.index==out_cells_meta["ID"]).all())
 
 
 # ## save cells-meta, af and dp
-
 # In[ ]:
 out_cells_meta["ID"]
 

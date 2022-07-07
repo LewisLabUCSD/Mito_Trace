@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from icecream import ic
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 ic.disable()
 
@@ -148,15 +150,139 @@ def _constraints(solution):
 
 
 def evaluate_series(individual_ser, AF_df, DP_df, curr_labels,
-                    return_data=False):
+                    return_data=False,
+                    objectives_l=("variants_with_clone_norm_by_1_over_nclones_with_variant",
+                                  "max_clone_ncells_over_nclones",
+                                  "max_clone_ncells_over_ncells",
+                                  "pct_thresh","other_pct_thresh",
+                                  "n_vars",
+                                  "obj_nclones_more_than_one_unique")):
     params = individual_ser.to_dict()
     # print('params', params)
     # solution = {"pct_thresh": individual[0], "af_thresh":individual[1],  "other_pct_thresh": individual[2]}
     data = {"AF_df": AF_df, "DP_df": DP_df, "curr_labels": curr_labels}
     all_unique_df = get_clones_unique_variants(params, data)
     data["all_unique_df"] = all_unique_df
-    eval_out = _objectives(data)
+    eval_out = _objectives(data, objectives_l=objectives_l)
     if return_data:
         return pd.Series(eval_out), data
     else:
         return pd.Series(eval_out)
+
+
+def set_multi_rank(results, weights):
+    if "multi" in results.columns:  # in case multi was added before
+        rank_results = results.drop("multi", axis=1).rank(
+            na_option='top')
+    else:
+        rank_results = results.rank(na_option='top')
+    rank_results["multi"] = (weights * rank_results).sum(axis=1)
+    return rank_results.sort_values(by="multi")[::-1]
+
+
+def set_multi(results, weights):
+    print(results.shape)
+    # first normalize results for each column to sum to 1
+    objs_total = results.replace([-np.inf, np.inf], np.nan).sum(axis=0)
+    print('objs_total', objs_total.head())
+    results_norm = results.apply(lambda x: x / objs_total.loc[x.name],
+                                 axis=0)
+
+    results_norm["multi"] = (weights * results_norm).sum(axis=1)
+    return results_norm.sort_values(by="multi")[::-1]
+
+#
+#
+#
+# heatmap_input = all_df[["n_cells", "variant"]].reset_index().pivot(
+#     index="id", columns="variant", values="n_cells").fillna(0).astype(
+#     int)
+# meta_df = all_df[
+#     ["af_thresh", "other_pct_thresh", "pct_thresh", "clone"]]
+# meta_df = meta_df.loc[~(meta_df.index.duplicated())]
+# meta_df = meta_df.sort_values(
+#     ["af_thresh", "pct_thresh", "other_pct_thresh", "clone"])
+# heatmap_input = heatmap_input.loc[meta_df.index]
+#
+# # Get the variants based on total number of cells across parameters
+# heatmap_input = heatmap_input.loc[:,
+#                 heatmap_input.sum().sort_values()[::-1].index]
+# variants_order = heatmap_input.columns
+# clone_sums = meta_df.groupby("clone").apply(clone_sum)
+# clone_sums = clone_sums.loc[:,
+#              clone_sums.sum().sort_values()[::-1].index]
+# clones_order = clone_sums.index
+#
+
+# Get the clones based on total number of cells across parameters
+def clone_sum(val, heatmap_input):
+    # print(val)
+    return (heatmap_input.loc[val.index].sum())
+
+
+def prep_long_heatmap(all_df):
+    heatmap_input = all_df[["n_cells", "variant"]].reset_index().pivot(
+        index="id", columns="variant", values="n_cells").fillna(
+        0).astype(int)
+    meta_df = all_df[
+        ["af_thresh", "other_pct_thresh", "pct_thresh", "clone"]]
+    meta_df = meta_df.loc[~(meta_df.index.duplicated())]
+    meta_df = meta_df.sort_values(
+        ["af_thresh", "pct_thresh", "other_pct_thresh", "clone"])
+    heatmap_input = heatmap_input.loc[meta_df.index]
+
+    # Get the variants based on total number of cells across parameters
+    heatmap_input = heatmap_input.loc[:,
+                    heatmap_input.sum().sort_values()[::-1].index]
+    variants_order = heatmap_input.columns
+    clone_sums = meta_df.groupby("clone").apply(clone_sum,
+                                                heatmap_input)
+    clone_sums = clone_sums.loc[:,
+                 clone_sums.sum().sort_values()[::-1].index]
+    clones_order = clone_sums.index
+    return clones_order, variants_order, heatmap_input
+
+def params_to_str(ser, param_names):
+    name = ""
+    for p in param_names:
+        name = name + f"{p}={ser[p]:.3f}\n"
+    return name
+
+def params_and_multi_str(ser):
+    param_str = ser["params"]
+    name = f"params:\n{param_str.strip()}\nObjective score={ser['multi_obj']} (want to maximize)"
+    return name
+
+
+def draw_heatmap(*args, **kwargs):
+    data = kwargs.pop('data')
+    clones_order = kwargs.pop('clones_order')
+    variants_order = kwargs.pop('variants_order' )
+
+    #title_col = kwargs.pop("title_col", "params_multi")
+    #print('title_col', title_col)
+    # param_names = kwargs.pop('param_names', None)
+    # print(data.shape)
+    # print(data.head())
+    d = data.pivot(index=args[1], columns=args[0],
+                   values=args[2]).fillna(0)
+
+    # get all clones and variants
+    d_full = pd.DataFrame(index=clones_order, columns=variants_order)
+    d_full.loc[:, :] = 0
+    d_full.loc[d.index, d.columns] = d
+    d_full = d_full.astype(float)
+
+    # get cluster results
+    g = sns.clustermap(d_full, method="single")
+    inds = g.dendrogram_row.dendrogram["leaves"]
+    cols = g.dendrogram_col.dendrogram["leaves"]
+    plt.close(g.fig)
+
+    sns.heatmap(d_full.iloc[inds, cols],xticklabels=True, yticklabels=True,
+                cbar_kws=dict(orientation="vertical"), **kwargs)
+
+    #print(data[title_col].values[0])
+    #plt.gca().set_title(data[title_col].values[0])
+    return
+

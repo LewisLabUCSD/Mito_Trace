@@ -290,7 +290,6 @@ rule all:
         #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
         #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
         #         variants=[x for x in params_clones["variants"] if x != "simple"]) #".aggregate.txt"
-
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes/.finalize", #single_clones/{f}",
                 out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
@@ -724,14 +723,183 @@ rule scPileup_simpleUnion_v02:
     notebook:
         join(ROOT_DIR, "workflow/notebooks/af_filter/donor_to_af_v02.ipynb")
 
+########################################################################
+## Variants E: 'prefilterImputeMod':
+#
+########################################################################
+# module prefilterImputeMod:
+#     snakefile: "./rules/clone_detection/proc_prefilterMerge_imputation.smk"
+#     config: params
 
-module prefilterImpute:
-    snakefile: "./rules/clone_detection/proc_prefilterMerge_imputation.smk"
-    config: params
+#use rule * from prefilterImputeMod as imputeproc_*
+rule merge_pileup_conditions:
+    input:
+        cov_dirs = expand("{{out_dir}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/{sample}.coverage.strands.txt", sample=samples.index),
+        mult_cells = expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/cells_meta.tsv",
+                            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])
+    output:
+        merge_pile = expand("{{out_dir}}/data/coverage_merged/donor{d}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/merge.coverage.strands.txt",
+                            d=np.arange(config["N_DONORS"]))
+    params:
+        indir = lambda wildcards, input: dirname(input.cov_dirs[0]),
+        outdir = lambda wildcards, output: dirname(dirname(output[0])),
+        samples = samples.index
+    run:
+        cells_meta = pd.read_csv(input.mult_cells, sep="\t")
+        from collections import defaultdict
+        donor_cov_d = defaultdict(list)
+        for d, cells_don_df in cells_meta.groupby("donor"):
+            for n in ["A", "G", "C", "T", "coverage"]:
+                print('n', n)
+                curr_pile = []
+                for ind, curr_sample in enumerate(samples):
+                    cov_df = pd.read_csv(join(params.indir, f"{curr_sample}.{n}.strands.txt"), header=None)
+                    cov_df[1] = cov_df[1].apply(lambda x: f"{x}_{curr_sample}")
+                    # filter for cells in this donor
+                    curr_don_cov = cov_df.loc[cov_df[1].isin(cells_don_df["raw ID"])].copy()
+                    donor_cov_d[(d,n)].append(curr_don_cov)
+                #curr_pile.append(cov_df)
+        for (d,n), val in donor_cov_d:
+            (pd.concat(val, axis=0)).to_csv(join(params.outdir, f"donor{d}", f"merge.{n}.strands.txt"), sep="\t")
 
-use rule * from prefilterImpute as imputeproc_*
+
+rule create_filters_prefilterMerge:
+    input:
+        concat_dir = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/merge.coverage.strands.txt"
+    output:
+        note = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/out.ipynb",
+        cov = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/merged.coverage.txt",
+        af = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/af_by_cell.tsv",
+        fig = report("{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/heatmap.png",
+                      category="mtpreproc", subcategory="filter"),
+        fig2 = report("{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/initial_cell_depth.png",
+                      category="mtpreproc",subcategory="filter"),
+    params:
+        concat_d = lambda wildcards, input: dirname(input.concat_dir),
+        ref_fa = mt_ref_fa, # config["genome_path"][config['genome']]['mt_ref_fa'],
+        name = "merged", # lambda wildcards: wildcards.sample,
+        #filt_params = get_filt,
+        note = join(ROOT_DIR, "workflow/notebooks/af_filter/filter_af_by_cell_v02.ipynb")
+    version: "v02"
+    resources:
+        mem_mb=90000
+    shell:
+        """
+        papermill -p scpileup_dir {params.concat_d} -p af_f {output.af} -p mt_ref_fa {params.ref_fa} -p name {params.name} \
+        -p min_cells {wildcards.mincells} -p min_reads {wildcards.minreads} -p topn {wildcards.topN} \
+        -p het_thresh {wildcards.hetthresh} -p min_het_cells {wildcards.minhetcells} -p het_count_thresh {wildcards.hetcountthresh} \
+        -p bq_thresh {wildcards.bqthresh} {params.note} {output.note}
+        """
 
 
+# use rule mgatk from mgatkMod as mgatk_prefiltermerge_mgatk with:
+#     input:
+#         all = "{outdir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/merged.coverage.txt",
+#         refAllele = "{outdir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/chrM_refAllele.txt",
+#     output:
+#         vars_f = "{outdir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/merged.variant.rds",
+#         vars_qc = "{outdir}/data/coverage_merged/donor{d}/  MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/merged.variantQC.png",
+#     params:
+#         data_dir = lambda wildcards, input: dirname(input.all),
+#         sample = "merged",
+#         outdir = "mgatk"
+
+rule get_refAllele_prefiltermerge:
+    #input: config["mt_ref_fa"],
+    params: params['mgatk']["chrM_refAllele"]
+    output: "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/chrM_refAllele.txt",
+    shell: 'cp {params} {output}'
+
+
+rule prefiltermerge_mgatk:
+    """ Run both toSeurat and call variants in one script"""
+    input:
+        all = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/merged.coverage.txt",
+        refAllele = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/chrM_refAllele.txt",
+    output:
+        vars_f = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/merged.variant.rds",
+        vars_qc = "{out_dir}/data/coverage_merged/donor{d}/  MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/merged.variantQC.png",
+    params:
+        data_dir = lambda wildcards, input: dirname(input.all),
+        sample = "merged",
+        outdir = "mgatk",
+        script = join(ROOT_DIR, "R_scripts", "wrap_mgatk.R")
+    shell:
+        "{params.script} {params.data_dir} {params.outdir}/{params.sample} FALSE "
+
+# use rule merge_pileup_conditions from prefilterImputeMod as imputeproc_merge_pileup_conditions with:
+#     input:
+#         cov_dirs = expand("{{output}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/{sample}.coverage.strands.txt", sample=samples.index),
+#         mult_cells = expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex/cells_meta.tsv",
+#                             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+#                             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])
+#     output:
+#         merge_pile = expand("{{output}}/data/coverage_merged/donor{d}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/merge.coverage.strands.txt",
+#                             d=config["N_DONORS"])
+
+rule scPileup_prefilterMergeImpute:
+    input:
+        vars_f = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/merged.variant.rds",
+    output:
+        af = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_prefilterMerge_impute/donor{d}/af.tsv",
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_prefilterMerge_impute/donor{d}/output.ipynb",
+    params:
+        note= join(ROOT_DIR, "workflow/notebooks/af_filter/impute_pileup.ipynb")
+    shell: "papermill {params.note} {output.note}"
+
+
+
+# module knnMod:
+#     snakefile: "./rules/clone_detection/knn.smk"
+#     config: config
+
+#use rule knn from knnMod as knn_knn with:
+rule knn_prefilterMergeImpute:
+    input:
+        af = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_prefilterMerge_impute/donor{d}/af.tsv",
+    output:
+        cells= "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_prefilterMerge_impute/knn/kparam_{kparam}/donors/donor{d}/cells_meta.tsv",
+        fig =  "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_prefilterMerge_impute/knn/kparam_{kparam}/donors/donor{d}/donor{d}.variants.labels.png"
+    params:
+        indir = lambda wildcards, input: dirname(input.af),
+        name = lambda wildcards: f"donor{wildcards.d}",
+        outdir = lambda wildcards, output: dirname(output[0]),
+        note = join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb")
+    shell:
+        "papermill -k ir -p indir {params.indir} -p name {params.name} -p donor {wildcards.d} -p outdir {params.outdir} -p kparam {wildcards.kparam} {params.note} {params.outdir}/output.ipynb"
+
+
+#use rule knn_concat from knnMod as knn_knn_concat with:
+def concat_knn(in_files, out_name):
+    all = []
+    cols = ["donor", "lineage"]
+    for i in in_files:
+        #print(i)
+        all.append(pd.read_csv(i,sep='\t'))
+        #print(all[-1].head())
+        if "donor_index" in all[-1].columns.values:
+            cols.append("donor_index")
+        if "lineage_index" in all[-1].columns.values:
+            cols.append("lineage_index")
+    all = pd.concat(all,ignore_index=True).sort_values(cols)
+    if 'level_0' in all.columns:
+        all = all.drop('level_0',axis=1)
+    all.to_csv(out_name,sep='\t',index=False)
+
+
+rule knn_concat_prefilterMergeImpute:
+    input:
+        cells = expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_prefilterMerge_impute/knn/kparam_{{kparam}}/donors/donor{d}/cells_meta.tsv",
+                       d=np.arange(config["N_DONORS"])),
+    output:
+        cells_all = "{output}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_prefilterMerge_impute/knn/kparam_{kparam}/cells_meta.tsv"
+    run: concat_knn(input, output[0])
+
+
+########################################################################
+########################################################################
+########################################################################
 
 # def get_pileup_vars(wildcards):
 #     w = wildcards
@@ -776,6 +944,10 @@ def get_counts_in(wildcards):
         return f"{w.out_dir}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_init/donor{w.d}/af.tsv"
     elif w.variants == "simpleUnion":
         return f"{w.out_dir}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_simpleUnion/donor{w.d}/af.tsv"
+    elif w.variants == "prefilterMerge_impute":
+        return  f"{w.out_dir}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_prefilterMerge_impute/donor{w.d}/af.tsv"
+    else:
+        raise ValueError("get_counts_in variants not here")
 
 
 

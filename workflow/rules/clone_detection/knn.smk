@@ -46,7 +46,7 @@ def get_knn_script(cfg):
         return join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb")
     elif variants_type == "mgatkdonor":
         return join(ROOT_DIR, "R_scripts", "knn_clones.ipynb"),
-    elif variants_type is None:
+    else:
         return join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb")
 
 rule knn:
