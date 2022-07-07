@@ -111,7 +111,8 @@ rule lineage_clone_counts_input:
         outdir = lambda wildcards, output: dirname(output.note),
         script = get_lineage_clone_counts_script,
         min_cell = params["clone_sizes_min_cell"]
-    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True -p min_cell {params.min_cell} {params.script} {output.note}" #-p use_input True
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True  -p min_cell {params.min_cell} {params.script} {output.note}" #-p use_input True
+
 
 rule tmp_no_input:
     output: temp("{outdir}/annotation_clones/cluster_clone_counts/{donType}/.tmp_input")
@@ -155,7 +156,7 @@ def lin_clone_file(wildcards):
     w = wildcards
     #print(config["samples"])
     #print(f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb")
-    if not ("Input" in config['samples'].index and len(config["samples"]==1)):
+    if not ("Input" in config['samples'].index and len(config["samples"])==1):
         return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb"
     return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/.tmp_all"
 

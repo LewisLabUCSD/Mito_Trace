@@ -21,16 +21,8 @@ from icecream import ic
 ic.disable()
 
 
-# In[ ]:
-
-
-
-
-
-# In[3]:
-
-
-indir = snakemake.input.indir
+#indir = snakemake.input.indir
+indir = snakemake.params.indir
 outdir = snakemake.params.outdir
 donor =  int(snakemake.params.donor)
 anno_cells_meta_f = snakemake.input.anno_cells_meta_f  #"/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_30/gff_A2_black/annotation_clones/se_cells_meta_labels.tsv"
@@ -411,13 +403,9 @@ def set_multi(results, weights):
     return results_norm.sort_values(by="multi")[::-1]
 
 
-# In[ ]:
 
 
 results_df.replace([-np.inf, np.inf], np.nan).sum(axis=0)
-
-
-# In[ ]:
 
 
 results_norm = set_multi(results_df, weights)
@@ -426,47 +414,37 @@ rank_df = set_multi_rank(results_norm, weights)
 rank_df
 
 
-# In[ ]:
-
-
 results_df.replace([-np.inf], np.nan).sum()
 
-
-# In[ ]:
 
 
 drop_results = results_norm.loc[results_norm["multi"].isnull()]
 results_norm = results_norm.loc[~(results_norm["multi"].isnull())]
-results_norm
+
+## Save the objective results
+results_norm.to_csv(join(outdir, "objectives_norm.csv"))
+results_df.to_csv(join(outdir, "objectives.csv"))
+rank_df.to_csv(join(outdir, "objectives_rank.csv"))
 #results_norm.loc[results_norm["multi"] == np.nan]
 
 
 # ### Plot distribution results
 
-# In[ ]:
-
-
 sns.displot(results_norm["multi"])
 plt.title("multiobjective function (want to maximize)")
-plt.savefig(join(outdir, "loss_multi.png"))
-
-
-# In[ ]:
+plt.savefig(join(outdir, "loss_multi.pdf"))
 
 
 sns.displot(rank_df["multi"])
 
 
-# In[ ]:
-
-
 sns.displot(rank_df["variants_with_clone_norm_by_1_over_nclones_with_variant"])
 plt.title("objective: variants_with_clone_norm_by_1_over_nclones_with_variant (want to maximize)")
-plt.savefig(join(outdir, "loss_variants_with_clone_norm_by_1_over_nclones_with_variant.png"))
+plt.savefig(join(outdir, "loss_variants_with_clone_norm_by_1_over_nclones_with_variant.pdf"))
 
 sns.displot(rank_df["obj_nclones_more_than_one_unique"])
 plt.title("objective: Number of clones with at least 2 unique variants (want to maximize)")
-plt.savefig(join(outdir, "loss_variants_with_clone_norm_by_1_over_nclones_with_variant.png"))
+plt.savefig(join(outdir, "loss_variants_with_clone_norm_by_1_over_nclones_with_variant.pdf"))
 
 
 # In[ ]:
@@ -478,7 +456,7 @@ def get_top_n_results(results_df, rank_df, n=12):
     return filt_rank, filt_results
 
 
-# In[ ]:
+full_params.to_csv(join(outdir, "params.csv"))
 
 
 filt_rank, filt_results = get_top_n_results(results_norm, rank_df, n=topn)
@@ -487,10 +465,6 @@ filt_results.columns = [f"{x}_obj" for x in filt_results.columns]
 
 filt_results = pd.merge(filt_results, full_params, left_index=True, right_index=True, how="left")
 filt_rank = filt_rank.loc[filt_results.index]
-filt_results
-
-
-# In[ ]:
 
 
 all_df = []
@@ -501,9 +475,6 @@ for ind, val in filt_results.iterrows():
     all_df.append(data["all_unique_df"])
     all_objs[ind] = obj_out 
 all_df = pd.concat(all_df)
-
-
-# In[ ]:
 
 
 heatmap_input = all_df[["n_cells", "variant"]].reset_index().pivot(index="id", columns="variant", values="n_cells").fillna(0).astype(int)
@@ -528,13 +499,10 @@ clones_order
 
 
 
-# In[ ]:
-
-
 def params_to_str(ser, param_names):
     name = ""
     for p in param_names:
-        name = name + f"{p}={ser[p]:.3f};    "
+        name = name + f"{p}={ser[p]:.3f}\n"
     return name
 
 def params_and_multi_str(ser):
@@ -542,8 +510,6 @@ def params_and_multi_str(ser):
     name = f"params:\n{param_str.strip()}\nObjective score={ser['multi_obj']} (want to maximize)" 
     return name
 
-
-# In[ ]:
 
 
 all_df["params"] = all_df.apply(params_to_str, axis=1, args=(param_names,))
@@ -561,9 +527,6 @@ del tmp
 
 all_df["params_multi"] = all_df.apply(params_and_multi_str, axis=1)
 all_df
-
-
-# In[ ]:
 
 
 def draw_heatmap(*args, **kwargs):
@@ -601,69 +564,40 @@ fg.fig.suptitle(f"Best parameter combinations shown in order")
 fg.fig.subplots_adjust(top=0.9, hspace = 0.8)
 
 plt.title("multiobjective function (want to maximize)")
-plt.savefig(join(outdir, "top_param_results.png"))
+#plt.savefig(join(outdir, "top_param_results.pdf"))
+plt.savefig(join(outdir, "top_param_results.pdf"), dpi=300)
 
 
-# In[ ]:
 
-
-best_params = filt_results.iloc[0]
+best_params = (filt_results.sort_values("multi_obj")).iloc[0]
 best_params = pd.DataFrame(best_params).transpose()
 best_params.index = ["objective_scores"]
 best_params.loc["weight"] = None
 for obj, w in zip(objectives_l, weights):
     best_params.loc["weight", f"{obj}_obj"] = w
 
-best_params
-
-
-# In[ ]:
-
-
 out_df = all_df[all_df['params'] == best_params.loc["objective_scores", "params"]]
-out_df
-
-
-# In[ ]:
-
 
 clone_var_table = (out_df.pivot(index= 'variant',columns='clone', values='log2_n_cells').fillna(0))
-clone_var_table
+
 
 clones_keep = clone_var_table.loc[:, ~((clone_var_table==0).all(axis=0))].columns
 vars_keep = clone_var_table.loc[~((clone_var_table==0).all(axis=1))].index
 
 
-# In[ ]:
-
-
 sns.clustermap(clone_var_table)
 plt.title(best_params.loc["objective_scores", "params_multi"])
-plt.savefig(join(outdir, "best_params.png"))
+plt.savefig(join(outdir, "best_params.pdf"))
 
 sns.clustermap(clone_var_table.loc[vars_keep,clones_keep])
 plt.title(best_params.loc["objective_scores", "params_multi"])
-plt.savefig(join(outdir, "best_params_filt.png"))
+plt.savefig(join(outdir, "best_params_filt.pdf"))
 
 
 # ## Save clone-variant table and the parameters
-
-# In[ ]:
-
-
 clone_var_table.to_csv(join(outdir, "best_params_clone_vars.csv"))
 clone_var_table.loc[vars_keep,clones_keep].to_csv(join(outdir, "best_params_filt_clone_vars.csv"))
 best_params.to_csv(join(outdir, "best_params.csv"))
-
-
-
-# In[ ]:
-
-
-filt_results.to_csv(join(outdir, "param_results.csv"))
-
-
-# In[ ]:
 
 
 filt_curr_labels = curr_labels[curr_labels["name"].isin(clones_keep)]
@@ -677,8 +611,9 @@ out_cells_meta = anno_cells.loc[anno_cells["ID"].isin(cells_to_keep)]
 
 # out_AF_df = AF_df.loc[vars_keep, out_cells_meta.index]
 # out_DP_df = DP_df.loc[vars_keep, out_cells_meta.index]
-out_AF_df = AF_df.loc[vars_keep, out_cells_meta.index["ID"]]
-out_DP_df = DP_df.loc[vars_keep, out_cells_meta.index["ID"]]
+print(out_cells_meta.head())
+out_AF_df = AF_df.loc[vars_keep, out_cells_meta["ID"]].transpose()
+out_DP_df = DP_df.loc[vars_keep, out_cells_meta["ID"]].transpose()
 
 
 # In[ ]:
@@ -690,13 +625,13 @@ print(out_DP_df.shape)
 
 assert((out_AF_df.index==out_DP_df.index).all())
 assert((out_AF_df.columns==out_DP_df.columns).all())
-assert((out_AF_df.columns==out_cells_meta.index).all())
+assert((out_AF_df.index==out_cells_meta["ID"]).all())
 
 
 # ## save cells-meta, af and dp
 
 # In[ ]:
-
+out_cells_meta["ID"]
 
 out_cells_meta.to_csv(join(outdir, "cells_meta.tsv"),sep="\t")
 out_AF_df.to_csv(join(outdir, "af.tsv"), sep="\t")

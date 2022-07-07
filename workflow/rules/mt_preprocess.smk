@@ -271,7 +271,7 @@ rule filter_cell_bc:
                      nt=["coverage", "A", "C", "G", "T"]),
         barcode_p = "{output}/data/{sample}/MT/cellr_{cellrbc}/{sample}_barcode_data.p"
     output:
-        temp("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt")
+        ("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt")
     run:
         for n in ["A", "C", "G", "T", "coverage"]:
             #print('n', n)
@@ -346,7 +346,7 @@ def get_filt(w):
 
 rule create_filters_v02:
     input:
-        concat_dir = (rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
+        concat_dir = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt" #(rules.filter_cell_bc.output[0]) #"{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/{sample}.coverage.strands.txt.gz"
     output:
         note = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/out.ipynb",
         cov = "{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",

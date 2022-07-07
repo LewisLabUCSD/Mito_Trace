@@ -99,7 +99,6 @@ rule barcodes_inClones:
     shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} {params.note} {output.note}"
 
 
-
 rule distinguishing_vars:
     input:
         cells_meta = "{outdir}/cells_meta.tsv",

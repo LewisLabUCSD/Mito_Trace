@@ -45,11 +45,11 @@ rule run_variants_params:
         for filtering later.
     """
     input:
-        indir = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/",
+        clone_cells = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv",
         anno_cells_meta_f = get_anno_cells #expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv",
                                    #gff=gff) # /cells_meta_labels.tsv"
     output:
-        params_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/param_results.csv",
+        params_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/params.csv",
         best_params_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params.csv",
         best_params_clone_vars_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params_filt_clone_vars.csv",
         cells_meta_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
@@ -57,13 +57,14 @@ rule run_variants_params:
         dp_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/dp.tsv",
     params:
         outdir = lambda wildcards, output: dirname(output.params_f),
+        indir = lambda wildcards, input: dirname(input.clone_cells),
         donor = lambda wildcards: wildcards.d,
         # Objective weights. order of the columns
         weights = [1,0,0,1,-1, 1, 1], #weights=lambda wildcards: config["enriched_vars"]["params"]["objective_weights"][wildcards.objective_id]
         objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
                         "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
                         "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
-        ncpus=8, #config["ncpus"]
+        ncpus=24, #config["ncpus"]
         topn=16
     threads: 16
     script: join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_run.py.py")
@@ -71,8 +72,6 @@ rule run_variants_params:
     #     notebook = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/output.ipynb",
     # notebook:
     #     join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_run.py.ipynb")
-
-
 
 
 
@@ -87,8 +86,8 @@ rule merge_donor_optim:
         dp_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/dp.tsv",
     run:
         pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.cells_meta_f]).to_csv(output.cells_meta_f, sep="\t")
-        pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.af_f], axis=1).to_csv(output.af_f, sep="\t")
-        pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.dp_f], axis=1).to_csv(output.dp_f, sep="\t")
+        pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.af_f], axis=0).to_csv(output.af_f, sep="\t")
+        pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.dp_f], axis=0).to_csv(output.dp_f, sep="\t")
 
 
 # rule clonalshift_clones:

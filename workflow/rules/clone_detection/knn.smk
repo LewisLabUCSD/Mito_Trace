@@ -6,15 +6,16 @@ import numpy as np
 from icecream import ic
 
 
-wildcard_constraints:
-    variants = "simple|mgatkdonor",
-    d = "%d"
+# wildcard_constraints:
+#     variants = "simple|mgatkdonor",
+#     d = "%d"
 
 
 samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
-clones_cfg = config["params"]["clones"]
-nclonelist = clones_cfg['vireo']['params']['nclonelist']
+#clones_cfg = config["params"]["clones"]
+
+#nclonelist = clones_cfg['vireo']['params']['nclonelist']
 
 ########################################################################
 ## Variant Intermediate step for other workflows.
@@ -40,10 +41,13 @@ def concat_knn(in_files, out_name):
 
 
 def get_knn_script(cfg):
-    if cfg["variants_type"] == "init":
-        join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb"),
-    elif cfg["variants_type"] == "mgatkdonor":
+    variants_type = cfg.get("variants_type", None)
+    if variants_type == "init":
+        return join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb")
+    elif variants_type == "mgatkdonor":
         return join(ROOT_DIR, "R_scripts", "knn_clones.ipynb"),
+    elif variants_type is None:
+        return join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb")
 
 rule knn:
     input:

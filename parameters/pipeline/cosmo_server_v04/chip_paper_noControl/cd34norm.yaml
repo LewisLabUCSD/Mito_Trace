@@ -1,0 +1,35 @@
+## Global params
+outdir: "/data/Mito_Trace/output" # Global output directory
+config: "parameters/pipeline/pipeline_v04_chip.yaml"
+#params: "parameters/pipeline/params.csv"
+
+## Experiment params
+prefix: "v04/cd34norm/MTblacklist"
+samples_meta: "parameters/pipeline/cosmo_server_v04/chip_paper_noControl/cd34norm.csv"
+genome: "MTBlacklist"
+fastq_dir: "/data2/isshamie/mito_lineage/data/raw/jan21_2021_Croker/" #igm-storage2.ucsd.edu/210114_A00953_0213_AHVM25DSXY"
+mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/jan21_2021/MTblacklist"
+#results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
+N_DONORS: 4
+
+bed_regions:
+  A: ""
+
+# Cluster names
+umap_clusters_f: "/data/Mito_Trace/output/pipeline/v02/cd34norm/MTblacklist/results/atac_clusters.txt"
+umap_clusters:
+  0: "macrophages"
+  1: "neutrophil"
+  2: "NeP"
+  3: "Eosinophil"
+  4: "neutrophil"
+  5: "Erythroid"
+  6: "neutrophil"
+  7: "pDC?"
+  8: "erythroid"
+  9: "progenitor"
+  10: "monocyte"
+  11: "CLP"
+
+
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"

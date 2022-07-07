@@ -5,7 +5,7 @@ report: "report/workflow.rst"
 wildcard_constraints:
     cellr='True|False',
     kparam='[0-9]+',  #'%d', #[0-9]+',
-    variants = "simple|mgatkdonor|init|simpleUnion",
+    variants = "mgatkdonor|init|simpleUnion|prefilterMerge_impute",
     d = "[0-9]+",
     outdir = '((?!enriched_barcodes).)*'
 
@@ -299,7 +299,6 @@ rule all:
         #"{outdir}/single_clones/.preproc.txt"
 
         # # C. Clones: Variant types
-
 
 
         # Somatic variants
@@ -726,6 +725,25 @@ rule scPileup_simpleUnion_v02:
         join(ROOT_DIR, "workflow/notebooks/af_filter/donor_to_af_v02.ipynb")
 
 
+module prefilterImpute:
+    snakefile: "./rules/clone_detection/proc_prefilterMerge_imputation.smk"
+    config: params
+
+use rule * from prefilterImpute as imputeproc_*
+
+
+
+# def get_pileup_vars(wildcards):
+#     w = wildcards
+#     afs = []
+#     for d in np.arange(config["N_DONORS"]):
+#         if w.variants == "prefilterMerge_impute":
+#             afs.append(f"{w.out_dir}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_{w.variants}/donor{d}/af.tsv")
+#         else:
+#             afs.append(f"{w.out_dir}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/multiplex/clones_{w.variants}/donor{d}/af.tsv")
+#     return afs
+
+    #donor{d}/
 rule scPileup_variants:
     input:
         af = expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/multiplex/clones_{{variants}}/donor{d}/af.tsv",
@@ -1279,3 +1297,5 @@ module enrichedCloneVars:
 use rule finalize from enrichedCloneVars as enrichvars_finalize
 
 use rule * from enrichedCloneVars as enrichvars_*
+
+

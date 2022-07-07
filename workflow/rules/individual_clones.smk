@@ -54,8 +54,10 @@ rule get_clone_cells:
         # else:
         #     cells_meta["clusterID"] = cells_meta["cluster_labels"]
         cells_meta = load_cells_meta(input.se_cells_meta_f)
+        print('cells_meta', cells_meta.head())
         cells_meta = cells_meta.rename({"name":"cloneID"}, axis=1)
-        cells_meta = cells_meta.loc[cells_meta["donor"] == wildcards.d]
+        cells_meta = cells_meta.loc[cells_meta["donor"].astype(int) == int(wildcards.d)]
+        print('cells_meta', cells_meta.head())
         cells_meta[["cloneID", "clusterID","condition", "donor"]].to_csv(output.cells_meta, sep="\t")
 
 

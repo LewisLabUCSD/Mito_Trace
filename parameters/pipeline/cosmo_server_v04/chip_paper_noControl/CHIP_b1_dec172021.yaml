@@ -6,7 +6,7 @@ experiment: "CHIP_b1" # Only used for somatic variants as of now
 ## Experiment params
 prefix: "v04/CHIP_b1/MTBlacklist_A2"
 
-samples_meta: "parameters/pipeline/cosmo_server_v02/CHIP_dec172021/CHIP_b1_dec172021.csv"
+samples_meta: "parameters/pipeline/cosmo_server_v04/chip_paper_noControl/CHIP_b1_dec172021.csv"
 genome: "MTBlacklist_A2"  #"MTBlacklist_A2"
 
 #results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory

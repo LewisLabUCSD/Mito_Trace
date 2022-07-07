@@ -1,0 +1,299 @@
+main:
+  - "mtscATAC"
+  - "mtpreproc"
+  - "multiplex"
+  - "clones"
+  - "enrichment"
+  - "DE"
+  - "annotation_clones"
+
+
+cellranger_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/"
+samtools_path: "/data2/resources/software/cellranger_6_1_1/cellranger-6.1.1/external/anaconda/bin"
+annotation_granges: "/mnt/md0/isshamie/Projects/Mito_Trace/data/processed/annotation_granges/"
+
+genome_path:
+  #genome: "MTBlacklist" # ["MTBlacklist", "MTBlacklist_mtasnucl", "noblacklist_hg38"]
+  MTBlacklist:
+    # Genome paths
+    genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/chrM.fasta"
+    # Gene file needs to be confirmed as same as the new 10x genome downloaded
+    gene_file: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/genes/genes.gtf"
+    gff: "hg38_1_2"
+  MTblacklist_mtasnucl:
+    # Genome paths
+    genome_dir: "data/external/GRCh38_MT_blacklist/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0/chrM.fasta"
+    # Gene file needs to be confirmed as same as the new 10x genome downloaded
+    gene_file: "data/external/GRCh38_1.2.0/refdata-cellranger-atac-GRCh38-1.2.0"
+    gff: "hg38_1_2"
+  MTBlacklist_A2: # cellranger new genoem version with MT blacklist
+    # Genome paths
+    genome_dir: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/" #"data/external/GRCh38_MT_blacklist/" #
+    ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/fasta/genome.fa" # I'm pretty sure this and genome_dir are the same and I just moved it.
+    mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
+    gene_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.gtf"
+    gene_sorted_file: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/genes/genes.sorted.gtf.bgz"
+    gff: "A2_black"
+
+mtpreproc:
+  version: 02
+  params:
+    cellrbc: [True]
+    numreadsfilter: [200]
+    basequality: [20]
+  mito_character: "chrM"
+  maxBP: 16571
+
+# For constructing the af_by_cell filter position_filter:
+filters:
+  params:
+    mincells: [10]
+    minreads: [50]
+    topN: [0]
+    hetthresh: [0.001]
+    minhetcells: [10] #[10,5]
+    hetcountthresh: [5] #[5,2]
+    bqthresh: [20]
+
+
+mgatk:
+  params:
+    lowcovthresh:
+      - 2 # For mgatk to fill in low coverage cell positions
+    ncellsthresh:
+      - 5
+  chrM_refAllele: "data/external/chrM_refAllele.txt"
+
+
+multiplex:
+  #params:
+  pseudo_multiplex:
+    #Number Reads Total: 10000000
+    num_cells: 100000 # high enough to choose all
+    is_proportional: False
+  genome_size: "data/external/GRCh38_MT_blacklist/fasta/genome.chrom.size"
+
+  mt:
+    minMAF:
+      - 0.01
+    minCOUNT:
+      - 200
+
+clones:
+  variants:
+   # - "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
+    #- "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
+    - "init"
+    - "simpleUnion"
+    #- "prefilterMerge_impute"
+    #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
+  method:
+    #- "vireo"
+    - "knn" #["vireo", "phylogeny", "knn"]
+  vireo:
+    params:
+      nclonelist: [20] #, 40, 100]
+  phylogeny:
+    params:
+      method: "missingV"
+      afthresh: 0
+      dpthresh: 2
+  knn:
+    params:
+      resolution: [3, 30, 50] #, 3] #, 30, 50] #[10,3]
+
+  params:
+    dendro_thresh: 0.6
+
+
+distinct_clones:
+  params:
+    weights: [1,1,1,1,1,1,1]
+    objectives: []
+
+#clones:
+#  variants:
+#    simple: # Old one, where the depth is not filled in and uses the union of the vireo vcfs
+#      - vireo
+#    mgatkdonor:
+#      - vireo
+#      - knn # reruns mgatk on the donors, takes the intersection of the filtered data
+#    init:
+#    #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
+#  method:
+#    - "vireo"
+#    - "knn" #["vireo", "phylogeny", "knn"]
+#  vireo:
+#    params:
+#      nclonelist: [20] #, 40, 100]
+#  phylogeny:
+#    params:
+#      method: "missingV"
+#      afthresh: 0
+#      dpthresh: 2
+#  knn:
+#    params:
+#      resolution: [10,3]
+
+som_vars:
+  mutect:
+    params:
+      min_af: [0.05]
+      mid_af: [0.45]
+      min_ad: [10]
+      min_dp: [50]
+      qual: [25]
+
+
+annotations:
+  datadir: "data/external/granja_cd34/"
+  ID: "GSE129785_scATAC-Hematopoiesis-CD34"
+  name: "granja_cd34"
+  #file: "granja_published_C1.rds"
+  version: "v02"
+  method:
+    - "lareau"
+    - "anchors"
+  lareau:
+    proj_ref: "sample" #sample, ref . Which experiment to run lsi on for the coordinate space
+  anchors:
+    assay:
+      - "RNA"
+      - "ATAC"
+
+#  gene_file: "/data/Mito_Trace/data/processed/genomes/mtMasked/GRCh38_MT_blacklist/genes/genes.gtf"
+#  gene_type:
+#    - "custom"
+
+
+annotation_clones:
+  params:
+    cdf_thresh:
+      - 0.3
+
+    min_pct:
+      - 0.01 # for TF
+    btwnMinpct:
+      #- 0.01
+      - 0
+    logfc_threshold:
+      - 0.1
+     # - 0
+      #- 0.1
+      #- 0.25
+    p_thresh:
+      - 0.1
+    assay:
+      - "RNA"
+      #- "ATAC"
+    betweenClust_pval_thresh:
+      #- 0.01
+      - 0.1
+    betweenCond_pval_thresh:
+     # - 0.01
+      - 0.1
+    gsea_pval:
+     # - 0.01
+      - 0.1
+
+    prefilter:
+      #- "TRUE"
+      - "FALSE"
+
+    stat_col:
+      - "log2FoldChange"
+      #- "padj"
+
+    padjmethod:
+      - "BH"
+
+    min_cells:
+      - 1
+     # - 10
+
+    hyperMinCl:
+     # - 1
+      - 10
+    bothConds:
+     # - True
+      - False
+
+    t:
+      - 0.1
+      - 0.01
+    rt:
+      - 10
+      #- 50
+    clone_sizes_min_cell: 10
+
+de_clones_change:
+  params:
+    filt:
+      - "fisher"
+      #  - "None"
+    pthresh:
+      - 0.01
+    use_p_adjust:
+      - True
+    min_cell:
+      - 1
+      #- 5
+      #- 10
+      #- 50
+    min_cell_both:
+      - 0
+      #- 1
+      #- 10
+    shuffle:
+      #- False
+      - True
+
+    min_pct:
+      - 0.1
+    logfc_threshold:
+      #- 0.1
+      - 0
+      #- 0.25
+    p_thresh:
+      - 0.1
+    gsea_pval:
+      - 0.1
+    prefilter:
+      - "FALSE"
+    stat_col:
+      - "log2FoldChange"
+    padjmethod:
+      - "BH"
+
+clone_clust_embed:
+  params:
+    perplexity:
+      - 30
+      - 50
+      #- 20
+    donor_perplexity:
+      - 10
+
+
+mt_as_clones:
+  params:
+    af_ts: [0.01, 0.1, 0.4, 0.8]
+    oth_af_ts: [0.01, 0.1, 0.4]
+    cov_ts: [2, 10, 30] # mean coverage at position for cells with the AF
+    oth_cov_ts: [2, 10, 30]  # mean coverage for cells without AF
+    num_cells: [5, 10, 30] # num cells and fraction are for cells with sufficient coverage
+    oth_num_cells: [10, 100, 500, 0.25] #, 0.6, 0.8] # fraction is of cells with sufficient coverage
+    mean_pos_cov: [0, 10]
+  best_params:
+    af: 0.1
+    oth_af: 0.1
+    cov: 10
+    oth_cov: 10
+    num_cells: 10
+    oth_num_cells: 0.25
+    mean_pos_cov: 0
+

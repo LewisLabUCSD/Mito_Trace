@@ -1,0 +1,2 @@
+sample_name,cellr_ID,fastq_ID,barcode_f,bam_f
+Flt3l,J2,BC_10xATAC_J2,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/jan21_2021/MTblacklist/J2/outs/filtered_peak_bc_matrix/barcodes.tsv,/home/isaac/lewis/mito_lineage/output/mtscATAC/data/jan21_2021/MTblacklist/J2/outs/possorted_bam.bam
