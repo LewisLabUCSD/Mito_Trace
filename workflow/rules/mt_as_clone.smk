@@ -27,6 +27,7 @@ rule mtclones_informative:
 
     #shell: "papermill -p don_dir {input.don_dir} -p params {params.mtclone_params} {params.script} {params.outdir}"
 
+
 rule plot_mtclones_informative:
     input:
         #don_dir = "{outdir}/multiplex/clones_{variants}/

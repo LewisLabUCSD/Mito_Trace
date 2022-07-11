@@ -7,6 +7,10 @@ import subprocess as subp
 from os.path import join, dirname
 from src.config import ROOT_DIR
 
+# wildcard_constraints:
+#     output = '((?!coverage_merged))'
+#
+
 res = config['results']
 samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 

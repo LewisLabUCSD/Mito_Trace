@@ -7,7 +7,7 @@ from os.path import dirname
 rule get_refAllele:
     #input: config["mt_ref_fa"],
     params: config['mgatk']["chrM_refAllele"]
-    output: "{outdir}/chrM_refAllele.txt"
+    output: refAllele = "{outdir}/chrM_refAllele.txt"
     shell: 'cp {params} {output}'
 
 
@@ -29,8 +29,10 @@ rule mgatk:
 
 
 rule mgatk_to_vireoIn:
-    input: "{outdir}/mgatk/{sample}.variant.rds"
-    output: "{outdir}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
+    input:
+        mgatk = "{outdir}/mgatk/{sample}.variant.rds"
+    output:
+        vireofmt = "{outdir}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
     params:
         indir = lambda wildcards, input: dirname(input[0]),
         outdir = lambda wildcards, output: dirname(output[0]),

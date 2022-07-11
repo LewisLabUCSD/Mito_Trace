@@ -525,7 +525,7 @@ plt.savefig(join(outdir, "top_param_results.pdf"), dpi=300)
 
 
 
-best_params = (filt_results.sort_values("multi_obj")).iloc[0]
+best_params = (filt_results.sort_values("multi_obj")[::-1]).iloc[0]
 best_params = pd.DataFrame(best_params).transpose()
 best_params.index = ["objective_scores"]
 best_params.loc["weight"] = None

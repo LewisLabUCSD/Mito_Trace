@@ -73,6 +73,23 @@ rule run_variants_params:
     # notebook:
     #     join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_run.py.ipynb")
 
+rule optim_results:
+    input:
+        params_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/params.csv",
+    output:
+        #note = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/out.ipynb",
+        top_clustered = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/top_param_group_results.pdf",
+        top_clustered_table = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/top_param_group_clusters.pdf",
+        top_table = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/top_param_groups_clone_vars.pdf",
+    params:
+        indir = lambda wildcards, input: dirname(input.params_f),
+        outdir = lambda wildcards, output: dirname(output.top_clustered),
+        note = join(ROOT_DIR, "notebooks/workflow/notebooks/clone_vars/optimization_results.ipynb"),
+        weights = [1,0,0,1,-1, 1, 1]
+    log:
+        notebook = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/out.ipynb"
+    notebook:
+        join(ROOT_DIR, "notebooks/workflow/notebooks/clone_vars/optimization_results.ipynb")
 
 
 rule merge_donor_optim:
@@ -161,12 +178,13 @@ use rule single_input_and_culture_cl from cloneShiftMod as cloneshifttwo_single_
     output:
         note = "{outdir}/enriched_barcodes/clonal_shifts/variants_{variants}/donors/donor{d}/clones/knn_kparam_{kparam}/output_single_{condition}_compare.ipynb"
     params:
-        clone_col = name_map["clones"], #lambda wildcards: name_map[wildcards.cloneShift_method]
-        noInput_indir= lambda wildcards, input: dirname(input.noInput),
-        input_indir = lambda wildcards, input: dirname(input.input),
+        indir= lambda wildcards, input: dirname(input.cond),
         outdir = lambda wildcards, output: dirname(output.note),
         donor = lambda wildcards: wildcards.d,
-        script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
+        script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/individual_conditions_hypergeometric.ipynb"), #get_script,
+        cond = condition[0],
+        clone_col = name_map["clones"], #lambda wildcards: name_map[wildcards.cloneShift_method]
+
 
 
 
