@@ -17,7 +17,7 @@ Analysis/
 *.bai
 *.svg
 .snakemake
-
+.envs/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
