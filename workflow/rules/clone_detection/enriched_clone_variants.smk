@@ -31,10 +31,16 @@ dendro_d = config['clones']['params']['dendro_thresh']
 #     w = wildcards
 #     return f"{w.outdir}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv"
 #
-
+import os
 def get_anno_cells(wildcards):
     w = wildcards
+    print('w.outdir', w.outdir)
+    print('var', w.variants)
+    print('gff', gff)
+    print(f"{w.outdir}/clones/variants_{w.variants}/knn/kparam_{w.kparam}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv")
+    print('true', os.path.exists(f"{w.outdir}/clones/variants_{w.variants}/knn/kparam_{w.kparam}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv"))
     return  f"{w.outdir}/clones/variants_{w.variants}/knn/kparam_{w.kparam}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv"
+
 
 
 rule run_variants_params:
@@ -50,11 +56,11 @@ rule run_variants_params:
                                    #gff=gff) # /cells_meta_labels.tsv"
     output:
         params_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/params.csv",
-        best_params_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params.csv",
-        best_params_clone_vars_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params_filt_clone_vars.csv",
-        cells_meta_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
-        af_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/af.tsv",
-        dp_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/dp.tsv",
+        # best_params_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params.csv",
+        # best_params_clone_vars_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params_filt_clone_vars.csv",
+        # cells_meta_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
+        # af_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/af.tsv",
+        # dp_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/dp.tsv",
     params:
         outdir = lambda wildcards, output: dirname(output.params_f),
         indir = lambda wildcards, input: dirname(input.clone_cells),
@@ -64,9 +70,11 @@ rule run_variants_params:
         objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
                         "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
                         "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
-        ncpus=24, #config["ncpus"]
-        topn=16
-    threads: 16
+        ncpus=12, #config["ncpus"]
+        topn=16,
+        to_test=False
+    threads: 17
+    priority: 2
     script: join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_run.py.py")
     # log:
     #     notebook = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/output.ipynb",
@@ -76,20 +84,32 @@ rule run_variants_params:
 rule optim_results:
     input:
         params_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/params.csv",
+        anno_cells_meta_f = get_anno_cells,
+        clone_cells = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv",
     output:
-        #note = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/out.ipynb",
-        top_clustered = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/top_param_group_results.pdf",
-        top_clustered_table = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/top_param_group_clusters.pdf",
-        top_table = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/top_param_groups_clone_vars.pdf",
+        #note = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/out.ipynb",
+        best_params_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params.csv",
+        best_params_clone_vars_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params_filt_clone_vars.csv",
+        cells_meta_f = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
+        af_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/af.tsv",
+        dp_f ="{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/dp.tsv",
+        top_clustered = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/top_param_group_results.pdf",
+        top_clustered_table = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/top10perc_param_group_clusters.pdf",
+        top_table = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/top_param_groups_clone_vars.pdf",
+    priority: 10
     params:
         indir = lambda wildcards, input: dirname(input.params_f),
         outdir = lambda wildcards, output: dirname(output.top_clustered),
-        note = join(ROOT_DIR, "notebooks/workflow/notebooks/clone_vars/optimization_results.ipynb"),
-        weights = [1,0,0,1,-1, 1, 1]
+        af_indirs = lambda wildcards, input: dirname(input.clone_cells),
+        #note = join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_results.ipynb"),
+        weights = [1,0,0,1,-1, 1, 1],
+        objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
+                        "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
+                        "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
     log:
-        notebook = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/optim_results/out.ipynb"
+        notebook = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/out.ipynb"
     notebook:
-        join(ROOT_DIR, "notebooks/workflow/notebooks/clone_vars/optimization_results.ipynb")
+        join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_results.py.ipynb")
 
 
 rule merge_donor_optim:

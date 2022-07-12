@@ -241,10 +241,13 @@ def run(groups, sizes, atac_col, clone_col, p_thresh,
 def wrap_create_enrichment(ar, groups, atac_col, clone_col, p_thresh, clones, atac_cl, to_p_correct):
     out = []
     cell_pairs = []
+
     for ind, val in groups.iterrows():
+        # if val["count"] > 0
         cell_pairs.extend(
-            [[val[atac_col], val[clone_col]]] * val["count"])
+            [[val[atac_col], val[clone_col]]] * int(val["count"]))
     cell_pairs = np.array(cell_pairs)
+
     for i in ar:
         #ic(i)
         #curr_sim = groups.copy()

@@ -137,7 +137,7 @@ def check_input(config, files_config, curr_p, git_commit=None,
 
 
 def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, dryrun=False, forcetargets=False,
-        to_gitpush=False, cores=2, forcerun=None, to_report=True):
+        to_gitpush=False, cores=2, forcerun=None, to_report=True, email=None):
     ic(targets)
     if targets==None or len(targets) == 0:
         targets=None
@@ -153,6 +153,11 @@ def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, 
                               cores=cores, force_incomplete=True)
     print("out")
     print(out)
+    if email is not None:
+        #cmd = f"sendmail {out} {email}"
+        cmd = f"echo '{out}' | sendmail {email}"
+        print(cmd)
+        os.system(cmd)
 
     # Setup config output file names
     config = read_config_file(configfile)
@@ -215,7 +220,7 @@ def run(smkfile, configfile, pipename, outdir=None, to_git=False, targets=None, 
         s = 'Ran and Needs inspection\n' + 'Time:' + curr_time + "\n"
         with open(an_f, 'a') as f:
             f.write(s)
-    return
+    return out
 
 
 @click.command()
