@@ -383,9 +383,6 @@ module preFiltMod:
     snakefile: "./rules/clone_detection/proc_prefilterMerge_imputation.smk"
     config: params
 
-
-
-
 ########################################################################
 ########################################################################
 
@@ -398,11 +395,13 @@ use rule * from mtpreprocMod as mtpreproc_*
 ########################################################################
 ## 2. Call variants using MGATK and convert to the Vireo multiplex input
 ########################################################################
-#use rule * from mgatkMod
+use rule * from mgatkMod as mgatk_*
 
-use rule get_refAllele from mgatkMod
+use rule get_refAllele from mgatkMod as mgatk_get_refAllele with:
+    output: "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/chrM_refAllele.txt"
 
-use rule mgatk from mgatkMod with:
+
+use rule mgatk from mgatkMod  as mgatk_mgatk with:
     input:
         all = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
         refAllele = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/chrM_refAllele.txt"
@@ -410,11 +409,24 @@ use rule mgatk from mgatkMod with:
         vars_f = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}.variant.rds",
         vars_qc = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}.variantQC.png"
 
-use rule mgatk_to_vireoIn from mgatkMod with:
+use rule mgatk_to_vireoIn from mgatkMod as mgatk_mgatk_to_vireoIn with:
     input:
         mgatk = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}.variant.rds"
     output:
         vireofmt = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
+
+
+rule merge_variant_samples:
+    input:
+        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/variants.vcf",
+    output:
+        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.tsv",
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.ipynb"
+    params:
+        note = join(ROOT_DIR, "workflow", "notebooks", "variant_types", "scoreVariants.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+    shell:
+        "papermill -p vcf {input[0]} -p outdir {params.outdir} {params.note} {output.note}"
 
 
 rule mgatk_to_variant:
@@ -450,18 +462,6 @@ rule mgatk_to_variant:
         all_vcf.to_csv(output.vcf, mode='a', index=False, sep="\t", header=True)
 
 
-rule merge_variant_samples:
-    input:
-        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/variants.vcf",
-    output:
-        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.tsv",
-        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.ipynb"
-    params:
-        note = join(ROOT_DIR, "workflow", "notebooks", "variant_types", "scoreVariants.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note),
-    shell:
-        "papermill -p vcf {input[0]} -p outdir {params.outdir} {params.note} {output.note}"
-
 ########################################################################
 ## 3. Merge the sample inputs together by concatenating.
 ########################################################################
@@ -475,7 +475,7 @@ rule merged:
     output: "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/cellSNP.tag.AD.mtx"
     #input: lambda wildcards: expand("data/{{prefix}}/chrM/{name}_cellSNP_minC{{mt_minC}}_minAF{{mt_minAF}}", name=config["samples"])
     params:
-        num_cells=num_cells,
+        num_cells = num_cells,
         is_prop = is_prop,
         indirs = lambda wildcards, input: [dirname(x) for x in input],
         outdir = lambda wildcards, output: dirname(output[0]),
@@ -1493,9 +1493,11 @@ module enrichedCloneVars:
     config: params
 
 
-use rule finalize from enrichedCloneVars as enrichvars_finalize
 
 use rule * from enrichedCloneVars as enrichvars_*
+#use rule finalize from enrichedCloneVars as enrichvars_finalize
+
+#use rule run_variants_params from enrichedCloneVars as enrichvars_run_variants_params
 
 
 use rule * from preFiltMod as filtmod_*

@@ -89,7 +89,7 @@ clones:
     #- "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
     - "init"
     - "simpleUnion"
-    - "prefilterMerge_impute"
+    #- "prefilterMerge_impute"
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:
     #- "vireo"
@@ -104,7 +104,7 @@ clones:
       dpthresh: 2
   knn:
     params:
-      resolution: [3, 30, 50] #, 3] #, 30, 50] #[10,3]
+      resolution: [30] #[3, 30, 50] #, 3] #, 30, 50] #[10,3]
 
   params:
     dendro_thresh: 0.6

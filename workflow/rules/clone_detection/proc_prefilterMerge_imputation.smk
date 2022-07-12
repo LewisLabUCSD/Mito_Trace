@@ -16,12 +16,13 @@ samples = config["samples"]
 
 mt_ref_fa = config["genome_path"][config["genome"]]["mt_ref_fa"]
 
-module mgatkMod:
-    snakefile: "../mgatk.smk"
-    config: config
+# module mgatkMod:
+#     snakefile: "../mgatk.smk"
+#     config: config
 
-wildcard_constraints:
-    sample = "^((?!merged).)*$"
+# wildcard_constraints:
+#     sample = "^((?!merged).)*$"
+#
 
 
 rule merge_pileup_conditions:
@@ -29,7 +30,7 @@ rule merge_pileup_conditions:
         cov_dirs = expand("{{out_dir}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/{sample}.coverage.strands.txt", sample=samples.index),
         mult_cells = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/multiplex.ipynb",
     output:
-        merge_pile = expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/coverage_merged/donor{d}/merge.coverage.strands.txt",
+        merge_pile = expand("{{out_dir}}/data/coverage_merged/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/coverage_merged/donor{d}/merge.coverage.strands.txt",
                             d=np.arange(config["N_DONORS"]))
     params:
         #indir = lambda wildcards, input: dirname(input.cov_dirs[0]),
@@ -69,14 +70,14 @@ rule merge_pileup_conditions:
 
 rule create_filters_prefilterMerge:
     input:
-        concat_dir = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merge.coverage.strands.txt",
+        concat_dir = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merge.coverage.strands.txt",
     output:
-        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/out.ipynb",
-        cov = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.coverage.txt",
-        af = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/af_by_cell.tsv",
-        fig = report("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/heatmap.png",
+        note = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/out.ipynb",
+        cov = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.coverage.txt",
+        af = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/af_by_cell.tsv",
+        fig = report("{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/heatmap.png",
                       category="mtpreproc", subcategory="filter"),
-        fig2 = report("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/initial_cell_depth.png",
+        fig2 = report("{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/initial_cell_depth.png",
                       category="mtpreproc",subcategory="filter"),
     params:
         concat_d = lambda wildcards, input: dirname(input.concat_dir),
@@ -106,15 +107,22 @@ rule create_filters_prefilterMerge:
 # use rule get_refAllele from mgatkMod as preftilermerge_get_refAllele with:
 #     output:
 #         refAllele = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/donor{d}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/chrM_refAllele.txt",
+rule get_refAllele:
+    #input: config["mt_ref_fa"],
+    params: config['mgatk']["chrM_refAllele"]
+    output:
+        refAllele = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/chrM_refAllele.txt",
+    shell: 'cp {params} {output}'
+
 
 rule prefiltermerge_mgatk:
     """ Run both toSeurat and call variants in one script"""
     input:
-        all = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.coverage.txt",
-        refAllele = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/chrM_refAllele.txt",
+        all = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.coverage.txt",
+        refAllele = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/chrM_refAllele.txt",
     output:
-        vars_f = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.variant.rds",
-        vars_qc = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.variantQC.png",
+        vars_f = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.variant.rds",
+        vars_qc = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/merged.variantQC.png",
     params:
         data_dir = lambda wildcards, input: dirname(input.all),
         sample = "merged",
@@ -125,15 +133,20 @@ rule prefiltermerge_mgatk:
 
 
 #rule prefiltermerge_mgatk_to_vireoIn:
-use rule mgatk_to_vireoIn from mgatkMod as mergeImpute_mgatk_to_vireoIn with:
+rule mergeImpute_mgatk_to_vireoIn:
     input:
-        mgatk = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/coverage_merged/donor{d}/merged.variant.rds",
+        mgatk = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/coverage_merged/donor{d}/merged.variant.rds",
     output:
-        vireofmt = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/coverage_merged/donor{d}/cellSNP.tag.AD.mtx"
+        vireofmt = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/coverage_merged/donor{d}/cellSNP.tag.AD.mtx"
     params:
         indir = lambda wildcards, input: dirname(input[0]),
         outdir = lambda wildcards, output: dirname(output[0]),
-        sample = "merged" # lambda wildcards: wildcards.sample
+        sample = "merged", # lambda wildcards: wildcards.sample
+        script = join(ROOT_DIR, "src", "mgatk_to_vireo.py")
+    shell:
+        "python {params.script} {params.indir} {params.outdir} {params.sample}"
+
+
     # shell:
     #     "python src/mgatk_to_vireo.py {params.indir} {params.outdir} {params.sample}"
 
@@ -141,7 +154,7 @@ use rule mgatk_to_vireoIn from mgatkMod as mergeImpute_mgatk_to_vireoIn with:
 # use rule merge_pileup_conditions from prefilterImputeMod as imputeproc_merge_pileup_conditions with:
 #     input:
 #         cov_dirs = expand("{{output}}/data/{sample}/MT/cellr_{{cellrbc}}/numread_{{num_read}}/{sample}.coverage.strands.txt", sample=samples.index),
-#         mult_cells = expand("{{output}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex/cells_meta.tsv",
+#         mult_cells = expand("{{output}}/data/coverage_merged/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex/cells_meta.tsv",
 #                             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
 #                             hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])
 #     output:
@@ -151,15 +164,15 @@ use rule mgatk_to_vireoIn from mgatkMod as mergeImpute_mgatk_to_vireoIn with:
 rule scPileup_prefilterMergeImpute:
     input:
         #vars_f = "{out_dir}/data/coverage_merged/donor{d}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/merged.variant.rds",
-        vireofmt = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/cellSNP.tag.AD.mtx"
+        vireofmt = "{out_dir}/data/coverage_merged/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/coverage_merged/donor{d}/cellSNP.tag.AD.mtx"
     output:
         af = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_prefilterMerge_impute/donor{d}/af.tsv",
         note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_prefilterMerge_impute/donor{d}/output.ipynb",
     params:
         note= join(ROOT_DIR, "workflow/notebooks/af_filter/impute_pileup_prefilterMerge.ipynb"),
-        sample =  "merged", #"",".join(samples.index),
         pileup_d = lambda wildcards, input: dirname(input.vireofmt),
         outdir = lambda wildcards, output: dirname(output.af),
+        #sample =  "merged", #"",".join(samples.index),
     shell: "papermill -p pileup_d {params.pileup_d} -p outdir {params.outdir} {params.note} {output.note}"
 
 

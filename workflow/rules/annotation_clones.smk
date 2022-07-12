@@ -48,6 +48,7 @@ def get_cluster_labels():
     else:
         return config.get("umap_clusters_f", "FALSE")
 
+
 rule add_cluster_labels:
     """Prepare clone-by-cluster counts for umap and hypergeometric test"""
     input:
@@ -111,7 +112,7 @@ rule lineage_clone_counts_input:
         outdir = lambda wildcards, output: dirname(output.note),
         script = get_lineage_clone_counts_script,
         min_cell = params["clone_sizes_min_cell"]
-    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True  -p min_cell {params.min_cell} {params.script} {output.note}" #-p use_input True
+    shell: "papermill -p outdir {params.outdir} -p se_cells_meta_f {input.se_meta} -p use_input True -p min_cell {params.min_cell} {params.script} {output.note}" #-p use_input True
 
 
 rule tmp_no_input:
