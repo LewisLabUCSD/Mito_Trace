@@ -103,7 +103,16 @@ assert(len(weights)==len(objectives))
 if not exists(outdir):
     os.mkdir(outdir)
 
+
+# save weights and params:
+weights_params_str = "objective, weight"
+for i in zip(objectives_l, weights):
+    weights_params_str = weights_params_str + f"{i[0]},{i[1]}\n"
+with open(join(outdir, "obj_weights.txt"), 'w') as f:
+    f.write(weights_params_str)
+
 # ## Load & preprocess:
+
 # - AF df
 # - DP df
 # - cells_meta with clone labels. need to create name as donor_lineage
@@ -161,14 +170,18 @@ full_params.head()
 ################################################
 if to_test:
     results_df = full_params.sample(32).parallel_apply(
-        optim.evaluate_series, args=(AF_df, DP_df, curr_labels), axis=1)
+        optim.evaluate_series, args=(AF_df, DP_df, curr_labels, False), axis=1)
 else:
     if full_params.shape[0]>=10000:
-        results_df = full_params.sample(10000).parallel_apply(optim.evaluate_series, args=(AF_df, DP_df, curr_labels), axis=1)
+        results_df = full_params.sample(10000).parallel_apply(optim.evaluate_series, args=(AF_df, DP_df, curr_labels, False), axis=1)
     else:
-        results_df = full_params.parallel_apply(optim.evaluate_series, args=(AF_df, DP_df, curr_labels), axis=1)
+        results_df = full_params.parallel_apply(optim.evaluate_series, args=(AF_df, DP_df, curr_labels, False), axis=1)
     #results_df = full_params.sample(100).parallel_apply(evaluate_series, args=(AF_df, DP_df, curr_labels), axis=1)
+results_df.to_csv(join(outdir, "objectives.csv"))
+full_params.to_csv(join(outdir, "raw_params.csv"))
 
+
+#print(results_df.head())
 print((results_df>0).any())
 drop_inds = results_df.loc[(results_df==0).all(axis=1)].index
 results_norm = optim.set_multi(results_df, weights)
@@ -176,14 +189,18 @@ rank_df = optim.set_multi_rank(results_norm, weights)
 
 drop_results = results_norm.loc[results_norm["multi"].isnull()]
 results_norm = results_norm.loc[~(results_norm["multi"].isnull())]
+if len(results_norm) == 0:
+    raise ValueError("No param retrieved variants")
 
 ########################
 ## Save the objective results
 ########################
 results_norm.to_csv(join(outdir, "objectives_norm.csv"))
-results_df.to_csv(join(outdir, "objectives.csv"))
+
+full_params.to_csv(join(outdir, "raw_params.csv"))
 rank_df.to_csv(join(outdir, "objectives_rank.csv"))
 #results_norm.loc[results_norm["multi"] == np.nan]
+full_params.to_csv(join(outdir, "params.csv"))
 
 ########################
 # Plot distribution results
@@ -212,7 +229,6 @@ def get_top_n_results(results_df, rank_df, n=12):
     return filt_rank, filt_results
 
 
-full_params.to_csv(join(outdir, "params.csv"))
 
 filt_rank, filt_results = get_top_n_results(results_norm, rank_df, n=topn)
 filt_results.columns = [f"{x}_obj" for x in filt_results.columns]
@@ -225,7 +241,7 @@ for ind, val in filt_results.iterrows():
     print(ind)
     obj_out, data = optim.evaluate_series(val, AF_df, DP_df, curr_labels, return_data=True)
     all_df.append(data["all_unique_df"])
-    all_objs[ind] = obj_out 
+    all_objs[ind] = obj_out
 all_df = pd.concat(all_df)
 
 heatmap_input = all_df[["n_cells", "variant"]].reset_index().pivot(index="id", columns="variant", values="n_cells").fillna(0).astype(int)
@@ -248,7 +264,7 @@ filt_results["params"] = filt_results.apply(optim.params_to_str, axis=1, args=(p
 filt_results["params_multi"] = filt_results.apply(optim.params_and_multi_str, axis=1)
 tmp = filt_results.set_index("params")
 all_df["multi_obj"] = all_df.apply(lambda x: tmp.loc[x["params"], "multi_obj"], axis=1)
-del tmp                               
+del tmp
 
 all_df["params_multi"] = all_df.apply(optim.params_and_multi_str, axis=1)
 
@@ -266,6 +282,8 @@ fg.fig.subplots_adjust(top=0.9, hspace = 0.8)
 plt.title("multiobjective function (want to maximize)")
 #plt.savefig(join(outdir, "top_param_results.pdf"))
 plt.savefig(join(outdir, "top_param_results.pdf"), dpi=300)
+
+
 
 
 

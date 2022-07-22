@@ -66,24 +66,22 @@ def get_clones_unique_variants(solution, data):
     return all_unique_df
 
 
-def _objective_two_unique_vars_in_clone(all_unique_df, to_pivot=True):
+def _objective_two_unique_vars_in_clone(all_unique_df, to_pivot=True, ind_col="id"):
     if to_pivot:
-        if "id" in all_unique_df.columns:
-            df = all_unique_df.pivot(index="id", columns="variant",
+        if ind_col in all_unique_df.columns:
+            df = all_unique_df.pivot(index=ind_col, columns="variant",
                                      values="n_cells").fillna(0).astype(
                 int)
         else:
-            df = all_unique_df.reset_index().pivot(index="id",
+            df = all_unique_df.reset_index().pivot(index=ind_col,
                                                    columns="variant",
                                                    values="n_cells").fillna(
                 0).astype(int)
     else:
         df = all_unique_df
-    vars_to_keep = df.loc[:, (
-                                         df > 0).sum() == 1].columns  # Variants with just 1 clone
+    vars_to_keep = df.loc[:, (df > 0).sum() == 1].columns  # Variants with just 1 clone
     clones_to_keep = df.loc[
         df.sum(axis=1) > 1].index  # Clones w >2 enriched variants
-    obj = 0
 
     def cl_more_than_one(cl_ser):
         curr = cl_ser[cl_ser > 0]  # variants in a clone
@@ -97,7 +95,49 @@ def _objective_two_unique_vars_in_clone(all_unique_df, to_pivot=True):
     #         return sum([True if x in vars_to_keep else False for x in curr.index]) > 1
     # obj = sum(df.loc[clones_to_keep].apply(lambda x: x(lambda y):, axis=0))
     obj = sum(df.loc[clones_to_keep].apply(cl_more_than_one, axis=1))
-    return obj
+
+    obj_n_clones = df.shape[0]
+    return obj, obj_n_clones
+
+
+def _objectives_dendro(df, objectives_l=("variants_with_clone_norm_by_1_over_nclones_with_variant",
+                                         "max_clone_ncells_over_nclones",
+                                         "max_clone_ncells_over_ncells",
+                                         "obj_nclones_more_than_one_unique")):
+    obj_max_nce_over_ncl = 0
+    obj_max_nce_over_nce = 0
+    obj_cl_over_ncl = 0
+    obj_nvars = 0
+    if len(df) == 0:
+        # print('all 0', all_unique_df.columns)
+        return {x: (-1 * np.inf) for x in
+                objectives_l}  # return score of 0 since all positive values
+    for v, v_df in df.groupby("variant"):
+        ic(v)
+        max_ncells = max(v_df["n_cells"])
+        n_clones = len(set(v_df["clone"].values))
+        obj_max_nce_over_ncl += max_ncells / n_clones
+        obj_max_nce_over_nce += max_ncells / v_df["n_cells"].sum()
+
+        if n_clones != 0:
+            obj_cl_over_ncl += 1 / n_clones
+            obj_nvars += 1
+
+    # calculate objective number of clones with more than one unique variant
+    obj_nclones_more_than_one_unique, obj_n_clones = _objective_two_unique_vars_in_clone(
+        df, ind_col="clone", to_pivot=True)
+
+    objectives_all = {
+        "variants_with_clone_norm_by_1_over_nclones_with_variant": obj_cl_over_ncl,
+        "max_clone_ncells_over_nclones": obj_max_nce_over_ncl,
+        "max_clone_ncells_over_ncells": obj_max_nce_over_nce,
+        "obj_nclones_more_than_one_unique": obj_nclones_more_than_one_unique,
+        "n_clones": obj_n_clones}
+
+    objectives = {}
+    for l in objectives_l:
+        objectives[l] = objectives_all[l]
+    return objectives
 
 
 def _objectives(data, objectives_l):
@@ -126,7 +166,7 @@ def _objectives(data, objectives_l):
             obj_nvars += 1
 
     # calculate objective number of clones with more than one unique variant
-    obj_nclones_more_than_one_unique = _objective_two_unique_vars_in_clone(
+    obj_nclones_more_than_one_unique, _ = _objective_two_unique_vars_in_clone(
         all_unique_df, to_pivot=True)
 
     objectives = {
@@ -136,7 +176,12 @@ def _objectives(data, objectives_l):
         "pct_thresh": obj_d, "other_pct_thresh": obj_e,
         "n_vars": obj_nvars,
         "obj_nclones_more_than_one_unique": obj_nclones_more_than_one_unique}
-    return objectives
+
+    # Remove obj not in list
+    obj = {}
+    for o in objectives_l:
+        obj[o] = objectives[o]
+    return obj
 
 
 def _constraints(solution):
@@ -258,7 +303,7 @@ def draw_heatmap(*args, **kwargs):
     data = kwargs.pop('data')
     clones_order = kwargs.pop('clones_order')
     variants_order = kwargs.pop('variants_order' )
-
+    share_axis = kwargs.pop('share_axis', True)
     #title_col = kwargs.pop("title_col", "params_multi")
     #print('title_col', title_col)
     # param_names = kwargs.pop('param_names', None)
@@ -274,14 +319,16 @@ def draw_heatmap(*args, **kwargs):
     d_full = d_full.astype(float)
 
     # get cluster results
-    g = sns.clustermap(d_full, method="single")
-    inds = g.dendrogram_row.dendrogram["leaves"]
-    cols = g.dendrogram_col.dendrogram["leaves"]
-    plt.close(g.fig)
-
-    sns.heatmap(d_full.iloc[inds, cols],xticklabels=True, yticklabels=True,
-                cbar_kws=dict(orientation="vertical"), **kwargs)
-
+    if not share_axis:
+        g = sns.clustermap(d_full, method="single")
+        inds = g.dendrogram_row.dendrogram["leaves"]
+        cols = g.dendrogram_col.dendrogram["leaves"]
+        plt.close(g.fig)
+        sns.heatmap(d_full.iloc[inds, cols],xticklabels=True, yticklabels=True,
+                    cbar_kws=dict(orientation="vertical"), **kwargs)
+    else:
+        sns.heatmap(d_full,xticklabels=True, yticklabels=True,
+                    cbar_kws=dict(orientation="vertical"), **kwargs)
     #print(data[title_col].values[0])
     #plt.gca().set_title(data[title_col].values[0])
     return

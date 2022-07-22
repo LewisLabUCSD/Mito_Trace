@@ -44,6 +44,7 @@ rule se_meta:
 
 def get_cluster_labels():
     if "umap_clusters_f" in config and config["umap_clusters_f"] is None:
+        print('no labels')
         return "FALSE"
     else:
         return config.get("umap_clusters_f", "FALSE")

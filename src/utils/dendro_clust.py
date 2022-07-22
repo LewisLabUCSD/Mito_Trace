@@ -14,6 +14,26 @@ def dendro_plot(df, row_meta):
     row_meta = row_meta.iloc[inds]
     return g, row_meta
 
+from dynamicTreeCut import cutreeHybrid
+from scipy.spatial.distance import pdist
+from scipy.cluster.hierarchy import linkage
+
+
+def run_dynamic(df, metric='euclidean', minClusterSize=1):
+    if "multi" in df.columns.values:
+        df = df.drop("multi", axis=1)
+    distances = pdist(df.values,
+                      metric)
+    link = linkage(distances, "average")
+    clusters = cutreeHybrid(link, distances, minClusterSize=minClusterSize)["labels"]
+    print('clusters', clusters.keys())
+    # clusters = pd.DataFrame({"ID":clusters["ID"], "labels": clusters["labels"]}, index=obj_norm_top10perc.index)#[["ID", "labels"]]
+    clusters = pd.DataFrame({"labels": clusters},
+                            index=df.index)  # [["ID", "labels"]]
+    clusters["ID"] = df.index
+
+    return clusters, link
+
 
 def dendro_cluster(df, g=None, d_thresh=0.6, link=None, **kwargs):
     if g is not None:

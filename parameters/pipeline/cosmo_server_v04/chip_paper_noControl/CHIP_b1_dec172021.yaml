@@ -19,8 +19,8 @@ variants_f: "/data/Mito_Trace/data/processed/gilead_chip_profile/20210726_Croker
 mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b1/MTBlacklist_A2" #"/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec172021_b1/MTblacklist"
 
 
-markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"
-umap_clusters_f: "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/results/atac_clusters.txt"
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
+umap_clusters_f: # "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/results/atac_clusters.txt"
 
 
 ## Somatic variant calling to help.

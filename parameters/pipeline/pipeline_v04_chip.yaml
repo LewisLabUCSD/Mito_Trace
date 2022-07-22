@@ -89,7 +89,7 @@ clones:
     #- "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
     - "init"
     - "simpleUnion"
-    #- "prefilterMerge_impute"
+    - "prefilterMerge_impute"
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:
     #- "vireo"

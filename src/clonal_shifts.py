@@ -492,6 +492,7 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
         g = sns.clustermap(groups.pivot(index=atac_col, columns=clone_col,
                                     values="log2_count").fillna(0))
     else:
+        f = plt.figure()
         sns.heatmap(groups.pivot(index=atac_col, columns=clone_col,
                                  values="log2_count").fillna(0))
 
@@ -513,20 +514,25 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
     output_df.to_csv(join(outdir, "hypergeo_padjusted_sigOnly.csv"))
 
     if output_df.shape[0] == 0 and output_df.shape[1] == 0:
-        plt.figure()
-        plt.title("Empty data")
+        f, ax = plt.subplots()
+        plt.title("Empty data (none are significant)")
+        f.savefig(join(outdir, "hypergeo_padjusted.png"), dpi=300,
+                    bbox_inches="tight")
         return
     elif output_df.shape[0] <= 1:
+        plt.figure()
         sns.heatmap(-np.log10(bh_enrichment_df.fillna(1)))
-        plt.title("Empty data")
+        plt.title("-log10 BH-adjusted p-values for clonal shifts across clusters.")
+        plt.savefig(join(outdir, "hypergeo_padjusted.png"), dpi=300,
+                    bbox_inches="tight")
     else:
         g = sns.clustermap(
             -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)),
             row_cluster=False)
         g.ax_heatmap.set(xlabel="Cluster ID")
         g.ax_cbar.set(title="-log10 p-value")
-
-    plt.savefig(join(outdir, "hypergeo_padjusted.png"),dpi=300, bbox_inches = "tight")
+        g.fig.suptitle("-log10 BH-adjusted p-values for clonal shifts across clusters.")
+        plt.savefig(join(outdir, "hypergeo_padjusted.png"),dpi=300, bbox_inches = "tight")
 
     return True
 
@@ -546,20 +552,22 @@ def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, 
                                 atac_col, outdir, figs_close=figs_close)
 
     # Merge the initial results and the shuffle results and save
-    hyper_df = hyper_df.reset_index().melt(
-        id_vars=["index"]).rename(
-        {"variable": "lineage", "index": "clone", "value": "BH_p_adj"},
-        axis=1).set_index(["clone", "lineage"])
-    out_df = results_df.rename(
-        {"value": "p_value shuffle", "index": "clone",
-         "variable": "lineage"}, axis=1)
-    out_df = out_df[out_df["p_value shuffle"] < p_thresh]
+    # hyper_df = hyper_df.reset_index().melt(
+    #     id_vars=["index"]).rename(
+    #     {"variable": "lineage", "index": "clone", "value": "BH_p_adj"},
+    #     axis=1).set_index(["clone", "lineage"])
+    # Save shuffle results
+    # out_df = results_df.rename(
+    #     {"value": "p_value_shuffle", "index": "clone",
+    #      "variable": "lineage"}, axis=1)
+    out_df = results_df.copy()
+    #out_df = out_df[out_df["p_value shuffle"] < p_thresh]
+    out_df = out_df[out_df["value"] < p_thresh]
     print('out_df', out_df)
-    out_df["BH_p_adj"] = out_df.apply(
-        lambda x: hyper_df.loc[(x["clone"], x["lineage"]), "BH_p_adj"],
-        axis=1)
-    out_df = out_df.sort_values(["method", "p_value shuffle", "BH_p_adj"])
-
+    # out_df["BH_p_adj"] = out_df.apply(
+    #     lambda x: hyper_df.loc[(x["clone"], x["lineage"]), "BH_p_adj"],
+    #     axis=1)
+    out_df = out_df.sort_values(["method", "value"]) #, "BH_p_adj"])
     out_df.to_csv(join(outdir, "sig_results.tsv"))
     plot_sig_results_per_method(results_df, p_thresh, outdir)
 

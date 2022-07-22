@@ -1,6 +1,8 @@
 library(Signac)
 library(Seurat)
 library(dplyr)
+library("Nebulosa")
+
 
 filtCells <- function(se, min_peak_region_fragments=10,
                       max_peak_region_fragments=15000,
@@ -42,7 +44,7 @@ embed.atac <- function(se, outdir, lsi_start_comp=2, lsi_end_comp=50,reduction='
 }
 
 
-featplot <- function(name.sig, se, curr.outdir, feat.names=NULL){
+featplot <- function(name.sig, se, curr.outdir, feat.names=NULL, use.density=FALSE){
   if (!is.null(feat.names)){
     name <- feat.names[name.sig,]
   }else{
@@ -54,6 +56,11 @@ featplot <- function(name.sig, se, curr.outdir, feat.names=NULL){
            file=file.path(curr.outdir, paste0(name.sig,".embedFeat.top.png")))
   }else{
     print(paste0("Feature no in object: ", name.sig))
+  }
+  if(use.density){
+    plot_density(se, name.sig) + ggtitle(name)
+    ggsave(plot=feat,
+           file=file.path(curr.outdir, paste0("density.", name.sig,".embedFeat.top.png")))
   }
 }
 
