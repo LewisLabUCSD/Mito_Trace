@@ -9,7 +9,7 @@ from src.config import ROOT_DIR
 
 # wildcard_constraints:
 #     output = '((?!coverage_merged))'
-#
+#mtpreproc_extractCB_from_bam_03
 
 res = config['results']
 samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)

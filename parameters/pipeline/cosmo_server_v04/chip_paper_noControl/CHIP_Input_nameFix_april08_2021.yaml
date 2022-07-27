@@ -10,6 +10,6 @@ fastq_dir: "/data2/isshamie/mito_lineage/data/raw/CHIP_april08_2021_Croker/" #ig
 mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_april08_2021_Croker/MTblacklist"
 genome: "MTBlacklist"
 N_DONORS: 5
-markers_f: "/data/Mito_Trace/data/processed/cd34_markers.txt"
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt"
 
 umap_clusters_f:

@@ -16,6 +16,7 @@ def get_btwnClust_rscript(wildcards):
         return join(ROOT_DIR, "workflow/notebooks/nuclear_de/de_clusters/DE_peaks_btwnClusters.ipynb")
     return
 
+
 rule btwnClust_DE:
     """ Compares clusters to each other. For now works with Gene Activity
     

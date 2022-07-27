@@ -54,6 +54,12 @@ def plot_impute(imp_df, af_df, dp_df, cov_thresh, cell_pct_cov_thresh, median_d,
 
 
     from mplh import cluster_help as ch
+
+    print('imp_df shape', imp_df.shape)
+    print('imp_df', imp_df.head())
+
+    if (imp_df.shape[0] <= 1) or (imp_df.shape[1] <= 1):
+        return None
     g_pile=ch.plot_cluster(df=imp_df,
                     col_meta=col_meta,
                     col_clr_schemes="sequential")

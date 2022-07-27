@@ -267,10 +267,10 @@ rule all:
         #         pthresh=params_clch["pthresh"], min_cell=params_clch["min_cell"], min_cell_both=params_clch["min_cell_both"],),
 
         # mt as clones
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/mt_as_clones/variants_{variants}/.complete.txt",
-                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/mt_as_clones/variants_{variants}/.complete.txt",
+        #         out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"],),
 
         # # clonal_shifts
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clonal_shifts/variants_{variants}/.finalize_complete.txt",
@@ -282,7 +282,7 @@ rule all:
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/single_clones/{f}",
                 out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
                 mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".preproc.txt", ".top_clones.txt"]), #".aggregate.txt"
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".top_clones.txt"]), #".preproc.txt", scPileup_variants".aggregate.txt"
 
         # enriched barcodes process
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes/clonal_shifts/variants_{variants}/.finalize_complete.txt",
@@ -416,18 +416,6 @@ use rule mgatk_to_vireoIn from mgatkMod as mgatk_mgatk_to_vireoIn with:
         vireofmt = "{out_dir}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/{sample}/vireoIn/cellSNP.tag.AD.mtx"
 
 
-rule merge_variant_samples:
-    input:
-        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/variants.vcf",
-    output:
-        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.tsv",
-        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.ipynb"
-    params:
-        note = join(ROOT_DIR, "workflow", "notebooks", "variant_types", "scoreVariants.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note),
-    shell:
-        "papermill -p vcf {input[0]} -p outdir {params.outdir} {params.note} {output.note}"
-
 
 rule mgatk_to_variant:
     input:
@@ -436,9 +424,10 @@ rule mgatk_to_variant:
     output:
         vcf = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/variants.vcf",
     params:
-        note = join(ROOT_DIR, "workflow", "notebooks", "variant_types", "scoreVariants.ipynb"),
+        #note = join(ROOT_DIR, "workflow", "notebooks", "variant_types", "scoreVariants.ipynb"),
         vcfs = lambda wildcards, input: [join(dirname(x),"cellSNP.base.vcf") for x in input.cells],
         mt_fasta = mt_ref_fa
+    priority: 10
     run:
         #all_vcf = pd.read_csv(params.vcfs[0], sep="\t")[["#CHROM", "POS", "REF", "ALT"]]
         #for i in params.vcfs[1:]:
@@ -456,10 +445,28 @@ rule mgatk_to_variant:
         header = header + "\n" + f"##reference=file:/{params.mt_fasta}\n"
         print('header', header)
         print('output.vcf', output.vcf)
+        if os.path.exists(output.vcf):
+            os.rm(output.vcf)
         with open(output.vcf, 'a') as file:
             file.write(header)
         print(all_vcf.columns)
         all_vcf.to_csv(output.vcf, mode='a', index=False, sep="\t", header=True)
+
+
+rule merge_variant_samples:
+    input:
+        vcf = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/variants.vcf",
+    output:
+        vars = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.tsv",
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_variants/anno_variants.ipynb"
+    params:
+        note = join(ROOT_DIR, "workflow", "notebooks", "variant_types", "scoreVariants.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        mt_ref = mt_ref_fa
+    priority: 10
+    shell:
+        "papermill -p vcf_f {input.vcf} -p outdir {params.outdir} -p mt_fasta {params.mt_ref} {params.note} {output.note}"
+
 
 
 ########################################################################
@@ -546,6 +553,7 @@ def get_cluster_labels():
     out = config.get("umap_clusters_f", "FALSE")
     if out is None :
         out = "FALSE"
+    print('cluster label f', out)
     return out
 
 
@@ -948,6 +956,7 @@ rule scPileup_variants:
     params:
         indir = lambda wildcards, input: dirname(dirname(input.af[0])),
         outdir = lambda wildcards, output: dirname(output.note),
+
         note = join(ROOT_DIR, "workflow/notebooks/variant_types/Donors_variantTypes.ipynb")
     shell: "papermill -p indir {params.indir} -p outdir {params.outdir} {params.note} {output.note}"
 
