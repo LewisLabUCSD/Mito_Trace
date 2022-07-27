@@ -108,6 +108,17 @@ clones:
 
   params:
     dendro_thresh: 0.6
+    clone_barcodes_optimization:
+      objectives: ["variants_with_clone_norm_by_1_over_nclones_with_variant",
+                   "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
+                   "pct_thresh","other_pct_thresh",
+                   "n_vars", "obj_nclones_more_than_one_unique"]
+        weights_cfg:
+          standard: [1,1,1,1,-1, 1, 1]
+          multivar_clones: [1,1,1,1,-1, 1, 3]
+          high_unique: [2,1,1,1,-1, 1, 2]
+          high_cells: [1,1,2,1,-1, 1, 1]
+
 
 
 distinct_clones:
@@ -296,4 +307,5 @@ mt_as_clones:
     num_cells: 10
     oth_num_cells: 0.25
     mean_pos_cov: 0
+
 

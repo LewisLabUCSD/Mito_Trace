@@ -23,7 +23,10 @@ if len(condition) == 0:
 print('condition types for clonal shift', condition)
 
 gff = config["genome_path"][config["genome"]]["gff"]
-dendro_d = config['clones']['params']['dendro_thresh']
+dendro_d = params_clones['params']['dendro_thresh']
+
+objectives_l = params_clones["params"]["clone_barcodes_optimization"]["objectives"]
+weights_cfg = params_clones["params"]["clone_barcodes_optimization"]["weights_cfg"]
 
 #
 # def get_anno_cells_meta(wildcards):
@@ -63,9 +66,7 @@ rule run_variants_params:
         donor = lambda wildcards: wildcards.d,
         # Objective weights. order of the columns
         weights = [1,1,1,1,-1, 1, 1], #weights=lambda wildcards: config["enriched_vars"]["params"]["objective_weights"][wildcards.objective_id]
-        objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
-                        "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
-                        "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
+        objectives_l = config[""] #["variants_with_clone_norm_by_1_over_nclones_with_variant", "max_clone_ncells_over_ncells","pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
         ncpus=12, #config["ncpus"]
         topn=16,
         to_test=False
@@ -92,8 +93,7 @@ rule run_variants_params:
 #         outdir = lambda wildcards, output: dirname(output.params_f),
 #         donor = lambda wildcards: wildcards.d,
 #         weights = [1,1,1,1,-1, 1, 1], #weights=lambda wildcards: config["enriched_vars"]["params"]["objective_weights"][wildcards.objective_id]
-#         objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
-#                         "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
+#         objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant", "max_clone_ncells_over_ncells",
 #                         "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
 #         topn=16,
 #         to_test=False
@@ -125,8 +125,7 @@ rule optim_results:
         af_indirs = lambda wildcards, input: dirname(input.clone_cells),
         #note = join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_results.ipynb"),
         weights = [1,1,1,1,-1, 1, 1],
-        objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
-                        "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
+        objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant", "max_clone_ncells_over_ncells",
                         "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
     log:
         notebook = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/out.ipynb"
@@ -149,6 +148,24 @@ rule merge_donor_optim:
         pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.af_f], axis=0).to_csv(output.af_f, sep="\t")
         pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.dp_f], axis=0).to_csv(output.dp_f, sep="\t")
 
+
+rule barcodes_btwnClones_dendro:
+    input:
+        cells_meta = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv",
+        af_note = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/af.tsv",
+    output:
+        note = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.ipynb",
+        mean = "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+        res = report(multiext("{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.",
+                                  "clones_dendro.csv", "dendrogram_pvals.txt",
+                                  "dendro.NoCondition.max2.AF.png"),
+                         category="lineage")
+    params:
+        note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode_dendro_dynamicClust.ipynb"),
+        indir = lambda wildcards, input: dirname(input.cells_meta),
+        outdir = lambda wildcards, output: dirname(output.note),
+        #dendro_thresh = 0.6
+    shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} -p dendroThresh {wildcards.dendro_thresh} {params.note} {output.note}"
 
 # rule clonalshift_clones:
 #     input:
@@ -411,6 +428,7 @@ use rule top_clone_complete from indClonesMod as indclonestwo_top_clone_complete
 
 
 
+
 rule finalize:
     input:
         "{outdir}/enriched_barcodes/single_clones/.top_clones.txt",
@@ -430,8 +448,7 @@ rule finalize:
 #         donor = lambda wildcards: wildcards.d,
 #         # Objective weights. order of the columns
 #         weights = [1,0,0,1,-1, 1, 1], #weights=lambda wildcards: config["enriched_vars"]["params"]["objective_weights"][wildcards.objective_id]
-#         objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant",
-#                         "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells",
+#         objectives_l = ["variants_with_clone_norm_by_1_over_nclones_with_variant", "max_clone_ncells_over_ncells",
 #                         "pct_thresh","other_pct_thresh", "n_vars", "obj_nclones_more_than_one_unique"],
 #         ncpus=8, #config["ncpus"]
 #         topn=16

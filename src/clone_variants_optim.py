@@ -197,7 +197,6 @@ def _constraints(solution):
 def evaluate_series(individual_ser, AF_df, DP_df, curr_labels,
                     return_data=False,
                     objectives_l=("variants_with_clone_norm_by_1_over_nclones_with_variant",
-                                  "max_clone_ncells_over_nclones",
                                   "max_clone_ncells_over_ncells",
                                   "pct_thresh","other_pct_thresh",
                                   "n_vars",
@@ -236,28 +235,6 @@ def set_multi(results, weights):
     results_norm["multi"] = (weights * results_norm).sum(axis=1)
     return results_norm.sort_values(by="multi")[::-1]
 
-#
-#
-#
-# heatmap_input = all_df[["n_cells", "variant"]].reset_index().pivot(
-#     index="id", columns="variant", values="n_cells").fillna(0).astype(
-#     int)
-# meta_df = all_df[
-#     ["af_thresh", "other_pct_thresh", "pct_thresh", "clone"]]
-# meta_df = meta_df.loc[~(meta_df.index.duplicated())]
-# meta_df = meta_df.sort_values(
-#     ["af_thresh", "pct_thresh", "other_pct_thresh", "clone"])
-# heatmap_input = heatmap_input.loc[meta_df.index]
-#
-# # Get the variants based on total number of cells across parameters
-# heatmap_input = heatmap_input.loc[:,
-#                 heatmap_input.sum().sort_values()[::-1].index]
-# variants_order = heatmap_input.columns
-# clone_sums = meta_df.groupby("clone").apply(clone_sum)
-# clone_sums = clone_sums.loc[:,
-#              clone_sums.sum().sort_values()[::-1].index]
-# clones_order = clone_sums.index
-#
 
 # Get the clones based on total number of cells across parameters
 def clone_sum(val, heatmap_input):
@@ -287,11 +264,13 @@ def prep_long_heatmap(all_df):
     clones_order = clone_sums.index
     return clones_order, variants_order, heatmap_input
 
+
 def params_to_str(ser, param_names):
     name = ""
     for p in param_names:
         name = name + f"{p}={ser[p]:.3f}\n"
     return name
+
 
 def params_and_multi_str(ser):
     param_str = ser["params"]

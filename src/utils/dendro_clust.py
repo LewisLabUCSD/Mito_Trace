@@ -19,14 +19,17 @@ from scipy.spatial.distance import pdist
 from scipy.cluster.hierarchy import linkage
 
 
-def run_dynamic(df, metric='euclidean', minClusterSize=1):
+def run_dynamic(df, metric='euclidean', method="average", minClusterSize=1):
     if "multi" in df.columns.values:
         df = df.drop("multi", axis=1)
-    distances = pdist(df.values,
-                      metric)
-    link = linkage(distances, "average")
+    distances = pdist(df.values, metric)
+    print('distances')
+    print(distances)
+    link = linkage(distances, method)
+    print('link')
+    print(link)
     clusters = cutreeHybrid(link, distances, minClusterSize=minClusterSize)["labels"]
-    print('clusters', clusters.keys())
+    #print('clusters', clusters.keys())
     # clusters = pd.DataFrame({"ID":clusters["ID"], "labels": clusters["labels"]}, index=obj_norm_top10perc.index)#[["ID", "labels"]]
     clusters = pd.DataFrame({"labels": clusters},
                             index=df.index)  # [["ID", "labels"]]
