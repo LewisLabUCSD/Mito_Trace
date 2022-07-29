@@ -214,6 +214,14 @@ def evaluate_series(individual_ser, AF_df, DP_df, curr_labels,
         return pd.Series(eval_out)
 
 
+def norm_results(results):
+    objs_total = results.replace([-np.inf, np.inf], np.nan).sum(axis=0)
+    print('objs_total', objs_total.head())
+    results_norm = results.apply(lambda x: x / objs_total.loc[x.name],
+                                 axis=0)
+    return results_norm
+
+
 def set_multi_rank(results, weights):
     if "multi" in results.columns:  # in case multi was added before
         rank_results = results.drop("multi", axis=1).rank(
@@ -224,16 +232,33 @@ def set_multi_rank(results, weights):
     return rank_results.sort_values(by="multi")[::-1]
 
 
-def set_multi(results, weights):
-    print(results.shape)
-    # first normalize results for each column to sum to 1
-    objs_total = results.replace([-np.inf, np.inf], np.nan).sum(axis=0)
-    print('objs_total', objs_total.head())
-    results_norm = results.apply(lambda x: x / objs_total.loc[x.name],
-                                 axis=0)
-
+def set_multi(results, weights, to_norm_results=True):
+    if to_norm_results:
+        results_norm = norm_results(results)
+    else:
+        results_norm = results.copy()
     results_norm["multi"] = (weights * results_norm).sum(axis=1)
     return results_norm.sort_values(by="multi")[::-1]
+
+
+########################
+# Get the top n results
+########################
+def get_top_n_results(results_df, rank_df, n=12, how="norm"):
+    """ Gets the topn results objectives.
+
+    :param results_df: normalized objective scores, with multi as multi-objective
+    :param rank_df: ranked objective scores
+    :param n: Top n scores to keep
+    :param how: How to sort the top results. Either "norm" or "rank"
+    """
+    if how == "rank":
+        filt_rank = rank_df.sort_values(by=["multi"])[::-1].iloc[:n]
+        filt_results = results_df.loc[filt_rank.index]
+    else:
+        filt_results = results_df.sort_values(by=["multi"])[::-1].iloc[:n]
+        filt_rank = rank_df.loc[filt_results.index]
+    return filt_rank, filt_results
 
 
 # Get the clones based on total number of cells across parameters
@@ -274,7 +299,7 @@ def params_to_str(ser, param_names):
 
 def params_and_multi_str(ser):
     param_str = ser["params"]
-    name = f"params:\n{param_str.strip()}\nObjective score={ser['multi_obj']} (want to maximize)"
+    name = f"params:\n{param_str.strip()}\nObjective score={ser['multi_obj']:.4f}"
     return name
 
 

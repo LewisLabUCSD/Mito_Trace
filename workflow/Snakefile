@@ -194,7 +194,12 @@ rule all:
         #     kparam=config["params_clones"]["knn"]["params"]["resolution"],
         #     variants=[x for x in params_clones["variants"] if x != "simple"], gff=gff,
         #     t=params_annclo["t"], rt=params_annclo["rt"]),
-
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/anno_multiplex/gff_{gff}/se_cells_meta_labels.tsv",
+            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], gff=gff,
+            variants=[x for x in params_clones["variants"] if x != "simple"],
+            kparam=params_clones["knn"]["params"]["resolution"]),
         # Cluster DE
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwnclust_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}/de_p{p_thresh}_GSEA_pthresh_{gsea_pval}/summary.ipynb",
             out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
@@ -997,7 +1002,6 @@ module cloneMod:
 
 
 use rule * from cloneMod as clone_*
-
 
 use rule convert_to_af from cloneMod as clone_convert_to_af with:
     input:

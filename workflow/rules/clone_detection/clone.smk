@@ -17,6 +17,11 @@ from icecream import ic
 
 
 
+if type(config["dendro_thresh"]) != list:
+    dendro_thresh = [config["dendro_thresh"]]
+else:
+    dendro_thresh = config["dendro_thresh"]
+print("dendro thresh", dendro_thresh)
 
 #samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
@@ -81,7 +86,7 @@ rule barcodes_btwnClones_dendro:
         note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode_dendro.ipynb"),
         indir = lambda wildcards, input: dirname(input.cells_meta),
         outdir = lambda wildcards, output: dirname(output.note),
-        dendro_thresh = 0.6
+        #dendro_thresh = dendro_thresh #0.6
     shell: "papermill -p INDIR {params.indir} -p OUTDIR {params.outdir} -p DONOR {wildcards.d} -p dendroThresh {wildcards.dendro_thresh} {params.note} {output.note}"
 
 
@@ -118,7 +123,7 @@ rule finalize:
         btwnClones = expand("{{outdir}}/barcodes/inClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
         distinct_vars = expand("{{outdir}}/distinct_variants/donor{d}/output.ipynb", d=np.arange(config["N_DONORS"])),
         dendroClones = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
-                              d=np.arange(config["N_DONORS"]), dendro_thresh=[config["dendro_thresh"]]),
+                              d=np.arange(config["N_DONORS"]), dendro_thresh=dendro_thresh),
     output:
         out = "{outdir}/barcodes/_clone_complete.txt",
     shell: "touch {output.out}"
