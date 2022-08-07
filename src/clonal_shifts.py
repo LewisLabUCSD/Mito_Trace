@@ -572,3 +572,52 @@ def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, 
     plot_sig_results_per_method(results_df, p_thresh, outdir)
 
     return out_df, hyper_df, results_df, out_d
+
+
+def check_sig(x):
+    #print(x.head())
+    print('name', x.name)
+    name, clust, cond = x.name
+    x = x.set_index("method")["is_sig"]
+
+    assert(x.index.duplicated().sum()==0)
+
+    sig = 0
+    if 'hypergeo' not in x.index:
+        print('hypergeo not sig')
+        return sig
+    if x["hypergeo"]==True:
+        if ("global_all" in x) and x["global_all"]==True:
+            if ("clone_min" in x) and (x["clone_min"]==True):
+                if ("global_min" in x) and (x["global_min"]==True):
+                    sig = 4
+                else:
+                    sig = 3
+            else:
+                sig = 2
+        else:
+            sig = 1
+    return sig
+
+
+def hypergeo_score(df, p_thresh):
+    p_df = df.copy()
+    p_df["is_sig"] = p_df["pval"]<p_thresh
+    print(p_df.shape)
+    print(p_df.duplicated(["index","variable", "condition", "method"]).any())
+    p_df_group = p_df.groupby(["index", "variable", "condition"]).apply(
+        check_sig)
+    print(p_df_group.shape)
+    # p_df_out = p_df_group.reset_index().rename({0:"significant_score", "index":"clone", "variable":"cluster"}, axis=1)
+    p_df_out = p_df_group.reset_index().rename({0: "significant_score"},
+                                               axis=1)
+
+    p_df_out["cluster_condition"] = p_df_out.apply(
+        lambda x: f'{x["variable"]}_{x["condition"]}', axis=1)
+    p_df_out = p_df_out.pivot(index='index',
+                              columns='cluster_condition',
+                              values="significant_score").fillna(0)
+
+    return p_df_group, p_df_out
+
+

@@ -4,6 +4,9 @@ import seaborn as sns
 #mean_af_clust = mean_af.iloc[inds,cols]
 import pandas as pd
 import matplotlib.pyplot as plt
+from dynamicTreeCut import cutreeHybrid
+from scipy.spatial.distance import pdist
+from scipy.cluster.hierarchy import linkage
 
 
 def dendro_plot(df, row_meta):
@@ -14,26 +17,54 @@ def dendro_plot(df, row_meta):
     row_meta = row_meta.iloc[inds]
     return g, row_meta
 
-from dynamicTreeCut import cutreeHybrid
-from scipy.spatial.distance import pdist
-from scipy.cluster.hierarchy import linkage
 
 
-def run_dynamic(df, metric='euclidean', method="average", minClusterSize=1):
+
+def run_dynamic(df, metric='euclidean', method="average",
+                minClusterSize=1, deepSplit=1,
+                maxCoreScatter=None, minGap=None):
     if "multi" in df.columns.values:
         df = df.drop("multi", axis=1)
-    distances = pdist(df.values, metric)
+    distances = pdist(df.values, metric=metric)
     print('distances')
     print(distances)
-    link = linkage(distances, method)
+    link = linkage(distances, method=method)
     print('link')
     print(link)
-    clusters = cutreeHybrid(link, distances, minClusterSize=minClusterSize)["labels"]
-    #print('clusters', clusters.keys())
+    print('deepsplit', deepSplit)
+    clusters = cutreeHybrid(link, distances,
+                            minClusterSize=minClusterSize,
+                            deepSplit=deepSplit,
+                            maxCoreScatter=maxCoreScatter,
+                            minGap=minGap)["labels"]
+    print('clusters', clusters)
     # clusters = pd.DataFrame({"ID":clusters["ID"], "labels": clusters["labels"]}, index=obj_norm_top10perc.index)#[["ID", "labels"]]
     clusters = pd.DataFrame({"labels": clusters},
                             index=df.index)  # [["ID", "labels"]]
     clusters["ID"] = df.index
+    return clusters, link
+
+
+def run_dynamic_hyper(df, metric='cosine', method="complete",
+                      deepSplit=3):
+    # clusters, link = run_dynamic(mean_af, metric='euclidean', method="average", minClusterSize=1)
+    is_comp = False
+    for i in ([3, 2, 1]):
+        try:
+            clusters, link = run_dynamic(df, metric='cosine',
+                                         method="complete",
+                                         minClusterSize=i, deepSplit=4)
+            is_comp = True
+            break
+        except IndexError:
+            print(f'didnt work for {i}')
+    print("min cluster size:", i)
+
+    if not is_comp:
+        print('min size 1 and deepsplit 1')
+        clusters, link = run_dynamic(df, metric=metric,
+                                     method=method,
+                                     minClusterSize=1, deepSplit=deepSplit)
 
     return clusters, link
 
@@ -71,6 +102,7 @@ def old_v01_get_cluster_classes(den, label='ivl'):
         cluster_classes[c] = i_l
 
     return cluster_classes
+
 
 def old_v01_add_cluster_labels(df, den, row_meta):
     clusters = old_v01_add_cluster_labels(den)
