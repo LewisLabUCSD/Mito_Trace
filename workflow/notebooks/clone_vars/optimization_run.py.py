@@ -16,10 +16,10 @@ outdir = snakemake.params.outdir
 donor =  int(snakemake.params.donor)
 anno_cells_meta_f = snakemake.input.anno_cells_meta_f  #"/data/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn/clones/variants_init/knn/kparam_30/gff_A2_black/annotation_clones/se_cells_meta_labels.tsv"
 # Objective weights. order of the columns
-weights =  snakemake.params.weights
+weights = snakemake.params.weights
 objectives_l = snakemake.params.get("objectives_l", 
                                     ["variants_with_clone_norm_by_1_over_nclones_with_variant", 
-                                     "max_clone_ncells_over_nclones", "max_clone_ncells_over_ncells", 
+                                     "max_clone_ncells_over_ncells",
                                      "pct_thresh","other_pct_thresh", 
                                      "n_vars", "obj_nclones_more_than_one_unique"])
 ncpus = snakemake.params.get('ncpus', 8)
@@ -61,7 +61,6 @@ to_test = snakemake.params.get("to_test", False)
 #     topn=16
 
 
-import multiprocessing
 import pandas as pd
 import numpy as np
 import random

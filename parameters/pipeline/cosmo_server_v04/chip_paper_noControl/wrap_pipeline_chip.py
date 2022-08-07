@@ -44,7 +44,7 @@ for i in config["indir"]:
     #                           cores=8, verbose=True)
     out = run(config["snakefile"], curr_config, config["pipename"], outdir=None,
               to_git=False, targets=None, dryrun=dryrun, forcerun=targets, to_report=to_report,
-              forcetargets=forcetargets, to_gitpush=False, cores=16, email=email)
+              forcetargets=forcetargets, to_gitpush=False, cores=16, email=None)
 
     # cmd = f"sendmail {out} {email}"
     # print(cmd)

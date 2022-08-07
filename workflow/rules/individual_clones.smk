@@ -278,6 +278,14 @@ rule get_rank_mt_cl_sizes:
     shell: "papermill -p indir {params.indir} -p outdir {params.outdir} -p cells_meta_f {input.cells} -p is_mt {params.is_mt} -p condition {params.condition} {params.note} {output.note}"
 
 
+
+rule get_repr_clones_cl:
+    output: ""
+
+
+rule get_repr_clones_mt:
+    output: ""
+
 # rule get_onecond_rank_cl_sizes:
 #     input:
 #         hyper = get_hypergeo,
@@ -773,7 +781,7 @@ rule top_merge:
         ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
         #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
     output:
-        out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.pdf"),
+        out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.svg"),
         note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/merge_panels.ipynb"
     params:
         outdir = lambda wildcards, output:  dirname(output.note),
@@ -784,7 +792,7 @@ rule top_merge:
 rule top_clone_complete:
     input:
         expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/{f}",
-              f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.pdf"],
+              f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.svg"],
               d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
               clone_shift_method = knn_clone_shift,
               kparam=params_clones["knn"]["params"]["resolution"]),
