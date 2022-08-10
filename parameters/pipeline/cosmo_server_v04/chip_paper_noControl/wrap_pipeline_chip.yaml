@@ -9,8 +9,8 @@ indir:
 
 
 targets:
-  - "enrichvars_finalize"
-  - "reprcl_top_clone_umap_overlay"
+  #- "enrichvars_finalize"
+  #- "reprcl_top_clone_umap_overlay"
   #- "enrichvars_barcodes_btwnClones_dendro"
   #- "enrichvars_run_variants_params"
 

@@ -320,46 +320,46 @@ use rule get_clone_cells from reprClonesMod as reprcl_get_clone_cells with:
         # se_meta = expand("{{outdir}}/enriched_barcodes/clones/variants_{{variants}}/knn/kparam_{{kparam}}/annotation_clones/cells_meta.tsv",
         #              gff=config["gff"])
     output:
-        cells_meta = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
+        cells_meta = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
 
 
 
 use rule get_repr_clones_cl from reprClonesMod as reprcl_get_repr_clones_cl with:
     input:
         hyper = "{outdir}/enriched_barcodes/objs_{wt}/clonal_shifts/variants_{variants}/donors/donor{d}/clones/knn_kparam_{kparam}/output.ipynb", #get_hypergeo,
-        cells="{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
+        cells="{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
     output:
-        note = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/output_rank_ncells.ipynb",
-        clone_order = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt"
+        note = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/output_rank_ncells.ipynb",
+        clone_order = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt"
 
 
 
 use rule top_clone_mt_variants_cl from reprClonesMod as reprcl_top_clone_mt_variants_cl with:
     input:
         #se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"]),
-        cells = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
-        clone_order_f = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt",
+        cells = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
+        clone_order_f = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt",
         mt_f =  "{outdir}/enriched_barcodes/objs_{wt}/clones/variants_{variants}/knn/kparam_{kparam}/af.tsv",
     output:
-        note = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/{clone_order}_clone_mt_variants.ipynb",
+        note = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/{clone_order}_clone_mt_variants.ipynb",
 
 
 # use rule top_clone_mt_variants_mt from reprClonesMod as reprcl_clone_mt_variants_mt with:
 #     input:
 #         se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"]),
-#         cells = "{outdir}/enriched_barcodes/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
+#         cells = "{outdir}/enriched_barcodes/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
 #         mt_f =  "{outdir}/enriched_barcodes/clones/variants_{variants}/knn/kparam_{kparam}/af.tsv",
 #     output:
-#         note = "{outdir}/enriched_barcodes/repr_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_clones/top/{clone_order}_clone_mt_variants.ipynb",
+#         note = "{outdir}/enriched_barcodes/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_clones/top/{clone_order}_clone_mt_variants.ipynb",
 #
 
 use rule top_clone_umap_overlay from reprClonesMod as reprcl_top_clone_umap_overlay with:
     input:
         se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"]),
-        cells = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
-        clone_order_f = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt",
+        cells = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
+        clone_order_f = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt",
     output:
-        note = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/top_umap_overlay.ipynb"
+        note = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/top_umap_overlay.ipynb"
     params:
         script = join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clones_umap_overlap.ipynb"),
         outdir = lambda wildcards, output: dirname(output.note),
@@ -378,38 +378,38 @@ def get_param_top_clone_hypergeoSig_condition():
 use rule top_clone_hypergeoSig_cl from reprClonesMod as reprcl_top_clone_hypergeoSig_cl with:
     input:
         indir = "{outdir}/enriched_barcodes/objs_{wt}/clonal_shifts/variants_{variants}/donors/donor{d}/clones/knn_kparam_{kparam}/output.ipynb", #get_hypergeo,
-        cloneIDs_f = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/clones_ranked/representative_cloneID.txt",
-        #cloneID = "{outdir}/enriched_barcodes/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/cloneIDs/{cloneID}.txt"
+        cloneIDs_f = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/clones_ranked/representative_cloneID.txt",
+        #cloneID = "{outdir}/enriched_barcodes/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/cloneIDs/{cloneID}.txt"
     output:
-        note = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/top_hypergeo_sig.ipynb",
+        note = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/top_hypergeo_sig.ipynb",
 
 
 use rule top_clone_lineage_count from reprClonesMod as reprcl_top_clone_lineage_count with:
     input:
-        cells = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
-        clone_order_f = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt",
+        cells = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv",
+        clone_order_f = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/clones_ranked/representative_cloneID.txt",
     output:
-        note = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/top_clone_lineage_count.ipynb",
+        note = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/top_clone_lineage_count.ipynb",
 
 
 use rule top_merge from reprClonesMod as reprcl_top_merge with:
     input:
-        ins = multiext("{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
+        ins = multiext("{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
     output:
-        out_f = multiext("{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/","clone_shift_combine.svg"),
-        note = "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/merge_panels.ipynb"
+        out_f = multiext("{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/","clone_shift_combine.svg"),
+        note = "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/merge_panels.ipynb"
 
 
 
 
 use rule top_clone_complete from reprClonesMod as reprcl_top_clone_complete with:
     input:
-        expand("{{outdir}}/enriched_barcodes/objs_{{wt}}/repr_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/{f}",
+        expand("{{outdir}}/enriched_barcodes/objs_{{wt}}/{{clone_subset}}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/{f}",
               f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.svg"],
               d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
               kparam=params_clones["knn"]["params"]["resolution"],)
     output:
-        "{outdir}/enriched_barcodes/objs_{wt}/repr_clones/.top_clones.txt"
+        "{outdir}/enriched_barcodes/objs_{wt}/{clone_subset}/.top_clones.txt"
 
 
 
@@ -419,7 +419,7 @@ rule finalize:
                 variants=[x for x in params_clones["variants"] if x != "simple"],
                 kparam=params_clones["knn"]["params"]["resolution"],
                 wt = weights_ids, d=np.arange(config["N_DONORS"])),
-        expand("{{outdir}}/enriched_barcodes/objs_{wt}/repr_clones/.top_clones.txt", wt = weights_ids),
+        expand("{{outdir}}/enriched_barcodes/objs_{wt}/{clone_subset}/.top_clones.txt", wt = weights_ids, clone_subset=["repr_clones", "single_clones"]),
         expand("{{outdir}}/enriched_barcodes/objs_{wt}/clones/variants_{variants}/knn/kparam_{kparam}/annotation_clones/clone_counts/donor{d}/counts_clones.ipynb",
                variants=[x for x in params_clones["variants"] if x != "simple"],
                kparam=params_clones["knn"]["params"]["resolution"],

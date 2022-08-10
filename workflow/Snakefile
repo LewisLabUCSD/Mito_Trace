@@ -76,6 +76,8 @@ config["params_clones"] = params_clones
 
 
 params["markers_f"] = config["markers_f"]
+params["markers_select_f"] = config["markers_select_f"]
+
 
 # Add cell markers to annotation:
 cluster_names_f = config.get("umap_clusters_f", None) #join(res, "results", "atac_clusters.txt")

@@ -705,7 +705,7 @@ rule top_clone_mt_variants_cl:
         script = get_clone_mt_variants_script, #join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_mt_variants.ipynb"),
         af_thresh=0.001,
         cov_thresh=2,
-        ntop_clones=10,
+        ntop_clones=8,
         ntop_vars=10
     shell: "papermill -p cells_meta_f {input.cells} -p indir {params.indir} -p outdir {params.outdir} -p clone_order_f {input.clone_order_f} -p ntop_clones {params.ntop_clones} -p af_thresh {params.af_thresh} -p cov_thresh {params.cov_thresh} -p ntop_vars {params.ntop_vars} {params.script} {output.note}"
 
@@ -723,7 +723,7 @@ rule top_clone_mt_variants_mt:
         script = get_clone_mt_variants_script, #join(ROOT_DIR, "workflow/notebooks/individual_clones/top_individual_clone_mt_variants.ipynb"),
         af_thresh=0.001,
         cov_thresh=2,
-        ntop_clones=20,
+        ntop_clones=10,
         ntop_vars=10
     shell: "papermill -p cells_meta_f {input.cells} -p indir {params.indir} -p outdir {params.outdir} -p clone_order_f {input.clone_order_f} -p ntop_clones {params.ntop_clones} -p af_thresh {params.af_thresh} -p cov_thresh {params.cov_thresh} -p ntop_vars {params.ntop_vars} {params.script} {output.note}"
 

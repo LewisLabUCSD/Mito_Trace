@@ -185,6 +185,30 @@ rule plotMarkers:
         markers_f = config["markers_f"]
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
 
+
+rule plotMarkersSelect:
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note = "{outdir}/annotation_clones/markersSelect/markersSelect.ipynb",
+    params:
+        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/dotplot_umap_immune_markers.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        markers_f = config["markers_select_f"]
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
+
+rule dotplotMarkersSelect:
+    input:
+        "{outdir}/annotation_clones/markersSelect/markersSelect.ipynb",
+    output:
+        note = "{outdir}/annotation_clones/markersSelect/dotplot_markersSelect.ipynb",
+    params:
+        note = join(ROOT_DIR, "workflow/notebooks/lineage_clones/markerSelect_dotplot.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        #markers_f = config["markers_select_f"]
+    shell: "papermill -p outdir {params.outdir} {params.note} {output.note}"
+
+
 rule overlayClones_umap:
     input:
         se_f = "{outdir}/annotation_clones/SE.rds",
@@ -298,6 +322,7 @@ rule finalize:
     input:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
+        markersSelect = "{outdir}/annotation_clones/markersSelect/dotplot_markersSelect.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/counts_clones.ipynb"),
         #cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
         cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/.summarize_{sampType}.txt",
