@@ -5,10 +5,14 @@ import os
 import numpy as np
 from os.path import join, dirname
 from snakemake.utils import min_version
-from icecream import ic
 min_version("6.0")
 
-
+from icecream import ic
+verbose = config.get("verbose", False)
+if verbose:
+    ic.enable()
+else:
+    ic.disable()
 
 knn_clone_shift= ["clones", "dendro_bc"]
 #mt_method = "mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}"
@@ -20,8 +24,8 @@ params_clones = config["clones"]
 dendro_d = config['clones']['params']['dendro_thresh']
 
 def load_cells_meta(cells_meta_f):
-    print(cells_meta_f)
-    print('here')
+    ic(cells_meta_f)
+    ic('here')
     try:
         cells_meta = pd.read_csv(cells_meta_f, sep="\t", index_col=0)
     except:
@@ -32,8 +36,8 @@ def load_cells_meta(cells_meta_f):
         cells_meta["clusterID"] = cells_meta["seurat_clusters"]
     else:
         cells_meta["clusterID"] = cells_meta["cluster_labels"]
-    print('cells_meta')
-    print(cells_meta.head())
+    ic('cells_meta')
+    ic(cells_meta.head())
     return cells_meta
 
 
@@ -54,10 +58,10 @@ rule get_clone_cells:
         # else:
         #     cells_meta["clusterID"] = cells_meta["cluster_labels"]
         cells_meta = load_cells_meta(input.se_cells_meta_f)
-        print('cells_meta', cells_meta.head())
+        ic('cells_meta', cells_meta.head())
         cells_meta = cells_meta.rename({"name":"cloneID"}, axis=1)
         cells_meta = cells_meta.loc[cells_meta["donor"].astype(int) == int(wildcards.d)]
-        print('cells_meta', cells_meta.head())
+        ic('cells_meta', cells_meta.head())
         cells_meta[["cloneID", "clusterID","condition", "donor"]].to_csv(output.cells_meta, sep="\t")
 
 
@@ -73,14 +77,14 @@ rule get_clone_dendro_cells:
         cells_meta = load_cells_meta(input.se_cells_meta_f)
         #barcodes_in = pd.read_csv(join(input.barcodes_dir[0],f"donor{wildcards.d}.clones_dendro.csv"), index_col=0)
         barcodes_in = pd.read_csv(list(input.barcodes_dir)[0], index_col=0)
-        print('d', wildcards.d)
-        #print('barcodes_in')
-        print('a barcodes',barcodes_in.head())
+        ic('d', wildcards.d)
+        #ic('barcodes_in')
+        ic('a barcodes',barcodes_in.head())
         barcodes_in[clone_col] = str(wildcards.d) + "_" + barcodes_in[clone_col]
-        print('b',barcodes_in.head())
+        ic('b',barcodes_in.head())
         cells_meta = cells_meta[cells_meta["name"].isin(barcodes_in.index)]
         cells_meta[clone_col] = cells_meta.apply(lambda x: barcodes_in.loc[x["name"], clone_col] , axis=1)
-        print('c', cells_meta.head())
+        ic('c', cells_meta.head())
         cells_meta = cells_meta.loc[cells_meta["donor"].astype(str) == str(wildcards.d)]
 
         cells_meta = cells_meta.rename({clone_col: "cloneID"}, axis=1)
@@ -103,9 +107,9 @@ rule get_cells_mt_as_clones:
         bin_d = pd.read_csv(join(indir,  f"donor_{wildcards.d}_binary_na.csv"), index_col=0)
         bin_d.columns = [f"cloneID_{x}" for x in bin_d.columns]
         labels_df = pd.read_csv(list(input.se_cells_meta_f)[0],sep="\t").set_index("ID")
-        print(labels_df.shape)
+        ic(labels_df.shape)
         labels_df = labels_df[~(labels_df["donor"]=='None')]
-        print(labels_df.shape)
+        ic(labels_df.shape)
         cells_meta = pd.merge(labels_df[["donor", "cluster_labels", "condition"]], bin_d, left_index=True, right_index=True, how="inner")
         cells_meta.index = [f'{x.split("_")[1]}_{x.split("_")[0]}'  for x in cells_meta.index]
         cells_meta = cells_meta.rename({"cluster_labels":"clusterID"}, axis=1)
@@ -117,7 +121,7 @@ rule get_cells_mt_as_clones:
         #donor_vars = get_high_variants(cells_meta.drop(["donor", "clusterID", "condition"], axis=1), thresh=0, pct_thresh=0.8)
         cells_meta = cells_meta.loc[:, ~(cells_meta.columns.isin(donor_vars))]
         #donor_vars = get_high_variants(cells_meta, thresh=0.8, pct_thresh=0.9)
-        print(f"number of donor vars: {len(donor_vars)}")
+        ic(f"number of donor vars: {len(donor_vars)}")
         cells_meta.to_csv(output.cells, sep="\t")
 
 # convert back to raw cell count from log2
@@ -136,9 +140,9 @@ rule get_cells_mt_as_clones_dendro:
         clone_col="den_clust"
         atac_col = "cluster_labels"
         labels_df = pd.read_csv(list(input.se_cells_meta_f)[0],sep="\t").reset_index().set_index("ID")
-        print(labels_df.shape)
+        ic(labels_df.shape)
         labels_df = labels_df[~(labels_df["donor"]=='None')]
-        print(labels_df.shape)
+        ic(labels_df.shape)
         labels_df.head()
         den_d = pd.read_csv(join(indir, f"don_{wildcards.d}_mt_dendro_clust.csv"), index_col=0)
         labels = labels_df[labels_df["donor"] == wildcards.d]
@@ -159,7 +163,7 @@ rule get_cloneIDs:
             cloneIDs = [x for x in df.columns if "cloneID" in x ]
         else:
             cloneIDs = list(set(df["cloneID"]))
-        print('cloneIDs', cloneIDs)
+        ic('cloneIDs', cloneIDs)
 
         cloneIDs_str = "\n".join(cloneIDs)
         with open(output.clone_f, "w") as f:
@@ -272,9 +276,9 @@ checkpoint get_single_cloneID:
         with open(input.clone_f, "r") as f:
             lines = f.readlines()
         lines = [x.strip() for x in lines]
-        print('lines', lines)
+        ic('lines', lines)
         for c_id in lines:
-            print('c_id', c_id)
+            ic('c_id', c_id)
             with open(join(output.clone_dir, f"{c_id}.txt")) as f:
                 f.write(str(c_id))
 

@@ -293,7 +293,7 @@ def prep_long_heatmap(all_df):
 def params_to_str(ser, param_names):
     name = ""
     for p in param_names:
-        name = name + f"{p}={ser[p]:.3f}\n"
+        name = name + f"{p}={ser[p]:.4f}\n"
     return name
 
 
@@ -305,8 +305,8 @@ def params_and_multi_str(ser):
 
 def draw_heatmap(*args, **kwargs):
     data = kwargs.pop('data')
-    clones_order = kwargs.pop('clones_order')
-    variants_order = kwargs.pop('variants_order' )
+    clones_order = kwargs.pop('clones_order', None)
+    variants_order = kwargs.pop('variants_order', None )
     share_axis = kwargs.pop('share_axis', True)
     #title_col = kwargs.pop("title_col", "params_multi")
     #print('title_col', title_col)
@@ -315,6 +315,11 @@ def draw_heatmap(*args, **kwargs):
     # print(data.head())
     d = data.pivot(index=args[1], columns=args[0],
                    values=args[2]).fillna(0)
+
+    if clones_order is None:
+        clones_order = d.index
+    if variants_order is None:
+        variants_order = d.columns
 
     # get all clones and variants
     d_full = pd.DataFrame(index=clones_order, columns=variants_order)

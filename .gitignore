@@ -24,6 +24,7 @@ __pycache__/
 .snakemake/
 _STARtmp/
 old/
+*DS_Store
 
 # C extensions
 *.so

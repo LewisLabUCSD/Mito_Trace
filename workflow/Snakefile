@@ -17,10 +17,15 @@ import numpy as np
 from os.path import join, dirname
 import pandas as pd
 from snakemake.utils import min_version
-from icecream import ic
 min_version("6.0")
-print('config', config)
 
+from icecream import ic
+verbose = config.get("verbose", False)
+if verbose:
+    ic.enable()
+else:
+    ic.disable()
+ic('config', config)
 
 ########################################################################
 # Setup parameters and outdir
@@ -82,7 +87,7 @@ params["markers_select_f"] = config["markers_select_f"]
 # Add cell markers to annotation:
 cluster_names_f = config.get("umap_clusters_f", None) #join(res, "results", "atac_clusters.txt")
 if (cluster_names_f is not None) and (not os.path.exists(cluster_names_f)):
-    print("Cluster label file not here.")
+    ic("Cluster label file not here.")
     cluster_names_f = ""
 params["cluster_names_f"] = cluster_names_f
 #workdir: config["work_dir"]
@@ -96,12 +101,12 @@ else:
 
 peak_names = [] if "bed_regions" not in config else list(config["bed_regions"].keys())
 peak_names.append("all")
-print("peak_names")
+#ic("peak_names")
 
 gatk_peak_names = [] if "gatk_bed_regions" not in config else list(config["gatk_bed_regions"].keys())
 
 if "som_vars" in params.keys():
-    print(params["som_vars"]["mutect"])
+    #ic(params["som_vars"]["mutect"])
     params_somvar = params["som_vars"]["mutect"]["params"]
 else:
     params_somvar = {}
@@ -286,10 +291,10 @@ rule all:
         #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], variants=[x for x in params_clones["variants"] if x != "simple"]),
         #
         # individual clones
-        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/single_clones/{f}",
-        #         out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-        #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-        #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".top_clones.txt"]), #".preproc.txt", scPileup_variants".aggregate.txt"
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/single_clones/{f}",
+                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'], f = [".top_clones.txt"]), #".preproc.txt", scPileup_variants".aggregate.txt"
 
         # enriched barcodes process
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes/clonal_shifts/variants_{variants}/.finalize_complete.txt",
@@ -450,13 +455,13 @@ rule mgatk_to_variant:
         all_vcf["REF"] = [x[-1] for x in all_vcf["REF"]]
         header = "##fileformat=VCFv4.0"
         header = header + "\n" + f"##reference=file:/{params.mt_fasta}\n"
-        print('header', header)
-        print('output.vcf', output.vcf)
+        # ic('header', header)
+        # ic('output.vcf', output.vcf)
         if os.path.exists(output.vcf):
             os.rm(output.vcf)
         with open(output.vcf, 'a') as file:
             file.write(header)
-        print(all_vcf.columns)
+        #ic(all_vcf.columns)
         all_vcf.to_csv(output.vcf, mode='a', index=False, sep="\t", header=True)
 
 
@@ -560,7 +565,7 @@ def get_cluster_labels():
     out = config.get("umap_clusters_f", "FALSE")
     if out is None :
         out = "FALSE"
-    print('cluster label f', out)
+    ic('cluster label f', out)
     return out
 
 
@@ -774,17 +779,17 @@ rule scPileup_simpleUnion_v02:
 #         #outdir = lambda wildcards, output: dirname(dirname(output[0])),
 #         samples = samples.index
 #     run:
-#         print('mult_cells', input.mult_cells)
+#         ic('mult_cells', input.mult_cells)
 #         cells_meta = pd.read_csv(join(dirname(input.mult_cells[0]),"cells_meta.tsv"), sep="\t")
 #         from collections import defaultdict
 #         donor_cov_d = defaultdict(list)
 #         samples = params.samples
 #         for d, cells_don_df in cells_meta.groupby("donor"):
 #             for n in ["A", "G", "C", "T", "coverage"]:
-#                 print('n', n)
+#                 ic('n', n)
 #                 curr_pile = []
 #                 for ind, curr_sample in enumerate(samples):
-#                     print(curr_sample)
+#                     ic(curr_sample)
 #                     cov_df = pd.read_csv(join(dirname(input.cov_dirs[ind]), f"{curr_sample}.{n}.strands.txt"), header=None)
 #                     cov_df[1] = cov_df[1].apply(lambda x: f"{x}_{curr_sample}")
 #                     # filter for cells in this donor
@@ -793,9 +798,9 @@ rule scPileup_simpleUnion_v02:
 #                 #curr_pile.append(cov_df)
 #         for k in donor_cov_d:
 #             d,n = k[0], k[1]
-#             print('d,n', d, n)
+#             ic('d,n', d, n)
 #             curr_df = pd.concat(donor_cov_d[k], axis=0, ignore_index=True)
-#             print(curr_df.head())
+#             ic(curr_df.head())
 #             (curr_df).to_csv(join(dirname(output.merge_pile[int(d)]), f"merge.{n}.strands.txt"), header=False, index=False)
 #             donor_cov_d[k] = None
 #
@@ -917,9 +922,9 @@ rule scPileup_simpleUnion_v02:
 #     all = []
 #     cols = ["donor", "lineage"]
 #     for i in in_files:
-#         #print(i)
+#         #ic(i)
 #         all.append(pd.read_csv(i,sep='\t'))
-#         #print(all[-1].head())
+#         #ic(all[-1].head())
 #         if "donor_index" in all[-1].columns.values:
 #             cols.append("donor_index")
 #         if "lineage_index" in all[-1].columns.values:
@@ -978,7 +983,7 @@ use rule * from procSimUnMod as procSimUnMod_*
 #########################################################################
 def get_counts_in(wildcards):
     w = wildcards
-    print('w', w)
+    ic('w', w)
     if w.variants == "mgatkdonor":
         return f"{w.out_dir}/data/merged/MT/cellr_{w.cellrbc}/numread_{w.num_read}/filters/minC{w.mincells}_minR{w.minreads}_topN{w.topN}_hetT{w.hetthresh}_hetC{w.minhetcells}_hetCount{w.hetcountthresh}_bq{w.bqthresh}/mgatk/vireoIn/clones/variants_mgatkdonor/donor{w.d}/mgatk/d{w.d}.variant.rds"
     elif w.variants == "simple":
@@ -1078,7 +1083,7 @@ use rule * from cloneEnrichMod as cloneEnrich_*
 
 
 
-print('params_clones', params_clones)
+ic('params_clones', params_clones)
 ############################################
 ## Compare methods:
 ############################################
