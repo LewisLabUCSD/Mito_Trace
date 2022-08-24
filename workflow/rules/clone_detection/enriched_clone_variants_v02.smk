@@ -169,6 +169,9 @@ checkpoint run_variants_params_constraints:
 #     notebook:
 #         join(ROOT_DIR, "workflow/notebooks/clone_vars/weights_of_objectives.py.ipynb")
 
+
+
+
 #def get_cells():
 
 checkpoint qc:
@@ -194,11 +197,37 @@ checkpoint qc:
 
         obj_qc.to_csv(output)
         return
+    checkpoint_output = checkpoints.scatter.get(**wildcards).output[0]
+        #"perfom-qc {input} > {output}"
 
 
-def get_multi_results(wildcards):
-    #files = checkpoints.run_variants_params_constraints.get(**wildcards).output["objs_norm_f"]
-    return glob_wildcards("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv"),
+
+def aggregate_input(wildcards):
+    checkpoint_output = checkpoints.link_processor.get(**wildcards).output[0]
+    return expand("output/processed_links/{sample}/{i}.txt",
+           sample=wildcards.sample,
+           i=glob_wildcards(os.path.join(checkpoint_output, "{i}.txt")).i)
+
+def get_results(wildcards):
+    files = checkpoints.run_variants_params_constraints.get(**wildcards).output["objs_norm_f"]
+    return  expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{wildcards.d}/cells_meta.tsv")
+    qc = pd.read_csv(checkpoints.run_variants_params_constraints.get().output["objs_norm_f"].open())
+    samples = qc[qc["objectives qc"]]
+    #cells_meta.tsv
+    filt_files = []
+    #ids = glob_wildcards(f"data/{wildcards.sample}/arbitrary/{{id}}.txt").id
+    ids = expand(glob_wildcards(f"{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{wildcards.d}/cells_meta.tsv").id)
+    print('ids', ids)
+    return ids
+    # for s in samples.index:
+    #     filt_files.append("{outdir}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv", d=np.arange(config["N_DONORS"])),
+    # return samples.index
+    ##return expand('scatter_copy_head/{i}_head.txt', i=glob_wildcards(os.path.join(checkpoint_output, '{i}.txt')).i)
+
+    #cells_meta_f = expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv", d=np.arange(config["N_DONORS"])),
+    #af_f =expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/af.tsv", d=np.arange(config["N_DONORS"])),
+    #dp_f =expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/dp.tsv", d=np.arange(config["N_DONORS"])),
+    #return expand("results/processed/{sample}.txt", sample=qc[qc["objectives qc"]])
 
 
 rule optim_results:
@@ -231,10 +260,25 @@ rule optim_results:
         #join(ROOT_DIR, "workflow/notebooks/clone_vars/optimization_results.py.ipynb")
 
 
+rule filt_cells:
+    input:
+        get_results
+    output:
+        "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/cells.qc_filt"
+    shell: "touch {output}"
+
+# expand("{{outdir}}/enriched_barcodes/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/objs_{{wt}}_constraints_{{cnstr}}/objectives_norm.csv",
+                             #d=np.arange(config["N_DONORS"]))
+    #ids = glob_wildcards(f"data/{wildcards.sample}/arbitrary/{{id}}.txt").id
+    #return expand(f"data/{wildcards.sample}/arbitrary/{{id}}.txt", id=ids)
+
+
+def get_cells
 rule merge_donor_optim:
     input:
-        cells_meta_f = get_multi_results,
-        #cells_meta_f = expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv", d=np.arange(config["N_DONORS"])),
+        #get_results,
+        cells_meta_f = expand(glob_wildcards("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv"), d=np.arange(config["N_DONORS"])),
+        cells_meta_f = expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/cells_meta.tsv", d=np.arange(config["N_DONORS"])),
         # af_f =expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/af.tsv", d=np.arange(config["N_DONORS"])),
         # dp_f =expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/dp.tsv", d=np.arange(config["N_DONORS"])),
     output:
@@ -246,9 +290,9 @@ rule merge_donor_optim:
         outdir = lambda wildcards, output: dirname(output.cells_meta_f)
 
     run:
-        pd.concat([pd.read_csv(join(x, "cells_meta.tsv"), sep="\t", index_col=0) for x in params["indir"]]).to_csv(output["cells_meta_f"], sep="\t")
-        pd.concat([pd.read_csv(join(x, "af.tsv"), sep="\t", index_col=0) for x in params["indir"]], axis=0).to_csv(join(params["outdir"], "af.tsv"), sep="\t")
-        pd.concat([pd.read_csv(join(x, "dp.tsv"), sep="\t", index_col=0) for x in params["indir"]], axis=0).to_csv(join(params["outdir"], "dp_f"), sep="\t")
+        pd.concat([pd.read_csv(join(x, "cells_meta.tsv"), sep="\t", index_col=0) for x in params.indir]).to_csv(output.cells_meta_f, sep="\t")
+        pd.concat([pd.read_csv(join(x, "af.tsv"), sep="\t", index_col=0) for x in params.indir], axis=0).to_csv(output.af_f, sep="\t")
+        pd.concat([pd.read_csv(join(x, "dp.tsv"), sep="\t", index_col=0) for x in params.indir], axis=0).to_csv(output.dp_f, sep="\t")
 
         # pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.cells_meta_f]).to_csv(output.cells_meta_f, sep="\t")
         # pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.af_f], axis=0).to_csv(output.af_f, sep="\t")
@@ -284,7 +328,7 @@ rule barcodes_btwnClones_dendro:
 #         outdir = lambda wildcards, output: dirname(output.note),
 #         N_DONORS = config["N_DONORS"],
 #     shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
-
+#
 
 name_map = {"clones":"name", "dendro_bc": "den_clust", "mt_as_clones": "Variants", "mt_as_clones_dendro": "den_clust"}
 
@@ -575,47 +619,6 @@ rule compare_clone_var_tables:
 #                wt = weights_ids, d=np.arange(config["N_DONORS"]))
 #     output: final = "{outdir}/enriched_barcodes/.finalize"
 #     shell: "touch {output}"
-
-############################################
-## Compare methods:
-############################################
-rule compare_clonevar_methods_get_params:
-    input:
-        expand("{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv",
-               variants=[x for x in params_clones["variants"] if x != "simple"], kparam=params_clones["knn"]["params"]["resolution"],
-               wt=weights_ids, cnstr=constraint_ids),
-    output:
-        meta_params = "{outdir}/enriched_barcodes/comparisons/params_meta.csv",
-    params:
-        outdir = lambda wildcards, output: dirname(output[0]),
-    run:
-        import itertools
-        df = pd.DataFrame(index=input, columns=["variants", "kparam", "objective", "constraints"])
-        params_iter = list(itertools.product([params_clones["variants"],params_clones["knn"]["params"]["resolution"],
-                                              weights_ids, constraint_ids]))
-        for [variants, kparam, wt, cnstr] in params_iter:
-            df.loc[f"{wildcards.outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv"] = [variants, kparam, wt, cnstr]
-        print(df.head())
-        df.to_csv(output["meta_params"])
-
-
-rule compare_clonevar_methods:
-    input:
-        meta_params = "{outdir}/enriched_barcodes/comparisons/params_meta.csv",
-    output:
-        note = "{outdir}/enriched_barcodes/comparisons/comparisons.ipynb",
-        fig = report(multiext("{outdir}/enriched_barcodes/comparisons/", "methods_nAgreeNorm.png", "methods_nAgreeNorm_agg.png", "methods_n_T_T_agg.png", "methods_nTTNorm_agg.png"), category="Methods"),
-    params:
-        note = join("src", "clones_compare", "distance_matrix_enriched.ipynb"),
-        outdir = lambda wildcards, output: dirname(output[0]),
-        # prefix = config["prefix"],
-        # cfg_outdir = config["outdir"],
-        # params_f = config["config"],
-        # all = lambda wildcards, input: ",".join(x for x in input),
-    shell:
-        "papermill -p meta_params_f {input.meta_params} -p outdir {params.outdir} {params.note} {output.note}"
-        #"papermill -p all_files {params.all} -p outdir {params.outdir} -p cfg_outdir {params.cfg_outdir} -p prefix {params.prefix} -p params_f {params.params_f} {params.note} {output.note}"
-
 
 
 rule finalize_constraints:
