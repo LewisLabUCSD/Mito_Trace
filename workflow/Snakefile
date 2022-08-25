@@ -178,12 +178,12 @@ rule all:
         ),
 
         # # Enrichment
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/_enrichment_complete",
-            out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-            variants=[x for x in params_clones["variants"] if x != "simple"],
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
-            kparam=params_clones["knn"]["params"]["resolution"]),
+        # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/_enrichment_complete",
+        #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+        #     variants=[x for x in params_clones["variants"] if x != "simple"],
+        #     mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+        #     hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
+        #     kparam=params_clones["knn"]["params"]["resolution"]),
 
         # Annotation clones
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/_nuclear_clones_complete.txt",
@@ -1046,6 +1046,8 @@ module cloneEnrichMod:
     config: params
 
 use rule * from cloneEnrichMod as cloneEnrich_*
+
+
 
 # rule vireo_enrichment:
 #     version: '1.0' # no +1 norm error

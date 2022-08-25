@@ -241,7 +241,7 @@ rule mv_tmp_compare_mt:
 best_p = config["mt_as_clones"]["best_params"]
 params_clones = config["clones"]
 
-print("dendro_d", dendro_d)
+#print("dendro_d", dendro_d)
 
 rule finalize:
     input:
