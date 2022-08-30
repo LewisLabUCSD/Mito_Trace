@@ -483,7 +483,7 @@ rule ind_clone_hypergeo_mt:
         # multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/{cloneID}/",
         #               "hypergeo_pval.png", "clone_shift.png")
     params:
-        notebook = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_lineage_hypergeo.ipynb"),
+        notebook = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_                                                                                                                                                   lineage_hypergeo.ipynb"),
         indir = lambda wildcards, input: dirname(input.indir),
         outdir = lambda wildcards, output: dirname(output[0]),
         #clone_id = lambda wildcards: wildcards.cloneID
