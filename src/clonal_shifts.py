@@ -617,15 +617,27 @@ def hypergeo_score(df, p_thresh):
     p_df["is_sig"] = p_df["pval"]<p_thresh
     print(p_df.shape)
     print(p_df.duplicated(["index","variable", "condition", "method"]).any())
+
     p_df_group = p_df.groupby(["index", "variable", "condition"]).apply(
         check_sig)
     print(p_df_group.shape)
-    # p_df_out = p_df_group.reset_index().rename({0:"significant_score", "index":"clone", "variable":"cluster"}, axis=1)
-    p_df_out = p_df_group.reset_index().rename({0: "significant_score"},
-                                               axis=1)
+    print(p_df_group)
+    print(p_df_group.index.name)
+    p_df_out = p_df_group
+    if "index" not in p_df_out:
+        p_df_out = p_df_out.reset_index()
 
+    # p_df_out = p_df_group.reset_index().rename({0:"significant_score", "index":"clone", "variable":"cluster"}, axis=1)
+    print('p_df_out')
+    print(p_df_out.head())
+    if "significant_score" not in p_df_out:
+        p_df_out = p_df_out.rename({0: "significant_score"},
+                                               axis=1)
+    print('p_df_out after')
+    print(p_df_out.head())
     p_df_out["cluster_condition"] = p_df_out.apply(
         lambda x: f'{x["variable"]}_{x["condition"]}', axis=1)
+
     p_df_out = p_df_out.pivot(index='index',
                               columns='cluster_condition',
                               values="significant_score").fillna(0)

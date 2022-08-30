@@ -271,8 +271,8 @@ rule optim_results:
         cells_meta_f = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/cells_meta.tsv",
         best_params_f ="{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params.csv",
         best_params_clone_vars_f ="{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/best_params_filt_clone_vars.csv",
-        af_f = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/af.tsv",
-        dp_f = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/dp.tsv",
+        af_f ="{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/af.tsv",
+        dp_f ="{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/dp.tsv",
         top_clustered = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/top_param_group_results.pdf",
         top_table = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/top_param_groups_clone_vars.pdf",
         top_clustered_table = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/donor{d}/top10perc_param_group_clusters.pdf",
@@ -291,12 +291,8 @@ rule optim_results:
 
 
 
+
 rule tmp_optim:
-    """ If no cells pass threshold for a donor, pass them all. Ideally
-        should be removed from downstream tasksusing snakemake checkpoint,
-        but some code issues arose. 
-    
-    """
     input:
         cells_meta_f = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv",
     output:
@@ -308,22 +304,15 @@ rule tmp_optim:
     run:
         print('wildcards tmp', wildcards["d"])
         df = pd.read_csv(input.cells_meta_f, sep="\t", index_col=0)
-        df = df[df["donor"].astype(str) == str(wildcards["d"])]
         df["name"] = df.apply(lambda x: f'{x["donor"]}_{x["lineage"]}', axis=1)
-        def inverse_string(x):
-            spl = x.split("_")
-            return f"{spl[1]}_{spl[0]}"
-        df["ID"] = [inverse_string(x) for x in df.index]
+        df[df["donor"].astype(str) == str(wildcards["d"])].to_csv(output.cells_meta_f, sep="\t")
+
         print('df shape')
         print(df.shape)
-        df.to_csv(output.cells_meta_f, sep="\t")
         af_f = join(params.af_indir, "af.tsv")
         dp_f = join(params.af_indir, "dp.tsv")
-        # transpose the af and dp DataFrames
-        pd.read_csv(af_f, sep="\t", index_col=0).transpose().to_csv(output.af_f, sep="\t", index=True)
-        pd.read_csv(dp_f, sep="\t", index_col=0).transpose().to_csv(output.dp_f, sep="\t", index=True)
-        #outdir = dirname(output.cells_meta_f)
-        #os.system(f"cp {af_f} {dp_f} {outdir}")
+        outdir = dirname(output.cells_meta_f)
+        os.system(f"cp {af_f} {dp_f} {outdir}")
 
 
 
@@ -354,7 +343,7 @@ rule get_donor_cells:
     params:
         outdir = lambda wildcards, output: dirname(output[0])
     shell:
-        "cp {input} {params.outdir}/"
+        "cp {input} {params.outdir}"
 
 
 # def qc_filt(wildcards):
@@ -393,8 +382,6 @@ rule merge_donor_optim:
         #cells_meta_f = "{outdir}/enriched_barcodes/objs_{wt}_constraints_{cnstr}/clones/variants_{variants}/knn/kparam_{kparam}/single_donors/donor{d}/cells_meta.tsv"
         #cells_meta_f = get_results
         cells_meta_f = expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/single_donors/donor{d}/cells_meta.tsv", d=np.arange(config["N_DONORS"])),
-        af_f = expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/single_donors/donor{d}/af.tsv", d=np.arange(config["N_DONORS"])),
-        dp_f = expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/single_donors/donor{d}/dp.tsv", d=np.arange(config["N_DONORS"])),
         # af_f =expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/af.tsv", d=np.arange(config["N_DONORS"])),
         # dp_f =expand("{{outdir}}/enriched_barcodes/objs_{{wt}}_constraints_{{cnstr}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/donor{d}/dp.tsv", d=np.arange(config["N_DONORS"])),
     output:
@@ -411,8 +398,8 @@ rule merge_donor_optim:
         print(type(input["cells_meta_f"]))
         print('cells meta', input["cells_meta_f"])
         pd.concat([pd.read_csv(join(dirname(x), "cells_meta.tsv"), sep="\t", index_col=0) for x in input["cells_meta_f"]], axis=0).to_csv(output["cells_meta_f"], sep="\t")
-        pd.concat([pd.read_csv(join(dirname(x), "af.tsv"), sep="\t", index_col=0) for x in input["cells_meta_f"]], axis=0).fillna(0).to_csv(join(params["outdir"], "af.tsv"), sep="\t")
-        pd.concat([pd.read_csv(join(dirname(x), "dp.tsv"), sep="\t", index_col=0) for x in input["cells_meta_f"]], axis=0).fillna(0).to_csv(join(params["outdir"], "dp.tsv"), sep="\t")
+        pd.concat([pd.read_csv(join(dirname(x), "af.tsv"), sep="\t", index_col=0) for x in input["cells_meta_f"]], axis=0).to_csv(join(params["outdir"], "af.tsv"), sep="\t")
+        pd.concat([pd.read_csv(join(dirname(x), "dp.tsv"), sep="\t", index_col=0) for x in input["cells_meta_f"]], axis=0).to_csv(join(params["outdir"], "dp.tsv"), sep="\t")
 
         # pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.cells_meta_f]).to_csv(output.cells_meta_f, sep="\t")
         # pd.concat([pd.read_csv(x, sep="\t", index_col=0) for x in input.af_f], axis=0).to_csv(output.af_f, sep="\t")
@@ -707,17 +694,6 @@ use rule top_merge from reprClonesMod as reprcl_top_merge with:
 #
 #     #return files
 
-# def get_repr_clone_out(wildcards):
-#     w = wildcards
-#     all_files = []
-#     for variants in params_clones["variants"]:
-#         for kparam in params_clones["knn"]["params"]["resolution"]:
-#             for d in np.arange(config["N_DONORS"]):
-#                 for f in ["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.svg"]:
-#                     in_f = ""
-#                     all_files.append(f"{w.outdir}/enriched_barcodes/objs_{w.wt}_constraints_{w.cnstr}/{w.clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/top/{f}")
-#     return
-
 
 use rule top_clone_complete from reprClonesMod as reprcl_top_clone_complete with:
     input:
@@ -811,7 +787,7 @@ rule compare_clonevar_methods:
         meta_params = "{outdir}/enriched_barcodes/comparisons/params_meta.csv",
     output:
         note = "{outdir}/enriched_barcodes/comparisons/comparisons.ipynb",
-        #fig = report(multiext("{outdir}/enriched_barcodes/comparisons/", "methods_nAgreeNorm.png", "methods_nAgreeNorm_agg.png", "methods_n_T_T_agg.png", "methods_nTTNorm_agg.png"), category="Methods"),
+        fig = report(multiext("{outdir}/enriched_barcodes/comparisons/", "methods_nAgreeNorm.png", "methods_nAgreeNorm_agg.png", "methods_n_T_T_agg.png", "methods_nTTNorm_agg.png"), category="Methods"),
     params:
         note = join("src", "clones_compare", "distance_matrix_enriched.ipynb"),
         outdir = lambda wildcards, output: dirname(output[0]),
