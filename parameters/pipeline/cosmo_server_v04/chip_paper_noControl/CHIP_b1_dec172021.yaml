@@ -20,6 +20,7 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/CHIP_dec17
 
 
 markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
+markers_select_f: "/data/Mito_Trace/data/processed/cd34_markers_bc.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
 umap_clusters_f: # "/mnt/md0/isshamie/Projects/Mito_Trace/output/pipeline/v02/CHIP_b1/MTBlacklist_A2/results/atac_clusters.txt"
 
 

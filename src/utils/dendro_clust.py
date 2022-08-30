@@ -136,6 +136,7 @@ def add_cluster_labels(den, row_meta):
 
     return out_meta
 
+
 def cluster_stats(clusters_df, out_f=None):
     from itertools import combinations
     size_pvals = []
@@ -159,6 +160,7 @@ def run_dendro_clust(df, dendroThresh, curr_clones, out_f=None,
                      to_clust_stats=False, use_seaborn=False, verbose=False, **kwargs ):
     #print('kwargs', kwargs)
     if use_seaborn:
+        import matplotlib.pyplot as plt
         print('creating linkage with seaborn clustermap')
         g = sns.clustermap(data=df, row_cluster=True, col_cluster=True, **kwargs)
         inds = g.dendrogram_row.dendrogram["leaves"]

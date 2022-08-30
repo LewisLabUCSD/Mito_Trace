@@ -18,15 +18,25 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
     a_enrich_df.index.name = "name"
     b_enrich_df.index.name = "name"
 
-    b_sig = b_enrich_df < p_thresh
-    b_sig = b_sig.reset_index().melt(id_vars="name", value_name="sig",
-                                     var_name=b_name)
-
-
     a_sig = a_enrich_df < p_thresh
-    a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
-                                     var_name=a_name)
+    if a_sig.shape[0] == 0:
+        a_sig = pd.DataFrame(columns=["name", a_name, "sig"])
+    else:
+        a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
+                                         var_name=a_name)
+    # a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
+    #                                  var_name=a_name)
 
+    print('a_sig', a_sig.head())
+    b_sig = b_enrich_df < p_thresh
+    print(b_sig.shape)
+    if b_sig.shape[0] == 0:
+        b_sig = pd.DataFrame(columns=["name", b_name, "sig"])
+    else:
+        b_sig = b_sig.reset_index().melt(id_vars="name", value_name="sig",
+                                         var_name=b_name)
+
+    print('b_sig', b_sig.head())
 
     merged_df = pd.DataFrame(index=a_sig[a_name].unique(),
                              columns=b_sig[b_name].unique()).astype(object)
@@ -35,9 +45,9 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
                                    columns=b_sig[
                                        b_name].unique()).astype("Int64")
     merged_count_df = merged_count_df.fillna(0)
-
-    b_sig = b_sig[b_sig["sig"]].drop("sig", axis=1)
-    a_sig = a_sig[a_sig["sig"]].drop("sig", axis=1)
+    #print(b_sig.loc[b_sig["sig"]])
+    b_sig = b_sig.loc[b_sig["sig"]].drop("sig", axis=1)
+    a_sig = a_sig.loc[a_sig["sig"]].drop("sig", axis=1)
 
     for inp_ind, val in a_sig.iterrows():
         curr_clone = val["name"]
@@ -488,9 +498,10 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
     print("Running hypergeo and saving sig results")
     print("plotting counts")
     groups["log2_count"] = np.log2(groups["count"] + 1)
-    if len(groups[clone_col].unique()) > 1:
-        g = sns.clustermap(groups.pivot(index=atac_col, columns=clone_col,
-                                    values="log2_count").fillna(0))
+
+    grp_counts = groups.pivot(index=atac_col, columns=clone_col, values="log2_count").fillna(0)
+    if len(groups[clone_col].unique()) > 1 and (grp_counts.shape[0] > 1) and (grp_counts.shape[1] > 1):
+        g = sns.clustermap(grp_counts)
     else:
         f = plt.figure()
         sns.heatmap(groups.pivot(index=atac_col, columns=clone_col,
@@ -519,13 +530,14 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
         f.savefig(join(outdir, "hypergeo_padjusted.png"), dpi=300,
                     bbox_inches="tight")
         return
-    elif output_df.shape[0] <= 1:
+    elif output_df.shape[0] <= 1 or (bh_enrichment_df.loc[output_df.index].shape[0] <= 1):
         plt.figure()
         sns.heatmap(-np.log10(bh_enrichment_df.fillna(1)))
         plt.title("-log10 BH-adjusted p-values for clonal shifts across clusters.")
         plt.savefig(join(outdir, "hypergeo_padjusted.png"), dpi=300,
                     bbox_inches="tight")
     else:
+
         g = sns.clustermap(
             -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)),
             row_cluster=False)
@@ -605,15 +617,27 @@ def hypergeo_score(df, p_thresh):
     p_df["is_sig"] = p_df["pval"]<p_thresh
     print(p_df.shape)
     print(p_df.duplicated(["index","variable", "condition", "method"]).any())
+
     p_df_group = p_df.groupby(["index", "variable", "condition"]).apply(
         check_sig)
     print(p_df_group.shape)
-    # p_df_out = p_df_group.reset_index().rename({0:"significant_score", "index":"clone", "variable":"cluster"}, axis=1)
-    p_df_out = p_df_group.reset_index().rename({0: "significant_score"},
-                                               axis=1)
+    print(p_df_group)
+    print(p_df_group.index.name)
+    p_df_out = p_df_group
+    if "index" not in p_df_out:
+        p_df_out = p_df_out.reset_index()
 
+    # p_df_out = p_df_group.reset_index().rename({0:"significant_score", "index":"clone", "variable":"cluster"}, axis=1)
+    print('p_df_out')
+    print(p_df_out.head())
+    if "significant_score" not in p_df_out:
+        p_df_out = p_df_out.rename({0: "significant_score"},
+                                               axis=1)
+    print('p_df_out after')
+    print(p_df_out.head())
     p_df_out["cluster_condition"] = p_df_out.apply(
         lambda x: f'{x["variable"]}_{x["condition"]}', axis=1)
+
     p_df_out = p_df_out.pivot(index='index',
                               columns='cluster_condition',
                               values="significant_score").fillna(0)

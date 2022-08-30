@@ -12,6 +12,8 @@ mtscATAC_OUTDIR: "/home/isaac/lewis/mito_lineage/output/mtscATAC/data/jan21_2021
 #results: "/data/isshamie/mito_lineage/output/pipeline/cd34norm/MTblacklist" # Output directory
 N_DONORS: 4
 
+
+
 bed_regions:
   A: ""
 
@@ -33,3 +35,4 @@ umap_clusters:
 
 
 markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt"
+markers_select_f: "/data/Mito_Trace/data/processed/cd34_markers_bc.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"

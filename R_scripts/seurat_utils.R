@@ -174,6 +174,8 @@ de.plots <- function(se.filt, names.sig, curr.outdir, curr.name="", max.size=10,
            file=file.path(curr.outdir, paste0(curr.name,".embedFeat.top.png")))
     ggsave(plot=dot,
            file=file.path(curr.outdir, paste0(curr.name, ".dot.top.png")))
+    ggsave(plot=dot,
+            file=file.path(curr.outdir, paste0(curr.name, ".dot.top.pdf")))
     if (to.vln){
     ggsave(plot=vln,
            file=file.path(curr.outdir, paste0(curr.name, ".violin.top.png")))

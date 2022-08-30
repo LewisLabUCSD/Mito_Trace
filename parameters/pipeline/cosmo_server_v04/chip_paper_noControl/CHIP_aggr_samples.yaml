@@ -2,7 +2,9 @@ outdir: "/data/Mito_Trace/output/aggregate/"
 prefix: "CHIP_aggr/v04"
 snakefile: "workflow/rules/data/chip.smk"
 pileup_dir: "data/merged/MT/cellr_True/numread_200/filters/minC10_minR50_topN0_hetT0.001_hetC10_hetCount5_bq20/mgatk/vireoIn"
-config: "parameters/pipeline/pipeline_v04_single_chip.yaml"
+config: "parameters/pipeline/pipeline_v04_chip.yaml"
+
+
 #chip_paper_noControl
 ## Sample files to aggregate!
 samples_config:
@@ -51,7 +53,8 @@ gene_ids_f:
 #mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
 
 
-markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
+markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
+markers_select_f: "/data/Mito_Trace/data/processed/cd34_markers_bc.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
 
 
 #samples:

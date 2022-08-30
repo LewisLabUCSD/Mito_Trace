@@ -2,6 +2,14 @@ from os.path import join, dirname
 from src.utils.data_io import sparse_to_cellranger_fragments
 from src.config import ROOT_DIR
 
+from icecream import ic
+
+verbose = config.get("verbose", False)
+if verbose:
+    ic.enable()
+else:
+    ic.disable()
+
 def get_anno_integrate(wildcards):
     #print(join(config["anno_res"], "mergedSamples","allSamples.integrated.rds"))
     #return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
@@ -14,7 +22,7 @@ def get_anno_integrate(wildcards):
 params = config["annotation_clones"]["params"]
 params_cl_embed = config["clone_clust_embed"]["params"]
 
-print('params', params)
+
 
 rule addClones:
     input:
@@ -44,7 +52,7 @@ rule se_meta:
 
 def get_cluster_labels():
     if "umap_clusters_f" in config and config["umap_clusters_f"] is None:
-        print('no labels')
+        ic('no labels')
         return "FALSE"
     else:
         return config.get("umap_clusters_f", "FALSE")
@@ -98,7 +106,7 @@ rule counts_clones:
 ################################################################
 """
 def get_lineage_clone_counts_script(wildcards):
-    #print('script', join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb"))
+    #ic('script', join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb"))
     if wildcards.donType == "combinedDonors":
         return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb")
     return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_donors.ipynb")
@@ -156,8 +164,8 @@ rule tmp_no_all:
 def lin_clone_file(wildcards):
     """ If it's an inputOnly run, we dont need this as redunndant to the input version"""
     w = wildcards
-    #print(config["samples"])
-    #print(f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb")
+    #ic(config["samples"])
+    #ic(f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb")
     if not ("Input" in config['samples'].index and len(config["samples"])==1):
         return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/all_cluster_clone_counts.ipynb"
     return f"{w.outdir}/annotation_clones/cluster_clone_counts/{w.donType}/.tmp_all"
@@ -184,6 +192,30 @@ rule plotMarkers:
         outdir = lambda wildcards, output: dirname(output.note),
         markers_f = config["markers_f"]
     shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
+
+
+rule plotMarkersSelect:
+    input:
+        se_f = "{outdir}/annotation_clones/SE.rds",
+    output:
+        note = "{outdir}/annotation_clones/markersSelect/markersSelect.ipynb",
+    params:
+        rscript = join(ROOT_DIR, "workflow/notebooks/lineage_clones/dotplot_umap_immune_markers.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        markers_f = config["markers_select_f"]
+    shell: "papermill -p se_f {input.se_f} -p outdir {params.outdir} -p markers_f {params.markers_f} {params.rscript} {output.note}"
+
+rule dotplotMarkersSelect:
+    input:
+        "{outdir}/annotation_clones/markersSelect/markersSelect.ipynb",
+    output:
+        note = "{outdir}/annotation_clones/markersSelect/dotplot_markersSelect.ipynb",
+    params:
+        note = join(ROOT_DIR, "workflow/notebooks/lineage_clones/markerSelect_dotplot.ipynb"),
+        outdir = lambda wildcards, output: dirname(output.note),
+        #markers_f = config["markers_select_f"]
+    shell: "papermill -p outdir {params.outdir} {params.note} {output.note}"
+
 
 rule overlayClones_umap:
     input:
@@ -298,6 +330,7 @@ rule finalize:
     input:
         dom="{outdir}/annotation_clones/dominant_clone_clust/dominant.ipynb",
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
+        markersSelect = "{outdir}/annotation_clones/markersSelect/dotplot_markersSelect.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/counts_clones.ipynb"),
         #cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
         cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/.summarize_{sampType}.txt",
@@ -306,8 +339,8 @@ rule finalize:
         #                hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
         # hyperg_f=expand("{{outdir}}/annotation_clones/hypergeom_clone_clust/mincl.{hyperMinCl}_bothConds.{bothConds}_p{pthresh}/_complete.txt",
         #     hyperMinCl=params["hyperMinCl"], bothConds=params["bothConds"], pthresh=params["p_thresh"]),
-        embed = expand("{{outdir}}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/embed.ipynb",
-                        perp=params_cl_embed["perplexity"], donperp=params_cl_embed["donor_perplexity"]),
+        # embed = expand("{{outdir}}/annotation_clones/clone_clust_embed/tsne_perp{perp}_donperp{donperp}/embed.ipynb",
+        #                 perp=params_cl_embed["perplexity"], donperp=params_cl_embed["donor_perplexity"]),
         overlay = "{outdir}/annotation_clones/umap_clones_overlay/output.ipynb",
     output:
         "{outdir}/annotation_clones/_nuclear_clones_complete.txt"

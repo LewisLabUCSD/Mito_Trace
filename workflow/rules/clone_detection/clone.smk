@@ -21,7 +21,7 @@ if type(config["dendro_thresh"]) != list:
     dendro_thresh = [config["dendro_thresh"]]
 else:
     dendro_thresh = config["dendro_thresh"]
-print("dendro thresh", dendro_thresh)
+
 
 #samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 
