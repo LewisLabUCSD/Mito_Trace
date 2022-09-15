@@ -25,8 +25,6 @@ params_clones = config["clones"]
 dendro_d = config['clones']['params']['dendro_thresh']
 
 def load_cells_meta(cells_meta_f):
-    ic(cells_meta_f)
-    ic('here')
     try:
         cells_meta = pd.read_csv(cells_meta_f, sep="\t", index_col=0)
     except:
@@ -199,7 +197,6 @@ def get_hypergeo(wildcards):
     elif clshift == "mt_as_clones_dendro" or clshift == "mt_as_clones":
         return f"{indir}/af.{w.af}_othaf.{w.othaf}_cov.{w.cov}_othcov.{w.othcov}_ncells.{w.ncells}_othncells.{w.othncells}_mean.{w.mean}/output.ipynb"
     return
-#clonal_shifts/donors/donor0/variants_init/knn/kparam_30/clones/"
 
 
 rule get_rank_mt:
@@ -232,6 +229,7 @@ rule get_rank_cl:
 
 sample_ids = config["samples"].index
 condition = []
+
 if "Input" in sample_ids:
     condition.append("inputOnly")
     if len(sample_ids) > 1:
@@ -244,6 +242,7 @@ def get_rank_cl_sizes_note(wildcards):
     if len(condition) == 1:
         return join(ROOT_DIR,  "workflow/notebooks/individual_clones/oneCondition_rank_clone_lineage_sizes.ipynb"),
     return join(ROOT_DIR,  "workflow/notebooks/individual_clones/rank_clone_lineage_sizes.ipynb"),
+
 
 def get_rank_cl_sizes_condition(wildcards):
     if len(condition) == 1:

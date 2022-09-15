@@ -23,6 +23,18 @@ params_clones = config["clones"]
 
 dendro_d = config['clones']['params']['dendro_thresh']
 
+
+sample_ids = config["samples"].index
+condition = []
+if "Input" in sample_ids:
+    condition.append("inputOnly")
+    if len(sample_ids) > 1:
+        condition.append("noInput")
+elif len(sample_ids) > 0:
+    condition.append("noInput")
+
+
+
 def load_cells_meta(cells_meta_f):
     ic(cells_meta_f)
     ic('here')
@@ -42,6 +54,7 @@ def load_cells_meta(cells_meta_f):
 
 
 
+
 """ Output line-separated cell IDs
 Cell ID, Clone, Lineage, Condition
 """
@@ -51,12 +64,6 @@ rule get_clone_cells:
     output:
         cells_meta = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_clones/cells_meta.tsv"
     run:
-        # cells_meta = pd.read_csv(input.se_cells_meta_f, sep="\t", index_col=0)
-        # cells_meta = cells_meta.loc[~(cells_meta["name"]=="None")]
-        # if not "cluster_labels" in cells_meta.columns.values:
-        #     cells_meta["clusterID"] = cells_meta["seurat_clusters"]
-        # else:
-        #     cells_meta["clusterID"] = cells_meta["cluster_labels"]
         cells_meta = load_cells_meta(input.se_cells_meta_f)
         ic('cells_meta', cells_meta.head())
         cells_meta = cells_meta.rename({"name":"cloneID"}, axis=1)
@@ -182,15 +189,6 @@ def get_hypergeo(wildcards):
     return
 
 
-sample_ids = config["samples"].index
-condition = []
-if "Input" in sample_ids:
-    condition.append("inputOnly")
-    if len(sample_ids) > 1:
-        condition.append("noInput")
-elif len(sample_ids) > 0:
-    condition.append("noInput")
-    
 
 def get_repr_cl_note(wildcards):
     w = wildcards
@@ -218,7 +216,7 @@ rule get_repr_clones_cl:
         note = get_repr_cl_note, #note = join(ROOT_DIR,  "workflow/notebooks/individual_clones/rank_clone_lineage_sizes.ipynb"),
         is_mt = False,
         condition = get_rank_cl_sizes_condition
-        #p_thresh = 0.1
+
     shell: "papermill -p indir {params.indir} -p outdir {params.outdir} -p cells_meta_f {input.cells} -p is_mt {params.is_mt} -p condition {params.condition} {params.note} {output.note}"
 
 
@@ -239,7 +237,7 @@ rule get_repr_clones_mt:
     shell: "papermill -p indir {params.indir} -p outdir {params.outdir} -p cells_meta_f {input.cells} -p is_mt {params.is_mt} -p condition {params.condition} {params.note} {output.note}"
 
 
-rule preperoc_complete:
+rule preproc_complete:
     input:
         expand("{{outdir}}/{{clone_subset}}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_mt_as_clones/cells_meta.tsv",
                 d=np.arange(config["N_DONORS"]),
@@ -313,123 +311,15 @@ def get_se(wildcards):
         return f"clones/variants_{w.variants}/knn/kparam_30/gff_{config['gff']}/annotation_clones/SE.rds"
         #return f"{w.outdir}/anno_multiplex/gff_{config['gff']}/se.rds"
 
-
-rule ind_clone_hypergeo_cl:
-    input:
-        cloneIDs_f = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/cloneIDs.txt",
-        indir = get_hypergeo,
-        #cloneID = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/cloneIDs/{cloneID}.txt"
-    output:
-        note = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/single/hypergeo_pval.ipynb",
-        #fig = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/single/{cloneID}/hypergeo_pval.png"
-        # multiext("{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/{cloneID}/",
-        #               "hypergeo_pval.png", "clone_shift.png")
-    params:
-        notebook = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_lineage_hypergeo.ipynb"),
-        indir = lambda wildcards, input: dirname(input.indir),
-        outdir = lambda wildcards, output: dirname(output[0]),
-        #clone_id = lambda wildcards: wildcards.cloneID
-    shell:
-        "papermill -p indir {params.indir} -p outdir {params.outdir} -p cloneID_f {input.cloneIDs_f} {params.notebook} {output.note}"
-
-
-rule ind_clone_hypergeo_mt:
-    input:
-        cloneIDs_f = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/cloneIDs.txt",
-        indir = get_hypergeo,
-        #cloneID = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/cloneIDs/{cloneID}.txt"
-    output:
-        note = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/single/hypergeo_pval.ipynb",
-        #fig = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{clone_shift_method}/single/{cloneID}/hypergeo_pval.png"
-        # multiext("{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/{cloneID}/",
-        #               "hypergeo_pval.png", "clone_shift.png")
-    params:
-        notebook = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_lineage_hypergeo.ipynb"),
-        indir = lambda wildcards, input: dirname(input.indir),
-        outdir = lambda wildcards, output: dirname(output[0]),
-        #clone_id = lambda wildcards: wildcards.cloneID
-    shell:
-        "papermill -p indir {params.indir} -p outdir {params.outdir} -p cloneID_f {input.cloneIDs_f} {params.notebook} {output.note}"
-
-
-rule ind_clone_umap_overlay:
-    input:
-        cells = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/cells_meta.tsv",
-        se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"])
-    output:
-        note = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/umap_overlay.ipynb"
-    params:
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clones_umap_overlap.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note)
-    shell: "papermill -p se_f {input.se} -p cells_meta_f {input.cells} -p outdir {params.outdir}  {params.script} {output.note}"
-
-
-rule ind_clone_lineage_count:
-    input:
-        cells = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/cells_meta.tsv",
-        #se =  expand("{{outdir}}/anno_multiplex/gff_{gff}/SE.rds", gff=config["gff"])
-    output:
-        note = "{outdir}/{clone_subset}/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/single/clone_lineage_count.ipynb"
-    params:
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_lineage_distribution.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note)
-    shell: "papermill -p cells_meta_f {input.cells} -p outdir {params.outdir} {params.script} {output.note}"
-
-
 def get_mt_f(wildcards):
     w = wildcards
     outdir = join(w.outdir, f"multiplex/clones_{w.variants}/donor{w.d}/af.tsv")
     return outdir
 
 
-rule ind_clone_coverage_af_cl:
-    input:
-        cells = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{cloneShift_method}/cells_meta.tsv",
-        mt_f = get_mt_f
-    output:
-        note = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{cloneShift_method}/single/mt_coverage.ipynb"
-    params:
-        mt_indir = lambda wildcards, input: dirname(input.mt_f),
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_mt_coverage.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note)
-    shell: "papermill -p indir {params.mt_indir} -p cells_meta_f {input.cells} -p outdir {params.outdir} {params.script} {output.note}"
-
-
-rule ind_clone_coverage_af_mt:
-    input:
-        cells = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{cloneShift_method}/cells_meta.tsv",
-        mt_f = get_mt_f
-    output:
-        note = "{outdir}/{clone_subset}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{cloneShift_method}/single/mt_coverage.ipynb"
-    params:
-        mt_indir = lambda wildcards, input: dirname(input.mt_f),
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/individual_clone_mt_coverage.ipynb"),
-        outdir = lambda wildcards, output: dirname(output.note)
-    shell: "papermill -p indir {params.mt_indir} -p cells_meta_f {input.cells} -p outdir {params.outdir} {params.script} {output.note}"
-
-
-
-rule individual_clone_complete:
-    input:
-        expand("{{outdir}}/{{clone_subset}}/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/single/{f}",
-              f=["umap_overlay.ipynb", "clone_lineage_count.ipynb"], #, "mt_coverage.ipynb", "hypergeo_pval.ipynb"],
-              d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
-              clone_shift_method = knn_clone_shift,
-              kparam=params_clones["knn"]["params"]["resolution"]),
-        expand("{{outdir}}/{{clone_subset}}/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/single/{f}",
-                  f=["umap_overlay.ipynb",  "clone_lineage_count.ipynb"], #, "mt_coverage.ipynb", "hypergeo_pval.ipynb",],
-                  d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
-                  variants=[x for x in params_clones["variants"] if x != "simple"],
-                  af= best_p["af"], othaf= best_p["oth_af"],
-                  cov= best_p["cov"], othcov= best_p["oth_cov"],
-                  ncells= best_p["num_cells"], othncells= best_p["oth_num_cells"],
-                  mean= best_p["mean_pos_cov"]),
-    output: "{outdir}/{clone_subset}/.aggregate.txt"
-    shell: "touch {output}"
-
-
 def get_top_clone_hypergeoSig_script(wildcards):
     return join(ROOT_DIR, "workflow/notebooks/individual_clones/oneCondition_top_individual_clone_lineage_Sig_hypergeo.ipynb")
+
 
 def get_param_top_clone_hypergeoSig_condition():
     if len(condition) == 1:

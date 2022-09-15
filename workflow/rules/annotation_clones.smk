@@ -11,8 +11,6 @@ else:
     ic.disable()
 
 def get_anno_integrate(wildcards):
-    #print(join(config["anno_res"], "mergedSamples","allSamples.integrated.rds"))
-    #return join(config["anno_res"], "mergedSamples","allSamples.integrated.rds")
     return join(config["anno_res"], config["gff"] , "mergedSamples","allSamples.integrated.rds")
 
 # def get_se_meta(wildcards):
@@ -21,7 +19,6 @@ def get_anno_integrate(wildcards):
 
 params = config["annotation_clones"]["params"]
 params_cl_embed = config["clone_clust_embed"]["params"]
-
 
 
 rule addClones:

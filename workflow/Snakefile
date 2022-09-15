@@ -7,7 +7,7 @@ wildcard_constraints:
     kparam='[0-9]+',  #'%d', #[0-9]+',
     variants = "mgatkdonor|init|simpleUnion|prefilterMerge_impute",
     d = "[0-9]+",
-    outdir = '((?!enriched_barcodes).)*'
+    outdir = '((?!enriched_barcodes_v02).)*'
 
 #configfile:  "parameters/pipeline/cosmo_server/jan21_2021.yaml"
 from src.config import ROOT_DIR
@@ -118,8 +118,8 @@ else:
 rule all:
     input:
         # # A. Preproc: Initial MT coverage per position per cell
-        # expand("{out_dir}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
-        #     out_dir=res,sample=samples.index, num_read=num_reads_filter, cellrbc=cellrbc),
+        expand("{out_dir}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
+            out_dir=res,sample=samples.index, num_read=num_reads_filter, cellrbc=cellrbc),
         # B. Multiplex: Multiplexed VAF and depth dendrograms for each donor and selected variants
         expand("{out_dir}/results/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/multiplex.pdf",
             out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
@@ -130,7 +130,7 @@ rule all:
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
             method=params_clones["method"],
-            kparam=params_clones["knn"]["params"]["resolution"],d=np.arange(config["N_DONORS"])),
+            kparam=params_clones["knn"]["params"]["resolution"]),
 
          #multiplex variant types
         expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_{variants}/variantTypes/output.ipynb",
@@ -177,6 +177,18 @@ rule all:
             variants=[x for x in params_clones["variants"] if x!="simple"]
         ),
 
+
+        # subsampling clones
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
+            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
+            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+            method=params_clones["method"],
+            kparam=params_clones["knn"]["params"]["resolution"],
+            variants=[x for x in params_clones["variants"] if x!="simple"]
+        ),
+
+
         # # Enrichment
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/enrichment/_enrichment_complete",
         #     out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
@@ -220,8 +232,6 @@ rule all:
             btwnMinpct=params_annclo["min_pct"], gsea_pval=params_annclo["gsea_pval"],
             ),
 
-
-        #
         # # Condition DE
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_p{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
         #     out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
@@ -235,7 +245,7 @@ rule all:
         #     prefilter=params_annclo["prefilter"],
         #     stat_col=params_annclo["stat_col"], padjmethod=params_annclo["padjmethod"]),
         #
-        #
+
         # # Within each clone run DE btwn conditions
         # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/de_clone_btwncond_RNA/minPct_{btwnMinpct}_logfc{logfc_threshold}_minCells{min_cells}_pthresh{p_thresh}/GSEA_pthresh.{gsea_pval}_pref.{prefilter}_stat.{stat_col}_padj.{padjmethod}/summary.ipynb",
         #     out_dir=res,cellrbc=cellrbc,num_read=num_reads_filter,
@@ -302,10 +312,10 @@ rule all:
         #         mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
         #         hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'],
         #         variants=[x for x in params_clones["variants"] if x != "simple"]) #".aggregate.txt"
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes/.finalize", #single_clones/{f}",
-                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
-                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])#, f = [".top_clones.txt"]) #".aggregate.txt"
+#        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/enriched_barcodes_v02/.finalize", #single_clones/{f}",
+#                out_dir=res,cellrbc=cellrbc, num_read=num_reads_filter,
+#                mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+#                hetcountthresh=ft['hetcountthresh'], bqthresh=ft['bqthresh'])#, f = [".top_clones.txt"]) #".aggregate.txt"
 
         #"{outdir}/single_clones/.preproc.txt"
 
@@ -394,6 +404,12 @@ module multMod:
 module preFiltMod:
     snakefile: "./rules/clone_detection/proc_prefilterMerge_imputation.smk"
     config: params
+
+
+module subSampMod:
+    snakefile: "./rules/clone_detection/subsample_knn.smk"
+    config: params
+
 
 ########################################################################
 ########################################################################
@@ -1083,6 +1099,11 @@ use rule * from cloneEnrichMod as cloneEnrich_*
 #         comparisons = config["comparisons"] if "comparisons" in config else "None"
 #     shell: "python {params.script} {input} {params.OUTDIR} {params.samples} --tests {params.comparisons:q}"
 
+use rule * from subSampMod as subsamp_*
+
+use rule subsample_knn from subSampMod as subsamp_subsample_knn with:
+    input:
+        af_full = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_{variants}/donor{d}/af.tsv"
 
 
 ic('params_clones', params_clones)

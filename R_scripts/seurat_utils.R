@@ -64,6 +64,7 @@ featplot <- function(name.sig, se, curr.outdir, feat.names=NULL, use.density=FAL
   }
 }
 
+
 vPlot <- function(se){
       vPlot <- VlnPlot(
       object = se,
@@ -326,8 +327,7 @@ summarize.tf.large.clones <- function(se, outdir, d, cdf.thresh, all.names.sig=c
 
 
 
-
-get.pwm <- function(se, genome, out_f=""){
+get.pwm <- function(se, genome, out_f="", species=9606){
   # Created by: ras
   # Created on: 10/26/21
   library(motifmatchr)
@@ -342,7 +342,7 @@ get.pwm <- function(se, genome, out_f=""){
   # extract position frequency matrices for the motifs
   pwm <- getMatrixSet(
     x = JASPAR2020,
-    opts = list(species = 9606, all_versions = FALSE)
+    opts = list(species = species, all_versions = FALSE)
   )
 
   fa.file <- Rsamtools::FaFile(genome, index=sprintf("%s.fai", genome)) #,

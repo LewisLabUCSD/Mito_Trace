@@ -15,6 +15,18 @@ import pickle
 def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
                     p_thresh=0.1, f_save=None,
                     title="Number of clones that are significant"):
+    """ Combine two hypergeometric tests that have the same dimensions.
+    Looks for samples (clones) that have significance both tests
+
+    :param a_enrich_df:
+    :param b_enrich_df:
+    :param a_name:
+    :param b_name:
+    :param p_thresh:
+    :param f_save:
+    :param title:
+    :return:
+    """
     a_enrich_df.index.name = "name"
     b_enrich_df.index.name = "name"
 
@@ -24,9 +36,6 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
     else:
         a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
                                          var_name=a_name)
-    # a_sig = a_sig.reset_index().melt(id_vars="name", value_name="sig",
-    #                                  var_name=a_name)
-
     print('a_sig', a_sig.head())
     b_sig = b_enrich_df < p_thresh
     print(b_sig.shape)
@@ -77,7 +86,6 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
         plt.title(f"{title} no significant clones")
         pass
 
-
     if f_save is not None:
         plt.savefig(f_save + ".pdf")
         merged_df.to_csv(f_save + ".csv")
@@ -86,6 +94,15 @@ def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
 
 def get_groups(groups, clones=None, atac_cl=None, clone_col=None,
                atac_col=None):
+    """ Gets the unique values for the columns based on the groups df
+
+    :param groups: DataFrame with the atac_col and clone_col
+    :param clones: if not None, skips getting the unique sample columns
+    :param atac_cl: if not None, skips getting the unique feature columns
+    :param clone_col: sample columns name
+    :param atac_col: feature column name .
+    :return:
+    """
     if clones is None:
         if clone_col is None:
             raise ValueError("clone_col or clones cant be None")
@@ -98,6 +115,15 @@ def get_groups(groups, clones=None, atac_cl=None, clone_col=None,
 
 
 def run_hypergeo(groups, clones, atac_cl, atac_col, clone_col):
+    """ Computes hypergeometric for each feature for each sample.
+
+    :param groups:
+    :param clones:
+    :param atac_cl:
+    :param atac_col:
+    :param clone_col:
+    :return:
+    """
     # p(k,M,n,N) = (n choose k)((M-n)choose(N-k))/(MchooseN)
     # pmf(k, M, n, N) = choose(n, k) * choose(M - n, N - k) / choose(M, N),
     # for max(0, N - (M-n)) <= k <= min(n, N)
@@ -127,6 +153,12 @@ def run_hypergeo(groups, clones, atac_cl, atac_col, clone_col):
 
 
 def pval_correct(enrichment_df, p_thresh):
+    """ Does BH-FDR test for hypergeometric tests
+
+    :param enrichment_df:
+    :param p_thresh:
+    :return:
+    """
     reject, pvals_corrected, _, _ = multitest.multipletests(
         enrichment_df.values.flatten(), alpha=p_thresh, method="fdr_bh")
 
@@ -139,14 +171,20 @@ def pval_correct(enrichment_df, p_thresh):
 
 
 def create_enrichment(groups, atac_col, clone_col, p_thresh, clones=None, atac_cl=None, to_correct=True):
+    """ Runs the hypergeometric test and does p-val correction if to_correct=True
+
+    :param groups:
+    :param atac_col:
+    :param clone_col:
+    :param p_thresh:
+    :param clones:
+    :param atac_cl:
+    :param to_correct:
+    :return:
+    """
     clones, atac_cl = get_groups(groups, clones, atac_cl, clone_col,
                                  atac_col)
-    #print('cols', atac_col, clone_col)
-    #print(groups.head())
-    #print('clones', clones)
     enrichment_df = run_hypergeo(groups, clones, atac_cl, atac_col, clone_col)
-    #print('raw enrich', enrichment_df)
-    #print(enrichment_df.shape)
     if to_correct:
         pvals_corrected = pval_correct(enrichment_df, p_thresh)
         bh_enrichment_df = enrichment_df.copy()
@@ -156,15 +194,31 @@ def create_enrichment(groups, atac_col, clone_col, p_thresh, clones=None, atac_c
     return enrichment_df
 
 
+def set_minimum_p(df, p_thresh):
+    # sets the minimum p-value instead of 0
+    min_p = (set((df.values).flatten()) - {0})
+    if len(min_p) == 0:
+        min_p_val = p_thresh-(p_thresh/10**4)
+    else:
+        min_p_val = min(min(min_p), p_thresh-(p_thresh/10**4))
+    df[df == 0] = min_p_val  # Set to the next min, or p_thresh, whichever is smaller
+    return df
+
 def create_output_df(bh_enrichment_df, sizes, p_thresh, to_filt=True):
+    """ Calculates significance with p_thresh and filters if to_filt
+
+    :param bh_enrichment_df:
+    :param sizes:
+    :param p_thresh:
+    :param to_filt:
+    :return:
+    """
     output_df = pd.DataFrame(index=sizes.index)
     # output_df = pd.DataFrame(index=bh_enrichment_df.index)
     output_df["significant clusters"] = ""
     output_df["size"] = sizes
     output_df["min_significance"] = None
 
-    sig_results = []
-    sig_order = []
     # for ind, val in bh_enrichment_df.loc[sizes.index].iterrows():
     for ind, val in bh_enrichment_df.iterrows():
         passed = val[val < p_thresh].index.values
@@ -175,35 +229,34 @@ def create_output_df(bh_enrichment_df, sizes, p_thresh, to_filt=True):
                 val)  # sig_results.append((ind, passed))
     output_df.loc[:, bh_enrichment_df.columns] = bh_enrichment_df.loc[
         output_df.index]
-    # print('output df before filter')
-    # print(output_df.head())
-    output_df = output_df.sort_values("min_significance")
+
 
     output_df = output_df.loc[~(output_df["min_significance"].isnull())]
-    #print('output df after filter')
-    #print(output_df.head())
-    # output_df.to_csv(out_f, sep=",")
-    output_df = output_df.sort_values("size", ascending=True)
+    output_df = output_df.sort_values("min_significance")
+    #output_df = output_df.sort_values("size", ascending=True)
     if to_filt:
         bh_enrichment_df[bh_enrichment_df > p_thresh] = 1
 
-    min_p = (set((bh_enrichment_df.values).flatten()) - {0})
-    if len(min_p) == 0:
-        min_p_val = p_thresh-(p_thresh/10**4)
-    else:
-        min_p_val = min(min(min_p), p_thresh-(p_thresh/10**4))
-
-    bh_enrichment_df[bh_enrichment_df == 0] = min_p_val  # Set to the next min, or p_thresh, whichever is smaller
+    bh_enrichment_df = set_minimum_p(bh_enrichment_df, p_thresh)
     return output_df, bh_enrichment_df
 
 
 def pipeline_groups_hypergeo(groups, clones, atac_cl, sizes, p_thresh, atac_col, clone_col, to_filt=True, to_correct=True):
-    # bh_enrichment_df = create_enrichment(groups, clones, atac_cl,
-    #                                      atac_col=atac_col,clone_col=clone_col, p_thresh=p_thresh)
+    """ Runs bh-corrected hypergeo for each clone-cluster combination
+
+    :param groups:
+    :param clones:
+    :param atac_cl:
+    :param sizes:
+    :param p_thresh:
+    :param atac_col:
+    :param clone_col:
+    :param to_filt:
+    :param to_correct:
+    :return:
+    """
     bh_enrichment_df =  create_enrichment(groups, atac_col, clone_col,
                                           p_thresh, clones, atac_cl, to_correct=to_correct)
-    #print('bh', bh_enrichment_df)
-    #print('clones', clones)
     output_df, bh_enrichment_df = create_output_df(bh_enrichment_df,
                                                    sizes=sizes, p_thresh=p_thresh, to_filt=to_filt)
     return output_df, bh_enrichment_df
@@ -468,14 +521,11 @@ def get_out(shuffle, clones, bh_enrichment_df, p_thresh, clone_map, atac_col, ou
 
 
 def plot_sig_results_per_method(results_df, p_thresh, outdir):
-    for ind, val in results_df[results_df["value"] < p_thresh].groupby(
-            "method"):
+    for ind, val in results_df[results_df["value"] < p_thresh].groupby("method"):
         if len(val)==0 or val.shape[1]==0:
             print('val empty')
             print(ind)
             continue
-        #min_m = min(val.loc[val["value"] != 0, "value"])
-        #val.loc[val["value"] == 0, "value"] = min_m
 
         curr_df = val.astype(object).pivot(index="index", columns="variable",values="value").fillna(1)
         if (curr_df.shape[0] > 1) and (curr_df.shape[1] > 1):
@@ -489,7 +539,6 @@ def plot_sig_results_per_method(results_df, p_thresh, outdir):
         #g.fig.suptitle(title)
         #g.ax_cbar.set(title=title)  # g.ax_cbar.set(title="-log10 p-value")
         plt.savefig(join(outdir, f"{ind}_shuffle_sig"),dpi=300, bbox_inches = "tight")
-
     return
 
 
@@ -511,7 +560,6 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
     plt.gca().set_title("log2 ncells")
     plt.savefig(join(outdir, "ncells.png"),dpi=300, bbox_inches = "tight")
     groups.rename({atac_col: "clusterID", clone_col: "cloneID"}, axis=1).to_csv(join(outdir, "ncells.csv"))
-    #groups.to_csv(join(outdir, "ncells.csv"))
 
     output_df, bh_enrichment_df = pipeline_groups_hypergeo(groups,
                                                            clones,
@@ -538,7 +586,6 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
         plt.savefig(join(outdir, "hypergeo_padjusted.png"), dpi=300,
                     bbox_inches="tight")
     else:
-
         g = sns.clustermap(
             -np.log10(bh_enrichment_df.loc[output_df.index].fillna(1)),
             row_cluster=False)
@@ -546,9 +593,7 @@ def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
         g.ax_cbar.set(title="-log10 p-value")
         g.fig.suptitle("-log10 BH-adjusted p-values for clonal shifts across clusters.")
         plt.savefig(join(outdir, "hypergeo_padjusted.png"),dpi=300, bbox_inches = "tight")
-
     return True
-
 
 
 def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, atac_cl, to_p_correct=False, n_shuffle=1000, figs_close=False, n_cpus=4):
@@ -564,17 +609,7 @@ def run_data_and_shuffle(groups, outdir, atac_col, clone_col, p_thresh, clones, 
     results_df, out_d = get_out(shuffle, clones, hyper_df, p_thresh, clone_map,
                                 atac_col, outdir, figs_close=figs_close)
 
-    # Merge the initial results and the shuffle results and save
-    # hyper_df = hyper_df.reset_index().melt(
-    #     id_vars=["index"]).rename(
-    #     {"variable": "lineage", "index": "clone", "value": "BH_p_adj"},
-    #     axis=1).set_index(["clone", "lineage"])
-    # Save shuffle results
-    # out_df = results_df.rename(
-    #     {"value": "p_value_shuffle", "index": "clone",
-    #      "variable": "lineage"}, axis=1)
     out_df = results_df.copy()
-    #out_df = out_df[out_df["p_value shuffle"] < p_thresh]
     out_df = out_df[out_df["value"] < p_thresh]
     print('out_df', out_df)
     # out_df["BH_p_adj"] = out_df.apply(

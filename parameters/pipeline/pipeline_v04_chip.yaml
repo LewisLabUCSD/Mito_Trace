@@ -126,6 +126,12 @@ clones:
         - "None"
         #- "min_pct_0.5"
         - "min_both_pct_0.5"
+
+    subsample:
+      pct: [10, 25, 50, 75, 90, 95, 99]
+      n_subsamples: 3
+
+
 distinct_clones:
   params:
     #weights: [1,1,1,1,1,1,1]
@@ -190,7 +196,6 @@ annotation_clones:
   params:
     cdf_thresh:
       - 0.3
-
     min_pct:
       - 0.01 # for TF
     btwnMinpct:

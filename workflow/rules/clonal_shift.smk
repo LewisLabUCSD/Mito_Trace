@@ -1,22 +1,44 @@
+""" Calculates if significant shift in clonal distributiion across cell lineages
+
+Different modules:
+1. clones
+2. clone_dendro
+(To finish)
+3. mt_as_clones
+4. mt_as_clones_dendro
+
+Input:
+a) se_meta = se_cells_meta_labels.tsv
+
+b) dendro =  barcodes/btwnClones_dendro_dt_{dt}/donor{d}.clones_dendro.csv,
+"""
+
 import pandas as pd
 from snakemake.utils import min_version
-from icecream import ic
 min_version("6.0")
-print('config', config)
+
+from icecream import ic
+verbose = config.get("verbose", False)
+if verbose:
+    ic.enable()
+else:
+    ic.disable()
+
+
 from src.config import ROOT_DIR
 from os.path import join, dirname
 import numpy as np
-import pickle
 
-
-#dendro_d = f"dendro_dt_{config['clones']['params']['dendro_thresh']}"
+name_map = {"clones":"name", "dendro_bc": "den_clust", "mt_as_clones": "Variants", "mt_as_clones_dendro": "den_clust"}
 
 dendro_d = config['clones']['params']['dendro_thresh']
 
 # inputOnly and noInput:
 # See if Input there, then run inputOnly, and if other conditions also there, run noInput
 sample_ids = config["samples"].index
-print('sample_ids', sample_ids)
+
+ic('config', config)
+ic('sample_ids', sample_ids)
 condition = []
 if "Input" in sample_ids:
     condition.append("inputOnly")
@@ -27,7 +49,7 @@ elif len(sample_ids) > 0:
 
 if len(condition) == 0:
     raise ValueError("Samples not set up properly")
-print('condition types for clonal shift', condition)
+ic('condition types for clonal shift', condition)
 
 
 rule clonalshift_clones:
@@ -41,7 +63,6 @@ rule clonalshift_clones:
         outdir = lambda wildcards, output: dirname(output.note),
         N_DONORS = config["N_DONORS"],
     shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
-
 
 
 rule clonalshift_dendro_bc:
@@ -60,22 +81,6 @@ rule clonalshift_dendro_bc:
         barcodes_dir = lambda wildcards, input: dirname(input.barcodes_dir[0]),
     shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p barcodes_dir {params.barcodes_dir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
 
-#
-# rule compare_input_and_culture_dendro_bc:
-#     input:
-#         noInput = "{outdir}/clonal_shifts/variants_{variants}/dendro_bc/results/noInput/knn/kparam_{kparam}/output.ipynb",
-#         input = "{outdir}/clonal_shifts/variants_{variants}/dendro_bc/results/inputOnly/knn/kparam_{kparam}/output.ipynb"
-#     output:
-#         note = "{outdir}/clonal_shifts/variants_{variants}/donors/donor{d}/dendro_bc/knn_kparam_{kparam}/output.ipynb"
-#     params:
-#         noInput_indir= lambda wildcards, input: dirname(input.noInput),
-#         input_indir = lambda wildcards, input: dirname(input.input),
-#         outdir = lambda wildcards, output: dirname(output.note),
-#         donor = lambda wildcards: wildcards.d,
-#         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-#     shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col den_clust -p outdir {params.outdir} {params.script} {output.note}"
-#
-
 
 rule clonalshift_mt_as_clones:
     input:
@@ -91,21 +96,6 @@ rule clonalshift_mt_as_clones:
     shell: "papermill -p indir {params.indir} -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
 
 
-# rule compare_input_and_culture_mt_as_clones:
-#     input:
-#         noInput = "{outdir}/clonal_shifts/variants_{variants}/mt_as_clones/results/noInput/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb",
-#         input = "{outdir}/clonal_shifts/variants_{variants}/mt_as_clones/results/inputOnly/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
-#     output:
-#         note = "{outdir}/clonal_shifts/variants_{variants}/donors/donor{d}/mt_as_clones/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
-#     params:
-#         noInput_indir= lambda wildcards, input: dirname(input.noInput),
-#         input_indir = lambda wildcards, input: dirname(input.input),
-#         outdir = lambda wildcards, output: dirname(output.note),
-#         donor = lambda wildcards: wildcards.d,
-#         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-#     shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col Variants -p outdir {params.outdir} {params.script} {output.note}"
-#
-
 rule clonalshift_mt_as_clones_dendro:
     input:
         clones = "{outdir}/mt_as_clones/variants_{variants}/dendro/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/dendro_mt_clones.ipynb",
@@ -120,22 +110,6 @@ rule clonalshift_mt_as_clones_dendro:
     shell: "papermill -p indir {params.indir} -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p N_DONORS {params.N_DONORS} -p condition {wildcards.condition} {params.script} {output}"
 
 
-# rule compare_input_and_culture_mt_as_clones_dendro:
-#     input:
-#         noInput = "{outdir}/clonal_shifts/variants_{variants}/mt_as_clones_dendro/results/noInput/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb",
-#         input = "{outdir}/clonal_shifts/variants_{variants}/mt_as_clones_dendro/results/inputOnly/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
-#     output:
-#         note = "{outdir}/clonal_shifts/variants_{variants}/donors/donor{d}/mt_as_clones_dendro/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/output.ipynb"
-#     params:
-#         noInput_indir= lambda wildcards, input: dirname(input.noInput),
-#         input_indir = lambda wildcards, input: dirname(input.input),
-#         outdir = lambda wildcards, output: dirname(output.note),
-#         donor = lambda wildcards: wildcards.d,
-#         script = join(ROOT_DIR, "workflow/notebooks/clonal_shifts/combine_conditions_hypergeometric.ipynb"), #get_script,
-#     shell: "papermill -p noIn_indir {params.noInput_indir} -p input_indir {params.input_indir} -p donor {params.donor} -p clone_col den_clust -p outdir {params.outdir} {params.script} {output.note}"
-
-
-name_map = {"clones":"name", "dendro_bc": "den_clust", "mt_as_clones": "Variants", "mt_as_clones_dendro": "den_clust"}
 
 rule compare_input_and_culture_cl:
     input:
@@ -178,6 +152,7 @@ def get_compare_output(wildcards):
         elif "noInput" in condition:
             return f"{w.outdir}/clonal_shifts/variants_{w.variants}/donors/donor{w.d}/{w.cloneShift_method}/knn_kparam_{w.kparam}/output_single_noInput_compare.ipynb"
     return
+
 
 rule mv_tmp_compare:
     input:
@@ -229,6 +204,7 @@ def get_compare_output_mt(wildcards):
             return f"{w.outdir}/clonal_shifts/variants_{w.variants}/donors/donor{w.d}/{w.cloneShift_method}/af.{w.af}_othaf.{w.othaf}_cov.{w.cov}_othcov.{w.othcov}_ncells.{w.ncells}_othncells.{w.othncells}_mean.{w.mean}/output_single_noInput_compare.ipynb"
     return
 
+
 rule mv_tmp_compare_mt:
     input:
         get_compare_output_mt
@@ -241,7 +217,6 @@ rule mv_tmp_compare_mt:
 best_p = config["mt_as_clones"]["best_params"]
 params_clones = config["clones"]
 
-#print("dendro_d", dendro_d)
 
 rule finalize:
     input:
