@@ -4,8 +4,9 @@ from os.path import join, dirname
 import os
 import numpy as np
 from icecream import ic
-np.random.seed(42)
-
+#np.random.seed(42)
+from sklearn.metrics import adjusted_mutual_info_score
+from sklearn.metrics import silhouette_score
 
 #samples = config["samples"] #pd.read_table(config["samples_meta"], dtype=str,sep=',').set_index(["sample_name"], drop=False)
 params = config["clones"]["params"]["subsample"]
@@ -24,13 +25,15 @@ params = config["clones"]["params"]["subsample"]
 #multiplex/clones_prefilterMerge_impute/donor0/af.tsv
 rule subsample_af:
     input:
-        af_full = "{outdir}/donor{d}/af.tsv"
+        af_full = "af.tsv"
     output:
-        temp("{outdir}/subsamples/pct_{pct}/{i}/donor{d}/af.tsv")
+        af_sub = ("{outdir}/subsamples/pct_{pct}/{i}/donor{d}/af.tsv")
     run:
-        df = pd.read_csv(input.af_full, sep="\t")
+        df = pd.read_csv(input.af_full, sep="\t", index_col=0)
         # keep condittions balanced?
-        df.sample(n=wildcards["pct"]).to_csv(output, sep="\t")
+        df.index.name = None
+        print(float(wildcards["pct"])/100)
+        df.sample(frac=float(wildcards["pct"])/100).to_csv(output.af_sub, sep="\t", index=True)
 
 def get_knn_script(cfg):
     variants_type = cfg.get("variants_type", None)
@@ -51,7 +54,8 @@ rule knn:
         indir = lambda wildcards, input: dirname(input.af),
         name = lambda wildcards: f"donor{wildcards.d}",
         outdir = lambda wildcards, output: dirname(output[0]),
-        note = get_knn_script(config) #join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb"),
+        note = join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb") #get_knn_script(config) #join(ROOT_DIR, "R_scripts", "knn_clones_init.ipynb"),
+    priority: 8
     shell:
         "papermill -k ir -p indir {params.indir} -p name {params.name} -p donor {wildcards.d} -p outdir {params.outdir} -p kparam {wildcards.kparam} {params.note} {params.outdir}/output.ipynb"
 
@@ -63,26 +67,37 @@ rule clone_metrics:
     output:
         silhouette = "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/silhouette.txt",
     run:
-        from sklearn.metrics import silhouette_score
-        clones = pd.read_csv(input.cells, sep="\t")[["name"]]
-        df = pd.read_csv(input.af, sep="\t")
-        silh = silhouette_score(df, labels=clones)
+
+        clones = pd.read_csv(input.cells, sep="\t")
+        df = pd.read_csv(input.af, sep="\t", index_col=0)
+
+        df = df.loc[clones["ID"]]
+        silh = silhouette_score(np.sqrt(df), labels=clones["lineage"])
         with open(output.silhouette, 'w') as f:
-            f.write(silh)
+            f.write(str(silh))
 
 rule compare_orig:
     input:
-        clones_orig = "{outdir}/knn/kparam_{kparam}/donors/donor{d}/cells_meta.tsv",
+        clones_orig = "{outdir}/knn/kparam_{kparam}/cells_meta.tsv",
         clones_sub = "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/cells_meta.tsv",
     output:
         anmi = "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/anmi.txt",
+    priority: 9
     run:
-        clones_orig = pd.read_csv(input.clones_orig, sep="\t")[["name"]]
-        clones_sub = pd.read_csv(input.clones_sub, sep="\t")[["name"]]
-        from sklearn.metrics import adjusted_mutual_info_score
-        nmi = adjusted_mutual_info_score(clones_orig, clones_sub, average_method='arithmetic')
+        clones_orig = pd.read_csv(input.clones_orig, sep="\t")
+        clones_orig["donor"] = clones_orig["donor"].astype(str)
+        print(clones_orig.head())
+        clones_orig = clones_orig[clones_orig["donor"] == str(wildcards.d)]
+        clones_sub = pd.read_csv(input.clones_sub, sep="\t")
+        inds = list(set(clones_sub["ID"].values).intersection(set(clones_orig["ID"].values)))
+        #print('inds', inds[:2])
+        clones_orig = clones_orig.set_index("ID").loc[inds,"lineage"].values
+        clones_sub  = clones_sub.set_index("ID").loc[inds, "lineage"].values
+
+        anmi = adjusted_mutual_info_score(clones_orig, clones_sub, average_method='arithmetic')
+        #print('anmi', anmi)
         with open(output.anmi, 'w') as f:
-            f.write(nmi)
+            f.write(str(anmi))
 
 
 rule subsamp_concat:
@@ -91,12 +106,13 @@ rule subsamp_concat:
         anmi = "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/anmi.txt",
     output:
         "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/subsamp.csv",
+    priority: 10
     run:
         with open(input.silhouette, 'r') as f:
             silh = f.read()
         with open(input.anmi, 'r') as f:
             anmi = f.read()
-        pd.Series([silh, anmi,wildcards.pct], index=["silhouette score", "adjusted nmi","percent subbsample"]).to_csv(output[0])
+        pd.Series([silh, anmi, wildcards.pct], index=["silhouette score", "adjusted nmi", "percent subbsample"]).to_csv(output[0])
 
 
 rule aggregate:
@@ -106,12 +122,26 @@ rule aggregate:
                i=np.arange(params["n_subsamples"]),
                )
     output:
-        "{outdir}/subsamples/donor{d}/knn/kparam_{kparam}/subsample_metrics.tsv",
+        "{outdir}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
     run:
         all = []
         for i in input:
-            all.append(pd.read_csv(i).transpose())
+            all.append(pd.read_csv(i, index_col=0).transpose())
         pd.concat(all, axis=0, ignore_index=True).to_csv(output[0], sep="\t")
+
+
+# rule all_aggregate:
+#     input:
+#         expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/knn/kparam_{kparam}/cells_meta.tsv",
+#                 variants=[x for x in config["params"]["variants"] if x != "simple"], kparam=params_clones["knn"]["params"]["resolution"]),
+
+
+#rule plots:
+    #input:
+        #groups = ["subsample_metrics.tsv"]
+    #output:
+        #out_fig = {outdir}/subsamples/roc_plots.png,
+        #out_metrics = {outdir}/subsamples/roc_plots.csv
 
 
 

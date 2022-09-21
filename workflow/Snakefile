@@ -172,7 +172,6 @@ rule all:
             out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            method=params_clones["method"],
             kparam=params_clones["knn"]["params"]["resolution"],
             variants=[x for x in params_clones["variants"] if x!="simple"]
         ),
@@ -183,10 +182,14 @@ rule all:
             out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
             mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
             hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            method=params_clones["method"],
             kparam=params_clones["knn"]["params"]["resolution"],
-            variants=[x for x in params_clones["variants"] if x!="simple"]
+            variants=[x for x in params_clones["variants"] if x!="simple"],
+            d=np.arange(config["N_DONORS"])
         ),
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons_subsamples/subsample_output.ipynb",
+            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
+            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh']),
 
 
         # # Enrichment
@@ -1101,10 +1104,11 @@ use rule * from cloneEnrichMod as cloneEnrich_*
 
 use rule * from subSampMod as subsamp_*
 
-use rule subsample_knn from subSampMod as subsamp_subsample_knn with:
+use rule subsample_af from subSampMod as subsamp_subsample_af with:
     input:
         af_full = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/multiplex/clones_{variants}/donor{d}/af.tsv"
-
+    output:
+        af_sub = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/pct_{pct}/{i}/donor{d}/af.tsv"
 
 ic('params_clones', params_clones)
 ############################################
@@ -1131,6 +1135,27 @@ rule compare_methods:
         "papermill -p all_files {params.all} -p outdir {params.outdir} -p cfg_outdir {params.cfg_outdir} -p prefix {params.prefix} -p params_f {params.params_f} {params.note} {output.note}"
 
 
+rule subsample_meta:
+    input:
+        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
+
+    output:
+        params = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/params.csv"
+    run:
+        pd.Series([wildcards.variants, wildcards.kparam, wildcards.d], index=["variants", "kparam", "d"]).to_csv(output.params)
+
+
+rule compare_subsample_methods:
+    input:
+        expand("{{out_dir}}/data/merged/MT/cellr_{{cellrbc}}/numread_{{num_read}}/filters/minC{{mincells}}_minR{{minreads}}_topN{{topN}}_hetT{{hetthresh}}_hetC{{minhetcells}}_hetCount{{hetcountthresh}}_bq{{bqthresh}}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/params.csv",
+                variants=[x for x in params_clones["variants"] if x != "simple"],
+                kparam=params_clones["params"]["subsample"]["knn"]["resolution"], d=np.arange(config["N_DONORS"])),
+    output:
+        note = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons_subsamples/subsample_output.ipynb",
+    params:
+        in_fs = lambda wildcards, input: ";".join(input),
+        note = join("src", "clones_compare", "clones_subsample.ipynb"),
+    shell: "papermill -p in_files {params.in_fs:q} {params.note} {output.note}"
 
 ############################################
 ## Annotation

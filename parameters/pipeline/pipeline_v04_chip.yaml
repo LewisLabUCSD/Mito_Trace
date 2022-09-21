@@ -129,7 +129,9 @@ clones:
 
     subsample:
       pct: [10, 25, 50, 75, 90, 95, 99]
-      n_subsamples: 3
+      n_subsamples: 100
+      knn:
+        resolution: [3, 30, 50]
 
 
 distinct_clones:

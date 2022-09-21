@@ -108,6 +108,7 @@ def get_lineage_clone_counts_script(wildcards):
         return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster.ipynb")
     return join(ROOT_DIR, "workflow/notebooks/lineage_clones/clone_cluster_donors.ipynb")
 
+
 rule lineage_clone_counts_input:
     """ ISSUE with the output the size is not accurate"""
     input:
@@ -143,6 +144,8 @@ rule finalize_lineage_clone_counts_input:
 ## Lineage clone counts for all
 ################################################################
 """
+
+
 rule lineage_clone_counts:
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
@@ -173,6 +176,25 @@ rule finalize_lineage_clone_counts:
     output:
         "{outdir}/annotation_clones/cluster_clone_counts/{donType}/.summarize_all.txt"
     shell: "touch {output}"
+
+"""
+Lineage (fate) Correlations
+"""
+rule fate_corr:
+    input:
+        se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
+    output:
+        note = "{outdir}/annotation_clones/fate_correlation/minC5/output.ipnyb",
+        corr = "{outdir}/annotation_clones/fate_correlation/minC5/correlation.csv",
+        corr_fig = "{outdir}/annotation_clones/fate_correlation/minC5/fateCorr_allDonors.pdf",
+        repr_corr_fig = "{outdir}/annotation_clones/fate_correlation/minC5/fateCorr_scatter_allDonors.pdf",
+        corr_fig_sepClones = "{outdir}/annotation_clones/fate_correlation/minC5/fateCorr_sepCond_allDonors.pdf"
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        min_cell = 5,
+        note = join(ROOT_DIR, "workflow/notebooks/lineage_clones/fate_correlation.ipynb")
+    shell: "papermill -p se_cells_meta_f {input.se_meta} -p outdir {params.outdir} -p min_cell {params.min_cell} -p use_input False {params.note} {output.note}"
+
 
 """
 ################################################################
@@ -329,6 +351,7 @@ rule finalize:
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
         markersSelect = "{outdir}/annotation_clones/markersSelect/dotplot_markersSelect.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/counts_clones.ipynb"),
+        fate_corr = "{outdir}/annotation_clones/fate_correlation/minC5/output.ipnyb",
         #cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
         cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/.summarize_{sampType}.txt",
                               donType=["combinedDonors", "sepDonors"], sampType=["input", "all"]),

@@ -120,11 +120,44 @@ rule nuclear_mtclones_af:
 
 
 
+
+rule nuclear_mt_bias:
+    input:
+        in_fs = expand("{{outdir}}/multiplex/clones_{{variants}}/donor{d}/output.ipynb", d=np.arange(config["N_DONORS"])) ,
+        se_meta = expand("{{outdir}}/anno_multiplex/gff_{gff}/se_cells_meta_labels.tsv", gff=config["gff"]),
+    output:
+        note = "{outdir}/mt_nuclear/variants_{variants}/method_{method}/out.ipynb",
+        labels = expand("{{outdir}}/mt_nuclear/variants_{{variants}}/method_{{method}}/minCov10_donor{d}.labels.csv",
+                        d = np.arange(config["N_DONORS"])),
+        af = expand("{{outdir}}/mt_nuclear/variants_{{variants}}/method_{{method}}/minCov10_donor{d}.af.csv",
+                        d = np.arange(config["N_DONORS"])),
+    params:
+        indir = lambda wildcards, input: dirname(dirname(input.in_fs[0])),
+        outdir = lambda wildcards, output: dirname(output.note),
+        conditions = "Input",
+        note = join(ROOT_DIR, "workflow/notebooks/mt_as_clones/mt_nuclear_af_v02.ipynb.ipynb"),
+    shell: "papermill -p indir {params.indir} -p se_meta {input.se_meta} -p outdir {params.outdir} -p method {wildcards.method} {params.note} {output.note}"
+
+
+rule nuclear_mt_bias_complexHeatmap:
+    input:
+        labels_f = "{outdir}/mt_nuclear/variants_{variants}/method_{method}/minCov10_donor{d}.labels.csv",
+        af_f = "{outdir}/mt_nuclear/variants_{variants}/method_{method}/minCov10_donor{d}.af.csv",
+    output:
+        note = "{outdir}/mt_nuclear/variants_{variants}/method_{method}/method_{method}/heatmap.ipynb"
+    params:
+        outdir = lambda wildcards, output: dirname(output.note),
+        note = join(ROOT_DIR, "workflow/notebooks/mt_as_clones/mt_nuclear_complexHeatmap.ipynb"),
+        name = lambda wildcards: f"donor{wildcards.d}"
+    shell: "papermill -p labels_f {input.labels_f} -p af_f {input.af_f} -p outdir {params.outdir}  {params.note} {output.note}"
+
 rule finalize:
     input:
         "{outdir}/mt_as_clones/variants_{variants}/mt_clones_thresh/.complete",
         "{outdir}/mt_as_clones/variants_{variants}/anno_mt_af/out.ipynb",
         "{outdir}/mt_as_clones/variants_{variants}/mt_clones_thresh/params_plot.ipynb",
+
+
         expand("{{outdir}}/mt_as_clones/variants_{{variants}}/lineage_clusters/af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/anno_mt_clones.ipynb",
                 af= best_p["af"], othaf= best_p["oth_af"],
                 cov= best_p["cov"], othcov= best_p["oth_cov"],
@@ -135,6 +168,8 @@ rule finalize:
                 cov= best_p["cov"], othcov= best_p["oth_cov"],
                 ncells= best_p["num_cells"], othncells= best_p["oth_num_cells"],
                 mean= best_p["mean_pos_cov"]),
+        expand("{{outdir}}/mt_nuclear/variants_{{variants}}/method_{method}/heatmap.ipynb",
+               method=["anova", "bias"])
         #"{outdir}/mt_as_clones/variants_{variants}/anno_mt_clones_thresh/manual_params/anno_mt_clones.ipynb",
     output:
         out = "{outdir}/mt_as_clones/variants_{variants}/.complete.txt"
