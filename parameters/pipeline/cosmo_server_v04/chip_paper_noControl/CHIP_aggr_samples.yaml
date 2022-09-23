@@ -52,6 +52,7 @@ bed_regions:
 gene_ids_f:
 #mt_ref_fa: "data/processed/genomes/mtMasked/GRCh38_MT_blacklist_A2_2020/chrM.fasta"
 
+umap_clusters_f: "/mnt/md0/isshamie/Projects/Mito_Trace/output/aggregate/CHIP_aggr/v04/results/aggregate_lineage_markers.txt"
 
 markers_f: "/data/Mito_Trace/data/processed/cd34_markers_v02.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
 markers_select_f: "/data/Mito_Trace/data/processed/cd34_markers_bc.txt" #"/data/Mito_Trace/data/processed/cd34_markers.txt" #"/data/Mito_Trace/data/processed/cd34_markers_v02.txt"
