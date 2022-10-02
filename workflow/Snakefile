@@ -178,18 +178,18 @@ rule all:
 
 
         # subsampling clones
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
-            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-            kparam=params_clones["knn"]["params"]["resolution"],
-            variants=[x for x in params_clones["variants"] if x!="simple"],
-            d=np.arange(config["N_DONORS"])
-        ),
-        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons_subsamples/subsample_output.ipynb",
-            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
-            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh']),
+#        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
+#            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
+#            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+#            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+#            kparam=params_clones["knn"]["params"]["resolution"],
+#            variants=[x for x in params_clones["variants"] if x!="simple"],
+#            d=np.arange(config["N_DONORS"])
+#        ),
+#        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons_subsamples/subsample_output.ipynb",
+#            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
+#            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+#            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh']),
 
 
         # # Enrichment
