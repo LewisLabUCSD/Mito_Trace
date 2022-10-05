@@ -184,11 +184,11 @@ rule fate_corr:
     input:
         se_meta = "{outdir}/annotation_clones/se_cells_meta_labels.tsv",
     output:
-        note = "{outdir}/annotation_clones/fate_correlation/minC5/output.ipnyb",
-        corr = "{outdir}/annotation_clones/fate_correlation/minC5/correlation.csv",
-        corr_fig = "{outdir}/annotation_clones/fate_correlation/minC5/fateCorr_allDonors.pdf",
-        repr_corr_fig = "{outdir}/annotation_clones/fate_correlation/minC5/fateCorr_scatter_allDonors.pdf",
-        corr_fig_sepClones = "{outdir}/annotation_clones/fate_correlation/minC5/fateCorr_sepCond_allDonors.pdf"
+        note = "{outdir}/annotation_clones/fate_correlation/minC5_corr.Kendall.b_labelsGroup.{group}/output.ipynb",
+        #corr = "{outdir}/annotation_clones/fate_correlation/minC5_corr.Kendall.b_labelsGroup.{group}/correlation.csv",
+        #corr_fig = "{outdir}/annotation_clones/fate_correlation/minC5_corr.Kendall.b_labelsGroup.{group}/fateCorr_allDonors.pdf",
+        #repr_corr_fig = "{outdir}/annotation_clones/fate_correlation/minC5_corr.Kendall.b_labelsGroup.{group}/fateCorr_scatter_allDonors.pdf",
+        #corr_fig_sepClones = "{outdir}/annotation_clones/fate_correlation/minC5_corr.Kendall.b_labelsGroup.{group}/fateCorr_sepCond_allDonors.pdf"
     params:
         outdir = lambda wildcards, output: dirname(output.note),
         min_cell = 5,
@@ -351,7 +351,7 @@ rule finalize:
         markers="{outdir}/annotation_clones/markers/markers.ipynb",
         markersSelect = "{outdir}/annotation_clones/markersSelect/dotplot_markersSelect.ipynb",
         cl_sizes=expand("{{outdir}}/annotation_clones/clone_counts/counts_clones.ipynb"),
-        fate_corr = "{outdir}/annotation_clones/fate_correlation/minC5/output.ipnyb",
+        fate_corr = expand("{{outdir}}/annotation_clones/fate_correlation/minC5_corr.Kendall.b_labelsGroup.{group}/output.ipynb", group=[False, True]),
         #cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/cluster_clone_counts.ipynb",donType=["combinedDonors", "sepDonors"]),
         cl_lin_sizes = expand("{{outdir}}/annotation_clones/cluster_clone_counts/{donType}/.summarize_{sampType}.txt",
                               donType=["combinedDonors", "sepDonors"], sampType=["input", "all"]),
