@@ -66,7 +66,7 @@ rule get_clone_cells:
 
 rule get_clone_dendro_cells:
     input:
-        barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{{d}}.clones_dendro.csv", dt=dendro_d),
+        barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{{d}}.rmLowVars.0.2.clones_dendro.csv", dt=dendro_d),
         se_cells_meta_f = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv", gff=config["gff"])#"{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv"
     output:
         cells = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_dendro_bc/cells_meta.tsv"
@@ -782,18 +782,17 @@ rule top_clone_umap_overlay:
     shell: "papermill -p se_f {input.se} -p cells_meta_f {input.cells} -p outdir {params.outdir} -p clone_order_f {input.clone_order_f} {params.script} {output.note}"
 
 
-rule top_merge:
-    input:
-        ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
-        #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
-    output:
-        out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.svg"),
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/merge_panels.ipynb"
-    params:
-        outdir = lambda wildcards, output:  dirname(output.note),
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/concat_images_top_clones.ipynb"),
-    shell: "papermill -p outdir {params.outdir} {params.script} {output.note}"
-
+# rule top_merge:
+#     input:
+#         ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
+#         #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
+#     output:
+#         out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.svg"),
+#         note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/merge_panels.ipynb"
+#     params:
+#         outdir = lambda wildcards, output:  dirname(output.note),
+#         script = join(ROOT_DIR, "workflow/notebooks/individual_clones/concat_images_top_clones.ipynb"),
+#     shell: "papermill -p outdir {params.outdir} {params.script} {output.note}"
 
 rule top_clone_complete:
     input:
@@ -802,7 +801,6 @@ rule top_clone_complete:
               d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
               clone_shift_method = knn_clone_shift,
               kparam=params_clones["knn"]["params"]["resolution"]),
-
         # expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/top/{f}",
         #           f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.pdf"],
         #           d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
@@ -821,3 +819,13 @@ rule top_clone_complete:
         #           mean= best_p["mean_pos_cov"]),
     output: "{outdir}/single_clones/.top_clones.txt"
     shell: "touch {output}"
+
+
+rule top_complete:
+    input:
+        ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
+        #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
+    output: "{outdir}/single_clones/.top_clones.txt"
+    shell: "touch {output}"
+
+

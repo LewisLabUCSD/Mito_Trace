@@ -87,8 +87,8 @@ clones:
   variants:
     #- "simple" # Old one, where the depth is not filled in and uses the union of the vireo vcfs
     #- "mgatkdonor" # reruns mgatk on the donors, takes the intersection of the filtered data
-    - "init"
-    - "simpleUnion"
+    #- "init"
+    #- "simpleUnion"
     - "prefilterMerge_impute"
     #- "simpleintersection" #Union of the vireo output vcfs, so doesn't re-run mgatk.
   method:

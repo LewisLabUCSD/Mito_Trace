@@ -63,14 +63,14 @@ rule barcodes_btwnClones_dendro:
         af_note = "{outdir}/sc_af/donor{d}/sc_af.ipynb",
     output:
         note = "{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.ipynb",
-        mean = "{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
-        res = report(multiext("{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.",
-                                  "clones_dendro.csv", "dendrogram_pvals.txt",
-                                  "dendro.NoCondition.max2.AF.png"),
-                         category="lineage")
-
+        den_clust = "{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.rmLowVars.0.2.clones_dendro.csv"
+        #mean = "{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+        #res = report(multiext("{outdir}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.",
+        #                         "clones_dendro.csv", "dendrogram_pvals.txt",
+        #                          "dendro.NoCondition.max2.AF.png"),
+        #                 category="lineage")
     params:
-        note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode_dendro.ipynb"),
+        note = join(ROOT_DIR, "workflow", "notebooks", "clone_af_dendrograms", "MT_btwnClones_Barcode_dendro.101022.ipynb"),
         indir = lambda wildcards, input: dirname(input.cells_meta),
         outdir = lambda wildcards, output: dirname(output.note),
         #dendro_thresh = dendro_thresh #0.6
@@ -108,9 +108,9 @@ rule barcodes_inClones:
 
 rule finalize:
     input:
-        #inClones =  expand("{{outdir}}/barcodes/btwnClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
-        btwnClones = expand("{{outdir}}/barcodes/inClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
-        dendroClones = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.mean.csv",
+        #btwnClones =  expand("{{outdir}}/barcodes/btwnClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
+        inClones = expand("{{outdir}}/barcodes/inClones/donor{d}.ipynb", d=np.arange(config["N_DONORS"])),
+        dendroClones = expand("{{outdir}}/barcodes/btwnClones_dendro_dt_{dendro_thresh}/donor{d}.ipynb",
                               d=np.arange(config["N_DONORS"]), dendro_thresh=dendro_thresh),
     output:
         out = "{outdir}/barcodes/_clone_complete.txt",

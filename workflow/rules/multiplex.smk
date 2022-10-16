@@ -37,6 +37,19 @@ rule multiplex:
     shell: "papermill -p INDIR {params.INDIR} -p OUTDIR {params.OUTDIR} -p N_DONORS {params.N_DONORS} -p sample_names {params.sample_names} -p to_elbo {params.to_elbo} --log-output {params.notebook} {output.note}"
 
 
+rule multiplex_snps:
+    input: 
+        note="{outdir}/multiplex/out_multiplex.ipynb",
+    output: 
+        note="{outdir}/multiplex/n_donor_vars.ipynb",
+        n_dons="{outdir}/multiplex/n_donor_vars.csv",
+    params:
+        af_mean_f = lambda wildcards, input: join(dirname(input.note), "AF_SNPs.csv"),
+        outdir= lambda wildcards, output: dirname(output.note),
+        note = join("src", "vireo", "Multiplex_get_donor_variants.ipynb" ),
+    shell: "papermill -p af_mean_f {params.af_mean_f} -p outdir {params.outdir} -p don_th 0.7 -p oth_th 0.1 {params.note} {output.note} "
+
+
 rule multiplex_elbo:
     input: "{outdir}/cellSNP.tag.AD.mtx"
     output:

@@ -69,7 +69,7 @@ rule clonalshift_dendro_bc:
     input:
         se_meta = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv",
                          gff=config["gff"]),
-        barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{d}.clones_dendro.csv",
+        barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{d}.rmLowVars.0.2.clones_dendro.csv",
                               dt=dendro_d, d=np.arange(config["N_DONORS"]))
         #barcodes_dir = "{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/barcodes/btwnClones_dendro_dt_{dt}",
     output:
