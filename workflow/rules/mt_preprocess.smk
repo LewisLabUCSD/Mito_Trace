@@ -22,17 +22,6 @@ ft = config['filters']
 ft_parms = ft["params"]
 
 
-# rule all:
-#     input:
-#         expand("{output}/figures/{sample}/MT/cellr_{cellrbc}/numread_{num_read}_MT_position_coverage.png",
-#                 output=res, sample=samples["sample_name"].values,
-#                 num_read=mt_parms['numreadsfilter'], cellrbc=mt_parms['cellrbc']),
-#         expand("{output}/data/{sample}/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/{sample}.coverage.txt",
-#                output=res, sample=samples["sample_name"].values,
-#                num_read=mt_parms['numreadsfilter'], cellrbc=mt_parms['cellrbc'],
-#                mincells=ft_parms['mincells'],minreads=ft_parms['minreads'],topN=ft_parms["topN"],hetthresh=ft_parms['hetthresh'],minhetcells=ft_parms['minhetcells'],
-#                hetcountthresh=ft_parms['hetcountthresh'], bqthresh=ft_parms['bqthresh'])
-
 
 ######################################################################
 ## Extract the MT and process for the relevant reads with the "CB" cell barcodes

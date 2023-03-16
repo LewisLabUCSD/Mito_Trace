@@ -25,8 +25,6 @@ params_clones = config["clones"]
 dendro_d = config['clones']['params']['dendro_thresh']
 
 def load_cells_meta(cells_meta_f):
-    ic(cells_meta_f)
-    ic('here')
     try:
         cells_meta = pd.read_csv(cells_meta_f, sep="\t", index_col=0)
     except:
@@ -68,7 +66,7 @@ rule get_clone_cells:
 
 rule get_clone_dendro_cells:
     input:
-        barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{{d}}.clones_dendro.csv", dt=dendro_d),
+        barcodes_dir = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/barcodes/btwnClones_dendro_dt_{dt}/donor{{d}}.rmLowVars.0.2.clones_dendro.csv", dt=dendro_d),
         se_cells_meta_f = expand("{{outdir}}/clones/variants_{{variants}}/knn/kparam_{{kparam}}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv", gff=config["gff"])#"{outdir}/clones/variants_{variants}/knn/kparam_{kparam}/gff_{gff}/annotation_clones/se_cells_meta_labels.tsv"
     output:
         cells = "{outdir}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_dendro_bc/cells_meta.tsv"
@@ -199,7 +197,6 @@ def get_hypergeo(wildcards):
     elif clshift == "mt_as_clones_dendro" or clshift == "mt_as_clones":
         return f"{indir}/af.{w.af}_othaf.{w.othaf}_cov.{w.cov}_othcov.{w.othcov}_ncells.{w.ncells}_othncells.{w.othncells}_mean.{w.mean}/output.ipynb"
     return
-#clonal_shifts/donors/donor0/variants_init/knn/kparam_30/clones/"
 
 
 rule get_rank_mt:
@@ -232,6 +229,7 @@ rule get_rank_cl:
 
 sample_ids = config["samples"].index
 condition = []
+
 if "Input" in sample_ids:
     condition.append("inputOnly")
     if len(sample_ids) > 1:
@@ -244,6 +242,7 @@ def get_rank_cl_sizes_note(wildcards):
     if len(condition) == 1:
         return join(ROOT_DIR,  "workflow/notebooks/individual_clones/oneCondition_rank_clone_lineage_sizes.ipynb"),
     return join(ROOT_DIR,  "workflow/notebooks/individual_clones/rank_clone_lineage_sizes.ipynb"),
+
 
 def get_rank_cl_sizes_condition(wildcards):
     if len(condition) == 1:
@@ -783,42 +782,53 @@ rule top_clone_umap_overlay:
     shell: "papermill -p se_f {input.se} -p cells_meta_f {input.cells} -p outdir {params.outdir} -p clone_order_f {input.clone_order_f} {params.script} {output.note}"
 
 
-rule top_merge:
+# # rule top_merge:
+# #     input:
+# #         ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
+# #         #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
+# #     output:
+# #         out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.svg"),
+# #         note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/merge_panels.ipynb"
+# #     params:
+# #         outdir = lambda wildcards, output:  dirname(output.note),
+# #         script = join(ROOT_DIR, "workflow/notebooks/individual_clones/concat_images_top_clones.ipynb"),
+# #     shell: "papermill -p outdir {params.outdir} {params.script} {output.note}"
+#
+# rule top_clone_complete:
+#     input:
+#         expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/{f}",
+#               f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.svg"],
+#               d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
+#               clone_shift_method = knn_clone_shift,
+#               kparam=params_clones["knn"]["params"]["resolution"]),
+#         # expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/top/{f}",
+#         #           f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.pdf"],
+#         #           d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
+#         #           variants=[x for x in params_clones["variants"] if x != "simple"],
+#         #           af= best_p["af"], othaf= best_p["oth_af"],
+#         #           cov= best_p["cov"], othcov= best_p["oth_cov"],
+#         #           ncells= best_p["num_cells"], othncells= best_p["oth_num_cells"],
+#         #           mean= best_p["mean_pos_cov"]),
+#         # expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_mt_as_clones/top/{f}",
+#         #           f=["top_clone_lineage_count.ipynb", "top_hypergeo_sig.ipynb", "top_umap_overlay.ipynb"],
+#         #           d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
+#         #           variants=[x for x in params_clones["variants"] if x != "simple"],
+#         #           af= best_p["af"], othaf= best_p["oth_af"],
+#         #           cov= best_p["cov"], othcov= best_p["oth_cov"],
+#         #           ncells= best_p["num_cells"], othncells= best_p["oth_num_cells"],
+#         #           mean= best_p["mean_pos_cov"]),
+#     output: "{outdir}/single_clones/.top_clones.txt"
+#     shell: "touch {output}"
+
+
+rule top_complete:
     input:
-        ins = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"),
+        ins = expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{cloneShift_method}/top/{f}",
+                            d=np.arange(config["N_DONORS"]), kparam=params_clones["knn"]["params"]["resolution"],
+                            cloneShift_method = knn_clone_shift, variants=[x for x in params_clones["variants"] if x != "simple"],
+                            f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb"]),
         #clone_order_f = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/clones_ranked/cloneID_rank_ncells.txt",
-    output:
-        out_f = multiext("{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/","clone_shift_combine.svg"),
-        note = "{outdir}/single_clones/donor{d}/cloneMethod_{method}/clonalShift_method_{cloneShift_method}/top/merge_panels.ipynb"
-    params:
-        outdir = lambda wildcards, output:  dirname(output.note),
-        script = join(ROOT_DIR, "workflow/notebooks/individual_clones/concat_images_top_clones.ipynb"),
-    shell: "papermill -p outdir {params.outdir} {params.script} {output.note}"
-
-
-rule top_clone_complete:
-    input:
-        expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_knn_resolution_{kparam}/clonalShift_method_{clone_shift_method}/top/{f}",
-              f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.svg"],
-              d=np.arange(config["N_DONORS"]), variants=[x for x in params_clones["variants"] if x != "simple"],
-              clone_shift_method = knn_clone_shift,
-              kparam=params_clones["knn"]["params"]["resolution"]),
-
-        # expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_{clone_shift_method}/top/{f}",
-        #           f=["top_umap_overlay.ipynb", "top_hypergeo_sig.ipynb", "top_clone_lineage_count.ipynb", "top_clone_mt_variants.ipynb", "all_clone_mt_variants.ipynb", "clone_shift_combine.pdf"],
-        #           d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
-        #           variants=[x for x in params_clones["variants"] if x != "simple"],
-        #           af= best_p["af"], othaf= best_p["oth_af"],
-        #           cov= best_p["cov"], othcov= best_p["oth_cov"],
-        #           ncells= best_p["num_cells"], othncells= best_p["oth_num_cells"],
-        #           mean= best_p["mean_pos_cov"]),
-        # expand("{{outdir}}/single_clones/donor{d}/cloneMethod_variants_{variants}_mt_bestparams_af.{af}_othaf.{othaf}_cov.{cov}_othcov.{othcov}_ncells.{ncells}_othncells.{othncells}_mean.{mean}/clonalShift_method_mt_as_clones/top/{f}",
-        #           f=["top_clone_lineage_count.ipynb", "top_hypergeo_sig.ipynb", "top_umap_overlay.ipynb"],
-        #           d=np.arange(config["N_DONORS"]), clone_shift_method=mt_clone_shift,
-        #           variants=[x for x in params_clones["variants"] if x != "simple"],
-        #           af= best_p["af"], othaf= best_p["oth_af"],
-        #           cov= best_p["cov"], othcov= best_p["oth_cov"],
-        #           ncells= best_p["num_cells"], othncells= best_p["oth_num_cells"],
-        #           mean= best_p["mean_pos_cov"]),
     output: "{outdir}/single_clones/.top_clones.txt"
     shell: "touch {output}"
+
+

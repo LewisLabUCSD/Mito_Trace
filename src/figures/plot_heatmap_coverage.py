@@ -10,6 +10,8 @@ import numpy as np
 import sys
 import click
 import matplotlib as mpl
+import mplh.fig_utils as fu
+
 mpl.use('agg')
 
 
@@ -87,6 +89,7 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     plt.xlabel("MT position")
     plt.ylabel("Cell")
     plt.savefig(savefig_f)
+    #fu.helper_save(savefig_f, to_svg=True, to_pdf=True)
     plt.close()
 
     log2_sc_coverage = np.log2(sc_coverage + 1)
@@ -102,7 +105,7 @@ def plot_sc_mt(sc_coverage_f, savefig_f, top_n=0):
     plt.title(os.path.basename(savefig_f))
     plt.ylabel("Cell")
     plt.savefig(savefig_f.replace(".png","")+".log2.png")
-
+    #fu.helper_save(savefig_f.replace(".png","")+".log2.png", to_svg=True, to_pdf=True)
     return
 
 
@@ -129,7 +132,7 @@ def plot_percent_coverage_cells(sc_coverage_f, savefig_f,
     sns.barplot(data=pct_cov_df, x="Minimum number of reads",
                 y="Number of MT positions",
                 hue="Minimum number of cells")
-    plt.savefig(savefig_f)
+    fu.helper_save(savefig_f, to_svg=True, to_pdf=True)
 
     plt.close(f)
     return

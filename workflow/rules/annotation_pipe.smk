@@ -73,6 +73,7 @@ rule createExpSignac:
         samples = ",".join(samples["cellr_ID"].values),
         gff = gff
         #workdir = os.getcwd(),
+    priority: 7
     shell: "papermill -p cellr_in {params.indir} -p outdir {params.outdir} -p samples {params.samples} -p sample_names {params.sample_names} -p gff_id {params.gff} {params.rscript} {output[0]}"
 
 
@@ -99,6 +100,7 @@ rule integrateSignac:
         rscript= get_integrate_or_single_rscript, #join(ROOT_DIR, "R_scripts/annotations/integrateSignac.ipynb"), # The script defaults to the granja data
         sample_names = ",".join(samples.index),
         gff = gff
+    priority: 7
     shell: "papermill -p outdir {params.outdir} -p sample_names {params.sample_names} -p gff_id {params.gff} {params.rscript} {output[0]}"
 
 #
