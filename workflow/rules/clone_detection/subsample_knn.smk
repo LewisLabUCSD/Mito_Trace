@@ -60,7 +60,56 @@ rule knn:
         "papermill -k ir -p indir {params.indir} -p name {params.name} -p donor {wildcards.d} -p outdir {params.outdir} -p kparam {wildcards.kparam} {params.note} {params.outdir}/output.ipynb"
 
 
-rule clone_metrics:
+# get clone_stats: #clones, #variants (0.01 in clone), max size, median, CV, mean
+### Descriptives
+#######################
+rule clone_descriptives:
+    input:
+        af ="{outdir}/subsamples/pct_{pct}/{i}/donor{d}/af.tsv",
+        cells= "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/cells_meta.tsv",
+    output:
+        metrics = "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/cl_metrics.tsv",
+    run:
+        clones = pd.read_csv(input.cells, sep="\t")
+        df = pd.read_csv(input.af, sep="\t", index_col=0)
+        m_d = {}
+
+        clone_sizes = clones.groupby("lineage").size()
+        metrics = clone_sizes.describe().rename({"count": "nclones","50%":"median cells", 
+                                                 "max":"max cells", "mean":"mean cells"})
+        metrics["cv"] = metrics["std"]/metrics["mean cells"]
+
+        # get n-barcodes by calculating mean
+        df = df.loc[clones["ID"]]
+
+        mean_vars = clones.groupby("lineage").apply(lambda x: df.loc[df.index.isin(x["ID"])].mean())
+        mean_vars
+        metrics["barcodes"] = (mean_vars>0.01).any().sum()
+        metrics["total cells"] = clones.shape[0]
+        metrics["percent"] = wildcards.pct
+        pd.DataFrame(metrics).transpose()[["percent", "total cells", "nclones", "mean cells", "median cells", 
+                                          "max cells", "std", "cv", "barcodes"]].to_csv(output.metrics, sep="\t", index=False)
+        
+rule descriptives_aggregate:
+    input:
+        expand("{{outdir}}/subsamples/pct_{pct}/{i}/donor{{d}}/knn/kparam_{{kparam}}/cl_metrics.tsv",
+               pct=params["pct"],
+               i=np.arange(params["n_subsamples"]),
+               )
+    output:
+        "{outdir}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_descriptives.tsv",
+    run:
+        all = []
+        for i in input:
+            all.append(pd.read_csv(i, sep="\t"))
+        pd.concat(all, axis=0, ignore_index=True).to_csv(output[0], sep="\t")
+#######################
+#######################
+
+#######################
+## Internal metrics
+#######################
+rule clone_silh:
     input:
         af ="{outdir}/subsamples/pct_{pct}/{i}/donor{d}/af.tsv",
         cells= "{outdir}/subsamples/pct_{pct}/{i}/donor{d}/knn/kparam_{kparam}/cells_meta.tsv",
@@ -129,6 +178,8 @@ rule aggregate:
             all.append(pd.read_csv(i, index_col=0).transpose())
         pd.concat(all, axis=0, ignore_index=True).to_csv(output[0], sep="\t")
 
+#######################
+#######################
 
 # rule all_aggregate:
 #     input:

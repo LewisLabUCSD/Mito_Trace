@@ -182,16 +182,16 @@ rule all:
             variants=[x for x in params_clones["variants"] if x!="simple"]
         ),
 
-
-        # subsampling clones
-#        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
-#            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
-#            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
-#            hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
-#            kparam=params_clones["knn"]["params"]["resolution"],
-#            variants=[x for x in params_clones["variants"] if x!="simple"],
-#            d=np.arange(config["N_DONORS"])
-#        ),
+        #subsampling clones - descriptives
+        expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/params_descriptives.csv",
+           out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
+           mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
+           hetcountthresh=ft['hetcountthresh'],bqthresh=ft['bqthresh'],
+           kparam=params_clones["params"]["subsample"]["knn"]["resolution"],
+           variants=[x for x in params_clones["variants"] if x!="simple"],
+           d=np.arange(config["N_DONORS"])
+        ),
+       ## subsampling clones - internal metrics
 #       # expand("{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/comparisons_subsamples/subsample_output.ipynb",
 #            out_dir=res, cellrbc=cellrbc, num_read=num_reads_filter,
 #            mincells=ft['mincells'],minreads=ft['minreads'],topN=ft["topN"],hetthresh=ft['hetthresh'],minhetcells=ft['minhetcells'],
@@ -1149,7 +1149,7 @@ ic('params_clones', params_clones)
 #         "papermill -p all_files {params.all} -p outdir {params.outdir} -p cfg_outdir {params.cfg_outdir} -p prefix {params.prefix} -p params_f {params.params_f} {params.note} {output.note}"
 
 ############################################
-## Compare methods:
+## Compare methods based on cell pairs:
 ############################################
 rule compare_methods_get_params:
     input:
@@ -1189,7 +1189,9 @@ rule compare_methods_figure:
         "papermill -p meta_params_f {input.meta_params} -p outdir {params.outdir} {params.note} {output.note}"
         #"papermill -p all_files {params.all} -p outdir {params.outdir} -p cfg_outdir {params.cfg_outdir} -p prefix {params.prefix} -p params_f {params.params_f} {params.note} {output.note}"
 
-
+############################################
+## Compare methods based on subsampling and internal metrics
+############################################
 rule subsample_meta:
     input:
         "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_metrics.tsv",
@@ -1211,6 +1213,21 @@ rule compare_subsample_methods:
         in_fs = lambda wildcards, input: ";".join(input),
         note = join("src", "clones_compare", "clones_subsample.ipynb"),
     shell: "papermill -p in_files {params.in_fs:q} {params.note} {output.note}"
+
+
+############################################
+## Compare methods based on subsampling and clone descriptive metrics
+############################################
+rule subsample_descriptives_meta:
+    input:
+        "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/subsample_descriptives.tsv",
+    output:
+        params = "{out_dir}/data/merged/MT/cellr_{cellrbc}/numread_{num_read}/filters/minC{mincells}_minR{minreads}_topN{topN}_hetT{hetthresh}_hetC{minhetcells}_hetCount{hetcountthresh}_bq{bqthresh}/mgatk/vireoIn/clones/variants_{variants}/subsamples/knn/kparam_{kparam}/donor{d}/params_descriptives.csv"
+    run:
+        pd.Series([wildcards.variants, wildcards.kparam, wildcards.d], index=["variants", "kparam", "d"]).to_csv(output.params)
+
+
+
 
 ############################################
 ## Annotation

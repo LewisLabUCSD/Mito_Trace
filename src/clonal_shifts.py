@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from icecream import ic
 import pickle
 
-
+print('here')
 def merge_hypergeom(a_enrich_df, b_enrich_df, a_name, b_name,
                     p_thresh=0.1, f_save=None,
                     title="Number of clones that are significant"):
@@ -298,6 +298,7 @@ def run(groups, sizes, atac_col, clone_col, p_thresh,
                               values="log2_count").fillna(0))
         if out_f is not None:
             plt.savefig(out_f + "groups_counts.png",dpi=300, bbox_inches = "tight")
+            plt.savefig(out_f + "groups_counts.pdf",dpi=300, bbox_inches = "tight")
     return output_df, bh_enrichment_df
 
 
@@ -386,9 +387,8 @@ def plot_glob_all(bh_enrichment_df, global_all, p_thresh, atac_col, out_f=None):
     #shuffle_pval_df = ((bh_enrichment_df) < global_all).sum() / len(global_all)
     curr_thresh = np.percentile(global_all, 100 * p_thresh)
     f, ax = plt.subplots()
-    sns.histplot(global_all, ax=ax, stat='probability')
-    sns.histplot(bh_enrichment_df.values.flatten(), color="green",
-                 stat='probability', alpha=0.4, ax=ax)
+    sns.histplot(global_all, ax=ax, stat='probability', binwidth=0.05, binrange=(0,1))
+    sns.histplot(bh_enrichment_df.values.flatten(), color="green", stat='probability', alpha=0.4, ax=ax,  binwidth=0.05, binrange=(0,1))
     plt.axvline(curr_thresh, color='r', alpha=0.4)
     group_vs_shuffle = bh_enrichment_df[bh_enrichment_df < curr_thresh]
     sig_pairs = group_vs_shuffle.stack().reset_index().rename({"level_1": atac_col, 0: "p_val"}, axis=1)
@@ -406,9 +406,8 @@ def plot_glob_min(bh_enrichment_df, global_min, p_thresh, atac_col, out_f=None):
     #shuffle_pval_df = ((bh_enrichment_df) < global_min).sum() / len(global_min)
     curr_thresh = np.percentile(global_min, 100 * p_thresh)
     f, ax = plt.subplots()
-    sns.histplot(global_min, ax=ax, stat='probability')
-    sns.histplot(bh_enrichment_df.values.flatten(), color="green",
-                 stat='probability', alpha=0.4, ax=ax)
+    sns.histplot(global_min, ax=ax, stat='probability',  binwidth=0.05, binrange=(0,1))
+    sns.histplot(bh_enrichment_df.values.flatten(), color="green",  binwidth=0.05, binrange=(0,1), stat='probability', alpha=0.4, ax=ax)
     plt.axvline(curr_thresh, color='r')
     group_vs_shuffle = bh_enrichment_df[bh_enrichment_df < curr_thresh]
     sig_pairs = group_vs_shuffle.stack().reset_index().rename(
@@ -427,7 +426,7 @@ def plot_clone_min(bh_enrichment_df, clone_min, p_thresh, out_f=None):
 
     g = sns.FacetGrid(pd.DataFrame(clone_min).melt(), col="variable",
                       col_wrap=4, sharex=False, sharey=False)
-    g.map_dataframe(sns.histplot, x="value", stat='probability',
+    g.map_dataframe(sns.histplot, x="value", stat='probability', binwidth=0.05, binrange=(0,1),
                     color='blue', alpha=0.6)
 
     shuffle_pval_df = bh_enrichment_df.copy()
@@ -441,7 +440,7 @@ def plot_clone_min(bh_enrichment_df, clone_min, p_thresh, out_f=None):
         sig_pairs = group_vs_shuffle[group_vs_shuffle]
         clone_min_sig[ind] = sig_pairs
         g.axes_dict[ind].axvline(curr_thresh, color='red', linewidth=4)
-        sns.histplot(bh_enrichment_df.loc[ind], stat='probability',
+        sns.histplot(bh_enrichment_df.loc[ind], stat='probability', binwidth=0.05, binrange=(0,1),
                      color='green', alpha=0.4, ax=g.axes_dict[ind])
     if out_f is not None:
         plt.savefig(out_f,dpi=300, bbox_inches = "tight")
@@ -474,9 +473,9 @@ def plot_clone_all(bh_enrichment_df, clone_all, p_thresh, out_f=None):
         clone_min_sig[ind] = sig_pairs
 
         sns.histplot(data=data, stat='probability', color='blue',
-                     ax=axs[curr_row, curr_col])
+                     ax=axs[curr_row, curr_col], binwidth=0.05, binrange=(0,1))
 
-        sns.histplot(bh_enrichment_df.loc[ind], stat='probability',
+        sns.histplot(bh_enrichment_df.loc[ind], stat='probability', binwidth=0.05, binrange=(0,1),
                      color='green', alpha=0.05,
                      ax=axs[curr_row, curr_col])
         # sns.histplot(data=real_df.loc[data["variable"][0]], x='value',stat='probability', color='green', alpha=0.05)
@@ -495,14 +494,14 @@ def plot_clone_all(bh_enrichment_df, clone_all, p_thresh, out_f=None):
 
 def get_out(shuffle, clones, bh_enrichment_df, p_thresh, clone_map, atac_col, outdir, figs_close=True):
     global_min, clone_min, global_all, clone_all = get_shuffle_results(shuffle, clones, clone_map=clone_map)
-    ic('global all')
-    out_all = plot_glob_all(bh_enrichment_df, global_all, p_thresh, atac_col=atac_col, out_f=join(outdir, "shuffle_all.png"))
-    ic('global min')
-    out_min = plot_glob_min(bh_enrichment_df, global_min, p_thresh, atac_col=atac_col, out_f=join(outdir, "shuffle_min.png"))
-    ic('clone all')
-    out_cloneall = plot_clone_all(bh_enrichment_df, clone_all, p_thresh, out_f=join(outdir, "shuffle_cloneMin.png"))
-    ic('clone min')
-    out_clonemin = plot_clone_min(bh_enrichment_df, clone_min, p_thresh=p_thresh, out_f=join(outdir, "shuffle_cloneAll.png"))
+    #ic('global all')
+    out_all = plot_glob_all(bh_enrichment_df, global_all, p_thresh, atac_col=atac_col, out_f=join(outdir, "shuffle_all.pdf"))
+    #ic('global min')
+    out_min = plot_glob_min(bh_enrichment_df, global_min, p_thresh, atac_col=atac_col, out_f=join(outdir, "shuffle_min.pdf"))
+    #ic('clone all')
+    out_cloneall = plot_clone_all(bh_enrichment_df, clone_all, p_thresh, out_f=join(outdir, "shuffle_cloneMin.pdf"))
+    #ic('clone min')
+    out_clonemin = plot_clone_min(bh_enrichment_df, clone_min, p_thresh=p_thresh, out_f=join(outdir, "shuffle_cloneAll.pdf"))
     if figs_close:
         plt.close('all')
     # save results df with p-vals for each
@@ -544,6 +543,7 @@ def plot_sig_results_per_method(results_df, p_thresh, outdir):
 
 def hypergeo_plots(groups, clones, atac_cl, sizes, p_thresh, atac_col,
                    clone_col, outdir):
+    print('hypergeo plots')
     print("Running hypergeo and saving sig results")
     print("plotting counts")
     groups["log2_count"] = np.log2(groups["count"] + 1)
